@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, type UseFormRegisterReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Eye, EyeOff, Loader2, Lock, ShieldAlert } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import Container from "@/components/ui/Container";
 import { Button } from "@/components/ui/button";
@@ -40,9 +41,8 @@ const ResetPasswordPage = () => {
   });
 
   const onSubmit = async (data: ResetPasswordFormData) => {
-    if (!token) {
-      return;
-    }
+    if (!token) return;
+
     try {
       const result = await resetPassword(
         token,
@@ -53,24 +53,27 @@ const ResetPasswordPage = () => {
         navigate("/login", { replace: true });
       }
     } catch {
-      // Error handled in store
+      // Error handled in store.
     }
   };
 
   if (!token) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center py-12">
+      <div className="flex min-h-[68vh] items-center justify-center py-12">
         <Container className="w-full max-w-md">
-          <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-8 text-center">
-            <h1 className="text-xl font-semibold text-gray-900">
+          <div className="rounded-lg bg-white p-8 text-center shadow-xl shadow-zinc-950/10 ring-1 ring-black/5">
+            <ShieldAlert className="mx-auto h-10 w-10 text-red-500" />
+            <h1 className="mt-5 text-xl font-black text-gray-900">
               Link không hợp lệ
             </h1>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-sm leading-6 text-gray-600">
               Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng yêu
               cầu gửi lại.
             </p>
             <Link to="/forgot-password" className="mt-6 block">
-              <Button>Quên mật khẩu</Button>
+              <Button className="bg-zinc-950 font-black hover:bg-red-600">
+                Quên mật khẩu
+              </Button>
             </Link>
           </div>
         </Container>
@@ -79,17 +82,20 @@ const ResetPasswordPage = () => {
   }
 
   return (
-    <div className="min-h-[60vh] flex items-center justify-center py-12">
+    <div className="flex min-h-[68vh] items-center justify-center py-12">
       <Container className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-8">
-          <div className="text-center mb-8">
+        <div className="rounded-lg bg-white p-8 shadow-xl shadow-zinc-950/10 ring-1 ring-black/5">
+          <div className="mb-8 text-center">
             <Link
               to="/"
-              className="text-2xl font-bold text-gray-900 hover:text-red-500 transition-colors"
+              className="inline-flex items-center gap-2 text-2xl font-black tracking-tight text-gray-900 transition-colors hover:text-red-600"
             >
+              <span className="flex h-10 w-10 items-center justify-center rounded-sm bg-zinc-950 text-sm font-black text-white">
+                S
+              </span>
               SPORTSHOP
             </Link>
-            <h1 className="mt-6 text-2xl font-semibold text-gray-900">
+            <h1 className="mt-7 text-2xl font-black text-gray-900">
               Đặt lại mật khẩu
             </h1>
             <p className="mt-2 text-sm text-gray-600">
@@ -98,53 +104,44 @@ const ResetPasswordPage = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            <div>
-              <Label htmlFor="newPassword">Mật khẩu mới</Label>
-              <Input
-                id="newPassword"
-                type={showPassword ? "text" : "password"}
-                placeholder="Tối thiểu 6 ký tự"
-                className="mt-1.5"
-                {...register("newPassword")}
-              />
-              {errors.newPassword && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.newPassword.message}
-                </p>
-              )}
-            </div>
+            <PasswordInput
+              id="newPassword"
+              label="Mật khẩu mới"
+              placeholder="Tối thiểu 6 ký tự"
+              showPassword={showPassword}
+              error={errors.newPassword?.message}
+              register={register("newPassword")}
+            />
 
-            <div>
-              <Label htmlFor="confirmPassword">Xác nhận mật khẩu mới</Label>
-              <Input
-                id="confirmPassword"
-                type={showPassword ? "text" : "password"}
-                placeholder="Nhập lại mật khẩu mới"
-                className="mt-1.5"
-                {...register("confirmPassword")}
-              />
-              {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.confirmPassword.message}
-                </p>
+            <PasswordInput
+              id="confirmPassword"
+              label="Xác nhận mật khẩu mới"
+              placeholder="Nhập lại mật khẩu mới"
+              showPassword={showPassword}
+              error={errors.confirmPassword?.message}
+              register={register("confirmPassword")}
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowPassword((value) => !value)}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-600 hover:text-zinc-950"
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
               )}
-              <label className="mt-2 flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={showPassword}
-                  onChange={(e) => setShowPassword(e.target.checked)}
-                  className="rounded border-gray-300"
-                />
-                Hiển thị mật khẩu
-              </label>
-            </div>
+              {showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+            </button>
 
             <Button
               type="submit"
-              className="w-full"
+              className="h-11 w-full bg-zinc-950 font-black hover:bg-red-600"
               size="lg"
               disabled={loading}
             >
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {loading ? "Đang xử lý..." : "Đặt lại mật khẩu"}
             </Button>
           </form>
@@ -152,7 +149,7 @@ const ResetPasswordPage = () => {
           <p className="mt-6 text-center">
             <Link
               to="/login"
-              className="text-sm text-red-600 hover:text-red-700"
+              className="text-sm font-semibold text-red-600 hover:text-red-700"
             >
               ← Quay lại đăng nhập
             </Link>
@@ -162,5 +159,36 @@ const ResetPasswordPage = () => {
     </div>
   );
 };
+
+const PasswordInput = ({
+  id,
+  label,
+  placeholder,
+  showPassword,
+  error,
+  register,
+}: {
+  id: string;
+  label: string;
+  placeholder: string;
+  showPassword: boolean;
+  error?: string;
+  register: UseFormRegisterReturn;
+}) => (
+  <div>
+    <Label htmlFor={id}>{label}</Label>
+    <div className="relative mt-1.5">
+      <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+      <Input
+        id={id}
+        type={showPassword ? "text" : "password"}
+        placeholder={placeholder}
+        className="h-11 pl-10"
+        {...register}
+      />
+    </div>
+    {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+  </div>
+);
 
 export default ResetPasswordPage;

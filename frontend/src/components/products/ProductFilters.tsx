@@ -63,7 +63,7 @@ const ProductFilters = ({ filters, onFiltersChange }: ProductFiltersProps) => {
   };
 
   return (
-    <aside className="rounded-sm bg-white p-5 ring-1 ring-black/5">
+    <aside className="ui-panel sticky top-24 rounded-lg p-5">
       <div className="mb-5 flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-[0.18em] text-zinc-950">
           <Filter className="h-4 w-4" />
@@ -92,7 +92,7 @@ const ProductFilters = ({ filters, onFiltersChange }: ProductFiltersProps) => {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <Input
                 placeholder="Product name"
-                className="h-10 rounded-sm border-zinc-200 pl-9"
+                className="h-10 rounded-sm border-zinc-200 bg-white pl-9"
                 value={searchInput}
                 onChange={(event) => setSearchInput(event.target.value)}
                 onKeyDown={(event) => {
@@ -100,7 +100,7 @@ const ProductFilters = ({ filters, onFiltersChange }: ProductFiltersProps) => {
                 }}
               />
             </div>
-            <Button onClick={handleSearch} size="sm" className="h-10 rounded-sm">
+            <Button onClick={handleSearch} size="sm" className="h-10 rounded-sm bg-zinc-950 hover:bg-red-600">
               <Search className="h-4 w-4" />
             </Button>
           </div>
@@ -146,7 +146,7 @@ const ProductFilters = ({ filters, onFiltersChange }: ProductFiltersProps) => {
           <h4 className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-zinc-400">
             Brands
           </h4>
-          <div className="max-h-64 space-y-2.5 overflow-y-auto pr-1">
+          <div className="soft-scrollbar max-h-64 space-y-2.5 overflow-y-auto pr-1">
             {isLoadingBrands ? (
               Array.from({ length: 5 }).map((_, index) => (
                 <Skeleton key={index} className="h-6 w-full" />

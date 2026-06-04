@@ -27,7 +27,7 @@ const ProductsPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#f7f7f5]">
+    <div className="min-h-screen">
       <Container>
         <ProductListing
           title={pageTitle}

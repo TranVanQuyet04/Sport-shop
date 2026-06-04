@@ -39,10 +39,10 @@ const ProductsByBrand = () => {
   }
 
   return (
-    <section>
+    <section className="rounded-lg">
       <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">
+          <p className="section-kicker">
             Popular picks
           </p>
           <h3 className="mt-2 text-2xl font-black tracking-tight text-zinc-950 sm:text-3xl">
@@ -51,13 +51,13 @@ const ProductsByBrand = () => {
         </div>
         <a
           href="/collections"
-          className="text-sm font-bold uppercase text-zinc-700 underline-offset-4 hover:text-red-600 hover:underline"
+          className="text-sm font-black uppercase tracking-wide text-zinc-700 underline-offset-4 hover:text-red-600 hover:underline"
         >
           View all products
         </a>
       </div>
 
-      <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
+      <div className="soft-scrollbar mb-8 flex gap-2 overflow-x-auto pb-2">
         {brands.slice(0, 4).map((brand) => (
           <Button
             key={brand.id}
@@ -65,8 +65,8 @@ const ProductsByBrand = () => {
             variant={selectedBrand === brand.slug ? "default" : "outline"}
             className={`h-10 shrink-0 rounded-full px-5 text-xs font-bold uppercase tracking-wide transition-all ${
               selectedBrand === brand.slug
-                ? "bg-zinc-950 text-white hover:bg-red-600"
-                : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-950 hover:bg-white"
+                ? "bg-zinc-950 text-white shadow-sm hover:bg-red-600"
+                : "border-zinc-200 bg-white/80 text-zinc-700 hover:border-zinc-950 hover:bg-white"
             }`}
           >
             {brand.name ?? brand.brandName}
@@ -94,7 +94,7 @@ const ProductsByBrand = () => {
               />
             ))
           ) : (
-            <div className="col-span-full rounded-sm bg-white py-12 text-center text-gray-500 ring-1 ring-black/5">
+            <div className="ui-panel col-span-full rounded-lg py-12 text-center text-gray-500">
               No products found for this brand.
             </div>
           )}

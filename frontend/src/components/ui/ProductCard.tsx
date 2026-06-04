@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { Eye, ShoppingBag } from "lucide-react";
 
 const COLOR_MAP: Record<string, string> = {
   bac: "#C0C0C0",
@@ -63,10 +64,10 @@ const ProductCard = ({
       .replace(/[đĐ]/g, "d");
 
   const content = (
-    <article className="flex h-full flex-col overflow-hidden rounded-sm bg-white ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10">
+    <article className="flex h-full flex-col overflow-hidden rounded-lg bg-white ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-zinc-950/10">
       <div className="relative aspect-square overflow-hidden bg-zinc-100">
         {hasSale && (
-          <span className="absolute left-3 top-3 z-10 rounded-full bg-red-600 px-3 py-1 text-[10px] font-black uppercase tracking-wide text-white">
+          <span className="absolute left-3 top-3 z-10 rounded-full bg-red-600 px-3 py-1 text-[10px] font-black uppercase tracking-wide text-white shadow-sm">
             Sale
           </span>
         )}
@@ -75,6 +76,15 @@ const ProductCard = ({
           alt={name}
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
+        <div className="absolute inset-x-3 bottom-3 flex translate-y-3 gap-2 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <span className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-sm bg-zinc-950 px-3 text-xs font-black uppercase tracking-wide text-white shadow-lg shadow-black/20">
+            <Eye className="h-4 w-4" />
+            View
+          </span>
+          <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-white text-zinc-950 shadow-lg shadow-black/15">
+            <ShoppingBag className="h-4 w-4" />
+          </span>
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col p-4">

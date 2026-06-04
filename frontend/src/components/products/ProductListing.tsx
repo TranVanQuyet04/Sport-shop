@@ -69,7 +69,7 @@ const ProductListing = ({
         )}
       />
 
-      <section className="mt-5 rounded-sm bg-zinc-950 p-6 text-white sm:p-8">
+      <section className="mt-5 overflow-hidden rounded-lg bg-zinc-950 p-6 text-white shadow-lg shadow-zinc-950/10 sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/50">
           Collection
         </p>
@@ -99,12 +99,12 @@ const ProductListing = ({
               {Array.from({ length: 8 }).map((_, index) => (
                 <div
                   key={index}
-                  className="aspect-[3/4] animate-pulse rounded-sm bg-white ring-1 ring-black/5"
+                  className="aspect-[3/4] animate-pulse rounded-lg bg-white ring-1 ring-black/5"
                 />
               ))}
             </div>
           ) : error ? (
-            <div className="mt-6 rounded-sm bg-white p-12 text-center ring-1 ring-black/5">
+            <div className="ui-panel mt-6 rounded-lg p-12 text-center">
               <p className="font-semibold text-red-600">
                 Could not load products.
               </p>
@@ -116,7 +116,7 @@ const ProductListing = ({
               </button>
             </div>
           ) : data?.data?.length === 0 ? (
-            <div className="mt-6 rounded-sm bg-white p-12 text-center text-zinc-500 ring-1 ring-black/5">
+            <div className="ui-panel mt-6 rounded-lg p-12 text-center text-zinc-500">
               No products match your filters.
             </div>
           ) : (

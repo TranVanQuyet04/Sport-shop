@@ -71,7 +71,7 @@ export default function AdminDashboard() {
   }, [user?.roleName]);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[#eef0f3] text-zinc-950">
+    <div className="flex h-screen w-full overflow-hidden bg-[#eef2f3] text-zinc-950">
       <TooltipProvider>
         {/* =========================================
            CỘT A: PRIMARY SIDEBAR (Icon Navigation)
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
         {/* =========================================
            CỘT C: MAIN AREA (Workspace)
            ========================================= */}
-        <main className="flex min-w-0 flex-1 flex-col bg-[#f4f5f7]">
+        <main className="flex min-w-0 flex-1 flex-col bg-[linear-gradient(180deg,#f8faf9_0%,#eef2f3_100%)]">
           {/* Header Cột C */}
           <AdminHeader
             activePrimary={activePrimary}
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
           />
 
           {/* Nội dung chính */}
-          <div className="flex flex-1 flex-col overflow-y-auto p-6">
+          <div className="soft-scrollbar flex flex-1 flex-col overflow-y-auto p-4 sm:p-6">
             {/* --- CASE: SYSTEM DASHBOARD --- */}
             {activePrimary === "system" && (
               <AdminDashboardContent selectedMenu={selectedMenu} />

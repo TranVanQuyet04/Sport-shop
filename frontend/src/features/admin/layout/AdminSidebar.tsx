@@ -27,7 +27,7 @@ export function AdminSidebar({
   const isShipper = roleName === "Người giao hàng";
   return (
     <aside className="z-20 flex w-[76px] flex-none flex-col items-center gap-6 bg-zinc-950 py-6 text-slate-50 shadow-2xl shadow-black/20">
-      <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-white text-lg font-black text-zinc-950 shadow-lg">
+      <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-white text-lg font-black text-zinc-950 shadow-lg">
         S
       </div>
 
@@ -39,9 +39,9 @@ export function AdminSidebar({
           <Button
             variant={activePrimary === "system" ? "secondary" : "ghost"}
             size="icon"
-            className={`h-12 w-12 rounded-sm transition-all ${
+            className={`h-12 w-12 rounded-lg transition-all ${
               activePrimary === "system"
-                ? "bg-white text-zinc-950 hover:bg-white"
+                ? "bg-white text-zinc-950 shadow-lg shadow-black/20 hover:bg-white"
                 : "text-slate-400 hover:bg-white/10 hover:text-white"
             }`}
             onClick={() => setActivePrimary("system")}
@@ -60,9 +60,9 @@ export function AdminSidebar({
               <Button
                 variant={activePrimary === "chat" ? "secondary" : "ghost"}
                 size="icon"
-                className={`h-12 w-12 rounded-sm transition-all ${
+                className={`h-12 w-12 rounded-lg transition-all ${
                   activePrimary === "chat"
-                    ? "bg-white text-zinc-950 hover:bg-white"
+                    ? "bg-white text-zinc-950 shadow-lg shadow-black/20 hover:bg-white"
                     : "text-slate-400 hover:bg-white/10 hover:text-white"
                 }`}
                 onClick={() => setActivePrimary("chat")}
@@ -88,7 +88,7 @@ export function AdminSidebar({
         <Button
           variant="ghost"
           size="icon"
-          className="h-12 w-12 rounded-sm text-slate-400 hover:bg-white/10 hover:text-red-400"
+          className="h-12 w-12 rounded-lg text-slate-400 hover:bg-white/10 hover:text-red-400"
           onClick={onLogout}
         >
           <LogOut className="w-6 h-6" />

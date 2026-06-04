@@ -5,9 +5,9 @@ import Container from "@/components/ui/Container";
 
 const HomePage = () => {
   return (
-    <div className="bg-[#f7f7f5]">
+    <div>
       <HeroBanner />
-      <Container className="space-y-16 py-14">
+      <Container className="space-y-16 py-14 sm:py-16">
         <FavoriteBrands />
         <ProductsByBrand />
       </Container>
