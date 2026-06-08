@@ -30,7 +30,7 @@ class AuthBrandHeader extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
-      actions: [if (trailing != null) trailing!],
+      actions: [?trailing],
     );
   }
 }

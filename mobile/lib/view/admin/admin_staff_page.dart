@@ -17,19 +17,19 @@ class AdminStaffPage extends StatelessWidget {
       appBar: const AdminAppBar(),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
-        children: const [
+        children: [
           _StaffHeader(),
-          SizedBox(height: AppSpacing.xl),
-          TextField(decoration: InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Tìm kiếm tên, email hoặc mã nhân viên...')),
-          SizedBox(height: AppSpacing.lg),
-          Row(children: [
+          const SizedBox(height: AppSpacing.xl),
+          const TextField(decoration: InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Tìm kiếm tên, email hoặc mã nhân viên...')),
+          const SizedBox(height: AppSpacing.lg),
+          const Row(children: [
             _RoleChip(label: 'Bộ lọc', active: true, icon: Icons.filter_list),
             SizedBox(width: AppSpacing.md),
             _RoleChip(label: 'SHOP_STAFF'),
             SizedBox(width: AppSpacing.md),
             _RoleChip(label: 'DELIVERY_STAFF'),
           ]),
-          SizedBox(height: AppSpacing.xl),
+          const SizedBox(height: AppSpacing.xl),
           Row(
             children: [
               Expanded(child: OutlinedButton.icon(onPressed: () => context.go(AppRoutes.adminShiftPlanning), icon: const Icon(Icons.calendar_month), label: const Text('Lịch trực'))),
@@ -47,11 +47,11 @@ class AdminStaffPage extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xl),
           _StaffCard(name: 'Lê Minh Đức', role: 'SHOP_STAFF', active: true, accent: AppColors.secondary, onTap: () => context.go('/admin/staff/AV-99283')),
-          SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.lg),
           _StaffCard(name: 'Nguyễn Thu Hà', role: 'DELIVERY_STAFF', active: true, accent: AppColors.primary, onTap: () => context.go('/admin/staff/AV-99284')),
-          SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.lg),
           _StaffCard(name: 'Trần Hoàng Nam', role: 'DELIVERY_STAFF', active: false, accent: AppColors.textSecondary, onTap: () => context.go('/admin/staff/AV-99285')),
-          SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.lg),
           _StaffCard(name: 'Phạm Minh Anh', role: 'SHOP_STAFF', active: true, accent: AppColors.secondary, onTap: () => context.go('/admin/staff/AV-99286')),
         ],
       ),

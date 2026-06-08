@@ -89,7 +89,10 @@ class _AddressCard extends StatelessWidget {
                 TextButton(onPressed: () {}, child: const Text('Sửa')),
                 TextButton(onPressed: () {}, child: const Text('Xóa')),
                 const Spacer(),
-                Radio<bool>(value: true, groupValue: isDefault, onChanged: (_) {}),
+                Icon(
+                  isDefault ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                  color: isDefault ? AppColors.secondary : AppColors.textSecondary,
+                ),
               ],
             ),
           ],

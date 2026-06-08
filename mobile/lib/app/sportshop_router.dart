@@ -41,6 +41,11 @@ import '../view/customer/product_gallery_page.dart';
 import '../view/customer/profile_page.dart';
 import '../view/customer/search_page.dart';
 import '../view/customer/tracking_page.dart';
+import '../view/delivery_staff/assigned_orders_page.dart';
+import '../view/delivery_staff/delivery_home_page.dart';
+import '../view/delivery_staff/delivery_status_update_page.dart';
+import '../view/delivery_staff/failed_delivery_report_page.dart';
+import '../view/delivery_staff/shipper_account_page.dart';
 import '../view/public/not_found_page.dart';
 import '../view/public/unauthorized_page.dart';
 import '../view/splash/splash_page.dart';
@@ -99,6 +104,11 @@ abstract final class AppRoutes {
   static const shopStaffPacking = '/shop-staff/orders/:id/packing';
   static const shopStaffHandover = '/shop-staff/handover';
   static const shopStaffOrderTimeline = '/shop-staff/orders/:id/timeline';
+  static const deliveryHome = '/delivery-staff/home';
+  static const deliveryAssignedOrders = '/delivery-staff/orders';
+  static const deliveryStatusUpdate = '/delivery-staff/orders/:id/status';
+  static const deliveryFailedReport = '/delivery-staff/orders/:id/failed-report';
+  static const deliveryAccount = '/delivery-staff/account';
 }
 
 final sportshopRouter = GoRouter(
@@ -302,6 +312,11 @@ final sportshopRouter = GoRouter(
     GoRoute(path: AppRoutes.shopStaffPacking, name: 'shopStaffPacking', builder: (context, state) => ShopStaffPackingPage(orderId: state.pathParameters['id'] ?? '')),
     GoRoute(path: AppRoutes.shopStaffHandover, name: 'shopStaffHandover', builder: (context, state) => const ShopStaffHandoverPage()),
     GoRoute(path: AppRoutes.shopStaffOrderTimeline, name: 'shopStaffOrderTimeline', builder: (context, state) => ShopStaffOrderTimelinePage(orderId: state.pathParameters['id'] ?? '')),
+    GoRoute(path: AppRoutes.deliveryHome, name: 'deliveryHome', builder: (context, state) => const DeliveryHomePage()),
+    GoRoute(path: AppRoutes.deliveryAssignedOrders, name: 'deliveryAssignedOrders', builder: (context, state) => const AssignedOrdersPage()),
+    GoRoute(path: AppRoutes.deliveryStatusUpdate, name: 'deliveryStatusUpdate', builder: (context, state) => DeliveryStatusUpdatePage(orderId: state.pathParameters['id'] ?? '')),
+    GoRoute(path: AppRoutes.deliveryFailedReport, name: 'deliveryFailedReport', builder: (context, state) => FailedDeliveryReportPage(orderId: state.pathParameters['id'] ?? '')),
+    GoRoute(path: AppRoutes.deliveryAccount, name: 'deliveryAccount', builder: (context, state) => const ShipperAccountPage()),
   ],
   errorBuilder: (context, state) => const NotFoundPage(),
 );

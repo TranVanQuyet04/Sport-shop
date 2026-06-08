@@ -52,7 +52,7 @@ class AdminStaffDetailPage extends StatelessWidget {
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 Text('Trạng thái làm việc', style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900)),
                 const SizedBox(width: AppSpacing.md),
-                Switch(value: true, onChanged: (_) {}, activeColor: AppColors.secondary),
+                Switch(value: true, onChanged: (_) {}, activeThumbColor: AppColors.secondary),
               ]),
             ),
           ),

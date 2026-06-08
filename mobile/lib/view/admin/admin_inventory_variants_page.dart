@@ -16,29 +16,29 @@ class AdminInventoryVariantsPage extends StatelessWidget {
       appBar: AppBar(title: const Text('Admin Dashboard'), actions: const [IconButton(onPressed: null, icon: Icon(Icons.notifications_none)), IconButton(onPressed: null, icon: Icon(Icons.search))]),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
-        children: const [
+        children: [
           _Title(),
-          SizedBox(height: AppSpacing.xl),
-          Row(children: [
+          const SizedBox(height: AppSpacing.xl),
+          const Row(children: [
             Expanded(child: _StockSummary(title: 'CẢNH BÁO', value: '04', subtitle: 'Biến thể sắp hết hàng', alert: true)),
             SizedBox(width: AppSpacing.lg),
             Expanded(child: _StockSummary(title: 'TỔNG TỒN', value: '1,240', subtitle: 'Sản phẩm hiện có', dark: true)),
           ]),
-          SizedBox(height: AppSpacing.xl),
-          Wrap(spacing: AppSpacing.md, runSpacing: AppSpacing.md, children: [
+          const SizedBox(height: AppSpacing.xl),
+          const Wrap(spacing: AppSpacing.md, runSpacing: AppSpacing.md, children: [
             _InventoryChip(label: 'Tất cả', active: true),
             _InventoryChip(label: 'Size 40-42'),
             _InventoryChip(label: 'Màu Đen'),
             _InventoryChip(label: 'Màu Đỏ'),
           ]),
-          SizedBox(height: AppSpacing.xl),
-          _VariantCard(sku: 'PRO-X1-RED-42', detail: 'Màu Đỏ • Size 42', count: 3, alert: true, icon: Icons.directions_run),
-          SizedBox(height: AppSpacing.lg),
-          _VariantCard(sku: 'PRO-X1-BLK-40', detail: 'Màu Đen • Size 40', count: 48, icon: Icons.directions_run),
-          SizedBox(height: AppSpacing.lg),
-          _VariantCard(sku: 'PRO-X1-WHT-41', detail: 'Màu Trắng • Size 41', count: 125, icon: Icons.directions_run),
-          SizedBox(height: AppSpacing.xl),
-          OutlinedButton.icon(onPressed: null, icon: Icon(Icons.add_circle_outline), label: Text('Thêm biến thể mới')),
+          const SizedBox(height: AppSpacing.xl),
+          const _VariantCard(sku: 'PRO-X1-RED-42', detail: 'Màu Đỏ • Size 42', count: 3, alert: true, icon: Icons.directions_run),
+          const SizedBox(height: AppSpacing.lg),
+          const _VariantCard(sku: 'PRO-X1-BLK-40', detail: 'Màu Đen • Size 40', count: 48, icon: Icons.directions_run),
+          const SizedBox(height: AppSpacing.lg),
+          const _VariantCard(sku: 'PRO-X1-WHT-41', detail: 'Màu Trắng • Size 41', count: 125, icon: Icons.directions_run),
+          const SizedBox(height: AppSpacing.xl),
+          OutlinedButton.icon(onPressed: null, icon: const Icon(Icons.add_circle_outline), label: const Text('Thêm biến thể mới')),
         ],
       ),
       floatingActionButton: FloatingActionButton(backgroundColor: AppColors.secondary, foregroundColor: Colors.white, onPressed: () {}, child: const Icon(Icons.save_outlined)),

@@ -137,9 +137,11 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
           ),
           const SizedBox(height: AppSpacing.xl),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: -AppSpacing.lg),
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xl),
-            color: AppColors.surfaceMuted,
+            decoration: BoxDecoration(
+              color: AppColors.surfaceMuted,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

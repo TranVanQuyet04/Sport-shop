@@ -18,10 +18,10 @@ class AdminProductsPage extends StatelessWidget {
       appBar: const AdminAppBar(),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
-        children: const [
-          TextField(decoration: InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Tìm kiếm sản phẩm, SKU...')),
-          SizedBox(height: AppSpacing.lg),
-          Wrap(
+        children: [
+          const TextField(decoration: InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Tìm kiếm sản phẩm, SKU...')),
+          const SizedBox(height: AppSpacing.lg),
+          const Wrap(
             spacing: AppSpacing.md,
             runSpacing: AppSpacing.md,
             children: [
@@ -31,18 +31,18 @@ class AdminProductsPage extends StatelessWidget {
               _FilterButton(icon: Icons.tune, label: 'Lọc nâng cao', active: true),
             ],
           ),
-          SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.md),
           Row(children: [
-            Expanded(child: OutlinedButton.icon(onPressed: null, icon: Icon(Icons.category), label: Text('Danh mục'))),
-            SizedBox(width: AppSpacing.md),
-            Expanded(child: OutlinedButton.icon(onPressed: null, icon: Icon(Icons.verified), label: Text('Thương hiệu'))),
+            Expanded(child: OutlinedButton.icon(onPressed: null, icon: const Icon(Icons.category), label: const Text('Danh mục'))),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(child: OutlinedButton.icon(onPressed: null, icon: const Icon(Icons.verified), label: const Text('Thương hiệu'))),
           ]),
-          SizedBox(height: AppSpacing.xl),
-          _ProductAdminCard(name: 'Velocity Pro Runner X', sku: '#SKU-2024-A1', category: 'Giày chạy bộ chuyên nghiệp', price: 3250000, stock: '48 đôi', badge: 'Bán chạy', icon: Icons.directions_run),
-          SizedBox(height: AppSpacing.lg),
-          _ProductAdminCard(name: 'Apex Smart Performance', sku: '#SKU-9921-W2', category: 'Đồng hồ thể thao thông minh', price: 5800000, stock: '0 cái', badge: 'Hết hàng', icon: Icons.watch_outlined),
-          SizedBox(height: AppSpacing.lg),
-          _ProductAdminCard(name: 'Compression Gear L1', sku: '#SKU-7732-S9', category: 'Áo nén tập luyện cường độ cao', price: 850000, stock: '125 chiếc', icon: Icons.checkroom),
+          const SizedBox(height: AppSpacing.xl),
+          const _ProductAdminCard(name: 'Velocity Pro Runner X', sku: '#SKU-2024-A1', category: 'Giày chạy bộ chuyên nghiệp', price: 3250000, stock: '48 đôi', badge: 'Bán chạy', icon: Icons.directions_run),
+          const SizedBox(height: AppSpacing.lg),
+          const _ProductAdminCard(name: 'Apex Smart Performance', sku: '#SKU-9921-W2', category: 'Đồng hồ thể thao thông minh', price: 5800000, stock: '0 cái', badge: 'Hết hàng', icon: Icons.watch_outlined),
+          const SizedBox(height: AppSpacing.lg),
+          const _ProductAdminCard(name: 'Compression Gear L1', sku: '#SKU-7732-S9', category: 'Áo nén tập luyện cường độ cao', price: 850000, stock: '125 chiếc', icon: Icons.checkroom),
         ],
       ),
       floatingActionButton: FloatingActionButton(
