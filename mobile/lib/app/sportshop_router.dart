@@ -44,6 +44,11 @@ import '../view/customer/tracking_page.dart';
 import '../view/public/not_found_page.dart';
 import '../view/public/unauthorized_page.dart';
 import '../view/splash/splash_page.dart';
+import '../view/shop_staff/shop_staff_confirm_orders_page.dart';
+import '../view/shop_staff/shop_staff_handover_page.dart';
+import '../view/shop_staff/shop_staff_home_page.dart';
+import '../view/shop_staff/shop_staff_order_timeline_page.dart';
+import '../view/shop_staff/shop_staff_packing_page.dart';
 
 abstract final class AppRoutes {
   static const splash = '/';
@@ -89,6 +94,11 @@ abstract final class AppRoutes {
   static const adminUsers = '/admin/users';
   static const adminRoles = '/admin/roles';
   static const adminSettings = '/admin/settings';
+  static const shopStaffHome = '/shop-staff/home';
+  static const shopStaffConfirmOrders = '/shop-staff/orders/confirm';
+  static const shopStaffPacking = '/shop-staff/orders/:id/packing';
+  static const shopStaffHandover = '/shop-staff/handover';
+  static const shopStaffOrderTimeline = '/shop-staff/orders/:id/timeline';
 }
 
 final sportshopRouter = GoRouter(
@@ -287,6 +297,11 @@ final sportshopRouter = GoRouter(
     GoRoute(path: AppRoutes.adminUsers, name: 'adminUsers', builder: (context, state) => const AdminUserManagementPage()),
     GoRoute(path: AppRoutes.adminRoles, name: 'adminRoles', builder: (context, state) => const AdminRoleManagementPage()),
     GoRoute(path: AppRoutes.adminSettings, name: 'adminSettings', builder: (context, state) => const AdminSystemSettingsPage()),
+    GoRoute(path: AppRoutes.shopStaffHome, name: 'shopStaffHome', builder: (context, state) => const ShopStaffHomePage()),
+    GoRoute(path: AppRoutes.shopStaffConfirmOrders, name: 'shopStaffConfirmOrders', builder: (context, state) => const ShopStaffConfirmOrdersPage()),
+    GoRoute(path: AppRoutes.shopStaffPacking, name: 'shopStaffPacking', builder: (context, state) => ShopStaffPackingPage(orderId: state.pathParameters['id'] ?? '')),
+    GoRoute(path: AppRoutes.shopStaffHandover, name: 'shopStaffHandover', builder: (context, state) => const ShopStaffHandoverPage()),
+    GoRoute(path: AppRoutes.shopStaffOrderTimeline, name: 'shopStaffOrderTimeline', builder: (context, state) => ShopStaffOrderTimelinePage(orderId: state.pathParameters['id'] ?? '')),
   ],
   errorBuilder: (context, state) => const NotFoundPage(),
 );
