@@ -113,6 +113,13 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text('Quên mật khẩu?'),
                 ),
               ),
+              Center(
+                child: TextButton.icon(
+                  onPressed: () => context.go(AppRoutes.guestChat),
+                  icon: const Icon(Icons.support_agent_outlined),
+                  label: const Text('Chat hỗ trợ khách vãng lai'),
+                ),
+              ),
             ],
           ),
         ),

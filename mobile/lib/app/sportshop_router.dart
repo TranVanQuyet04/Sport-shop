@@ -46,6 +46,7 @@ import '../view/delivery_staff/delivery_home_page.dart';
 import '../view/delivery_staff/delivery_status_update_page.dart';
 import '../view/delivery_staff/failed_delivery_report_page.dart';
 import '../view/delivery_staff/shipper_account_page.dart';
+import '../view/public/guest_chat_page.dart';
 import '../view/public/not_found_page.dart';
 import '../view/public/unauthorized_page.dart';
 import '../view/splash/splash_page.dart';
@@ -61,6 +62,7 @@ abstract final class AppRoutes {
   static const register = '/register';
   static const forgotPassword = '/forgot-password';
   static const resetPassword = '/reset-password';
+  static const guestChat = '/guest-chat';
   static const unauthorized = '/unauthorized';
   static const onboarding = '/onboarding';
   static const customerHome = '/customer/home';
@@ -138,6 +140,11 @@ final sportshopRouter = GoRouter(
       path: AppRoutes.resetPassword,
       name: 'resetPassword',
       builder: (context, state) => const ResetPasswordPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.guestChat,
+      name: 'guestChat',
+      builder: (context, state) => const GuestChatPage(),
     ),
     GoRoute(
       path: AppRoutes.unauthorized,
