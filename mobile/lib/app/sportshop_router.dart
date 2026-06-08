@@ -50,6 +50,7 @@ import '../view/public/guest_chat_page.dart';
 import '../view/public/not_found_page.dart';
 import '../view/public/shared_form_demo_page.dart';
 import '../view/public/shared_states_demo_page.dart';
+import '../view/public/status_badges_demo_page.dart';
 import '../view/public/unauthorized_page.dart';
 import '../view/splash/splash_page.dart';
 import '../view/shop_staff/shop_staff_confirm_orders_page.dart';
@@ -67,6 +68,7 @@ abstract final class AppRoutes {
   static const guestChat = '/guest-chat';
   static const sharedStatesDemo = '/demo/states';
   static const sharedFormDemo = '/demo/form';
+  static const statusBadgesDemo = '/demo/status-badges';
   static const unauthorized = '/unauthorized';
   static const onboarding = '/onboarding';
   static const customerHome = '/customer/home';
@@ -159,6 +161,11 @@ final sportshopRouter = GoRouter(
       path: AppRoutes.sharedFormDemo,
       name: 'sharedFormDemo',
       builder: (context, state) => const SharedFormDemoPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.statusBadgesDemo,
+      name: 'statusBadgesDemo',
+      builder: (context, state) => const StatusBadgesDemoPage(),
     ),
     GoRoute(
       path: AppRoutes.unauthorized,
