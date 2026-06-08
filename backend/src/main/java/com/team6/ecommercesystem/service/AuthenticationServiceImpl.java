@@ -112,6 +112,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                     .expiredTime(LocalDateTime.ofInstant(refreshPayload.getExpiredTime().toInstant(), ZoneId.systemDefault()))
                     .revoked(false)
                     .build();
+            validRefreshTokenRepository.save(refreshToken);
 
             return LoginResponse.builder()
                     .accessToken(accessPayload.getToken())

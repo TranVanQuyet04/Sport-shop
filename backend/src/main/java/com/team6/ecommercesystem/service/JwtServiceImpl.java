@@ -32,6 +32,9 @@ public class JwtServiceImpl implements JwtService {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
+    @Value("${jwt.blacklist.enabled:true}")
+    private boolean blacklistEnabled;
+
     private final BlacklistedAccessTokenRepository blacklistedAccessTokenRepository;
 
     @Override
@@ -113,7 +116,7 @@ public class JwtServiceImpl implements JwtService {
                 return false;
             }
 
-            if (checkBlacklist) {
+            if (checkBlacklist && blacklistEnabled) {
                 String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
                 if (jwtId == null) {
                     log.warn("Token does not contain JWT ID");

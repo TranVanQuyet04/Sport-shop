@@ -6,11 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Mono;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class AIProductService {
-    private final WebClient.Builder webClientBuilder;
+    private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
     @Value("${gemini.api.key}")
@@ -77,20 +75,7 @@ public class AIProductService {
                 .toUriString();
 
         try {
-            Map<?, ?> response = webClientBuilder.build()
-                    .post()
-                    .uri(url)
-                    .bodyValue(requestBody)
-                    .retrieve()
-                    .onStatus(status -> status.isError(), clientResponse ->
-                            clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
-                                log.error("AI Classification API error ({}): {}", clientResponse.statusCode(), errorBody);
-                                return Mono.error(new RuntimeException("Gemini API error during classification"));
-                            })
-                    )
-                    .bodyToMono(Map.class)
-                    .timeout(Duration.ofSeconds(30))
-                    .block();
+            Map<?, ?> response = restTemplate.postForObject(url, requestBody, Map.class);
 
             return extractTextFromResponse(response);
 

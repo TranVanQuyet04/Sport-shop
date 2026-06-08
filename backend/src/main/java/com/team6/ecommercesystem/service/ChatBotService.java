@@ -7,9 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ChatBotService {
     private final ProductRepository productRepository;
-    private final WebClient.Builder webClientBuilder;
+    private final RestTemplate restTemplate;
 
     @Value("${gemini.api.key}")
     private String apiKey;
@@ -94,19 +92,7 @@ public class ChatBotService {
                 .toUriString();
 
         try {
-            Map<?, ?> response = webClientBuilder.build()
-                    .post()
-                    .uri(url)
-                    .bodyValue(requestBody)
-                    .retrieve()
-                    .onStatus(status -> status.isError(), clientResponse ->
-                            clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
-                                log.error("Gemini API error ({}): {}", clientResponse.statusCode(), errorBody);
-                                return Mono.error(new RuntimeException("Gemini API returned an error"));
-                            })
-                    )
-                    .bodyToMono(Map.class)
-                    .block();
+            Map<?, ?> response = restTemplate.postForObject(url, requestBody, Map.class);
 
             return extractTextFromResponse(response);
 

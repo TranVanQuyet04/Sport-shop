@@ -21,6 +21,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class JwtDecoderConfiguration implements JwtDecoder {
     private static final String JWT_ALGORITHM = "HS512";
+    private static final String JCA_HMAC_ALGORITHM = "HmacSHA512";
     private static final int MINIMUM_KEY_LENGTH_BYTES = 64;
 
     @Value("${jwt.secret-key}")
@@ -35,7 +36,7 @@ public class JwtDecoderConfiguration implements JwtDecoder {
         try {
             SecretKey key = new SecretKeySpec(
                     secretKey.getBytes(StandardCharsets.UTF_8),
-                    JWT_ALGORITHM
+                    JCA_HMAC_ALGORITHM
             );
 
             // Tạo validator cho phép lệch 60 giây (quan trọng nhất)
