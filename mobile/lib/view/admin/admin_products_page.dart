@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/constants/app_spacing.dart';
+import '../../app/sportshop_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import 'widgets/admin_app_bar.dart';
@@ -40,7 +42,7 @@ class AdminProductsPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.secondary,
         foregroundColor: Colors.white,
-        onPressed: () {},
+        onPressed: () => context.go(AppRoutes.adminAddProduct),
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: const AdminBottomNav(selectedIndex: 1),
@@ -100,7 +102,11 @@ class _ProductAdminCard extends StatelessWidget {
               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [Text('TỒN KHO', style: AppTextStyles.caption), Text(stock, style: AppTextStyles.subtitle.copyWith(color: stock.startsWith('0') ? AppColors.secondary : AppColors.primary))]),
             ]),
             const SizedBox(height: AppSpacing.lg),
-            FilledButton.icon(style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48), backgroundColor: AppColors.primary), onPressed: () {}, icon: const Icon(Icons.edit), label: const Text('Chỉnh sửa')),
+            Row(children: [
+              Expanded(child: FilledButton.icon(style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48), backgroundColor: AppColors.primary), onPressed: () {}, icon: const Icon(Icons.edit), label: const Text('Chỉnh sửa'))),
+              const SizedBox(width: AppSpacing.md),
+              IconButton(onPressed: () => context.go('/admin/products/${sku.replaceAll('#', '')}/variants'), icon: const Icon(Icons.inventory_2_outlined)),
+            ]),
           ]),
         ),
       ]),

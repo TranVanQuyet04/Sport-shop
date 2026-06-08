@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../app/sportshop_router.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
@@ -28,13 +30,29 @@ class AdminStaffPage extends StatelessWidget {
             _RoleChip(label: 'DELIVERY_STAFF'),
           ]),
           SizedBox(height: AppSpacing.xl),
-          _StaffCard(name: 'Lê Minh Đức', role: 'SHOP_STAFF', active: true, accent: AppColors.secondary),
+          Row(
+            children: [
+              Expanded(child: OutlinedButton.icon(onPressed: () => context.go(AppRoutes.adminShiftPlanning), icon: const Icon(Icons.calendar_month), label: const Text('Lịch trực'))),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(child: OutlinedButton.icon(onPressed: () => context.go(AppRoutes.adminStaffPerformance), icon: const Icon(Icons.query_stats), label: const Text('Hiệu suất'))),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            children: [
+              Expanded(child: OutlinedButton.icon(onPressed: () => context.go(AppRoutes.adminOrderAssignment), icon: const Icon(Icons.assignment_ind), label: const Text('Phân công'))),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(child: OutlinedButton.icon(onPressed: () => context.go(AppRoutes.adminLeaveManagement), icon: const Icon(Icons.event_busy), label: const Text('Nghỉ phép'))),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          _StaffCard(name: 'Lê Minh Đức', role: 'SHOP_STAFF', active: true, accent: AppColors.secondary, onTap: () => context.go('/admin/staff/AV-99283')),
           SizedBox(height: AppSpacing.lg),
-          _StaffCard(name: 'Nguyễn Thu Hà', role: 'DELIVERY_STAFF', active: true, accent: AppColors.primary),
+          _StaffCard(name: 'Nguyễn Thu Hà', role: 'DELIVERY_STAFF', active: true, accent: AppColors.primary, onTap: () => context.go('/admin/staff/AV-99284')),
           SizedBox(height: AppSpacing.lg),
-          _StaffCard(name: 'Trần Hoàng Nam', role: 'DELIVERY_STAFF', active: false, accent: AppColors.textSecondary),
+          _StaffCard(name: 'Trần Hoàng Nam', role: 'DELIVERY_STAFF', active: false, accent: AppColors.textSecondary, onTap: () => context.go('/admin/staff/AV-99285')),
           SizedBox(height: AppSpacing.lg),
-          _StaffCard(name: 'Phạm Minh Anh', role: 'SHOP_STAFF', active: true, accent: AppColors.secondary),
+          _StaffCard(name: 'Phạm Minh Anh', role: 'SHOP_STAFF', active: true, accent: AppColors.secondary, onTap: () => context.go('/admin/staff/AV-99286')),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -84,18 +102,22 @@ class _RoleChip extends StatelessWidget {
 }
 
 class _StaffCard extends StatelessWidget {
-  const _StaffCard({required this.name, required this.role, required this.active, required this.accent});
+  const _StaffCard({required this.name, required this.role, required this.active, required this.accent, this.onTap});
 
   final String name;
   final String role;
   final bool active;
   final Color accent;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadius.xl)),
-      child: Padding(
+    return InkWell(
+      borderRadius: BorderRadius.circular(AppRadius.xl),
+      onTap: onTap,
+      child: DecoratedBox(
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadius.xl)),
+        child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Row(children: [
           CircleAvatar(radius: 48, backgroundColor: AppColors.surfaceMuted, foregroundColor: accent, child: const Icon(Icons.person, size: 44)),
@@ -112,6 +134,7 @@ class _StaffCard extends StatelessWidget {
           ])),
           IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
         ]),
+        ),
       ),
     );
   }

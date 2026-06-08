@@ -5,10 +5,17 @@ import '../view/auth/forgot_password_page.dart';
 import '../view/auth/register_page.dart';
 import '../view/auth/reset_password_page.dart';
 import '../view/admin/admin_dashboard_page.dart';
+import '../view/admin/admin_add_product_page.dart';
+import '../view/admin/admin_inventory_variants_page.dart';
+import '../view/admin/admin_leave_management_page.dart';
 import '../view/admin/admin_orders_page.dart';
+import '../view/admin/admin_order_assignment_page.dart';
 import '../view/admin/admin_products_page.dart';
 import '../view/admin/admin_revenue_page.dart';
+import '../view/admin/admin_shift_planning_page.dart';
 import '../view/admin/admin_staff_page.dart';
+import '../view/admin/admin_staff_detail_page.dart';
+import '../view/admin/admin_staff_performance_page.dart';
 import '../view/customer/add_address_page.dart';
 import '../view/customer/address_book_page.dart';
 import '../view/customer/cart_page.dart';
@@ -59,6 +66,13 @@ abstract final class AppRoutes {
   static const adminOrders = '/admin/orders';
   static const adminProducts = '/admin/products';
   static const adminStaff = '/admin/staff';
+  static const adminStaffDetail = '/admin/staff/:id';
+  static const adminShiftPlanning = '/admin/staff/shifts';
+  static const adminOrderAssignment = '/admin/staff/assign-orders';
+  static const adminLeaveManagement = '/admin/staff/leaves';
+  static const adminStaffPerformance = '/admin/staff/performance';
+  static const adminAddProduct = '/admin/products/new';
+  static const adminInventoryVariants = '/admin/products/:id/variants';
 }
 
 final sportshopRouter = GoRouter(
@@ -213,6 +227,41 @@ final sportshopRouter = GoRouter(
       path: AppRoutes.adminStaff,
       name: 'adminStaff',
       builder: (context, state) => const AdminStaffPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminStaffDetail,
+      name: 'adminStaffDetail',
+      builder: (context, state) => AdminStaffDetailPage(staffId: state.pathParameters['id'] ?? ''),
+    ),
+    GoRoute(
+      path: AppRoutes.adminShiftPlanning,
+      name: 'adminShiftPlanning',
+      builder: (context, state) => const AdminShiftPlanningPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminOrderAssignment,
+      name: 'adminOrderAssignment',
+      builder: (context, state) => const AdminOrderAssignmentPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminLeaveManagement,
+      name: 'adminLeaveManagement',
+      builder: (context, state) => const AdminLeaveManagementPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminStaffPerformance,
+      name: 'adminStaffPerformance',
+      builder: (context, state) => const AdminStaffPerformancePage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminAddProduct,
+      name: 'adminAddProduct',
+      builder: (context, state) => const AdminAddProductPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminInventoryVariants,
+      name: 'adminInventoryVariants',
+      builder: (context, state) => AdminInventoryVariantsPage(productId: state.pathParameters['id'] ?? ''),
     ),
   ],
   errorBuilder: (context, state) => const NotFoundPage(),
