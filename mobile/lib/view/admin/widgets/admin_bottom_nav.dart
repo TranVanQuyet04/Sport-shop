@@ -37,9 +37,7 @@ class AdminBottomNav extends StatelessWidget {
             context.go(AppRoutes.adminStaff);
             return;
           case 4:
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Màn cài đặt Admin sẽ được hoàn thiện ở bước sau')),
-            );
+            context.go(AppRoutes.adminSettings);
             return;
         }
       },

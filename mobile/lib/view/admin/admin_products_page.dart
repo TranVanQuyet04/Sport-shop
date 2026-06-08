@@ -31,6 +31,12 @@ class AdminProductsPage extends StatelessWidget {
               _FilterButton(icon: Icons.tune, label: 'Lọc nâng cao', active: true),
             ],
           ),
+          SizedBox(height: AppSpacing.md),
+          Row(children: [
+            Expanded(child: OutlinedButton.icon(onPressed: null, icon: Icon(Icons.category), label: Text('Danh mục'))),
+            SizedBox(width: AppSpacing.md),
+            Expanded(child: OutlinedButton.icon(onPressed: null, icon: Icon(Icons.verified), label: Text('Thương hiệu'))),
+          ]),
           SizedBox(height: AppSpacing.xl),
           _ProductAdminCard(name: 'Velocity Pro Runner X', sku: '#SKU-2024-A1', category: 'Giày chạy bộ chuyên nghiệp', price: 3250000, stock: '48 đôi', badge: 'Bán chạy', icon: Icons.directions_run),
           SizedBox(height: AppSpacing.lg),

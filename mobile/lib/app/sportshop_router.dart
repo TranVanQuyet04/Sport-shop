@@ -6,6 +6,11 @@ import '../view/auth/register_page.dart';
 import '../view/auth/reset_password_page.dart';
 import '../view/admin/admin_dashboard_page.dart';
 import '../view/admin/admin_add_product_page.dart';
+import '../view/admin/admin_brand_management_page.dart';
+import '../view/admin/admin_category_management_page.dart';
+import '../view/admin/admin_chat_detail_page.dart';
+import '../view/admin/admin_chat_rooms_page.dart';
+import '../view/admin/admin_delivery_monitoring_page.dart';
 import '../view/admin/admin_inventory_variants_page.dart';
 import '../view/admin/admin_leave_management_page.dart';
 import '../view/admin/admin_orders_page.dart';
@@ -16,6 +21,9 @@ import '../view/admin/admin_shift_planning_page.dart';
 import '../view/admin/admin_staff_page.dart';
 import '../view/admin/admin_staff_detail_page.dart';
 import '../view/admin/admin_staff_performance_page.dart';
+import '../view/admin/admin_role_management_page.dart';
+import '../view/admin/admin_system_settings_page.dart';
+import '../view/admin/admin_user_management_page.dart';
 import '../view/customer/add_address_page.dart';
 import '../view/customer/address_book_page.dart';
 import '../view/customer/cart_page.dart';
@@ -73,6 +81,14 @@ abstract final class AppRoutes {
   static const adminStaffPerformance = '/admin/staff/performance';
   static const adminAddProduct = '/admin/products/new';
   static const adminInventoryVariants = '/admin/products/:id/variants';
+  static const adminCategories = '/admin/categories';
+  static const adminBrands = '/admin/brands';
+  static const adminDeliveryMonitoring = '/admin/deliveries';
+  static const adminChatRooms = '/admin/chats';
+  static const adminChatDetail = '/admin/chats/:id';
+  static const adminUsers = '/admin/users';
+  static const adminRoles = '/admin/roles';
+  static const adminSettings = '/admin/settings';
 }
 
 final sportshopRouter = GoRouter(
@@ -263,6 +279,14 @@ final sportshopRouter = GoRouter(
       name: 'adminInventoryVariants',
       builder: (context, state) => AdminInventoryVariantsPage(productId: state.pathParameters['id'] ?? ''),
     ),
+    GoRoute(path: AppRoutes.adminCategories, name: 'adminCategories', builder: (context, state) => const AdminCategoryManagementPage()),
+    GoRoute(path: AppRoutes.adminBrands, name: 'adminBrands', builder: (context, state) => const AdminBrandManagementPage()),
+    GoRoute(path: AppRoutes.adminDeliveryMonitoring, name: 'adminDeliveryMonitoring', builder: (context, state) => const AdminDeliveryMonitoringPage()),
+    GoRoute(path: AppRoutes.adminChatRooms, name: 'adminChatRooms', builder: (context, state) => const AdminChatRoomsPage()),
+    GoRoute(path: AppRoutes.adminChatDetail, name: 'adminChatDetail', builder: (context, state) => AdminChatDetailPage(chatId: state.pathParameters['id'] ?? '')),
+    GoRoute(path: AppRoutes.adminUsers, name: 'adminUsers', builder: (context, state) => const AdminUserManagementPage()),
+    GoRoute(path: AppRoutes.adminRoles, name: 'adminRoles', builder: (context, state) => const AdminRoleManagementPage()),
+    GoRoute(path: AppRoutes.adminSettings, name: 'adminSettings', builder: (context, state) => const AdminSystemSettingsPage()),
   ],
   errorBuilder: (context, state) => const NotFoundPage(),
 );
