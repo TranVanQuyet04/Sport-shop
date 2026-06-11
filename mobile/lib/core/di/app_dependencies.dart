@@ -1,5 +1,7 @@
 import '../../repository/auth/auth_repository.dart';
 import '../../repository/auth/auth_repository_impl.dart';
+import '../../repository/chat/chat_repository.dart';
+import '../../repository/chat/chat_repository_impl.dart';
 import '../../repository/admin/admin_report_repository.dart';
 import '../../repository/admin/admin_report_repository_impl.dart';
 import '../../repository/admin/admin_catalog_repository.dart';
@@ -17,6 +19,7 @@ import '../../repository/customer/product_repository_impl.dart';
 import '../../repository/customer/profile_repository.dart';
 import '../../repository/customer/profile_repository_impl.dart';
 import '../../service/auth/auth_service.dart';
+import '../../service/chat/chat_service.dart';
 import '../../service/admin/admin_report_service.dart';
 import '../../service/admin/admin_catalog_service.dart';
 import '../../service/customer/address_service.dart';
@@ -42,6 +45,9 @@ class AppDependencies {
     tokenStorage: tokenStorage,
     apiClient: apiClient,
   );
+
+  late final ChatService chatService = ChatApiService(apiClient);
+  late final ChatRepository chatRepository = ChatRepositoryImpl(chatService);
 
   late final AdminReportService adminReportService = AdminReportApiService(
     apiClient,
