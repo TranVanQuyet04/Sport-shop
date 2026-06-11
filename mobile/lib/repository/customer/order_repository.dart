@@ -7,6 +7,8 @@ abstract interface class OrderRepository {
 
   Future<OrderModel?> getMyOrderById(String orderId);
 
+  Future<OrderModel?> getAdminOrderById(String orderId);
+
   Future<OrderModel> updateStatus({
     required String orderId,
     required String status,

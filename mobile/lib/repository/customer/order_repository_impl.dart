@@ -30,6 +30,18 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
+  Future<OrderModel?> getAdminOrderById(String orderId) async {
+    final normalized = orderId.replaceAll('#', '');
+    final orders = await getAllOrders();
+    for (final order in orders) {
+      if (order.id == normalized) {
+        return order;
+      }
+    }
+    return null;
+  }
+
+  @override
   Future<OrderModel> updateStatus({
     required String orderId,
     required String status,

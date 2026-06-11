@@ -4,10 +4,15 @@ import '../../model/customer/order_model.dart';
 import '../../repository/customer/order_repository.dart';
 
 class OrderDetailController extends ChangeNotifier {
-  OrderDetailController({required this.orderRepository, required this.orderId});
+  OrderDetailController({
+    required this.orderRepository,
+    required this.orderId,
+    this.useAdminOrders = false,
+  });
 
   final OrderRepository orderRepository;
   final String orderId;
+  final bool useAdminOrders;
 
   OrderModel? order;
   bool isLoading = false;
@@ -20,7 +25,9 @@ class OrderDetailController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      order = await orderRepository.getMyOrderById(orderId);
+      order = useAdminOrders
+          ? await orderRepository.getAdminOrderById(orderId)
+          : await orderRepository.getMyOrderById(orderId);
       if (order == null) {
         errorMessage = 'Không tìm thấy đơn hàng #$orderId.';
       }
