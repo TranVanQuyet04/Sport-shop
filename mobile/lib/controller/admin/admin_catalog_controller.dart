@@ -14,6 +14,7 @@ class AdminCatalogController extends ChangeNotifier {
   List<AdminBrandModel> brands = const [];
   List<AdminUserModel> users = const [];
   bool isLoading = false;
+  bool isSubmitting = false;
   String? errorMessage;
 
   Future<void> loadProducts() =>
@@ -29,6 +30,73 @@ class AdminCatalogController extends ChangeNotifier {
   Future<void> loadUsers() =>
       _load(() async => users = await adminCatalogRepository.getUsers());
 
+  Future<bool> saveCategory({
+    String? id,
+    required String name,
+    required String description,
+    String? parentId,
+  }) {
+    return _submit(() async {
+      if (id == null || id.isEmpty) {
+        await adminCatalogRepository.createCategory(
+          name: name,
+          description: description,
+          parentId: parentId,
+        );
+      } else {
+        await adminCatalogRepository.updateCategory(
+          id: id,
+          name: name,
+          description: description,
+          parentId: parentId,
+        );
+      }
+      categories = await adminCatalogRepository.getCategories();
+    });
+  }
+
+  Future<bool> deleteCategory(String id) {
+    return _submit(() async {
+      await adminCatalogRepository.deleteCategory(id);
+      categories = await adminCatalogRepository.getCategories();
+    });
+  }
+
+  Future<bool> saveBrand({
+    String? id,
+    required String name,
+    required String description,
+    required String logo,
+    required bool isActive,
+  }) {
+    return _submit(() async {
+      if (id == null || id.isEmpty) {
+        await adminCatalogRepository.createBrand(
+          name: name,
+          description: description,
+          logo: logo,
+          isActive: isActive,
+        );
+      } else {
+        await adminCatalogRepository.updateBrand(
+          id: id,
+          name: name,
+          description: description,
+          logo: logo,
+          isActive: isActive,
+        );
+      }
+      brands = await adminCatalogRepository.getBrands();
+    });
+  }
+
+  Future<bool> deleteBrand(String id) {
+    return _submit(() async {
+      await adminCatalogRepository.deleteBrand(id);
+      brands = await adminCatalogRepository.getBrands();
+    });
+  }
+
   Future<void> _load(Future<void> Function() action) async {
     isLoading = true;
     errorMessage = null;
@@ -40,6 +108,23 @@ class AdminCatalogController extends ChangeNotifier {
       errorMessage = error.toString();
     } finally {
       isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> _submit(Future<void> Function() action) async {
+    isSubmitting = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      await action();
+      return true;
+    } catch (error) {
+      errorMessage = error.toString();
+      return false;
+    } finally {
+      isSubmitting = false;
       notifyListeners();
     }
   }

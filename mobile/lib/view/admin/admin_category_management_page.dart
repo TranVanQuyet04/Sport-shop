@@ -45,6 +45,71 @@ class _AdminCategoryManagementPageState
     }
   }
 
+  Future<void> _openCategoryForm([AdminCategoryModel? category]) async {
+    final result = await showDialog<_CategoryFormResult>(
+      context: context,
+      builder: (_) => _CategoryFormDialog(category: category),
+    );
+    if (result == null) {
+      return;
+    }
+
+    final success = await _controller.saveCategory(
+      id: category?.id,
+      name: result.name,
+      description: result.description,
+      parentId: result.parentId,
+    );
+    if (!mounted) {
+      return;
+    }
+    _showSubmitResult(
+      success,
+      category == null ? 'Đã thêm danh mục.' : 'Đã cập nhật danh mục.',
+    );
+  }
+
+  Future<void> _deleteCategory(AdminCategoryModel category) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Xóa danh mục?'),
+        content: Text('Bạn có chắc muốn xóa "${category.name}" không?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) {
+      return;
+    }
+
+    final success = await _controller.deleteCategory(category.id);
+    if (!mounted) {
+      return;
+    }
+    _showSubmitResult(success, 'Đã xóa danh mục.');
+  }
+
+  void _showSubmitResult(bool success, String successMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          success
+              ? successMessage
+              : (_controller.errorMessage ?? 'Thao tác chưa thành công.'),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +117,9 @@ class _AdminCategoryManagementPageState
         title: const Text('Quản lý danh mục'),
         actions: [
           IconButton(
-            onPressed: _controller.loadCategories,
+            onPressed: _controller.isLoading
+                ? null
+                : _controller.loadCategories,
             icon: const Icon(Icons.refresh),
           ),
         ],
@@ -68,10 +135,14 @@ class _AdminCategoryManagementPageState
             Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
               child: AppButton(
-                label: 'Thêm danh mục mới',
+                label: _controller.isSubmitting
+                    ? 'Đang xử lý...'
+                    : 'Thêm danh mục mới',
                 variant: AppButtonVariant.secondary,
                 icon: Icons.add_circle_outline,
-                onPressed: null,
+                onPressed: _controller.isSubmitting
+                    ? null
+                    : () => _openCategoryForm(),
               ),
             ),
             const AdminBottomNav(selectedIndex: 1),
@@ -111,11 +182,122 @@ class _AdminCategoryManagementPageState
         if (index == 1) {
           return const _Title(
             title: 'Quản lý danh mục',
-            subtitle: 'Dữ liệu lấy từ API admin/categories',
+            subtitle: 'Thêm, sửa hoặc xóa danh mục sản phẩm.',
           );
         }
-        return _CategoryTile(category: _controller.categories[index - 2]);
+        final category = _controller.categories[index - 2];
+        return _CategoryTile(
+          category: category,
+          onEdit: () => _openCategoryForm(category),
+          onDelete: () => _deleteCategory(category),
+        );
       },
+    );
+  }
+}
+
+class _CategoryFormResult {
+  const _CategoryFormResult({
+    required this.name,
+    required this.description,
+    required this.parentId,
+  });
+
+  final String name;
+  final String description;
+  final String parentId;
+}
+
+class _CategoryFormDialog extends StatefulWidget {
+  const _CategoryFormDialog({this.category});
+
+  final AdminCategoryModel? category;
+
+  @override
+  State<_CategoryFormDialog> createState() => _CategoryFormDialogState();
+}
+
+class _CategoryFormDialogState extends State<_CategoryFormDialog> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late final TextEditingController _nameController = TextEditingController(
+    text: widget.category?.name ?? '',
+  );
+  late final TextEditingController _descriptionController =
+      TextEditingController(text: widget.category?.description ?? '');
+  late final TextEditingController _parentIdController = TextEditingController(
+    text: widget.category?.parentId ?? '',
+  );
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _parentIdController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    if (_formKey.currentState?.validate() != true) {
+      return;
+    }
+    Navigator.pop(
+      context,
+      _CategoryFormResult(
+        name: _nameController.text.trim(),
+        description: _descriptionController.text.trim(),
+        parentId: _parentIdController.text.trim(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isEditing = widget.category != null;
+    return AlertDialog(
+      title: Text(isEditing ? 'Sửa danh mục' : 'Thêm danh mục'),
+      content: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'Tên danh mục'),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Vui lòng nhập tên danh mục.';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: AppSpacing.md),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(labelText: 'Mô tả'),
+                minLines: 2,
+                maxLines: 4,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              TextFormField(
+                controller: _parentIdController,
+                decoration: const InputDecoration(
+                  labelText: 'Parent ID',
+                  hintText: 'Để trống nếu là danh mục gốc',
+                ),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Hủy'),
+        ),
+        FilledButton(onPressed: _submit, child: const Text('Lưu')),
+      ],
     );
   }
 }
@@ -143,9 +325,15 @@ class _Title extends StatelessWidget {
 }
 
 class _CategoryTile extends StatelessWidget {
-  const _CategoryTile({required this.category});
+  const _CategoryTile({
+    required this.category,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   final AdminCategoryModel category;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) => DecoratedBox(
@@ -161,7 +349,19 @@ class _CategoryTile extends StatelessWidget {
       subtitle: Text(
         category.description.isEmpty ? 'Không có mô tả' : category.description,
       ),
-      trailing: Text('#${category.id}'),
+      trailing: PopupMenuButton<String>(
+        onSelected: (value) {
+          if (value == 'edit') {
+            onEdit();
+          } else if (value == 'delete') {
+            onDelete();
+          }
+        },
+        itemBuilder: (context) => const [
+          PopupMenuItem(value: 'edit', child: Text('Sửa')),
+          PopupMenuItem(value: 'delete', child: Text('Xóa')),
+        ],
+      ),
     ),
   );
 }

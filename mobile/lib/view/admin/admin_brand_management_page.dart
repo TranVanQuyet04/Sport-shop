@@ -44,6 +44,72 @@ class _AdminBrandManagementPageState extends State<AdminBrandManagementPage> {
     }
   }
 
+  Future<void> _openBrandForm([AdminBrandModel? brand]) async {
+    final result = await showDialog<_BrandFormResult>(
+      context: context,
+      builder: (_) => _BrandFormDialog(brand: brand),
+    );
+    if (result == null) {
+      return;
+    }
+
+    final success = await _controller.saveBrand(
+      id: brand?.id,
+      name: result.name,
+      description: result.description,
+      logo: result.logo,
+      isActive: result.isActive,
+    );
+    if (!mounted) {
+      return;
+    }
+    _showSubmitResult(
+      success,
+      brand == null ? 'Đã thêm thương hiệu.' : 'Đã cập nhật thương hiệu.',
+    );
+  }
+
+  Future<void> _deleteBrand(AdminBrandModel brand) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Xóa thương hiệu?'),
+        content: Text('Bạn có chắc muốn xóa "${brand.name}" không?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) {
+      return;
+    }
+
+    final success = await _controller.deleteBrand(brand.id);
+    if (!mounted) {
+      return;
+    }
+    _showSubmitResult(success, 'Đã xóa thương hiệu.');
+  }
+
+  void _showSubmitResult(bool success, String successMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          success
+              ? successMessage
+              : (_controller.errorMessage ?? 'Thao tác chưa thành công.'),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,8 +121,14 @@ class _AdminBrandManagementPageState extends State<AdminBrandManagementPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.secondary,
         foregroundColor: Colors.white,
-        onPressed: () {},
-        child: const Icon(Icons.add),
+        onPressed: _controller.isSubmitting ? null : () => _openBrandForm(),
+        child: _controller.isSubmitting
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Icon(Icons.add),
       ),
       bottomNavigationBar: const AdminBottomNav(selectedIndex: 1),
     );
@@ -92,14 +164,136 @@ class _AdminBrandManagementPageState extends State<AdminBrandManagementPage> {
             ),
           );
         }
-        return _BrandTile(brand: _controller.brands[index - 2]);
+        final brand = _controller.brands[index - 2];
+        return _BrandTile(
+          brand: brand,
+          onEdit: () => _openBrandForm(brand),
+          onDelete: () => _deleteBrand(brand),
+        );
       },
+    );
+  }
+}
+
+class _BrandFormResult {
+  const _BrandFormResult({
+    required this.name,
+    required this.description,
+    required this.logo,
+    required this.isActive,
+  });
+
+  final String name;
+  final String description;
+  final String logo;
+  final bool isActive;
+}
+
+class _BrandFormDialog extends StatefulWidget {
+  const _BrandFormDialog({this.brand});
+
+  final AdminBrandModel? brand;
+
+  @override
+  State<_BrandFormDialog> createState() => _BrandFormDialogState();
+}
+
+class _BrandFormDialogState extends State<_BrandFormDialog> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late final TextEditingController _nameController = TextEditingController(
+    text: widget.brand?.name ?? '',
+  );
+  late final TextEditingController _descriptionController =
+      TextEditingController(text: widget.brand?.description ?? '');
+  late final TextEditingController _logoController = TextEditingController(
+    text: widget.brand?.logo ?? '',
+  );
+  late bool _isActive = widget.brand?.isActive ?? true;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _logoController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    if (_formKey.currentState?.validate() != true) {
+      return;
+    }
+    Navigator.pop(
+      context,
+      _BrandFormResult(
+        name: _nameController.text.trim(),
+        description: _descriptionController.text.trim(),
+        logo: _logoController.text.trim(),
+        isActive: _isActive,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isEditing = widget.brand != null;
+    return AlertDialog(
+      title: Text(isEditing ? 'Sửa thương hiệu' : 'Thêm thương hiệu'),
+      content: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'Tên thương hiệu'),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Vui lòng nhập tên thương hiệu.';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: AppSpacing.md),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(labelText: 'Mô tả'),
+                minLines: 2,
+                maxLines: 4,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              TextFormField(
+                controller: _logoController,
+                decoration: const InputDecoration(
+                  labelText: 'Logo URL',
+                  hintText: 'Có thể để trống',
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                value: _isActive,
+                title: const Text('Đang hoạt động'),
+                onChanged: (value) => setState(() => _isActive = value),
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Hủy'),
+        ),
+        FilledButton(onPressed: _submit, child: const Text('Lưu')),
+      ],
     );
   }
 }
 
 class _Header extends StatelessWidget {
   const _Header();
+
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +303,7 @@ class _Header extends StatelessWidget {
         style: AppTextStyles.display.copyWith(fontSize: 36),
       ),
       Text(
-        'Dữ liệu lấy từ API brands.',
+        'Thêm, sửa hoặc xóa thương hiệu sản phẩm.',
         style: AppTextStyles.body.copyWith(
           color: AppColors.textSecondary,
           fontSize: 18,
@@ -120,9 +314,15 @@ class _Header extends StatelessWidget {
 }
 
 class _BrandTile extends StatelessWidget {
-  const _BrandTile({required this.brand});
+  const _BrandTile({
+    required this.brand,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   final AdminBrandModel brand;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -156,7 +356,19 @@ class _BrandTile extends StatelessWidget {
             : brand.description,
         style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
       ),
-      trailing: const Icon(Icons.edit),
+      trailing: PopupMenuButton<String>(
+        onSelected: (value) {
+          if (value == 'edit') {
+            onEdit();
+          } else if (value == 'delete') {
+            onDelete();
+          }
+        },
+        itemBuilder: (context) => const [
+          PopupMenuItem(value: 'edit', child: Text('Sửa')),
+          PopupMenuItem(value: 'delete', child: Text('Xóa')),
+        ],
+      ),
     ),
   );
 }
