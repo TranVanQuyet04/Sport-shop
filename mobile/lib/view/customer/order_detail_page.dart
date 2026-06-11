@@ -6,7 +6,8 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
-import '../../core/widgets/status_badge.dart';
+import '../../core/widgets/order_status_badge.dart';
+import '../../model/common/delivery_status.dart';
 
 class OrderDetailPage extends StatelessWidget {
   const OrderDetailPage({super.key, required this.orderId});
@@ -28,7 +29,7 @@ class OrderDetailPage extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Text('#$orderId', style: AppTextStyles.display.copyWith(fontSize: 30))),
-              const StatusBadge(label: 'ĐANG GIAO', tone: StatusTone.error),
+              const DeliveryStatusBadge(status: DeliveryStatus.outForDelivery),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),

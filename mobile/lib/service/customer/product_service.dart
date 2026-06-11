@@ -1,9 +1,12 @@
 import '../../core/network/api_client.dart';
 import '../../core/network/api_endpoints.dart';
+import '../../model/customer/product_detail_model.dart';
 import '../../model/customer/product_summary_model.dart';
 
 abstract interface class ProductService {
   Future<List<ProductSummaryModel>> getRecommendedProducts();
+
+  Future<ProductDetailModel> getProductDetail(String productId);
 }
 
 class ProductApiService implements ProductService {
@@ -24,5 +27,13 @@ class ProductApiService implements ProductService {
         .whereType<Map>()
         .map((item) => ProductSummaryModel.fromJson(Map<String, dynamic>.from(item)))
         .toList();
+  }
+
+  @override
+  Future<ProductDetailModel> getProductDetail(String productId) async {
+    final json = await _apiClient.getJson('${ApiEndpoints.products}/$productId');
+    final result = json['result'];
+    final source = result is Map ? Map<String, dynamic>.from(result) : json;
+    return ProductDetailModel.fromJson(source);
   }
 }

@@ -5,7 +5,8 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
-import '../../core/widgets/status_badge.dart';
+import '../../core/widgets/order_status_badge.dart';
+import '../../model/common/delivery_status.dart';
 import 'widgets/customer_bottom_nav.dart';
 
 class TrackingPage extends StatelessWidget {
@@ -34,7 +35,7 @@ class TrackingPage extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(child: Text('MÃ ĐƠN HÀNG', style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w900))),
-                      const StatusBadge(label: 'ĐANG GIAO', tone: StatusTone.error),
+                      const DeliveryStatusBadge(status: DeliveryStatus.outForDelivery),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.xs),

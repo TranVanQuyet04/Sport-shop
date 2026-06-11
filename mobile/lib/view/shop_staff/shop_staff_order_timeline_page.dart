@@ -5,6 +5,8 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/order_status_badge.dart';
+import '../../model/common/order_status.dart';
 import '../admin/widgets/admin_bottom_nav.dart';
 
 class ShopStaffOrderTimelinePage extends StatelessWidget {
@@ -16,7 +18,7 @@ class ShopStaffOrderTimelinePage extends StatelessWidget {
         appBar: AppBar(leading: IconButton(onPressed: context.pop, icon: const Icon(Icons.arrow_back)), title: const Text('TRẠNG THÁI ĐƠN HÀNG'), actions: const [IconButton(onPressed: null, icon: Icon(Icons.notifications_none))]),
         body: ListView(padding: const EdgeInsets.all(AppSpacing.lg), children: [
           DecoratedBox(decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadius.xl)), child: Padding(padding: const EdgeInsets.all(AppSpacing.lg), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('MÃ ĐƠN HÀNG', style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w900)), Text('#$orderId', style: AppTextStyles.display.copyWith(fontSize: 28))])), const Chip(label: Text('ĐANG ĐÓNG GÓI'), backgroundColor: AppColors.secondary, labelStyle: TextStyle(color: Colors.white))]),
+            Row(children: [Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('MÃ ĐƠN HÀNG', style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w900)), Text('#$orderId', style: AppTextStyles.display.copyWith(fontSize: 28))])), const OrderStatusBadge(status: OrderStatus.packing)]),
             const Divider(height: AppSpacing.xl),
             Row(children: [Container(width: 82, height: 82, decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadius.md)), child: const Icon(Icons.directions_run, color: AppColors.secondary)), const SizedBox(width: AppSpacing.lg), Expanded(child: Text('Apex Velocity Runner Z1\nSize: 42 | Màu: Đỏ/Đen', style: AppTextStyles.body)), Text('1.250.000đ', style: AppTextStyles.subtitle.copyWith(color: AppColors.secondary))]),
           ]))),

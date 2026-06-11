@@ -5,6 +5,8 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/order_status_badge.dart';
+import '../../model/common/order_status.dart';
 import 'widgets/admin_app_bar.dart';
 import 'widgets/admin_bottom_nav.dart';
 
@@ -24,11 +26,11 @@ class AdminOrdersPage extends StatelessWidget {
           SizedBox(height: AppSpacing.lg),
           _OrderTabs(),
           SizedBox(height: AppSpacing.lg),
-          _AdminOrderCard(code: '#AV-98421', customer: 'Nguyễn Minh Hoàng', product: 'Velocity Pro Run 2.0', price: 2450000, status: 'CHỜ XÁC NHẬN', action: 'Xác nhận', actionDark: true),
+          _AdminOrderCard(code: '#AV-98421', customer: 'Nguyễn Minh Hoàng', product: 'Velocity Pro Run 2.0', price: 2450000, status: OrderStatus.pending, action: 'Xác nhận', actionDark: true),
           SizedBox(height: AppSpacing.lg),
-          _AdminOrderCard(code: '#AV-98415', customer: 'Trần Thị Thu Hà', product: 'Apex Court Master', price: 3100000, status: 'ĐANG GIAO', delivery: 'Giao bởi: J&T Express', action: 'Theo dõi'),
+          _AdminOrderCard(code: '#AV-98415', customer: 'Trần Thị Thu Hà', product: 'Apex Court Master', price: 3100000, status: OrderStatus.shipped, delivery: 'Giao bởi: J&T Express', action: 'Theo dõi'),
           SizedBox(height: AppSpacing.lg),
-          _AdminOrderCard(code: '#AV-98399', customer: 'Lê Quốc Khánh', product: 'Air Max Performance', price: 1890000, status: 'HOÀN THÀNH', action: 'Xem chi tiết', disabled: true),
+          _AdminOrderCard(code: '#AV-98399', customer: 'Lê Quốc Khánh', product: 'Air Max Performance', price: 1890000, status: OrderStatus.completed, action: 'Xem chi tiết', disabled: true),
         ],
       ),
       bottomNavigationBar: const AdminBottomNav(selectedIndex: 2),
@@ -99,7 +101,7 @@ class _AdminOrderCard extends StatelessWidget {
   final String customer;
   final String product;
   final int price;
-  final String status;
+  final OrderStatus status;
   final String action;
   final String? delivery;
   final bool actionDark;
@@ -116,7 +118,7 @@ class _AdminOrderCard extends StatelessWidget {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             Expanded(child: Text(code, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900))),
-            Text(status, style: AppTextStyles.body.copyWith(backgroundColor: status == 'ĐANG GIAO' ? AppColors.secondary : AppColors.surfaceMuted, color: status == 'ĐANG GIAO' ? Colors.white : AppColors.primary)),
+            OrderStatusBadge(status: status),
           ]),
           Text(customer, style: AppTextStyles.title),
           if (delivery != null) Text(delivery!, style: AppTextStyles.caption.copyWith(color: AppColors.secondary)),

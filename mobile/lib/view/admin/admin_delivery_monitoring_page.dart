@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/widgets/order_status_badge.dart';
+import '../../model/common/delivery_status.dart';
 import 'widgets/admin_app_bar.dart';
 import 'widgets/admin_bottom_nav.dart';
 
@@ -27,10 +29,10 @@ class AdminDeliveryMonitoringPage extends StatelessWidget {
             _DeliveryChip(label: 'Lỗi/Trả lại', warning: true),
           ]),
           SizedBox(height: AppSpacing.xl),
-          _DeliveryCard(status: 'GIAO HÀNG THẤT BẠI', code: '#AV-88320', detail: '45 Lê Lợi, Quận 1, TP. HCM\nNhân viên: Trần Văn A', alert: true, note: 'Lý do: Khách hàng không nghe máy sau 3 lần gọi.'),
-          _DeliveryCard(status: 'ĐANG GIAO HÀNG', code: '#AV-91244', detail: 'Điểm đến: KĐT Sala, Quận 2\nDự kiến: 14:30 Hôm nay', progress: 0.75),
-          _DeliveryCard(status: 'RỜI KHO', code: '#AV-92001', detail: 'Vinhomes Central Park, Bình Thạnh\nNhân viên: Lê Thị B', action: 'XEM BẢN ĐỒ'),
-          _DeliveryCard(status: 'CHỜ HOÀN KHO', code: '#AV-87112', detail: 'Yêu cầu hoàn trả bởi người mua\nCập nhật: 2 giờ trước'),
+          _DeliveryCard(status: DeliveryStatus.failed, code: '#AV-88320', detail: '45 Lê Lợi, Quận 1, TP. HCM\nNhân viên: Trần Văn A', alert: true, note: 'Lý do: Khách hàng không nghe máy sau 3 lần gọi.'),
+          _DeliveryCard(status: DeliveryStatus.outForDelivery, code: '#AV-91244', detail: 'Điểm đến: KĐT Sala, Quận 2\nDự kiến: 14:30 Hôm nay', progress: 0.75),
+          _DeliveryCard(status: DeliveryStatus.inTransit, code: '#AV-92001', detail: 'Vinhomes Central Park, Bình Thạnh\nNhân viên: Lê Thị B', action: 'XEM BẢN ĐỒ'),
+          _DeliveryCard(status: DeliveryStatus.returned, code: '#AV-87112', detail: 'Yêu cầu hoàn trả bởi người mua\nCập nhật: 2 giờ trước'),
         ],
       ),
       floatingActionButton: FloatingActionButton(backgroundColor: AppColors.secondary, foregroundColor: Colors.white, onPressed: () {}, child: const Icon(Icons.add)),
@@ -56,7 +58,7 @@ class _DeliveryChip extends StatelessWidget {
 
 class _DeliveryCard extends StatelessWidget {
   const _DeliveryCard({required this.status, required this.code, required this.detail, this.alert = false, this.note, this.progress, this.action});
-  final String status;
+  final DeliveryStatus status;
   final String code;
   final String detail;
   final bool alert;
@@ -70,7 +72,7 @@ class _DeliveryCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.lg),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(status, style: AppTextStyles.caption.copyWith(color: alert ? AppColors.secondary : AppColors.primary, fontWeight: FontWeight.w900, letterSpacing: 1.2)),
+            DeliveryStatusBadge(status: status),
             const SizedBox(height: AppSpacing.sm),
             Text(code, style: AppTextStyles.display.copyWith(fontSize: 26)),
             const SizedBox(height: AppSpacing.md),

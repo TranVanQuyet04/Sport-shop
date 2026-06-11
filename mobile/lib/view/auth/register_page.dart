@@ -2,14 +2,53 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
+import '../../controller/auth/register_controller.dart';
+import '../../core/di/app_dependencies.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_text_field.dart';
 import 'widgets/auth_brand_header.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  late final RegisterController _controller = RegisterController(
+    authRepository: AppDependencies.instance.authRepository,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onChanged);
+  }
+
+  @override
+  void dispose() {
+    _controller
+      ..removeListener(_onChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> _submit() async {
+    final success = await _controller.submit();
+    if (success && mounted) {
+      context.go(AppRoutes.login);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,36 +65,58 @@ class RegisterPage extends StatelessWidget {
             style: AppTextStyles.body.copyWith(fontSize: 18, color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.xl),
-          const _LabeledField(label: 'Họ và tên', hint: 'Nguyễn Văn A', icon: Icons.person_outline),
-          const _LabeledField(label: 'Email', hint: 'example@apex.com', icon: Icons.mail_outline, keyboardType: TextInputType.emailAddress),
-          const _LabeledField(label: 'Số điện thoại', hint: '09xx xxx xxx', icon: Icons.phone_outlined, keyboardType: TextInputType.phone),
-          const _LabeledField(label: 'Mật khẩu', hint: '••••••••', icon: Icons.lock_outline, obscure: true),
-          const _LabeledField(label: 'Xác nhận mật khẩu', hint: '••••••••', icon: Icons.lock_reset_outlined, obscure: true),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Checkbox(value: false, onChanged: (_) {}),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.sm),
-                  child: Text.rich(
-                    TextSpan(
-                      text: 'Tôi đồng ý với ',
-                      children: [
-                        TextSpan(text: 'Điều khoản', style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900, decoration: TextDecoration.underline)),
-                        const TextSpan(text: ' và '),
-                        TextSpan(text: 'Chính sách bảo mật', style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900, decoration: TextDecoration.underline)),
-                        const TextSpan(text: ' của Sportshop.'),
-                      ],
-                    ),
-                    style: AppTextStyles.body,
-                  ),
-                ),
-              ),
-            ],
+          AppTextField(
+            label: 'Họ và tên',
+            hintText: 'Nguyễn Văn A',
+            prefixIcon: Icons.person_outline,
+            onChanged: _controller.changeFullName,
           ),
+          const SizedBox(height: AppSpacing.lg),
+          AppTextField(
+            label: 'Email',
+            hintText: 'example@apex.com',
+            prefixIcon: Icons.mail_outline,
+            keyboardType: TextInputType.emailAddress,
+            onChanged: _controller.changeEmail,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          AppTextField(
+            label: 'Số điện thoại',
+            hintText: '09xx xxx xxx',
+            prefixIcon: Icons.phone_outlined,
+            keyboardType: TextInputType.phone,
+            onChanged: _controller.changePhoneNumber,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          AppTextField(
+            label: 'Mật khẩu',
+            hintText: '••••••••',
+            prefixIcon: Icons.lock_outline,
+            obscureText: !_controller.form.isPasswordVisible,
+            onChanged: _controller.changePassword,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          AppTextField(
+            label: 'Xác nhận mật khẩu',
+            hintText: '••••••••',
+            prefixIcon: Icons.lock_reset_outlined,
+            obscureText: !_controller.form.isConfirmPasswordVisible,
+            onChanged: _controller.changeConfirmPassword,
+          ),
+          if (_controller.errorMessage != null) ...[
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              _controller.errorMessage!,
+              style: AppTextStyles.caption.copyWith(color: AppColors.error),
+            ),
+          ],
           const SizedBox(height: AppSpacing.xl),
-          AppButton(label: 'ĐĂNG KÝ  →', variant: AppButtonVariant.secondary, onPressed: () => context.go(AppRoutes.login)),
+          AppButton(
+            label: 'ĐĂNG KÝ  →',
+            variant: AppButtonVariant.secondary,
+            isLoading: _controller.isLoading,
+            onPressed: _submit,
+          ),
           const SizedBox(height: AppSpacing.xl),
           const Divider(),
           const SizedBox(height: AppSpacing.lg),
@@ -64,49 +125,6 @@ class RegisterPage extends StatelessWidget {
               onPressed: () => context.go(AppRoutes.login),
               child: const Text('Đã có tài khoản? Đăng nhập ngay'),
             ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Row(
-            children: const [
-              Expanded(child: OutlinedButton(onPressed: null, child: Text('GOOGLE'))),
-              SizedBox(width: AppSpacing.md),
-              Expanded(child: FilledButton(onPressed: null, child: Text('FACEBOOK'))),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LabeledField extends StatelessWidget {
-  const _LabeledField({
-    required this.label,
-    required this.hint,
-    required this.icon,
-    this.obscure = false,
-    this.keyboardType,
-  });
-
-  final String label;
-  final String hint;
-  final IconData icon;
-  final bool obscure;
-  final TextInputType? keyboardType;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900)),
-          const SizedBox(height: AppSpacing.sm),
-          TextField(
-            obscureText: obscure,
-            keyboardType: keyboardType,
-            decoration: InputDecoration(prefixIcon: Icon(icon), hintText: hint),
           ),
         ],
       ),

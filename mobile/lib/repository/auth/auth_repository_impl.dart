@@ -30,6 +30,43 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> register({
+    required String fullName,
+    required String email,
+    required String phoneNumber,
+    required String password,
+    required String confirmPassword,
+  }) {
+    return authService.register(
+      fullName: fullName,
+      email: email,
+      phoneNumber: phoneNumber,
+      password: password,
+      confirmPassword: confirmPassword,
+    );
+  }
+
+  @override
+  Future<void> forgotPassword({
+    required String email,
+  }) {
+    return authService.forgotPassword(email: email);
+  }
+
+  @override
+  Future<void> resetPassword({
+    required String token,
+    required String newPassword,
+    required String confirmPassword,
+  }) {
+    return authService.resetPassword(
+      token: token,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword,
+    );
+  }
+
+  @override
   Future<void> logout() async {
     await tokenStorage.clear();
     apiClient.setBearerToken(null);

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../app/sportshop_router.dart';
 import '../../model/auth/login_form_model.dart';
 import '../../repository/auth/auth_repository.dart';
 
@@ -33,11 +34,11 @@ class LoginController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> submit() async {
+  Future<String?> submit() async {
     if (!_form.canSubmit) {
       _errorMessage = 'Vui lòng nhập email và mật khẩu.';
       notifyListeners();
-      return false;
+      return null;
     }
 
     _isLoading = true;
@@ -45,18 +46,29 @@ class LoginController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await authRepository.login(
+      final session = await authRepository.login(
         email: _form.email.trim(),
         password: _form.password,
       );
       _isLoading = false;
       notifyListeners();
-      return true;
+      return _routeForRole(session.role);
     } catch (error) {
       _isLoading = false;
       _errorMessage = error.toString();
       notifyListeners();
-      return false;
+      return null;
     }
+  }
+
+  String _routeForRole(String? role) {
+    final normalizedRole = role?.toUpperCase().replaceFirst('ROLE_', '').trim();
+    return switch (normalizedRole) {
+      'ADMIN' => AppRoutes.adminDashboard,
+      'SHOP_STAFF' => AppRoutes.shopStaffHome,
+      'DELIVERY_STAFF' => AppRoutes.deliveryHome,
+      'CUSTOMER' => AppRoutes.customerHome,
+      _ => AppRoutes.customerHome,
+    };
   }
 }

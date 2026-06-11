@@ -2,14 +2,53 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
+import '../../controller/auth/reset_password_controller.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_text_field.dart';
 import 'widgets/auth_brand_header.dart';
 
-class ResetPasswordPage extends StatelessWidget {
+class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});
+
+  @override
+  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
+}
+
+class _ResetPasswordPageState extends State<ResetPasswordPage> {
+  late final ResetPasswordController _controller = ResetPasswordController(
+    authRepository: AppDependencies.instance.authRepository,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onChanged);
+  }
+
+  @override
+  void dispose() {
+    _controller
+      ..removeListener(_onChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> _submit() async {
+    final success = await _controller.submit();
+    if (success && mounted) {
+      context.go(AppRoutes.login);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +61,7 @@ class ResetPasswordPage extends StatelessWidget {
           Text('Đặt lại mật khẩu', style: AppTextStyles.display.copyWith(fontSize: 34)),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'Vui lòng nhập mật khẩu mới cho tài khoản của bạn để tiếp tục trải nghiệm hiệu năng đỉnh cao cùng Apex Velocity.',
+            'Nhập token và mật khẩu mới cho tài khoản của bạn.',
             style: AppTextStyles.body.copyWith(fontSize: 18, color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.xxl),
@@ -37,13 +76,28 @@ class ResetPasswordPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Mật khẩu mới', style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900)),
-                  const SizedBox(height: AppSpacing.sm),
-                  const TextField(obscureText: true, decoration: InputDecoration(prefixIcon: Icon(Icons.lock_outline), suffixIcon: Icon(Icons.visibility_outlined), hintText: 'Nhập mật khẩu mới')),
-                  const SizedBox(height: AppSpacing.xl),
-                  Text('Xác nhận mật khẩu mới', style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900)),
-                  const SizedBox(height: AppSpacing.sm),
-                  const TextField(obscureText: true, decoration: InputDecoration(prefixIcon: Icon(Icons.lock_reset_outlined), suffixIcon: Icon(Icons.visibility_outlined), hintText: 'Xác nhận mật khẩu mới')),
+                  AppTextField(
+                    label: 'Token đặt lại mật khẩu',
+                    hintText: 'Nhập token từ email',
+                    prefixIcon: Icons.key_outlined,
+                    onChanged: _controller.changeToken,
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    label: 'Mật khẩu mới',
+                    hintText: 'Nhập mật khẩu mới',
+                    prefixIcon: Icons.lock_outline,
+                    obscureText: !_controller.form.isNewPasswordVisible,
+                    onChanged: _controller.changeNewPassword,
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    label: 'Xác nhận mật khẩu mới',
+                    hintText: 'Xác nhận mật khẩu mới',
+                    prefixIcon: Icons.lock_reset_outlined,
+                    obscureText: !_controller.form.isConfirmPasswordVisible,
+                    onChanged: _controller.changeConfirmPassword,
+                  ),
                   const SizedBox(height: AppSpacing.xl),
                   DecoratedBox(
                     decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadius.md)),
@@ -56,7 +110,7 @@ class ResetPasswordPage extends StatelessWidget {
                           const SizedBox(width: AppSpacing.md),
                           Expanded(
                             child: Text(
-                              'YÊU CẦU BẢO MẬT\nMật khẩu phải bao gồm ít nhất 8 ký tự, 1 chữ hoa và 1 số.',
+                              'Yêu cầu bảo mật\nMật khẩu phải bao gồm ít nhất 8 ký tự, 1 chữ hoa và 1 số.',
                               style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
                             ),
                           ),
@@ -64,8 +118,20 @@ class ResetPasswordPage extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (_controller.errorMessage != null) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      _controller.errorMessage!,
+                      style: AppTextStyles.caption.copyWith(color: AppColors.error),
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.xl),
-                  AppButton(label: 'XÁC NHẬN  ›', variant: AppButtonVariant.secondary, onPressed: () => context.go(AppRoutes.login)),
+                  AppButton(
+                    label: 'XÁC NHẬN  ›',
+                    variant: AppButtonVariant.secondary,
+                    isLoading: _controller.isLoading,
+                    onPressed: _submit,
+                  ),
                 ],
               ),
             ),

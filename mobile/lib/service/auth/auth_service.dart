@@ -7,6 +7,24 @@ abstract interface class AuthService {
     required String email,
     required String password,
   });
+
+  Future<void> register({
+    required String fullName,
+    required String email,
+    required String phoneNumber,
+    required String password,
+    required String confirmPassword,
+  });
+
+  Future<void> forgotPassword({
+    required String email,
+  });
+
+  Future<void> resetPassword({
+    required String token,
+    required String newPassword,
+    required String confirmPassword,
+  });
 }
 
 class AuthApiService implements AuthService {
@@ -27,5 +45,51 @@ class AuthApiService implements AuthService {
       },
     );
     return AuthSessionModel.fromJson(json);
+  }
+
+  @override
+  Future<void> register({
+    required String fullName,
+    required String email,
+    required String phoneNumber,
+    required String password,
+    required String confirmPassword,
+  }) async {
+    await _apiClient.postJson(
+      ApiEndpoints.register,
+      data: {
+        'fullName': fullName,
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'password': password,
+        'confirmPassword': confirmPassword,
+      },
+    );
+  }
+
+  @override
+  Future<void> forgotPassword({
+    required String email,
+  }) async {
+    await _apiClient.postJson(
+      ApiEndpoints.forgotPassword,
+      data: {'email': email},
+    );
+  }
+
+  @override
+  Future<void> resetPassword({
+    required String token,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    await _apiClient.postJson(
+      ApiEndpoints.resetPassword,
+      data: {
+        'token': token,
+        'newPassword': newPassword,
+        'confirmPassword': confirmPassword,
+      },
+    );
   }
 }

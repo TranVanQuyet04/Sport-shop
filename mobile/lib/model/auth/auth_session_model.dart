@@ -14,12 +14,17 @@ class AuthSessionModel {
   factory AuthSessionModel.fromJson(Map<String, dynamic> json) {
     final result = json['result'];
     final source = result is Map ? Map<String, dynamic>.from(result) : json;
+    final user = source['user'];
+    final userSource = user is Map ? Map<String, dynamic>.from(user) : const <String, dynamic>{};
 
     return AuthSessionModel(
       accessToken: (source['accessToken'] ?? source['token'] ?? '').toString(),
       refreshToken: source['refreshToken']?.toString(),
-      email: source['email']?.toString(),
-      role: source['role']?.toString() ?? source['roleName']?.toString(),
+      email: source['email']?.toString() ?? userSource['email']?.toString(),
+      role: source['role']?.toString() ??
+          source['roleName']?.toString() ??
+          userSource['role']?.toString() ??
+          userSource['roleName']?.toString(),
     );
   }
 }

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/widgets/order_status_badge.dart';
+import '../../model/common/delivery_status.dart';
 import '../admin/widgets/admin_app_bar.dart';
 import 'widgets/delivery_bottom_nav.dart';
 
@@ -125,7 +127,7 @@ class _AssignedOrderCard extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Text(code, style: AppTextStyles.title)),
-              Chip(label: Text(status), backgroundColor: const Color(0xFFFCE8EE), labelStyle: const TextStyle(color: AppColors.secondary)),
+              DeliveryStatusBadge(status: DeliveryStatus.fromApi(status)),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),

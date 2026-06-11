@@ -42,9 +42,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _submit() async {
-    final success = await _controller.submit();
-    if (success && mounted) {
-      context.go(AppRoutes.customerHome);
+    final targetRoute = await _controller.submit();
+    if (targetRoute != null && mounted) {
+      context.go(targetRoute);
     }
   }
 

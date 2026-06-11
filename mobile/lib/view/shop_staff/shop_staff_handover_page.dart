@@ -4,6 +4,8 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/order_status_badge.dart';
+import '../../model/common/order_status.dart';
 import '../admin/widgets/admin_app_bar.dart';
 
 class ShopStaffHandoverPage extends StatelessWidget {
@@ -53,5 +55,5 @@ class _ReadyOrder extends StatelessWidget {
   const _ReadyOrder({required this.code, required this.name, required this.price, required this.icon});
   final String code; final String name; final String price; final IconData icon;
   @override
-  Widget build(BuildContext context) => Container(margin: const EdgeInsets.only(bottom: AppSpacing.md), padding: const EdgeInsets.all(AppSpacing.md), decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadius.md)), child: Row(children: [Container(width: 82, height: 82, decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadius.sm)), child: Icon(icon, color: AppColors.secondary)), const SizedBox(width: AppSpacing.lg), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(code, style: AppTextStyles.body), Text(name, maxLines: 1, overflow: TextOverflow.ellipsis), Text(price, style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w900))])), const Chip(label: Text('PACKING')), const SizedBox(width: AppSpacing.sm), const Icon(Icons.check_box, color: AppColors.secondary)]));
+  Widget build(BuildContext context) => Container(margin: const EdgeInsets.only(bottom: AppSpacing.md), padding: const EdgeInsets.all(AppSpacing.md), decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadius.md)), child: Row(children: [Container(width: 82, height: 82, decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadius.sm)), child: Icon(icon, color: AppColors.secondary)), const SizedBox(width: AppSpacing.lg), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(code, style: AppTextStyles.body), Text(name, maxLines: 1, overflow: TextOverflow.ellipsis), Text(price, style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w900))])), const OrderStatusBadge(status: OrderStatus.packing), const SizedBox(width: AppSpacing.sm), const Icon(Icons.check_box, color: AppColors.secondary)]));
 }

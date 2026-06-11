@@ -5,15 +5,16 @@ import 'api_exception.dart';
 
 class ApiClient {
   ApiClient({Dio? dio})
-      : _dio = dio ??
-            Dio(
-              BaseOptions(
-                baseUrl: ApiEndpoints.baseUrl,
-                connectTimeout: const Duration(seconds: 15),
-                receiveTimeout: const Duration(seconds: 20),
-                headers: {'Content-Type': 'application/json'},
-              ),
-            );
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
+              baseUrl: ApiEndpoints.baseUrl,
+              connectTimeout: const Duration(seconds: 15),
+              receiveTimeout: const Duration(seconds: 20),
+              headers: {'Content-Type': 'application/json'},
+            ),
+          );
 
   final Dio _dio;
 
@@ -32,10 +33,7 @@ class ApiClient {
     }
   }
 
-  Future<Map<String, dynamic>> postJson(
-    String path, {
-    Object? data,
-  }) async {
+  Future<Map<String, dynamic>> postJson(String path, {Object? data}) async {
     try {
       final response = await _dio.post<Object?>(path, data: data);
       return _asJsonMap(response.data);
@@ -47,9 +45,31 @@ class ApiClient {
   Future<Map<String, dynamic>> putJson(
     String path, {
     Object? data,
+    Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      final response = await _dio.put<Object?>(path, data: data);
+      final response = await _dio.put<Object?>(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+      );
+      return _asJsonMap(response.data);
+    } on DioException catch (error) {
+      throw _toApiException(error);
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteJson(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    try {
+      final response = await _dio.delete<Object?>(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+      );
       return _asJsonMap(response.data);
     } on DioException catch (error) {
       throw _toApiException(error);

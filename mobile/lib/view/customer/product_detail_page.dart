@@ -3,10 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/sportshop_router.dart';
+import '../../controller/customer/product_detail_controller.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_state.dart';
+import '../../model/customer/product_detail_model.dart';
 
 class ProductDetailPage extends StatefulWidget {
   const ProductDetailPage({super.key, required this.productId});
@@ -19,15 +23,62 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
   int selectedColor = 0;
-  int selectedSize = 40;
+  int selectedSizeIndex = 0;
+  bool _isAddingToCart = false;
+
+  late final ProductDetailController _controller = ProductDetailController(
+    productRepository: AppDependencies.instance.productRepository,
+    productId: widget.productId,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onControllerChanged);
+    _controller.loadProduct();
+  }
+
+  @override
+  void dispose() {
+    _controller
+      ..removeListener(_onControllerChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onControllerChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final price = NumberFormat.decimalPattern('vi_VN').format(3500000);
+    final product = _controller.product ?? _fallbackProduct(widget.productId);
+    final colors = product.colors.isEmpty
+        ? ['Đen', 'Đỏ', 'Trắng']
+        : product.colors;
+    final sizes = product.sizes.isEmpty
+        ? ['38', '39', '40', '41', '42', '43', '44']
+        : product.sizes;
+    final currentColorIndex = selectedColor.clamp(0, colors.length - 1);
+    final currentSizeIndex = selectedSizeIndex.clamp(0, sizes.length - 1);
+    final selectedVariant = _findSelectedVariant(
+      product,
+      selectedSize: sizes[currentSizeIndex],
+      selectedColor: colors[currentColorIndex],
+    );
+    final displayPrice = product.displayPrice == 0
+        ? 3500000
+        : product.displayPrice;
+    final price = NumberFormat.decimalPattern('vi_VN').format(displayPrice);
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: context.pop, icon: const Icon(Icons.arrow_back)),
+        leading: IconButton(
+          onPressed: context.pop,
+          icon: const Icon(Icons.arrow_back),
+        ),
         title: const Center(child: Text('CHI TIẾT')),
         actions: const [
           IconButton(onPressed: null, icon: Icon(Icons.share_outlined)),
@@ -35,13 +86,41 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       ),
       body: ListView(
         children: [
+          if (_controller.isLoading)
+            const LinearProgressIndicator(minHeight: 3),
+          if (_controller.errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: AppErrorState(
+                title: 'Không tải được chi tiết sản phẩm',
+                message:
+                    'Đang hiển thị dữ liệu mẫu. Hãy thử lại khi backend sẵn sàng.',
+                onAction: _controller.loadProduct,
+              ),
+            ),
           Container(
             height: 500,
             color: const Color(0xFFECEFF1),
             child: InkWell(
-              onTap: () => context.go('/customer/products/${widget.productId}/gallery'),
-              child: const Center(
-                child: Icon(Icons.directions_run, size: 180, color: AppColors.secondary),
+              onTap: () =>
+                  context.go('/customer/products/${widget.productId}/gallery'),
+              child: Center(
+                child: product.imageUrls.isEmpty
+                    ? const Icon(
+                        Icons.directions_run,
+                        size: 180,
+                        color: AppColors.secondary,
+                      )
+                    : Image.network(
+                        product.imageUrls.first,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                              Icons.directions_run,
+                              size: 180,
+                              color: AppColors.secondary,
+                            ),
+                      ),
               ),
             ),
           ),
@@ -54,7 +133,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   children: [
                     Expanded(
                       child: Text(
-                        'RUNNING PERFORMANCE',
+                        [product.brand, product.sport, product.category]
+                            .where((value) => value.isNotEmpty)
+                            .join(' • ')
+                            .toUpperCase(),
                         style: AppTextStyles.caption.copyWith(
                           color: AppColors.secondary,
                           fontWeight: FontWeight.w900,
@@ -64,55 +146,94 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ),
                     const CircleAvatar(
                       backgroundColor: AppColors.surfaceMuted,
-                      child: Icon(Icons.favorite_border, color: AppColors.primary),
+                      child: Icon(
+                        Icons.favorite_border,
+                        color: AppColors.primary,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.xs),
-                Text('NIKE AIR MAX 270', style: AppTextStyles.display.copyWith(fontSize: 28)),
+                Text(
+                  product.name.toUpperCase(),
+                  style: AppTextStyles.display.copyWith(fontSize: 28),
+                ),
                 const SizedBox(height: AppSpacing.sm),
-                Text('$priceđ', style: AppTextStyles.display.copyWith(fontSize: 30)),
+                Text(
+                  '$priceđ',
+                  style: AppTextStyles.display.copyWith(fontSize: 30),
+                ),
                 const SizedBox(height: AppSpacing.lg),
                 Text(
-                  'Nike Air Max 270 mang đến phong cách hiện đại kết hợp với đệm Air lớn nhất từ trước đến nay, mang lại cảm giác siêu mềm mại và vẻ ngoài ấn tượng.',
-                  style: AppTextStyles.body.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.78)),
+                  product.description.isEmpty
+                      ? 'Sản phẩm thể thao hiệu năng cao, phù hợp cho tập luyện và sử dụng hằng ngày.'
+                      : product.description,
+                  style: AppTextStyles.body.copyWith(
+                    color: AppColors.textPrimary.withValues(alpha: 0.78),
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 const Divider(),
                 const SizedBox(height: AppSpacing.lg),
-                Text('MÀU SẮC', style: AppTextStyles.caption.copyWith(color: AppColors.primary, fontWeight: FontWeight.w900)),
+                Text(
+                  'MÀU SẮC',
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
                 const SizedBox(height: AppSpacing.md),
                 Row(
-                  children: [
-                    _ColorDot(color: Colors.black, selected: selectedColor == 0, onTap: () => setState(() => selectedColor = 0)),
-                    _ColorDot(color: AppColors.secondary, selected: selectedColor == 1, onTap: () => setState(() => selectedColor = 1)),
-                    _ColorDot(color: Colors.white, selected: selectedColor == 2, onTap: () => setState(() => selectedColor = 2)),
-                  ],
+                  children: List.generate(colors.length, (index) {
+                    return _ColorDot(
+                      color: _parseColor(colors[index]),
+                      selected: currentColorIndex == index,
+                      onTap: () => setState(() => selectedColor = index),
+                    );
+                  }),
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 Row(
                   children: [
-                    Text('CHỌN SIZE (VN)', style: AppTextStyles.caption.copyWith(color: AppColors.primary, fontWeight: FontWeight.w900)),
+                    Text(
+                      'CHỌN SIZE (VN)',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
                     const Spacer(),
-                    Text('Bảng size', style: AppTextStyles.caption.copyWith(color: AppColors.secondary, decoration: TextDecoration.underline)),
+                    Text(
+                      'Bảng size',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.secondary,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Wrap(
                   spacing: AppSpacing.sm,
                   runSpacing: AppSpacing.sm,
-                  children: [38, 39, 40, 41, 42, 43, 44].map((size) {
+                  children: List.generate(sizes.length, (index) {
                     return ChoiceChip(
-                      label: SizedBox(width: 48, child: Center(child: Text('$size'))),
-                      selected: selectedSize == size,
-                      onSelected: (_) => setState(() => selectedSize = size),
+                      label: SizedBox(
+                        width: 48,
+                        child: Center(child: Text(sizes[index])),
+                      ),
+                      selected: currentSizeIndex == index,
+                      onSelected: (_) =>
+                          setState(() => selectedSizeIndex = index),
                       selectedColor: AppColors.primary,
                       labelStyle: TextStyle(
-                        color: selectedSize == size ? Colors.white : AppColors.primary,
+                        color: currentSizeIndex == index
+                            ? Colors.white
+                            : AppColors.primary,
                         fontWeight: FontWeight.w700,
                       ),
                     );
-                  }).toList(),
+                  }),
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 const _InfoTile(title: 'Chính sách vận chuyển'),
@@ -137,7 +258,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 child: AppButton(
                   label: 'THÊM VÀO GIỎ',
                   variant: AppButtonVariant.outline,
-                  onPressed: () => context.go(AppRoutes.cart),
+                  isLoading: _isAddingToCart,
+                  onPressed: () => _addToCart(selectedVariant),
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -145,7 +267,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 child: AppButton(
                   label: 'MUA NGAY',
                   variant: AppButtonVariant.secondary,
-                  onPressed: () => context.go(AppRoutes.cart),
+                  isLoading: _isAddingToCart,
+                  onPressed: () =>
+                      _addToCart(selectedVariant, goToCheckout: true),
                 ),
               ),
             ],
@@ -154,10 +278,134 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       ),
     );
   }
+
+  ProductVariantModel _findSelectedVariant(
+    ProductDetailModel product, {
+    required String selectedSize,
+    required String selectedColor,
+  }) {
+    if (product.variants.isEmpty) {
+      return const ProductVariantModel(
+        id: '',
+        sku: '',
+        size: '',
+        color: '',
+        price: 0,
+        stockQuantity: 0,
+        imageUrls: [],
+      );
+    }
+
+    return product.variants.firstWhere(
+      (variant) =>
+          variant.size == selectedSize && variant.color == selectedColor,
+      orElse: () => product.variants.firstWhere(
+        (variant) => variant.size == selectedSize,
+        orElse: () => product.variants.first,
+      ),
+    );
+  }
+
+  Future<void> _addToCart(
+    ProductVariantModel variant, {
+    bool goToCheckout = false,
+  }) async {
+    if (variant.id.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Sản phẩm chưa có biến thể hợp lệ.')),
+      );
+      return;
+    }
+
+    setState(() => _isAddingToCart = true);
+    try {
+      await AppDependencies.instance.cartRepository.addToCart(
+        variantId: variant.id,
+        quantity: 1,
+      );
+      if (!mounted) {
+        return;
+      }
+      context.go(goToCheckout ? AppRoutes.checkout : AppRoutes.cart);
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.toString())));
+    } finally {
+      if (mounted) {
+        setState(() => _isAddingToCart = false);
+      }
+    }
+  }
+
+  ProductDetailModel _fallbackProduct(String productId) {
+    return ProductDetailModel(
+      id: productId,
+      name: 'Nike Air Max 270',
+      description:
+          'Nike Air Max 270 mang đến phong cách hiện đại kết hợp với đệm Air lớn, tạo cảm giác êm và nổi bật.',
+      category: 'Giày chạy bộ',
+      brand: 'Nike',
+      sport: 'Running',
+      variants: const [
+        ProductVariantModel(
+          id: '1',
+          sku: 'NIKE-270-BLK-40',
+          size: '40',
+          color: 'Đen',
+          price: 3500000,
+          stockQuantity: 8,
+          imageUrls: [],
+        ),
+        ProductVariantModel(
+          id: '2',
+          sku: 'NIKE-270-RED-41',
+          size: '41',
+          color: 'Đỏ',
+          price: 3500000,
+          stockQuantity: 6,
+          imageUrls: [],
+        ),
+        ProductVariantModel(
+          id: '3',
+          sku: 'NIKE-270-WHT-42',
+          size: '42',
+          color: 'Trắng',
+          price: 3500000,
+          stockQuantity: 4,
+          imageUrls: [],
+        ),
+      ],
+    );
+  }
+
+  Color _parseColor(String value) {
+    final normalized = value.toLowerCase();
+    if (normalized.contains('đỏ') || normalized.contains('red')) {
+      return AppColors.secondary;
+    }
+    if (normalized.contains('trắng') || normalized.contains('white')) {
+      return Colors.white;
+    }
+    if (normalized.contains('xanh') || normalized.contains('blue')) {
+      return AppColors.info;
+    }
+    if (normalized.contains('đen') || normalized.contains('black')) {
+      return Colors.black;
+    }
+    return AppColors.primary;
+  }
 }
 
 class _ColorDot extends StatelessWidget {
-  const _ColorDot({required this.color, required this.selected, required this.onTap});
+  const _ColorDot({
+    required this.color,
+    required this.selected,
+    required this.onTap,
+  });
 
   final Color color;
   final bool selected;
@@ -174,13 +422,18 @@ class _ColorDot extends StatelessWidget {
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: selected ? AppColors.primary : AppColors.border, width: selected ? 2 : 1),
+          border: Border.all(
+            color: selected ? AppColors.primary : AppColors.border,
+            width: selected ? 2 : 1,
+          ),
         ),
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
-            border: color == Colors.white ? Border.all(color: AppColors.border) : null,
+            border: color == Colors.white
+                ? Border.all(color: AppColors.border)
+                : null,
           ),
         ),
       ),
@@ -198,8 +451,14 @@ class _InfoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      title: Text(title, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700)),
-      trailing: Text(trailing ?? '›', style: AppTextStyles.body.copyWith(color: AppColors.secondary)),
+      title: Text(
+        title,
+        style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700),
+      ),
+      trailing: Text(
+        trailing ?? '›',
+        style: AppTextStyles.body.copyWith(color: AppColors.secondary),
+      ),
     );
   }
 }

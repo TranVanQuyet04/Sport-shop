@@ -5,6 +5,8 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/order_status_badge.dart';
+import '../../model/common/order_status.dart';
 
 class ShopStaffPackingPage extends StatelessWidget {
   const ShopStaffPackingPage({super.key, required this.orderId});
@@ -16,7 +18,7 @@ class ShopStaffPackingPage extends StatelessWidget {
         appBar: AppBar(leading: IconButton(onPressed: context.pop, icon: const Icon(Icons.arrow_back)), title: const Text('APEX VELOCITY'), actions: const [IconButton(onPressed: null, icon: Icon(Icons.notifications_none))]),
         body: ListView(padding: const EdgeInsets.all(AppSpacing.lg), children: [
           Text('ĐƠN HÀNG $orderId', style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w900)),
-          Row(children: [Expanded(child: Text('Chi tiết đóng gói', style: AppTextStyles.display.copyWith(fontSize: 36))), const Chip(label: Text('CONFIRMED'), backgroundColor: AppColors.secondary, labelStyle: TextStyle(color: Colors.white))]),
+          Row(children: [Expanded(child: Text('Chi tiết đóng gói', style: AppTextStyles.display.copyWith(fontSize: 36))), const OrderStatusBadge(status: OrderStatus.confirmed)]),
           const SizedBox(height: AppSpacing.lg),
           DecoratedBox(decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadius.xl), border: const Border(left: BorderSide(color: AppColors.secondary, width: 4))), child: Padding(padding: const EdgeInsets.all(AppSpacing.lg), child: Text('!  GHI CHÚ KHÁCH HÀNG\n"Vui lòng bọc kỹ phần hộp giày, tôi mua làm quà tặng. Cảm ơn shop!" - Trần Hoàng Long', style: AppTextStyles.body.copyWith(color: AppColors.secondary, fontWeight: FontWeight.w700)))),
           const SizedBox(height: AppSpacing.xl),
