@@ -9,6 +9,7 @@ import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_state.dart';
+import '../../model/customer/product_detail_model.dart';
 import '../../model/customer/product_summary_model.dart';
 import 'widgets/admin_app_bar.dart';
 import 'widgets/admin_bottom_nav.dart';
@@ -46,6 +47,41 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
     }
   }
 
+  Future<void> _editProduct(ProductSummaryModel product) async {
+    await _controller.loadProductDetail(product.id);
+    if (!mounted) {
+      return;
+    }
+
+    final detail = _controller.selectedProduct;
+    if (detail == null) {
+      _showResult(false, 'Không tải được chi tiết sản phẩm.');
+      return;
+    }
+
+    final result = await showDialog<_ProductFormResult>(
+      context: context,
+      builder: (_) => _ProductFormDialog(product: detail),
+    );
+    if (result == null) {
+      return;
+    }
+
+    final success = await _controller.saveProduct(
+      id: detail.id,
+      name: result.name,
+      description: result.description,
+      categoryName: result.categoryName,
+      brandName: result.brandName,
+      sportName: result.sportName,
+      variants: detail.variants.map(_variantPayload).toList(),
+    );
+    if (!mounted) {
+      return;
+    }
+    _showResult(success, 'Đã cập nhật sản phẩm.');
+  }
+
   Future<void> _deleteProduct(ProductSummaryModel product) async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -72,15 +108,31 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
     if (!mounted) {
       return;
     }
+    _showResult(success, 'Đã xóa sản phẩm.');
+  }
+
+  void _showResult(bool success, String successMessage) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           success
-              ? 'Đã xóa sản phẩm.'
-              : (_controller.errorMessage ?? 'Chưa xóa được sản phẩm.'),
+              ? successMessage
+              : (_controller.errorMessage ?? 'Thao tác chưa thành công.'),
         ),
       ),
     );
+  }
+
+  Map<String, dynamic> _variantPayload(ProductVariantModel variant) {
+    return {
+      'id': int.tryParse(variant.id),
+      'size': variant.size,
+      'color': variant.color,
+      'price': variant.price,
+      'stockQuantity': variant.stockQuantity,
+      'sku': variant.sku,
+      'imageUrls': variant.imageUrls,
+    };
   }
 
   @override
@@ -168,9 +220,157 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
         final product = _controller.products[index - 3];
         return _ProductAdminCard(
           product: product,
+          onEdit: () => _editProduct(product),
           onDelete: () => _deleteProduct(product),
         );
       },
+    );
+  }
+}
+
+class _ProductFormResult {
+  const _ProductFormResult({
+    required this.name,
+    required this.description,
+    required this.categoryName,
+    required this.brandName,
+    required this.sportName,
+  });
+
+  final String name;
+  final String description;
+  final String categoryName;
+  final String brandName;
+  final String sportName;
+}
+
+class _ProductFormDialog extends StatefulWidget {
+  const _ProductFormDialog({required this.product});
+
+  final ProductDetailModel product;
+
+  @override
+  State<_ProductFormDialog> createState() => _ProductFormDialogState();
+}
+
+class _ProductFormDialogState extends State<_ProductFormDialog> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late final TextEditingController _nameController = TextEditingController(
+    text: widget.product.name,
+  );
+  late final TextEditingController _descriptionController =
+      TextEditingController(text: widget.product.description);
+  late final TextEditingController _categoryController = TextEditingController(
+    text: widget.product.category,
+  );
+  late final TextEditingController _brandController = TextEditingController(
+    text: widget.product.brand,
+  );
+  late final TextEditingController _sportController = TextEditingController(
+    text: widget.product.sport,
+  );
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _categoryController.dispose();
+    _brandController.dispose();
+    _sportController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    if (_formKey.currentState?.validate() != true) {
+      return;
+    }
+    Navigator.pop(
+      context,
+      _ProductFormResult(
+        name: _nameController.text.trim(),
+        description: _descriptionController.text.trim(),
+        categoryName: _categoryController.text.trim(),
+        brandName: _brandController.text.trim(),
+        sportName: _sportController.text.trim(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Sửa thông tin sản phẩm'),
+      content: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _DialogField(
+                controller: _nameController,
+                label: 'Tên sản phẩm',
+                required: true,
+              ),
+              _DialogField(
+                controller: _descriptionController,
+                label: 'Mô tả',
+                minLines: 3,
+              ),
+              _DialogField(
+                controller: _categoryController,
+                label: 'Danh mục',
+                required: true,
+              ),
+              _DialogField(
+                controller: _brandController,
+                label: 'Thương hiệu',
+                required: true,
+              ),
+              _DialogField(controller: _sportController, label: 'Môn thể thao'),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Hủy'),
+        ),
+        FilledButton(onPressed: _submit, child: const Text('Lưu')),
+      ],
+    );
+  }
+}
+
+class _DialogField extends StatelessWidget {
+  const _DialogField({
+    required this.controller,
+    required this.label,
+    this.minLines = 1,
+    this.required = false,
+  });
+
+  final TextEditingController controller;
+  final String label;
+  final int minLines;
+  final bool required;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: TextFormField(
+        controller: controller,
+        minLines: minLines,
+        maxLines: minLines == 1 ? 1 : 5,
+        decoration: InputDecoration(labelText: label),
+        validator: (value) {
+          if (required && (value == null || value.trim().isEmpty)) {
+            return 'Vui lòng nhập $label.';
+          }
+          return null;
+        },
+      ),
     );
   }
 }
@@ -201,9 +401,14 @@ class _FilterButton extends StatelessWidget {
 }
 
 class _ProductAdminCard extends StatelessWidget {
-  const _ProductAdminCard({required this.product, required this.onDelete});
+  const _ProductAdminCard({
+    required this.product,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   final ProductSummaryModel product;
+  final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   @override
@@ -282,13 +487,19 @@ class _ProductAdminCard extends StatelessWidget {
                     ),
                     PopupMenuButton<String>(
                       onSelected: (value) {
-                        if (value == 'variants') {
+                        if (value == 'edit') {
+                          onEdit();
+                        } else if (value == 'variants') {
                           context.go('/admin/products/${product.id}/variants');
                         } else if (value == 'delete') {
                           onDelete();
                         }
                       },
                       itemBuilder: (context) => const [
+                        PopupMenuItem(
+                          value: 'edit',
+                          child: Text('Sửa thông tin'),
+                        ),
                         PopupMenuItem(
                           value: 'variants',
                           child: Text('Biến thể / kho'),
