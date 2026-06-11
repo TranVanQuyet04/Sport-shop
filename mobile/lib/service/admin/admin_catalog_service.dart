@@ -1,9 +1,50 @@
 import '../../core/network/api_client.dart';
 import '../../model/admin/admin_lookup_model.dart';
+import '../../model/customer/product_detail_model.dart';
 import '../../model/customer/product_summary_model.dart';
 
 abstract interface class AdminCatalogService {
   Future<List<ProductSummaryModel>> getProducts();
+
+  Future<ProductDetailModel> getProductDetail(String id);
+
+  Future<ProductDetailModel> createProduct({
+    required String name,
+    required String description,
+    required String categoryName,
+    required String brandName,
+    required String sportName,
+    required List<Map<String, dynamic>> variants,
+  });
+
+  Future<ProductSummaryModel> updateProduct({
+    required String id,
+    required String name,
+    required String description,
+    required String categoryName,
+    required String brandName,
+    required String sportName,
+    required List<Map<String, dynamic>> variants,
+  });
+
+  Future<void> deleteProduct(String id);
+
+  Future<ProductVariantModel> addVariant({
+    required String productId,
+    required Map<String, dynamic> variant,
+  });
+
+  Future<ProductVariantModel> updateVariant({
+    required String variantId,
+    required Map<String, dynamic> variant,
+  });
+
+  Future<void> deleteVariant(String variantId);
+
+  Future<void> updateVariantStock({
+    required String variantId,
+    required int quantity,
+  });
 
   Future<List<AdminCategoryModel>> getCategories();
 
@@ -55,6 +96,104 @@ class AdminCatalogApiService implements AdminCatalogService {
     return _parseList(
       json,
     ).map((item) => ProductSummaryModel.fromJson(item)).toList();
+  }
+
+  @override
+  Future<ProductDetailModel> getProductDetail(String id) async {
+    final json = await _apiClient.getJson('/admin/products/$id');
+    return ProductDetailModel.fromJson(_parseObject(json));
+  }
+
+  @override
+  Future<ProductDetailModel> createProduct({
+    required String name,
+    required String description,
+    required String categoryName,
+    required String brandName,
+    required String sportName,
+    required List<Map<String, dynamic>> variants,
+  }) async {
+    final json = await _apiClient.postJson(
+      '/admin/products',
+      data: _productPayload(
+        name: name,
+        description: description,
+        categoryName: categoryName,
+        brandName: brandName,
+        sportName: sportName,
+        variants: variants,
+      ),
+    );
+    return ProductDetailModel.fromJson(_parseObject(json));
+  }
+
+  @override
+  Future<ProductSummaryModel> updateProduct({
+    required String id,
+    required String name,
+    required String description,
+    required String categoryName,
+    required String brandName,
+    required String sportName,
+    required List<Map<String, dynamic>> variants,
+  }) async {
+    final json = await _apiClient.putJson(
+      '/admin/products/$id',
+      data: _productPayload(
+        name: name,
+        description: description,
+        categoryName: categoryName,
+        brandName: brandName,
+        sportName: sportName,
+        variants: variants,
+      ),
+    );
+    return ProductSummaryModel.fromJson(_parseObject(json));
+  }
+
+  @override
+  Future<void> deleteProduct(String id) async {
+    await _apiClient.deleteJson('/admin/products/$id');
+  }
+
+  @override
+  Future<ProductVariantModel> addVariant({
+    required String productId,
+    required Map<String, dynamic> variant,
+  }) async {
+    final json = await _apiClient.postJson(
+      '/admin/products/$productId/variants',
+      data: variant,
+    );
+    return ProductVariantModel.fromJson(_parseObject(json));
+  }
+
+  @override
+  Future<ProductVariantModel> updateVariant({
+    required String variantId,
+    required Map<String, dynamic> variant,
+  }) async {
+    final json = await _apiClient.putJson(
+      '/admin/products/variants/$variantId',
+      data: variant,
+    );
+    return ProductVariantModel.fromJson(_parseObject(json));
+  }
+
+  @override
+  Future<void> deleteVariant(String variantId) async {
+    await _apiClient.deleteJson('/admin/products/variants/$variantId');
+  }
+
+  @override
+  Future<void> updateVariantStock({
+    required String variantId,
+    required int quantity,
+  }) async {
+    await _apiClient.patchJson(
+      '/admin/products/variants/$variantId/stock',
+      queryParameters: {'quantity': quantity},
+    );
   }
 
   @override
@@ -207,5 +346,23 @@ class AdminCatalogApiService implements AdminCatalogService {
         .toLowerCase()
         .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
         .replaceAll(RegExp(r'^-+|-+$'), '');
+  }
+
+  Map<String, dynamic> _productPayload({
+    required String name,
+    required String description,
+    required String categoryName,
+    required String brandName,
+    required String sportName,
+    required List<Map<String, dynamic>> variants,
+  }) {
+    return {
+      'productName': name,
+      'description': description,
+      'categoryName': categoryName,
+      'brandName': brandName,
+      'sportName': sportName,
+      'variants': variants,
+    };
   }
 }

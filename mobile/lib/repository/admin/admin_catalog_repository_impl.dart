@@ -1,4 +1,5 @@
 import '../../model/admin/admin_lookup_model.dart';
+import '../../model/customer/product_detail_model.dart';
 import '../../model/customer/product_summary_model.dart';
 import '../../service/admin/admin_catalog_service.dart';
 import 'admin_catalog_repository.dart';
@@ -11,6 +12,91 @@ class AdminCatalogRepositoryImpl implements AdminCatalogRepository {
   @override
   Future<List<ProductSummaryModel>> getProducts() =>
       _adminCatalogService.getProducts();
+
+  @override
+  Future<ProductDetailModel> getProductDetail(String id) =>
+      _adminCatalogService.getProductDetail(id);
+
+  @override
+  Future<ProductDetailModel> createProduct({
+    required String name,
+    required String description,
+    required String categoryName,
+    required String brandName,
+    required String sportName,
+    required List<Map<String, dynamic>> variants,
+  }) {
+    return _adminCatalogService.createProduct(
+      name: name,
+      description: description,
+      categoryName: categoryName,
+      brandName: brandName,
+      sportName: sportName,
+      variants: variants,
+    );
+  }
+
+  @override
+  Future<ProductSummaryModel> updateProduct({
+    required String id,
+    required String name,
+    required String description,
+    required String categoryName,
+    required String brandName,
+    required String sportName,
+    required List<Map<String, dynamic>> variants,
+  }) {
+    return _adminCatalogService.updateProduct(
+      id: id,
+      name: name,
+      description: description,
+      categoryName: categoryName,
+      brandName: brandName,
+      sportName: sportName,
+      variants: variants,
+    );
+  }
+
+  @override
+  Future<void> deleteProduct(String id) =>
+      _adminCatalogService.deleteProduct(id);
+
+  @override
+  Future<ProductVariantModel> addVariant({
+    required String productId,
+    required Map<String, dynamic> variant,
+  }) {
+    return _adminCatalogService.addVariant(
+      productId: productId,
+      variant: variant,
+    );
+  }
+
+  @override
+  Future<ProductVariantModel> updateVariant({
+    required String variantId,
+    required Map<String, dynamic> variant,
+  }) {
+    return _adminCatalogService.updateVariant(
+      variantId: variantId,
+      variant: variant,
+    );
+  }
+
+  @override
+  Future<void> deleteVariant(String variantId) =>
+      _adminCatalogService.deleteVariant(variantId);
+
+  @override
+  Future<void> updateVariantStock({
+    required String variantId,
+    required int quantity,
+  }) {
+    return _adminCatalogService.updateVariantStock(
+      variantId: variantId,
+      quantity: quantity,
+    );
+  }
 
   @override
   Future<List<AdminCategoryModel>> getCategories() =>

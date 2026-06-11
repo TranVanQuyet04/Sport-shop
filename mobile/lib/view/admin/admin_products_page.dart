@@ -46,6 +46,43 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
     }
   }
 
+  Future<void> _deleteProduct(ProductSummaryModel product) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Xóa sản phẩm?'),
+        content: Text('Bạn có chắc muốn xóa "${product.name}" không?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) {
+      return;
+    }
+
+    final success = await _controller.deleteProduct(product.id);
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          success
+              ? 'Đã xóa sản phẩm.'
+              : (_controller.errorMessage ?? 'Chưa xóa được sản phẩm.'),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,7 +165,11 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
             ],
           );
         }
-        return _ProductAdminCard(product: _controller.products[index - 3]);
+        final product = _controller.products[index - 3];
+        return _ProductAdminCard(
+          product: product,
+          onDelete: () => _deleteProduct(product),
+        );
       },
     );
   }
@@ -160,9 +201,10 @@ class _FilterButton extends StatelessWidget {
 }
 
 class _ProductAdminCard extends StatelessWidget {
-  const _ProductAdminCard({required this.product});
+  const _ProductAdminCard({required this.product, required this.onDelete});
 
   final ProductSummaryModel product;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -238,10 +280,22 @@ class _ProductAdminCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    IconButton(
-                      onPressed: () =>
-                          context.go('/admin/products/${product.id}/variants'),
-                      icon: const Icon(Icons.inventory_2_outlined),
+                    PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == 'variants') {
+                          context.go('/admin/products/${product.id}/variants');
+                        } else if (value == 'delete') {
+                          onDelete();
+                        }
+                      },
+                      itemBuilder: (context) => const [
+                        PopupMenuItem(
+                          value: 'variants',
+                          child: Text('Biến thể / kho'),
+                        ),
+                        PopupMenuItem(value: 'delete', child: Text('Xóa')),
+                      ],
+                      icon: const Icon(Icons.more_vert),
                     ),
                   ],
                 ),

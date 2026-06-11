@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../../model/admin/admin_lookup_model.dart';
+import '../../model/customer/product_detail_model.dart';
 import '../../model/customer/product_summary_model.dart';
 import '../../repository/admin/admin_catalog_repository.dart';
 
@@ -10,6 +11,7 @@ class AdminCatalogController extends ChangeNotifier {
   final AdminCatalogRepository adminCatalogRepository;
 
   List<ProductSummaryModel> products = const [];
+  ProductDetailModel? selectedProduct;
   List<AdminCategoryModel> categories = const [];
   List<AdminBrandModel> brands = const [];
   List<AdminUserModel> users = const [];
@@ -19,6 +21,104 @@ class AdminCatalogController extends ChangeNotifier {
 
   Future<void> loadProducts() =>
       _load(() async => products = await adminCatalogRepository.getProducts());
+
+  Future<void> loadProductDetail(String id) => _load(
+    () async =>
+        selectedProduct = await adminCatalogRepository.getProductDetail(id),
+  );
+
+  Future<bool> saveProduct({
+    String? id,
+    required String name,
+    required String description,
+    required String categoryName,
+    required String brandName,
+    required String sportName,
+    required List<Map<String, dynamic>> variants,
+  }) {
+    return _submit(() async {
+      if (id == null || id.isEmpty) {
+        selectedProduct = await adminCatalogRepository.createProduct(
+          name: name,
+          description: description,
+          categoryName: categoryName,
+          brandName: brandName,
+          sportName: sportName,
+          variants: variants,
+        );
+      } else {
+        await adminCatalogRepository.updateProduct(
+          id: id,
+          name: name,
+          description: description,
+          categoryName: categoryName,
+          brandName: brandName,
+          sportName: sportName,
+          variants: variants,
+        );
+        selectedProduct = await adminCatalogRepository.getProductDetail(id);
+      }
+      products = await adminCatalogRepository.getProducts();
+    });
+  }
+
+  Future<bool> deleteProduct(String id) {
+    return _submit(() async {
+      await adminCatalogRepository.deleteProduct(id);
+      products = await adminCatalogRepository.getProducts();
+    });
+  }
+
+  Future<bool> saveVariant({
+    required String productId,
+    String? variantId,
+    required Map<String, dynamic> variant,
+  }) {
+    return _submit(() async {
+      if (variantId == null || variantId.isEmpty) {
+        await adminCatalogRepository.addVariant(
+          productId: productId,
+          variant: variant,
+        );
+      } else {
+        await adminCatalogRepository.updateVariant(
+          variantId: variantId,
+          variant: variant,
+        );
+      }
+      selectedProduct = await adminCatalogRepository.getProductDetail(
+        productId,
+      );
+    });
+  }
+
+  Future<bool> deleteVariant({
+    required String productId,
+    required String variantId,
+  }) {
+    return _submit(() async {
+      await adminCatalogRepository.deleteVariant(variantId);
+      selectedProduct = await adminCatalogRepository.getProductDetail(
+        productId,
+      );
+    });
+  }
+
+  Future<bool> updateVariantStock({
+    required String productId,
+    required String variantId,
+    required int quantity,
+  }) {
+    return _submit(() async {
+      await adminCatalogRepository.updateVariantStock(
+        variantId: variantId,
+        quantity: quantity,
+      );
+      selectedProduct = await adminCatalogRepository.getProductDetail(
+        productId,
+      );
+    });
+  }
 
   Future<void> loadCategories() => _load(
     () async => categories = await adminCatalogRepository.getCategories(),
