@@ -2,98 +2,260 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../controller/customer/order_detail_controller.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_state.dart';
 import '../../core/widgets/order_status_badge.dart';
-import '../../model/common/delivery_status.dart';
+import '../../model/common/order_status.dart';
+import '../../model/customer/order_model.dart';
 
-class OrderDetailPage extends StatelessWidget {
+class OrderDetailPage extends StatefulWidget {
   const OrderDetailPage({super.key, required this.orderId});
 
   final String orderId;
 
   @override
+  State<OrderDetailPage> createState() => _OrderDetailPageState();
+}
+
+class _OrderDetailPageState extends State<OrderDetailPage> {
+  late final OrderDetailController _controller = OrderDetailController(
+    orderRepository: AppDependencies.instance.orderRepository,
+    orderId: widget.orderId,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onControllerChanged);
+    _controller.loadOrder();
+  }
+
+  @override
+  void dispose() {
+    _controller
+      ..removeListener(_onControllerChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onControllerChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final total = NumberFormat.decimalPattern('vi_VN').format(4930000);
+    final order = _controller.order;
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: context.pop, icon: const Icon(Icons.arrow_back)),
+        leading: IconButton(
+          onPressed: context.pop,
+          icon: const Icon(Icons.arrow_back),
+        ),
         title: const Text('Chi tiết đơn hàng'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        children: [
-          Row(
+      body: RefreshIndicator(
+        onRefresh: _controller.loadOrder,
+        child: _buildBody(order),
+      ),
+    );
+  }
+
+  Widget _buildBody(OrderModel? order) {
+    if (_controller.isLoading && order == null) {
+      return const AppLoadingState(title: 'Đang tải đơn hàng');
+    }
+    if (_controller.errorMessage != null && order == null) {
+      return AppErrorState(
+        title: 'Không tải được đơn hàng',
+        message: _controller.errorMessage!,
+        onAction: _controller.loadOrder,
+      );
+    }
+    if (order == null) {
+      return const AppEmptyState(title: 'Không có dữ liệu đơn hàng');
+    }
+
+    final status = OrderStatus.fromApi(order.status);
+    final total = NumberFormat.decimalPattern(
+      'vi_VN',
+    ).format(order.totalAmount);
+    final orderTime = order.orderDate == null
+        ? 'Chưa có thời gian'
+        : DateFormat('HH:mm, dd/MM/yyyy', 'vi_VN').format(order.orderDate!);
+
+    return ListView(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                '#${order.id}',
+                style: AppTextStyles.display.copyWith(fontSize: 30),
+              ),
+            ),
+            OrderStatusBadge(status: status),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          'Đặt lúc $orderTime',
+          style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        _Panel(
+          title: 'Địa chỉ nhận hàng',
+          child: Text(
+            '${order.recipientName} • ${order.phoneNumber}\n${order.shippingAddress}',
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        _Panel(
+          title: 'Sản phẩm',
+          child: Column(
+            children: order.items.isEmpty
+                ? [const Text('Không có sản phẩm trong đơn hàng.')]
+                : order.items
+                      .map((item) => _OrderItemTile(item: item))
+                      .toList(),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        _Panel(
+          title: 'Thanh toán',
+          child: Column(
             children: [
-              Expanded(child: Text('#$orderId', style: AppTextStyles.display.copyWith(fontSize: 30))),
-              const DeliveryStatusBadge(status: DeliveryStatus.outForDelivery),
+              _PriceLine(label: 'Phương thức', value: order.paymentMethod),
+              _PriceLine(label: 'Tổng thanh toán', value: '$totalđ'),
+              if (order.note.isNotEmpty)
+                _PriceLine(label: 'Ghi chú', value: order.note),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
-          Text('Đặt lúc 14:20, 22 Tháng 05, 2024', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
-          const SizedBox(height: AppSpacing.xl),
-          const _Panel(
-            title: 'Địa chỉ nhận hàng',
-            child: Text('Nguyễn Văn A • 090 123 4567\n123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh'),
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        AppButton(
+          label: 'Theo dõi hành trình',
+          variant: AppButtonVariant.secondary,
+          onPressed: () => context.go('/customer/orders/${order.id}/tracking'),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        if (status == OrderStatus.shipped || status == OrderStatus.completed)
+          AppButton(
+            label: status == OrderStatus.completed
+                ? 'Đã hoàn thành'
+                : 'Xác nhận đã nhận hàng',
+            variant: AppButtonVariant.outline,
+            isLoading: _controller.isUpdating,
+            onPressed: status == OrderStatus.completed ? null : _completeOrder,
+          )
+        else if (status == OrderStatus.pending)
+          AppButton(
+            label: 'Hủy đơn hàng',
+            variant: AppButtonVariant.outline,
+            isLoading: _controller.isUpdating,
+            onPressed: _cancelOrder,
           ),
-          const SizedBox(height: AppSpacing.lg),
-          _Panel(
-            title: 'Sản phẩm',
-            child: Row(
+      ],
+    );
+  }
+
+  Future<void> _cancelOrder() async {
+    final success = await _controller.cancelOrder();
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          success
+              ? 'Đã hủy đơn hàng.'
+              : _controller.errorMessage ?? 'Không thể hủy đơn.',
+        ),
+      ),
+    );
+  }
+
+  Future<void> _completeOrder() async {
+    final success = await _controller.completeOrder();
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          success
+              ? 'Đã xác nhận nhận hàng.'
+              : _controller.errorMessage ?? 'Không thể cập nhật đơn.',
+        ),
+      ),
+    );
+  }
+}
+
+class _OrderItemTile extends StatelessWidget {
+  const _OrderItemTile({required this.item});
+
+  final OrderItemModel item;
+
+  @override
+  Widget build(BuildContext context) {
+    final price = NumberFormat.decimalPattern('vi_VN').format(item.subTotal);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: Row(
+        children: [
+          Container(
+            width: 78,
+            height: 78,
+            decoration: BoxDecoration(
+              color: AppColors.surfaceMuted,
+              borderRadius: BorderRadius.circular(AppRadius.md),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: item.variantImage.isEmpty
+                ? const Icon(
+                    Icons.directions_run,
+                    color: AppColors.secondary,
+                    size: 42,
+                  )
+                : Image.network(
+                    item.variantImage,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      Icons.directions_run,
+                      color: AppColors.secondary,
+                      size: 42,
+                    ),
+                  ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 78,
-                  height: 78,
-                  decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadius.md)),
-                  child: const Icon(Icons.directions_run, color: AppColors.secondary, size: 42),
+                Text(item.productName, style: AppTextStyles.subtitle),
+                Text(
+                  item.variantLabel,
+                  style: AppTextStyles.body.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Nike Air Max 270 React', style: AppTextStyles.subtitle),
-                      Text('Size: 42 | Màu: Đỏ/Đen', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
-                      Text('3.250.000đ x1', style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900)),
-                    ],
+                Text(
+                  '$priceđ x${item.quantity}',
+                  style: AppTextStyles.body.copyWith(
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          _Panel(
-            title: 'Thanh toán',
-            child: Column(
-              children: [
-                const _PriceLine(label: 'Tổng tiền hàng', value: '4.950.000đ'),
-                const _PriceLine(label: 'Phí vận chuyển', value: '30.000đ'),
-                const _PriceLine(label: 'Giảm giá', value: '-50.000đ'),
-                const Divider(),
-                Row(
-                  children: [
-                    Text('Tổng thanh toán', style: AppTextStyles.subtitle),
-                    const Spacer(),
-                    Text('$totalđ', style: AppTextStyles.title.copyWith(color: AppColors.secondary)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          AppButton(
-            label: 'Theo dõi hành trình',
-            variant: AppButtonVariant.secondary,
-            onPressed: () => context.go('/customer/orders/$orderId/tracking'),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          AppButton(
-            label: 'Xác nhận đã nhận hàng',
-            variant: AppButtonVariant.outline,
-            onPressed: () => context.go('/customer/orders/$orderId/confirm-received'),
           ),
         ],
       ),
@@ -144,7 +306,7 @@ class _PriceLine extends StatelessWidget {
         children: [
           Text(label),
           const Spacer(),
-          Text(value),
+          Flexible(child: Text(value, textAlign: TextAlign.end)),
         ],
       ),
     );
