@@ -15,6 +15,7 @@ class AdminCatalogController extends ChangeNotifier {
   List<AdminCategoryModel> categories = const [];
   List<AdminBrandModel> brands = const [];
   List<AdminUserModel> users = const [];
+  AdminUserModel? selectedUser;
   bool isLoading = false;
   bool isSubmitting = false;
   String? errorMessage;
@@ -130,6 +131,10 @@ class AdminCatalogController extends ChangeNotifier {
   Future<void> loadUsers() =>
       _load(() async => users = await adminCatalogRepository.getUsers());
 
+  Future<void> loadUserDetail(String id) => _load(
+    () async => selectedUser = await adminCatalogRepository.getUserDetail(id),
+  );
+
   Future<bool> saveUser({
     String? id,
     required String fullName,
@@ -158,6 +163,7 @@ class AdminCatalogController extends ChangeNotifier {
           roleName: roleName,
           status: status,
         );
+        selectedUser = await adminCatalogRepository.getUserDetail(id);
       }
       users = await adminCatalogRepository.getUsers();
     });

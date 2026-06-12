@@ -83,6 +83,8 @@ abstract interface class AdminCatalogRepository {
 
   Future<List<AdminUserModel>> getUsers();
 
+  Future<AdminUserModel> getUserDetail(String id);
+
   Future<AdminUserModel> createUser({
     required String fullName,
     required String email,

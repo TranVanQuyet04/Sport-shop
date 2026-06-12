@@ -84,6 +84,8 @@ abstract interface class AdminCatalogService {
 
   Future<List<AdminUserModel>> getUsers();
 
+  Future<AdminUserModel> getUserDetail(String id);
+
   Future<AdminUserModel> createUser({
     required String fullName,
     required String email,
@@ -325,6 +327,12 @@ class AdminCatalogApiService implements AdminCatalogService {
     return _parseList(
       json,
     ).map((item) => AdminUserModel.fromJson(item)).toList();
+  }
+
+  @override
+  Future<AdminUserModel> getUserDetail(String id) async {
+    final json = await _apiClient.getJson('/admin/users/$id');
+    return AdminUserModel.fromJson(_parseObject(json));
   }
 
   @override

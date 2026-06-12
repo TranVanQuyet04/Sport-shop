@@ -176,6 +176,10 @@ class AdminCatalogRepositoryImpl implements AdminCatalogRepository {
   Future<List<AdminUserModel>> getUsers() => _adminCatalogService.getUsers();
 
   @override
+  Future<AdminUserModel> getUserDetail(String id) =>
+      _adminCatalogService.getUserDetail(id);
+
+  @override
   Future<AdminUserModel> createUser({
     required String fullName,
     required String email,
