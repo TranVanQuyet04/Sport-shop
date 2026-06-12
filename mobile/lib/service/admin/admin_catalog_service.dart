@@ -83,6 +83,25 @@ abstract interface class AdminCatalogService {
   Future<void> deleteBrand(String id);
 
   Future<List<AdminUserModel>> getUsers();
+
+  Future<AdminUserModel> createUser({
+    required String fullName,
+    required String email,
+    required String phoneNumber,
+    required String password,
+    required String confirmPassword,
+    required String roleName,
+  });
+
+  Future<AdminUserModel> updateUser({
+    required String id,
+    required String fullName,
+    required String phoneNumber,
+    required String roleName,
+    required bool status,
+  });
+
+  Future<void> deleteUser(String id);
 }
 
 class AdminCatalogApiService implements AdminCatalogService {
@@ -306,6 +325,54 @@ class AdminCatalogApiService implements AdminCatalogService {
     return _parseList(
       json,
     ).map((item) => AdminUserModel.fromJson(item)).toList();
+  }
+
+  @override
+  Future<AdminUserModel> createUser({
+    required String fullName,
+    required String email,
+    required String phoneNumber,
+    required String password,
+    required String confirmPassword,
+    required String roleName,
+  }) async {
+    final json = await _apiClient.postJson(
+      '/admin/users',
+      data: {
+        'fullName': fullName,
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'password': password,
+        'confirmPassword': confirmPassword,
+        'roleName': roleName,
+      },
+    );
+    return AdminUserModel.fromJson(_parseObject(json));
+  }
+
+  @override
+  Future<AdminUserModel> updateUser({
+    required String id,
+    required String fullName,
+    required String phoneNumber,
+    required String roleName,
+    required bool status,
+  }) async {
+    final json = await _apiClient.putJson(
+      '/admin/users/$id',
+      data: {
+        'fullName': fullName,
+        'phoneNumber': phoneNumber,
+        'roleName': roleName,
+        'status': status,
+      },
+    );
+    return AdminUserModel.fromJson(_parseObject(json));
+  }
+
+  @override
+  Future<void> deleteUser(String id) async {
+    await _apiClient.deleteJson('/admin/users/$id');
   }
 
   List<Map<String, dynamic>> _parseList(Map<String, dynamic> json) {

@@ -130,6 +130,46 @@ class AdminCatalogController extends ChangeNotifier {
   Future<void> loadUsers() =>
       _load(() async => users = await adminCatalogRepository.getUsers());
 
+  Future<bool> saveUser({
+    String? id,
+    required String fullName,
+    required String email,
+    required String phoneNumber,
+    required String password,
+    required String confirmPassword,
+    required String roleName,
+    required bool status,
+  }) {
+    return _submit(() async {
+      if (id == null || id.isEmpty) {
+        await adminCatalogRepository.createUser(
+          fullName: fullName,
+          email: email,
+          phoneNumber: phoneNumber,
+          password: password,
+          confirmPassword: confirmPassword,
+          roleName: roleName,
+        );
+      } else {
+        await adminCatalogRepository.updateUser(
+          id: id,
+          fullName: fullName,
+          phoneNumber: phoneNumber,
+          roleName: roleName,
+          status: status,
+        );
+      }
+      users = await adminCatalogRepository.getUsers();
+    });
+  }
+
+  Future<bool> deleteUser(String id) {
+    return _submit(() async {
+      await adminCatalogRepository.deleteUser(id);
+      users = await adminCatalogRepository.getUsers();
+    });
+  }
+
   Future<bool> saveCategory({
     String? id,
     required String name,

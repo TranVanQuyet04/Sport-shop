@@ -82,4 +82,23 @@ abstract interface class AdminCatalogRepository {
   Future<void> deleteBrand(String id);
 
   Future<List<AdminUserModel>> getUsers();
+
+  Future<AdminUserModel> createUser({
+    required String fullName,
+    required String email,
+    required String phoneNumber,
+    required String password,
+    required String confirmPassword,
+    required String roleName,
+  });
+
+  Future<AdminUserModel> updateUser({
+    required String id,
+    required String fullName,
+    required String phoneNumber,
+    required String roleName,
+    required bool status,
+  });
+
+  Future<void> deleteUser(String id);
 }
