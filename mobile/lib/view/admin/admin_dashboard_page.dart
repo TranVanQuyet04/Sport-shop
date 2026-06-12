@@ -8,7 +8,6 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../core/widgets/app_state.dart';
 import 'widgets/admin_app_bar.dart';
 import 'widgets/admin_bottom_nav.dart';
 import 'widgets/admin_stat_card.dart';
@@ -71,12 +70,13 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
           children: [
             if (_controller.isLoading)
               const LinearProgressIndicator(minHeight: 3),
-            if (_controller.errorMessage != null)
-              AppErrorState(
-                title: 'Không tải được dashboard',
+            if (_controller.errorMessage != null) ...[
+              _AdminDemoBanner(
                 message: _controller.errorMessage!,
-                onAction: _controller.loadDashboard,
+                onRefresh: _controller.loadDashboard,
               ),
+              const SizedBox(height: AppSpacing.lg),
+            ],
             Text(
               'Hệ thống quản trị',
               style: AppTextStyles.caption.copyWith(
@@ -96,7 +96,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
               child: AdminStatCard(
                 title: 'Doanh thu hôm nay',
                 value: '$revenueđ',
-                subtitle: 'Từ API báo cáo',
+                subtitle: 'Tổng hợp theo ngày',
                 icon: Icons.payments_outlined,
                 dark: true,
               ),
@@ -130,6 +130,13 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
               ],
             ),
             const SizedBox(height: AppSpacing.xl),
+            _OperationsSnapshot(
+              pendingOrders: pendingOrders,
+              totalOrders: totalOrders,
+              onOrders: () => context.go(AppRoutes.adminOrders),
+              onDelivery: () => context.go(AppRoutes.adminDeliveryMonitoring),
+            ),
+            const SizedBox(height: AppSpacing.xl),
             Text('Thao tác nhanh', style: AppTextStyles.title),
             const SizedBox(height: AppSpacing.md),
             Row(
@@ -149,7 +156,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                 _QuickAction(
                   icon: Icons.calendar_month_outlined,
                   label: 'Lịch trực',
-                  onTap: () => context.go(AppRoutes.adminStaff),
+                  onTap: () => context.go(AppRoutes.adminShiftPlanning),
                 ),
               ],
             ),
@@ -167,26 +174,179 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             ),
             const _ActivityCard(
               icon: Icons.local_shipping_outlined,
-              title: 'Đơn hàng đang được xử lý',
-              subtitle: 'Theo dõi toàn bộ đơn trong màn quản lý đơn hàng.',
+              title: '12 đơn đang chờ xử lý',
+              subtitle: 'Ưu tiên xác nhận đơn mới và bàn giao vận chuyển.',
               accent: AppColors.secondary,
+              meta: 'Cần xử lý',
             ),
             const _ActivityCard(
               icon: Icons.person_add_alt,
-              title: 'Người dùng mới',
-              subtitle: 'Số người dùng mới được lấy từ báo cáo dashboard.',
+              title: '18 khách hàng mới',
+              subtitle: 'Tăng trưởng người dùng trong ngày hôm nay.',
               accent: AppColors.primary,
+              meta: 'Hôm nay',
             ),
             const _ActivityCard(
               icon: Icons.inventory_2_outlined,
-              title: 'Kho hàng',
-              subtitle: 'Quản lý sản phẩm và biến thể trong phân hệ sản phẩm.',
+              title: 'Kho hàng cần rà soát',
+              subtitle: 'Kiểm tra sản phẩm bán chạy và biến thể sắp hết hàng.',
               accent: AppColors.textSecondary,
+              meta: 'Inventory',
             ),
           ],
         ),
       ),
       bottomNavigationBar: const AdminBottomNav(selectedIndex: 0),
+    );
+  }
+}
+
+class _AdminDemoBanner extends StatelessWidget {
+  const _AdminDemoBanner({required this.message, required this.onRefresh});
+
+  final String message;
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+            TextButton(onPressed: onRefresh, child: const Text('Thử lại')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OperationsSnapshot extends StatelessWidget {
+  const _OperationsSnapshot({
+    required this.pendingOrders,
+    required this.totalOrders,
+    required this.onOrders,
+    required this.onDelivery,
+  });
+
+  final String pendingOrders;
+  final String totalOrders;
+  final VoidCallback onOrders;
+  final VoidCallback onDelivery;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Tình hình vận hành',
+              style: AppTextStyles.title.copyWith(color: AppColors.textInverse),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                Expanded(
+                  child: _SnapshotMetric(
+                    label: 'Chờ xử lý',
+                    value: pendingOrders,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: _SnapshotMetric(label: 'Tổng đơn', value: totalOrders),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: onOrders,
+                    icon: const Icon(Icons.receipt_long_outlined),
+                    label: const Text('Đơn hàng'),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: onDelivery,
+                    icon: const Icon(Icons.local_shipping_outlined),
+                    label: const Text('Giao hàng'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.textInverse,
+                      side: BorderSide(
+                        color: AppColors.textInverse.withValues(alpha: 0.4),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SnapshotMetric extends StatelessWidget {
+  const _SnapshotMetric({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.textInverse.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textInverse.withValues(alpha: 0.7),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              value,
+              style: AppTextStyles.display.copyWith(
+                color: AppColors.textInverse,
+                fontSize: 28,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -250,12 +410,14 @@ class _ActivityCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.accent,
+    required this.meta,
   });
 
   final IconData icon;
   final String title;
   final String subtitle;
   final Color accent;
+  final String meta;
 
   @override
   Widget build(BuildContext context) {
@@ -278,7 +440,7 @@ class _ActivityCard extends StatelessWidget {
         ),
         subtitle: Text(subtitle),
         trailing: Text(
-          'API',
+          meta,
           textAlign: TextAlign.right,
           style: AppTextStyles.caption,
         ),
