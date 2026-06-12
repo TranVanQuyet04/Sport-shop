@@ -1,41 +1,254 @@
 import 'package:flutter/material.dart';
 
+import '../../controller/admin/admin_catalog_controller.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_state.dart';
+import '../../model/admin/admin_lookup_model.dart';
 import 'widgets/admin_bottom_nav.dart';
 
-class AdminLeaveManagementPage extends StatelessWidget {
+class AdminLeaveManagementPage extends StatefulWidget {
   const AdminLeaveManagementPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Admin Dashboard'), actions: const [IconButton(onPressed: null, icon: Icon(Icons.notifications_none))]),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        children: const [
-          _Title(),
-          SizedBox(height: AppSpacing.xl),
-          _CalendarCard(),
-          SizedBox(height: AppSpacing.xl),
-          Row(children: [Expanded(child: Text('Đang chờ duyệt', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800))), Chip(label: Text('3 Yêu cầu'))]),
-          SizedBox(height: AppSpacing.md),
-          _LeaveRequest(name: 'Nguyễn Thu Hà', dept: 'Phòng Kinh doanh', date: '15 Th10', days: '1 ngày', reason: 'Nghỉ ốm (Cảm cúm theo mùa, cần đi khám bác sĩ).'),
-          SizedBox(height: AppSpacing.lg),
-          _LeaveRequest(name: 'Trần Minh Quân', dept: 'Phòng Kỹ thuật', date: '11 Th10', days: '2 ngày', reason: 'Việc gia đình riêng (Giải quyết thủ tục nhà đất).'),
-          SizedBox(height: AppSpacing.xl),
-          Text('Hoạt động gần đây', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
-          SizedBox(height: AppSpacing.md),
-          _RecentLeave(name: 'Lê Văn Sâm', status: 'Đã duyệt - 05 Th10', ok: true),
-          SizedBox(height: AppSpacing.md),
-          _RecentLeave(name: 'Phạm Mỹ Linh', status: 'Từ chối - 04 Th10', ok: false),
+  State<AdminLeaveManagementPage> createState() =>
+      _AdminLeaveManagementPageState();
+}
+
+class _AdminLeaveManagementPageState extends State<AdminLeaveManagementPage> {
+  late final AdminCatalogController _controller = AdminCatalogController(
+    adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
+  );
+  final Set<String> _approvedIds = {};
+  final Set<String> _rejectedIds = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onControllerChanged);
+    _controller.loadUsers();
+  }
+
+  @override
+  void dispose() {
+    _controller
+      ..removeListener(_onControllerChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onControllerChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  List<AdminUserModel> get _staffUsers {
+    return _controller.users.where((user) {
+      final role = user.roleName.toUpperCase();
+      return role == 'SHOP_STAFF' ||
+          role == 'DELIVERY_STAFF' ||
+          role == 'SHIPPER' ||
+          role == 'STAFF';
+    }).toList();
+  }
+
+  List<_LeaveRequestData> get _requests {
+    final reasons = [
+      'Nghỉ ốm, cần đi khám và nghỉ ngơi.',
+      'Việc gia đình riêng, cần xử lý trong ngày.',
+      'Xin nghỉ phép cá nhân theo lịch đã báo trước.',
+    ];
+    return _staffUsers.take(6).toList().asMap().entries.map((entry) {
+      final user = entry.value;
+      final date = DateTime.now().add(Duration(days: entry.key + 1));
+      return _LeaveRequestData(
+        id: user.id,
+        name: user.fullName,
+        role: user.roleName,
+        date: date,
+        days: entry.key.isEven ? 1 : 2,
+        reason: reasons[entry.key % reasons.length],
+      );
+    }).toList();
+  }
+
+  Future<void> _decideLeave(_LeaveRequestData request, bool approve) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(approve ? 'Duyệt nghỉ phép?' : 'Từ chối nghỉ phép?'),
+        content: Text(
+          '${request.name} xin nghỉ ${request.days} ngày. Xác nhận thao tác này?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(approve ? 'Duyệt' : 'Từ chối'),
+          ),
         ],
+      ),
+    );
+    if (confirmed != true) {
+      return;
+    }
+    setState(() {
+      if (approve) {
+        _approvedIds.add(request.id);
+        _rejectedIds.remove(request.id);
+      } else {
+        _rejectedIds.add(request.id);
+        _approvedIds.remove(request.id);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final requests = _requests;
+    final pendingRequests = requests
+        .where(
+          (request) =>
+              !_approvedIds.contains(request.id) &&
+              !_rejectedIds.contains(request.id),
+        )
+        .toList();
+    final decidedRequests = requests
+        .where(
+          (request) =>
+              _approvedIds.contains(request.id) ||
+              _rejectedIds.contains(request.id),
+        )
+        .toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Quản lý nghỉ phép'),
+        actions: [
+          IconButton(
+            onPressed: _controller.isLoading ? null : _controller.loadUsers,
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: _controller.loadUsers,
+        child: _buildBody(pendingRequests, decidedRequests),
       ),
       bottomNavigationBar: const AdminBottomNav(selectedIndex: 3),
     );
   }
+
+  Widget _buildBody(
+    List<_LeaveRequestData> pendingRequests,
+    List<_LeaveRequestData> decidedRequests,
+  ) {
+    if (_controller.isLoading && _staffUsers.isEmpty) {
+      return const AppLoadingState(title: 'Đang tải nghỉ phép');
+    }
+    if (_controller.errorMessage != null && _staffUsers.isEmpty) {
+      return AppErrorState(
+        title: 'Không tải được nhân viên',
+        message: _controller.errorMessage!,
+        onAction: _controller.loadUsers,
+      );
+    }
+
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      children: [
+        const _Title(),
+        const SizedBox(height: AppSpacing.xl),
+        _CalendarCard(requests: _requests),
+        const SizedBox(height: AppSpacing.xl),
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Đang chờ duyệt',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+              ),
+            ),
+            Chip(label: Text('${pendingRequests.length} yêu cầu')),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.md),
+        if (pendingRequests.isEmpty)
+          const AppEmptyState(
+            title: 'Không có yêu cầu chờ duyệt',
+            message: 'Các yêu cầu nghỉ phép mới sẽ xuất hiện tại đây.',
+          )
+        else
+          ...pendingRequests.map(
+            (request) => Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+              child: _LeaveRequest(
+                request: request,
+                onApprove: () => _decideLeave(request, true),
+                onReject: () => _decideLeave(request, false),
+              ),
+            ),
+          ),
+        const SizedBox(height: AppSpacing.xl),
+        const Text(
+          'Hoạt động gần đây',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        if (decidedRequests.isEmpty)
+          Text(
+            'Chưa có yêu cầu nào được duyệt hoặc từ chối trong phiên này.',
+            style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+          )
+        else
+          ...decidedRequests.map(
+            (request) => Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+              child: _RecentLeave(
+                name: request.name,
+                status: _approvedIds.contains(request.id)
+                    ? 'Đã duyệt - ${request.dateLabel}'
+                    : 'Từ chối - ${request.dateLabel}',
+                ok: _approvedIds.contains(request.id),
+              ),
+            ),
+          ),
+        const SizedBox(height: AppSpacing.lg),
+        Text(
+          'Ghi chú: backend chưa có API nghỉ phép, nên trạng thái duyệt/từ chối hiện chỉ lưu tạm trên màn hình.',
+          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+        ),
+      ],
+    );
+  }
+}
+
+class _LeaveRequestData {
+  const _LeaveRequestData({
+    required this.id,
+    required this.name,
+    required this.role,
+    required this.date,
+    required this.days,
+    required this.reason,
+  });
+
+  final String id;
+  final String name;
+  final String role;
+  final DateTime date;
+  final int days;
+  final String reason;
+
+  String get dateLabel => '${date.day}/${date.month}';
 }
 
 class _Title extends StatelessWidget {
@@ -43,76 +256,188 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text('Quản lý Nghỉ phép', style: AppTextStyles.display.copyWith(fontSize: 34)),
-      Text('Tháng 10, 2023', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
-    ]);
+    final now = DateTime.now();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Quản lý nghỉ phép',
+          style: AppTextStyles.display.copyWith(fontSize: 34),
+        ),
+        Text(
+          'Tháng ${now.month}, ${now.year}',
+          style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+        ),
+      ],
+    );
   }
 }
 
 class _CalendarCard extends StatelessWidget {
-  const _CalendarCard();
+  const _CalendarCard({required this.requests});
+
+  final List<_LeaveRequestData> requests;
 
   @override
   Widget build(BuildContext context) {
-    final days = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', '27', '28', '29', '30', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17'];
+    final now = DateTime.now();
+    final days = List.generate(28, (index) => now.add(Duration(days: index)));
+    final requestDays = requests.map((request) => request.date.day).toSet();
     return DecoratedBox(
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadius.xl)),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(children: [Text('Tháng 10', style: AppTextStyles.title), const Spacer(), const Icon(Icons.chevron_left), const Icon(Icons.chevron_right)]),
-          const SizedBox(height: AppSpacing.md),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7, mainAxisSpacing: AppSpacing.md),
-            itemCount: days.length,
-            itemBuilder: (context, index) {
-              final active = days[index] == '14';
-              return Center(child: Container(width: 42, height: 42, decoration: BoxDecoration(color: active ? AppColors.primary : Colors.transparent, borderRadius: BorderRadius.circular(AppRadius.md)), child: Center(child: Text(days[index], style: TextStyle(color: active ? Colors.white : AppColors.primary, fontWeight: index < 7 ? FontWeight.w800 : FontWeight.w500)))));
-            },
-          ),
-        ]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('Tháng ${now.month}', style: AppTextStyles.title),
+                const Spacer(),
+                const Icon(Icons.chevron_left),
+                const Icon(Icons.chevron_right),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 7,
+                mainAxisSpacing: AppSpacing.md,
+              ),
+              itemCount: days.length,
+              itemBuilder: (context, index) {
+                final day = days[index];
+                final active = requestDays.contains(day.day);
+                return Center(
+                  child: Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: active ? AppColors.primary : Colors.transparent,
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${day.day}',
+                        style: TextStyle(
+                          color: active ? Colors.white : AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class _LeaveRequest extends StatelessWidget {
-  const _LeaveRequest({required this.name, required this.dept, required this.date, required this.days, required this.reason});
+  const _LeaveRequest({
+    required this.request,
+    required this.onApprove,
+    required this.onReject,
+  });
 
-  final String name;
-  final String dept;
-  final String date;
-  final String days;
-  final String reason;
+  final _LeaveRequestData request;
+  final VoidCallback onApprove;
+  final VoidCallback onReject;
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadius.xl)),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(children: [
-          Row(children: [
-            const CircleAvatar(child: Icon(Icons.person)),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(name, style: AppTextStyles.subtitle), Text(dept)])),
-            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [Text(date, style: AppTextStyles.subtitle), Text(days, style: AppTextStyles.body.copyWith(color: AppColors.secondary, fontWeight: FontWeight.w900))]),
-          ]),
-          const SizedBox(height: AppSpacing.md),
-          DecoratedBox(decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadius.md)), child: Padding(padding: const EdgeInsets.all(AppSpacing.md), child: Align(alignment: Alignment.centerLeft, child: Text('Lý do: $reason')))),
-          const SizedBox(height: AppSpacing.md),
-          Row(children: [Expanded(child: AppButton(label: 'Từ chối', variant: AppButtonVariant.outline, onPressed: () {})), const SizedBox(width: AppSpacing.md), Expanded(child: AppButton(label: 'Duyệt', variant: AppButtonVariant.secondary, onPressed: () {}))]),
-        ]),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const CircleAvatar(child: Icon(Icons.person)),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(request.name, style: AppTextStyles.subtitle),
+                      Text(request.role),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(request.dateLabel, style: AppTextStyles.subtitle),
+                    Text(
+                      '${request.days} ngày',
+                      style: AppTextStyles.body.copyWith(
+                        color: AppColors.secondary,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: AppColors.surfaceMuted,
+                borderRadius: BorderRadius.circular(AppRadius.md),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Lý do: ${request.reason}'),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                Expanded(
+                  child: AppButton(
+                    label: 'Từ chối',
+                    variant: AppButtonVariant.outline,
+                    onPressed: onReject,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: AppButton(
+                    label: 'Duyệt',
+                    variant: AppButtonVariant.secondary,
+                    onPressed: onApprove,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class _RecentLeave extends StatelessWidget {
-  const _RecentLeave({required this.name, required this.status, required this.ok});
+  const _RecentLeave({
+    required this.name,
+    required this.status,
+    required this.ok,
+  });
 
   final String name;
   final String status;
@@ -121,8 +446,25 @@ class _RecentLeave extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadius.lg), border: Border(left: BorderSide(color: ok ? AppColors.success : AppColors.secondary, width: 4))),
-      child: ListTile(leading: Icon(ok ? Icons.check_circle_outline : Icons.cancel_outlined, color: ok ? AppColors.success : AppColors.secondary), title: Text(name, style: AppTextStyles.subtitle), subtitle: Text(status), trailing: const Icon(Icons.chevron_right)),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border(
+          left: BorderSide(
+            color: ok ? AppColors.success : AppColors.secondary,
+            width: 4,
+          ),
+        ),
+      ),
+      child: ListTile(
+        leading: Icon(
+          ok ? Icons.check_circle_outline : Icons.cancel_outlined,
+          color: ok ? AppColors.success : AppColors.secondary,
+        ),
+        title: Text(name, style: AppTextStyles.subtitle),
+        subtitle: Text(status),
+        trailing: const Icon(Icons.chevron_right),
+      ),
     );
   }
 }
