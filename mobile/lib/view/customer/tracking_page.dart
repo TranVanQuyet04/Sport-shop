@@ -102,6 +102,10 @@ class _TrackingPageState extends State<TrackingPage> {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
+        if (_controller.errorMessage != null) ...[
+          _TrackingDemoBanner(message: _controller.errorMessage!),
+          const SizedBox(height: AppSpacing.lg),
+        ],
         DecoratedBox(
           decoration: BoxDecoration(
             color: AppColors.surface,
@@ -232,7 +236,7 @@ class _TrackingPageState extends State<TrackingPage> {
         ),
         const SizedBox(height: AppSpacing.md),
         TextButton.icon(
-          onPressed: () {},
+          onPressed: () => context.go('/customer/support/chat'),
           icon: const Icon(Icons.support_agent),
           label: const Text('Liên hệ hỗ trợ'),
         ),
@@ -297,6 +301,38 @@ class _TrackingPageState extends State<TrackingPage> {
         subtitle: step.subtitle,
       );
     });
+  }
+}
+
+class _TrackingDemoBanner extends StatelessWidget {
+  const _TrackingDemoBanner({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

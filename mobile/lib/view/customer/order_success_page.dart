@@ -26,14 +26,24 @@ class OrderSuccessPage extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: Color(0xFFEFFBF3),
                 ),
-                child: const Icon(Icons.check_circle, color: AppColors.success, size: 72),
+                child: const Icon(
+                  Icons.check_circle,
+                  color: AppColors.success,
+                  size: 72,
+                ),
               ),
               const SizedBox(height: AppSpacing.xl),
-              Text('Đặt hàng thành công', style: AppTextStyles.display.copyWith(fontSize: 30), textAlign: TextAlign.center),
+              Text(
+                'Đặt hàng thành công',
+                style: AppTextStyles.display.copyWith(fontSize: 30),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: AppSpacing.md),
               Text(
-                'Đơn hàng #SW99281 đã được tạo. Shop sẽ xác nhận và chuẩn bị hàng trong thời gian sớm nhất.',
-                style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+                'Đơn hàng #SP24061201 đã được tạo. Shop sẽ xác nhận và chuẩn bị hàng trong thời gian sớm nhất.',
+                style: AppTextStyles.body.copyWith(
+                  color: AppColors.textSecondary,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.xl),
@@ -47,7 +57,7 @@ class OrderSuccessPage extends StatelessWidget {
                   padding: const EdgeInsets.all(AppSpacing.lg),
                   child: Column(
                     children: [
-                      _SuccessRow(label: 'Mã đơn', value: '#SW99281'),
+                      _SuccessRow(label: 'Mã đơn', value: '#SP24061201'),
                       _SuccessRow(label: 'Thanh toán', value: 'COD'),
                       _SuccessRow(label: 'Tổng tiền', value: '4.930.000đ'),
                     ],
@@ -58,7 +68,8 @@ class OrderSuccessPage extends StatelessWidget {
               AppButton(
                 label: 'Theo dõi đơn hàng',
                 variant: AppButtonVariant.secondary,
-                onPressed: () => context.go('/customer/orders/SW99281/tracking'),
+                onPressed: () =>
+                    context.go('/customer/orders/SP24061201/tracking'),
               ),
               const SizedBox(height: AppSpacing.md),
               AppButton(
@@ -86,9 +97,15 @@ class _SuccessRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       child: Row(
         children: [
-          Text(label, style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
+          Text(
+            label,
+            style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+          ),
           const Spacer(),
-          Text(value, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900)),
+          Text(
+            value,
+            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900),
+          ),
         ],
       ),
     );

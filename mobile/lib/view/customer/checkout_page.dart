@@ -10,6 +10,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_state.dart';
+import '../../core/widgets/app_text_field.dart';
 import '../../model/customer/cart_model.dart';
 import 'widgets/sportshop_logo.dart';
 
@@ -147,6 +148,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
           _InlineCheckoutError(message: _controller.errorMessage!),
         ],
         const SizedBox(height: AppSpacing.xl),
+        const _CheckoutStepHeader(),
+        const SizedBox(height: AppSpacing.xl),
         _SectionHeader(
           title: 'Địa chỉ nhận hàng',
           action: selectedAddress == null ? 'THÊM' : 'THAY ĐỔI',
@@ -198,13 +201,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
         const SizedBox(height: AppSpacing.xl),
         Text('Ghi chú đơn hàng', style: AppTextStyles.title),
         const SizedBox(height: AppSpacing.md),
-        TextField(
+        AppTextField(
+          label: 'Ghi chú',
           controller: _noteController,
-          minLines: 3,
           maxLines: 4,
-          decoration: const InputDecoration(
-            hintText: 'Ví dụ: Giao sau giờ hành chính, gọi trước khi đến...',
-          ),
+          hintText: 'Ví dụ: Giao sau giờ hành chính, gọi trước khi đến...',
+          prefixIcon: Icons.sticky_note_2_outlined,
         ),
         const SizedBox(height: AppSpacing.xl),
         _PriceSummary(
@@ -230,6 +232,67 @@ class _CheckoutPageState extends State<CheckoutPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(_controller.errorMessage ?? 'Không thể đặt hàng.'),
+      ),
+    );
+  }
+}
+
+class _CheckoutStepHeader extends StatelessWidget {
+  const _CheckoutStepHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Row(
+          children: [
+            _StepDot(label: '1', active: true),
+            const _StepLine(),
+            _StepDot(label: '2', active: true),
+            const _StepLine(),
+            _StepDot(label: '3', active: false),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StepDot extends StatelessWidget {
+  const _StepDot({required this.label, required this.active});
+
+  final String label;
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      radius: 18,
+      backgroundColor: active ? AppColors.secondary : AppColors.surfaceMuted,
+      foregroundColor: active ? AppColors.textInverse : AppColors.textPrimary,
+      child: Text(
+        label,
+        style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w900),
+      ),
+    );
+  }
+}
+
+class _StepLine extends StatelessWidget {
+  const _StepLine();
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        height: 2,
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+        color: AppColors.textInverse.withValues(alpha: 0.25),
       ),
     );
   }
