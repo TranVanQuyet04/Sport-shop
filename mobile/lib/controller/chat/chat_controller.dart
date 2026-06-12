@@ -50,11 +50,30 @@ class ChatController extends ChangeNotifier {
         ),
       ];
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage =
+          'Đang phản hồi ở chế độ demo vì chưa kết nối được backend chat.';
+      messages = [
+        ...messages,
+        ChatMessageModel.local(content: _demoReply(text), sender: 'ADMIN'),
+      ];
     } finally {
       isSending = false;
       notifyListeners();
     }
+  }
+
+  String _demoReply(String content) {
+    final lower = content.toLowerCase();
+    if (lower.contains('đơn') || lower.contains('giao')) {
+      return 'Mình đã nhận yêu cầu kiểm tra đơn hàng. Bạn có thể vào mục Đơn hàng để xem tracking, hoặc gửi mã đơn để hỗ trợ viên kiểm tra chi tiết.';
+    }
+    if (lower.contains('đổi') || lower.contains('size')) {
+      return 'Sportshop hỗ trợ đổi size trong vòng 7 ngày nếu sản phẩm còn nguyên tem và chưa qua sử dụng.';
+    }
+    if (lower.contains('thanh toán') || lower.contains('cod')) {
+      return 'Bạn có thể chọn COD, VNPay hoặc ví điện tử ở bước thanh toán. Với COD, bạn thanh toán trực tiếp khi nhận hàng.';
+    }
+    return 'Sportshop đã ghi nhận tin nhắn của bạn. Hỗ trợ viên sẽ phản hồi sớm nhất có thể.';
   }
 
   Future<void> loadAdminRooms() async {

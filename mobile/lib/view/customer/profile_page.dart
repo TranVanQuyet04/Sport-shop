@@ -89,6 +89,10 @@ class _ProfilePageState extends State<ProfilePage> {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
+        if (_controller.errorMessage != null) ...[
+          _DemoProfileBanner(message: _controller.errorMessage!),
+          const SizedBox(height: AppSpacing.lg),
+        ],
         const SizedBox(height: AppSpacing.xl),
         Center(
           child: Stack(
@@ -131,17 +135,19 @@ class _ProfilePageState extends State<ProfilePage> {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.xl),
-        Row(
-          children: const [
+        const Row(
+          children: [
             Expanded(
-              child: _MetricCard(value: '--', label: 'ĐƠN HÀNG'),
+              child: _MetricCard(value: '12', label: 'ĐƠN HÀNG'),
             ),
             SizedBox(width: AppSpacing.lg),
             Expanded(
-              child: _MetricCard(value: '--', label: 'ĐIỂM THƯỞNG'),
+              child: _MetricCard(value: '840', label: 'ĐIỂM THƯỞNG'),
             ),
           ],
         ),
+        const SizedBox(height: AppSpacing.lg),
+        const _MembershipCard(),
         const SizedBox(height: AppSpacing.xl),
         DecoratedBox(
           decoration: BoxDecoration(
@@ -198,6 +204,86 @@ class _ProfilePageState extends State<ProfilePage> {
           textAlign: TextAlign.center,
         ),
       ],
+    );
+  }
+}
+
+class _DemoProfileBanner extends StatelessWidget {
+  const _DemoProfileBanner({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MembershipCard extends StatelessWidget {
+  const _MembershipCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Row(
+          children: [
+            const CircleAvatar(
+              backgroundColor: AppColors.secondary,
+              foregroundColor: AppColors.textInverse,
+              child: Icon(Icons.workspace_premium_outlined),
+            ),
+            const SizedBox(width: AppSpacing.lg),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Thành viên Velocity',
+                    style: AppTextStyles.subtitle.copyWith(
+                      color: AppColors.textInverse,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    'Còn 160 điểm để lên hạng Pro Runner.',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textInverse.withValues(alpha: 0.72),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: AppColors.textInverse),
+          ],
+        ),
+      ),
     );
   }
 }

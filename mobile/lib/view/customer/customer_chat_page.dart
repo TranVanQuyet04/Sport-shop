@@ -83,6 +83,7 @@ class _CustomerChatPageState extends State<CustomerChatPage> {
         children: [
           if (_controller.errorMessage != null)
             _ChatErrorBanner(message: _controller.errorMessage!),
+          const _ChatStatusHeader(),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
@@ -109,6 +110,8 @@ class _CustomerChatPageState extends State<CustomerChatPage> {
                       onSubmitted: (_) => _sendMessage(),
                       decoration: InputDecoration(
                         hintText: 'Nhập tin nhắn...',
+                        filled: true,
+                        fillColor: AppColors.surface,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(999),
                         ),
@@ -162,8 +165,62 @@ class _ChatErrorBanner extends StatelessWidget {
         border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
       ),
       child: Text(
-        'Chưa gửi được tin nhắn. Vui lòng kiểm tra backend chat.',
+        message,
         style: AppTextStyles.caption.copyWith(color: AppColors.error),
+      ),
+    );
+  }
+}
+
+class _ChatStatusHeader extends StatelessWidget {
+  const _ChatStatusHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.md,
+        AppSpacing.lg,
+        0,
+      ),
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        children: [
+          const CircleAvatar(
+            backgroundColor: AppColors.primary,
+            foregroundColor: AppColors.textInverse,
+            child: Icon(Icons.support_agent_outlined),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Sportshop Support', style: AppTextStyles.subtitle),
+                Text(
+                  'Thường phản hồi trong vài phút',
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.success,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: 10,
+            height: 10,
+            decoration: const BoxDecoration(
+              color: AppColors.success,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ],
       ),
     );
   }
