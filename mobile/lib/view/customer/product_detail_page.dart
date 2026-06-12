@@ -331,9 +331,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(error.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Đang chuyển tiếp ở chế độ demo vì backend chưa sẵn sàng.',
+          ),
+        ),
+      );
+      context.go(goToCheckout ? AppRoutes.checkout : AppRoutes.cart);
+      return;
     } finally {
       if (mounted) {
         setState(() => _isAddingToCart = false);

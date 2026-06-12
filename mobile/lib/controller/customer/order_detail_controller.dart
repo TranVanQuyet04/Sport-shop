@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../core/mock/customer_demo_data.dart';
 import '../../model/customer/order_model.dart';
 import '../../repository/customer/order_repository.dart';
 
@@ -29,10 +30,13 @@ class OrderDetailController extends ChangeNotifier {
           ? await orderRepository.getAdminOrderById(orderId)
           : await orderRepository.getMyOrderById(orderId);
       if (order == null) {
-        errorMessage = 'Không tìm thấy đơn hàng #$orderId.';
+        order = CustomerDemoData.orderById(orderId);
+        errorMessage =
+            'Đang hiển thị đơn hàng mẫu vì chưa tìm thấy đơn #$orderId.';
       }
     } catch (error) {
-      errorMessage = error.toString();
+      order = CustomerDemoData.orderById(orderId);
+      errorMessage = 'Đang hiển thị đơn hàng mẫu vì chưa kết nối được backend.';
     } finally {
       isLoading = false;
       notifyListeners();

@@ -60,7 +60,10 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Text('Chào mừng trở lại', style: AppTextStyles.title),
               const SizedBox(height: AppSpacing.sm),
-              Text('Đăng nhập để tiếp tục mua sắm tại Sportshop.', style: AppTextStyles.body),
+              Text(
+                'Đăng nhập để tiếp tục mua sắm tại Sportshop.',
+                style: AppTextStyles.body,
+              ),
               const SizedBox(height: AppSpacing.xl),
               TextField(
                 keyboardType: TextInputType.emailAddress,
@@ -100,6 +103,35 @@ class _LoginPageState extends State<LoginPage> {
                 isLoading: _controller.isLoading,
                 onPressed: _submit,
               ),
+              const SizedBox(height: AppSpacing.xl),
+              Text('Xem nhanh UI theo vai trò', style: AppTextStyles.subtitle),
+              const SizedBox(height: AppSpacing.sm),
+              Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.sm,
+                children: [
+                  _RolePreviewChip(
+                    label: 'Customer',
+                    icon: Icons.storefront_outlined,
+                    onTap: () => context.go(AppRoutes.customerHome),
+                  ),
+                  _RolePreviewChip(
+                    label: 'Admin',
+                    icon: Icons.dashboard_outlined,
+                    onTap: () => context.go(AppRoutes.adminDashboard),
+                  ),
+                  _RolePreviewChip(
+                    label: 'Shop Staff',
+                    icon: Icons.inventory_2_outlined,
+                    onTap: () => context.go(AppRoutes.shopStaffHome),
+                  ),
+                  _RolePreviewChip(
+                    label: 'Delivery',
+                    icon: Icons.local_shipping_outlined,
+                    onTap: () => context.go(AppRoutes.deliveryHome),
+                  ),
+                ],
+              ),
               const Spacer(),
               Center(
                 child: TextButton(
@@ -123,6 +155,33 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _RolePreviewChip extends StatelessWidget {
+  const _RolePreviewChip({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+      avatar: Icon(icon, size: 18, color: AppColors.primary),
+      label: Text(label),
+      onPressed: onTap,
+      side: const BorderSide(color: AppColors.border),
+      backgroundColor: AppColors.surface,
+      labelStyle: AppTextStyles.caption.copyWith(
+        color: AppColors.textPrimary,
+        fontWeight: FontWeight.w700,
       ),
     );
   }
