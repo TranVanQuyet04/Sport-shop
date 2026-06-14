@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../core/mock/customer_demo_data.dart';
 import '../../model/common/order_status.dart';
 import '../../model/customer/order_model.dart';
 import '../../repository/customer/order_repository.dart';
@@ -28,8 +29,13 @@ class DeliveryOrdersController extends ChangeNotifier {
 
     try {
       orders = await orderRepository.getAllOrders();
+      if (orders.isEmpty) {
+        orders = CustomerDemoData.orders;
+      }
     } catch (error) {
-      errorMessage = error.toString();
+      orders = CustomerDemoData.orders;
+      errorMessage =
+          'Đang hiển thị đơn giao hàng mẫu vì chưa kết nối được backend.';
     } finally {
       isLoading = false;
       notifyListeners();
@@ -58,11 +64,31 @@ class DeliveryOrdersController extends ChangeNotifier {
       orders = await orderRepository.getAllOrders();
       return true;
     } catch (error) {
-      errorMessage = error.toString();
-      return false;
+      orders = orders
+          .map(
+            (order) => order.id == orderId ? _copyOrder(order, status) : order,
+          )
+          .toList();
+      errorMessage = 'Đã cập nhật giao hàng ở chế độ demo.';
+      return true;
     } finally {
       isUpdating = false;
       notifyListeners();
     }
+  }
+
+  OrderModel _copyOrder(OrderModel order, OrderStatus status) {
+    return OrderModel(
+      id: order.id,
+      status: status.apiValue,
+      totalAmount: order.totalAmount,
+      paymentMethod: order.paymentMethod,
+      recipientName: order.recipientName,
+      phoneNumber: order.phoneNumber,
+      shippingAddress: order.shippingAddress,
+      note: order.note,
+      orderDate: order.orderDate,
+      items: order.items,
+    );
   }
 }

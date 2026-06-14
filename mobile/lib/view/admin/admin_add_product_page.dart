@@ -110,17 +110,25 @@ class _AdminAddProductPageState extends State<AdminAddProductPage> {
     };
   }
 
+  void _closePage() {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+    context.go(AppRoutes.adminProducts);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: context.pop,
+          onPressed: _closePage,
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('Thêm sản phẩm mới'),
         actions: [
-          IconButton(onPressed: context.pop, icon: const Icon(Icons.close)),
+          IconButton(onPressed: _closePage, icon: const Icon(Icons.close)),
         ],
       ),
       body: Form(

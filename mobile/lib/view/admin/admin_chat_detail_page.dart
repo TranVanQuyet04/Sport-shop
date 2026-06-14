@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/sportshop_router.dart';
 import '../../controller/chat/chat_controller.dart' as app_chat;
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
@@ -68,6 +69,14 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
     );
   }
 
+  void _closePage() {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+    context.go(AppRoutes.adminChatRooms);
+  }
+
   Future<void> _sendMessage() async {
     final text = _messageController.text.trim();
     if (text.isEmpty || _controller.isSending) {
@@ -86,7 +95,7 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: context.pop,
+          onPressed: _closePage,
           icon: const Icon(Icons.arrow_back),
         ),
         title: Row(

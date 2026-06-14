@@ -6,6 +6,7 @@ import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_state.dart';
+import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/order_status_badge.dart';
 import '../../model/common/delivery_status.dart';
 import '../../model/customer/order_model.dart';
@@ -114,11 +115,17 @@ class _AdminDeliveryMonitoringPageState
       children: [
         const _Header(),
         const SizedBox(height: AppSpacing.lg),
-        const TextField(
-          decoration: InputDecoration(
-            prefixIcon: Icon(Icons.search),
-            hintText: 'Tìm mã đơn hàng hoặc địa chỉ...',
+        if (_controller.errorMessage != null) ...[
+          _DeliveryDemoBanner(
+            message: _controller.errorMessage!,
+            onRefresh: _controller.loadOrders,
           ),
+          const SizedBox(height: AppSpacing.lg),
+        ],
+        const AppTextField(
+          label: 'Tìm kiếm',
+          prefixIcon: Icons.search,
+          hintText: 'Tìm mã đơn hàng hoặc địa chỉ...',
         ),
         const SizedBox(height: AppSpacing.md),
         const Wrap(
@@ -166,6 +173,40 @@ class _AdminDeliveryMonitoringPageState
       'CANCELLED' => DeliveryStatus.returned,
       _ => DeliveryStatus.waitingPickup,
     };
+  }
+}
+
+class _DeliveryDemoBanner extends StatelessWidget {
+  const _DeliveryDemoBanner({required this.message, required this.onRefresh});
+
+  final String message;
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+            TextButton(onPressed: onRefresh, child: const Text('Thử lại')),
+          ],
+        ),
+      ),
+    );
   }
 }
 

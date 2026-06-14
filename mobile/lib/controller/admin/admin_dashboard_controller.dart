@@ -12,11 +12,24 @@ class AdminDashboardController extends ChangeNotifier {
   DashboardReportModel? report;
   bool isLoading = false;
   String? errorMessage;
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  void _safeNotifyListeners() {
+    if (!_disposed) {
+      notifyListeners();
+    }
+  }
 
   Future<void> loadDashboard() async {
     isLoading = true;
     errorMessage = null;
-    notifyListeners();
+    _safeNotifyListeners();
 
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);
@@ -32,7 +45,7 @@ class AdminDashboardController extends ChangeNotifier {
           'Đang hiển thị dashboard mẫu vì chưa kết nối được backend.';
     } finally {
       isLoading = false;
-      notifyListeners();
+      _safeNotifyListeners();
     }
   }
 }

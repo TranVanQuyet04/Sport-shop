@@ -9,6 +9,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_state.dart';
+import '../../core/widgets/app_text_field.dart';
 import '../../model/common/order_status.dart';
 import '../../model/customer/order_model.dart';
 import '../admin/widgets/admin_app_bar.dart';
@@ -76,18 +77,27 @@ class _ShopStaffConfirmOrdersPageState
     }
     return ListView.separated(
       padding: const EdgeInsets.all(AppSpacing.lg),
-      itemCount: pendingOrders.length + 4,
+      itemCount:
+          pendingOrders.length + 4 + (_controller.errorMessage == null ? 0 : 1),
       separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
       itemBuilder: (context, index) {
-        if (index == 0) {
-          return const TextField(
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: 'Tìm đơn hàng hoặc khách hàng...',
-            ),
+        if (index == 0 && _controller.errorMessage != null) {
+          return _ShopStaffDemoBanner(
+            message: _controller.errorMessage!,
+            onRefresh: _controller.loadOrders,
           );
         }
-        if (index == 1) {
+        final contentIndex = _controller.errorMessage == null
+            ? index
+            : index - 1;
+        if (contentIndex == 0) {
+          return const AppTextField(
+            label: 'Tìm kiếm',
+            prefixIcon: Icons.search,
+            hintText: 'Tìm đơn hàng hoặc khách hàng...',
+          );
+        }
+        if (contentIndex == 1) {
           return Row(
             children: [
               Expanded(
@@ -104,10 +114,10 @@ class _ShopStaffConfirmOrdersPageState
             ],
           );
         }
-        if (index == 2) {
+        if (contentIndex == 2) {
           return const Divider();
         }
-        if (index == 3) {
+        if (contentIndex == 3) {
           return AppButton(
             label: 'Xác nhận hàng loạt',
             icon: Icons.done_all,
@@ -115,7 +125,7 @@ class _ShopStaffConfirmOrdersPageState
             onPressed: _confirmAll,
           );
         }
-        final order = pendingOrders[index - 4];
+        final order = pendingOrders[contentIndex - 4];
         return _ConfirmCard(
           order: order,
           isBusy: _controller.isUpdating,
@@ -131,6 +141,40 @@ class _ShopStaffConfirmOrdersPageState
     for (final order in _controller.pendingOrders) {
       await _controller.updateStatus(order.id, OrderStatus.confirmed);
     }
+  }
+}
+
+class _ShopStaffDemoBanner extends StatelessWidget {
+  const _ShopStaffDemoBanner({required this.message, required this.onRefresh});
+
+  final String message;
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+            TextButton(onPressed: onRefresh, child: const Text('Thử lại')),
+          ],
+        ),
+      ),
+    );
   }
 }
 

@@ -9,6 +9,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_state.dart';
+import '../../core/widgets/app_text_field.dart';
 import '../../model/common/order_status.dart';
 import '../../model/customer/order_model.dart';
 import '../admin/widgets/admin_app_bar.dart';
@@ -175,17 +176,11 @@ class _DeliveryStatusUpdatePageState extends State<DeliveryStatusUpdatePage> {
         const SizedBox(height: AppSpacing.xl),
         Text('Ghi chú nhanh', style: AppTextStyles.subtitle),
         const SizedBox(height: AppSpacing.sm),
-        TextField(
+        const AppTextField(
+          label: 'Ghi chú',
           maxLines: 3,
-          decoration: InputDecoration(
-            hintText: 'Ví dụ: Khách hẹn nhận sau 15 phút...',
-            filled: true,
-            fillColor: AppColors.surface,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              borderSide: BorderSide.none,
-            ),
-          ),
+          prefixIcon: Icons.edit_note_outlined,
+          hintText: 'Ví dụ: Khách hẹn nhận sau 15 phút...',
         ),
       ],
     );

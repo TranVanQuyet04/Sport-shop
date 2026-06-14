@@ -7,6 +7,7 @@ import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_state.dart';
+import '../../core/widgets/app_text_field.dart';
 import '../../model/admin/admin_lookup_model.dart';
 import 'widgets/admin_bottom_nav.dart';
 
@@ -151,14 +152,20 @@ class _AdminRoleManagementPageState extends State<AdminRoleManagementPage> {
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
+        if (_controller.errorMessage != null) ...[
+          _RoleDemoBanner(
+            message: _controller.errorMessage!,
+            onRefresh: _controller.loadUsers,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+        ],
         Row(
           children: [
             const Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  hintText: 'Tìm kiếm vai trò hoặc người dùng...',
-                ),
+              child: AppTextField(
+                label: 'Tìm kiếm',
+                prefixIcon: Icons.search,
+                hintText: 'Tìm kiếm vai trò hoặc người dùng...',
               ),
             ),
             const SizedBox(width: AppSpacing.md),
@@ -223,6 +230,40 @@ class _AdminRoleManagementPageState extends State<AdminRoleManagementPage> {
           style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
         ),
       ],
+    );
+  }
+}
+
+class _RoleDemoBanner extends StatelessWidget {
+  const _RoleDemoBanner({required this.message, required this.onRefresh});
+
+  final String message;
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+            TextButton(onPressed: onRefresh, child: const Text('Thử lại')),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -390,25 +431,28 @@ class _RoleTile extends StatelessWidget {
   final bool active;
 
   @override
-  Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.only(bottom: AppSpacing.lg),
-    decoration: BoxDecoration(
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+    child: Material(
       color: AppColors.surface,
-      borderRadius: BorderRadius.circular(AppRadius.xl),
-      border: Border.all(color: AppColors.border),
-    ),
-    child: ListTile(
-      onTap: onTap,
-      minVerticalPadding: AppSpacing.lg,
-      leading: CircleAvatar(
-        radius: 34,
-        backgroundColor: active ? AppColors.primary : AppColors.surfaceMuted,
-        foregroundColor: active ? Colors.white : AppColors.primary,
-        child: Icon(icon),
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        side: const BorderSide(color: AppColors.border),
       ),
-      title: Text(name, style: AppTextStyles.title),
-      subtitle: Text(members, style: AppTextStyles.body),
-      trailing: const Icon(Icons.edit),
+      child: ListTile(
+        onTap: onTap,
+        minVerticalPadding: AppSpacing.lg,
+        leading: CircleAvatar(
+          radius: 34,
+          backgroundColor: active ? AppColors.primary : AppColors.surfaceMuted,
+          foregroundColor: active ? Colors.white : AppColors.primary,
+          child: Icon(icon),
+        ),
+        title: Text(name, style: AppTextStyles.title),
+        subtitle: Text(members, style: AppTextStyles.body),
+        trailing: const Icon(Icons.edit),
+      ),
     ),
   );
 }

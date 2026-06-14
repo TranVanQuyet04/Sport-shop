@@ -7,6 +7,7 @@ import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_state.dart';
+import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/order_status_badge.dart';
 import '../../model/common/delivery_status.dart';
 import '../../model/common/order_status.dart';
@@ -76,7 +77,7 @@ class _AssignedOrdersPageState extends State<AssignedOrdersPage> {
     }
     return ListView.separated(
       padding: const EdgeInsets.all(AppSpacing.lg),
-      itemCount: orders.length + 4,
+      itemCount: orders.length + 4 + (_controller.errorMessage == null ? 0 : 1),
       separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
       itemBuilder: (context, index) {
         if (index == 0) {
@@ -91,22 +92,24 @@ class _AssignedOrdersPageState extends State<AssignedOrdersPage> {
             style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
           );
         }
-        if (index == 2) {
-          return TextField(
-            decoration: InputDecoration(
-              hintText: 'Tìm mã đơn hoặc địa chỉ',
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: const Icon(Icons.tune),
-              filled: true,
-              fillColor: AppColors.surface,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppRadius.xl),
-                borderSide: BorderSide.none,
-              ),
-            ),
+        if (index == 2 && _controller.errorMessage != null) {
+          return _DeliveryDemoBanner(
+            message: _controller.errorMessage!,
+            onRefresh: _controller.loadOrders,
           );
         }
-        if (index == 3) {
+        final contentIndex = _controller.errorMessage == null
+            ? index
+            : index - 1;
+        if (contentIndex == 2) {
+          return const AppTextField(
+            label: 'Tìm kiếm',
+            hintText: 'Tìm mã đơn hoặc địa chỉ',
+            prefixIcon: Icons.search,
+            suffixIcon: Icons.tune,
+          );
+        }
+        if (contentIndex == 3) {
           return const Wrap(
             spacing: AppSpacing.sm,
             runSpacing: AppSpacing.sm,
@@ -117,12 +120,46 @@ class _AssignedOrdersPageState extends State<AssignedOrdersPage> {
             ],
           );
         }
-        final order = orders[index - 4];
+        final order = orders[contentIndex - 4];
         return _AssignedOrderCard(
           order: order,
           onTap: () => context.go('/delivery-staff/orders/${order.id}/status'),
         );
       },
+    );
+  }
+}
+
+class _DeliveryDemoBanner extends StatelessWidget {
+  const _DeliveryDemoBanner({required this.message, required this.onRefresh});
+
+  final String message;
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+            TextButton(onPressed: onRefresh, child: const Text('Thử lại')),
+          ],
+        ),
+      ),
     );
   }
 }

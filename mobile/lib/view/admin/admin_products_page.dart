@@ -9,6 +9,7 @@ import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_state.dart';
+import '../../core/widgets/app_text_field.dart';
 import '../../model/customer/product_detail_model.dart';
 import '../../model/customer/product_summary_model.dart';
 import 'widgets/admin_app_bar.dart';
@@ -169,34 +170,29 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
     }
     return ListView.separated(
       padding: const EdgeInsets.all(AppSpacing.lg),
-      itemCount: _controller.products.length + 3,
+      itemCount:
+          _controller.products.length +
+          2 +
+          (_controller.errorMessage == null ? 0 : 1),
       separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
       itemBuilder: (context, index) {
-        if (index == 0) {
-          return const TextField(
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: 'Tìm kiếm sản phẩm, SKU...',
-            ),
+        if (index == 0 && _controller.errorMessage != null) {
+          return _ProductDemoBanner(
+            message: _controller.errorMessage!,
+            onRefresh: _controller.loadProducts,
           );
         }
-        if (index == 1) {
-          return const Wrap(
-            spacing: AppSpacing.md,
-            runSpacing: AppSpacing.md,
-            children: [
-              _FilterButton(icon: Icons.credit_card, label: 'Thương hiệu'),
-              _FilterButton(icon: Icons.category_outlined, label: 'Danh mục'),
-              _FilterButton(icon: Icons.inventory_outlined, label: 'Tồn kho'),
-              _FilterButton(
-                icon: Icons.tune,
-                label: 'Lọc nâng cao',
-                active: true,
-              ),
-            ],
+        final contentIndex = _controller.errorMessage == null
+            ? index
+            : index - 1;
+        if (contentIndex == 0) {
+          return const AppTextField(
+            label: 'Tìm kiếm',
+            prefixIcon: Icons.search,
+            hintText: 'Tìm kiếm sản phẩm, SKU...',
           );
         }
-        if (index == 2) {
+        if (contentIndex == 1) {
           return Row(
             children: [
               Expanded(
@@ -217,13 +213,47 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
             ],
           );
         }
-        final product = _controller.products[index - 3];
+        final product = _controller.products[contentIndex - 2];
         return _ProductAdminCard(
           product: product,
           onEdit: () => _editProduct(product),
           onDelete: () => _deleteProduct(product),
         );
       },
+    );
+  }
+}
+
+class _ProductDemoBanner extends StatelessWidget {
+  const _ProductDemoBanner({required this.message, required this.onRefresh});
+
+  final String message;
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+            TextButton(onPressed: onRefresh, child: const Text('Thử lại')),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -371,31 +401,6 @@ class _DialogField extends StatelessWidget {
           return null;
         },
       ),
-    );
-  }
-}
-
-class _FilterButton extends StatelessWidget {
-  const _FilterButton({
-    required this.icon,
-    required this.label,
-    this.active = false,
-  });
-
-  final IconData icon;
-  final String label;
-  final bool active;
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      style: OutlinedButton.styleFrom(
-        backgroundColor: active ? AppColors.secondary : AppColors.surface,
-        foregroundColor: active ? Colors.white : AppColors.primary,
-      ),
-      onPressed: () {},
-      icon: Icon(icon, size: 18),
-      label: Text(label),
     );
   }
 }

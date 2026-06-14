@@ -421,28 +421,31 @@ class _ActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.md),
-      decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: Material(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border(left: BorderSide(color: accent, width: 4)),
-      ),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: AppColors.surfaceMuted,
-          foregroundColor: accent,
-          child: Icon(icon),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          side: BorderSide(color: accent, width: 1),
         ),
-        title: Text(
-          title,
-          style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900),
-        ),
-        subtitle: Text(subtitle),
-        trailing: Text(
-          meta,
-          textAlign: TextAlign.right,
-          style: AppTextStyles.caption,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: AppColors.surfaceMuted,
+            foregroundColor: accent,
+            child: Icon(icon),
+          ),
+          title: Text(
+            title,
+            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900),
+          ),
+          subtitle: Text(subtitle),
+          trailing: Text(
+            meta,
+            textAlign: TextAlign.right,
+            style: AppTextStyles.caption,
+          ),
         ),
       ),
     );

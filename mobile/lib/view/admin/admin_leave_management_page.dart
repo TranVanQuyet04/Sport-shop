@@ -167,6 +167,13 @@ class _AdminLeaveManagementPageState extends State<AdminLeaveManagementPage> {
       children: [
         const _Title(),
         const SizedBox(height: AppSpacing.xl),
+        if (_controller.errorMessage != null) ...[
+          _LeaveDemoBanner(
+            message: _controller.errorMessage!,
+            onRefresh: _controller.loadUsers,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+        ],
         _CalendarCard(requests: _requests),
         const SizedBox(height: AppSpacing.xl),
         Row(
@@ -227,6 +234,40 @@ class _AdminLeaveManagementPageState extends State<AdminLeaveManagementPage> {
           style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
         ),
       ],
+    );
+  }
+}
+
+class _LeaveDemoBanner extends StatelessWidget {
+  const _LeaveDemoBanner({required this.message, required this.onRefresh});
+
+  final String message;
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+            TextButton(onPressed: onRefresh, child: const Text('Thử lại')),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -445,16 +486,12 @@ class _RecentLeave extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
+    return Material(
+      color: AppColors.surface,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border(
-          left: BorderSide(
-            color: ok ? AppColors.success : AppColors.secondary,
-            width: 4,
-          ),
-        ),
+        side: BorderSide(color: ok ? AppColors.success : AppColors.secondary),
       ),
       child: ListTile(
         leading: Icon(

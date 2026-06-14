@@ -8,6 +8,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../model/chat/chat_model.dart';
 import '../../core/widgets/app_state.dart';
+import '../../core/widgets/app_text_field.dart';
 import 'widgets/admin_app_bar.dart';
 import 'widgets/admin_bottom_nav.dart';
 
@@ -58,37 +59,75 @@ class _AdminChatRoomsPageState extends State<AdminChatRoomsPage> {
               style: AppTextStyles.display.copyWith(fontSize: 34),
             ),
             const SizedBox(height: AppSpacing.md),
-            const TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Tìm phòng chat, khách hàng...',
-              ),
+            const AppTextField(
+              label: 'Tìm kiếm',
+              prefixIcon: Icons.search,
+              hintText: 'Tìm phòng chat, khách hàng...',
             ),
             const SizedBox(height: AppSpacing.xl),
             if (_controller.isLoading)
               const AppLoadingState(message: 'Đang tải phòng chat...')
-            else if (_controller.errorMessage != null)
+            else if (_controller.errorMessage != null &&
+                _controller.rooms.isEmpty)
               AppErrorState(
                 message: 'Chưa tải được phòng chat từ backend.',
                 onAction: _controller.loadAdminRooms,
               )
-            else if (_controller.rooms.isEmpty)
-              const AppEmptyState(
-                title: 'Chưa có phòng chat',
-                message:
-                    'Khi khách hàng tạo yêu cầu hỗ trợ, phòng chat sẽ xuất hiện ở đây.',
-              )
-            else
-              ..._controller.rooms.map(
-                (room) => _ChatRoomTile(
-                  room: room,
-                  onTap: () => context.go('/admin/chats/${room.id}'),
+            else ...[
+              if (_controller.errorMessage != null) ...[
+                _ChatDemoBanner(message: _controller.errorMessage!),
+                const SizedBox(height: AppSpacing.lg),
+              ],
+              if (_controller.rooms.isEmpty)
+                const AppEmptyState(
+                  title: 'Chưa có phòng chat',
+                  message:
+                      'Khi khách hàng tạo yêu cầu hỗ trợ, phòng chat sẽ xuất hiện ở đây.',
+                )
+              else
+                ..._controller.rooms.map(
+                  (room) => _ChatRoomTile(
+                    room: room,
+                    onTap: () => context.go('/admin/chats/${room.id}'),
+                  ),
                 ),
-              ),
+            ],
           ],
         ),
       ),
       bottomNavigationBar: const AdminBottomNav(selectedIndex: 4),
+    );
+  }
+}
+
+class _ChatDemoBanner extends StatelessWidget {
+  const _ChatDemoBanner({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

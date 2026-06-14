@@ -115,7 +115,8 @@ abstract final class AppRoutes {
   static const deliveryHome = '/delivery-staff/home';
   static const deliveryAssignedOrders = '/delivery-staff/orders';
   static const deliveryStatusUpdate = '/delivery-staff/orders/:id/status';
-  static const deliveryFailedReport = '/delivery-staff/orders/:id/failed-report';
+  static const deliveryFailedReport =
+      '/delivery-staff/orders/:id/failed-report';
   static const deliveryAccount = '/delivery-staff/account';
 }
 
@@ -190,16 +191,14 @@ final sportshopRouter = GoRouter(
     GoRoute(
       path: AppRoutes.productDetail,
       name: 'productDetail',
-      builder: (context, state) => ProductDetailPage(
-        productId: state.pathParameters['id'] ?? '',
-      ),
+      builder: (context, state) =>
+          ProductDetailPage(productId: state.pathParameters['id'] ?? ''),
     ),
     GoRoute(
       path: AppRoutes.productGallery,
       name: 'productGallery',
-      builder: (context, state) => ProductGalleryPage(
-        productId: state.pathParameters['id'] ?? '',
-      ),
+      builder: (context, state) =>
+          ProductGalleryPage(productId: state.pathParameters['id'] ?? ''),
     ),
     GoRoute(
       path: AppRoutes.cart,
@@ -234,23 +233,20 @@ final sportshopRouter = GoRouter(
     GoRoute(
       path: AppRoutes.orderDetail,
       name: 'orderDetail',
-      builder: (context, state) => OrderDetailPage(
-        orderId: state.pathParameters['id'] ?? '',
-      ),
+      builder: (context, state) =>
+          OrderDetailPage(orderId: state.pathParameters['id'] ?? ''),
     ),
     GoRoute(
       path: AppRoutes.tracking,
       name: 'tracking',
-      builder: (context, state) => TrackingPage(
-        orderId: state.pathParameters['id'] ?? '',
-      ),
+      builder: (context, state) =>
+          TrackingPage(orderId: state.pathParameters['id'] ?? ''),
     ),
     GoRoute(
       path: AppRoutes.confirmReceived,
       name: 'confirmReceived',
-      builder: (context, state) => ConfirmReceivedPage(
-        orderId: state.pathParameters['id'] ?? '',
-      ),
+      builder: (context, state) =>
+          ConfirmReceivedPage(orderId: state.pathParameters['id'] ?? ''),
     ),
     GoRoute(
       path: AppRoutes.profile,
@@ -293,11 +289,6 @@ final sportshopRouter = GoRouter(
       builder: (context, state) => const AdminStaffPage(),
     ),
     GoRoute(
-      path: AppRoutes.adminStaffDetail,
-      name: 'adminStaffDetail',
-      builder: (context, state) => AdminStaffDetailPage(staffId: state.pathParameters['id'] ?? ''),
-    ),
-    GoRoute(
       path: AppRoutes.adminShiftPlanning,
       name: 'adminShiftPlanning',
       builder: (context, state) => const AdminShiftPlanningPage(),
@@ -318,6 +309,12 @@ final sportshopRouter = GoRouter(
       builder: (context, state) => const AdminStaffPerformancePage(),
     ),
     GoRoute(
+      path: AppRoutes.adminStaffDetail,
+      name: 'adminStaffDetail',
+      builder: (context, state) =>
+          AdminStaffDetailPage(staffId: state.pathParameters['id'] ?? ''),
+    ),
+    GoRoute(
       path: AppRoutes.adminAddProduct,
       name: 'adminAddProduct',
       builder: (context, state) => const AdminAddProductPage(),
@@ -325,26 +322,105 @@ final sportshopRouter = GoRouter(
     GoRoute(
       path: AppRoutes.adminInventoryVariants,
       name: 'adminInventoryVariants',
-      builder: (context, state) => AdminInventoryVariantsPage(productId: state.pathParameters['id'] ?? ''),
+      builder: (context, state) => AdminInventoryVariantsPage(
+        productId: state.pathParameters['id'] ?? '',
+      ),
     ),
-    GoRoute(path: AppRoutes.adminCategories, name: 'adminCategories', builder: (context, state) => const AdminCategoryManagementPage()),
-    GoRoute(path: AppRoutes.adminBrands, name: 'adminBrands', builder: (context, state) => const AdminBrandManagementPage()),
-    GoRoute(path: AppRoutes.adminDeliveryMonitoring, name: 'adminDeliveryMonitoring', builder: (context, state) => const AdminDeliveryMonitoringPage()),
-    GoRoute(path: AppRoutes.adminChatRooms, name: 'adminChatRooms', builder: (context, state) => const AdminChatRoomsPage()),
-    GoRoute(path: AppRoutes.adminChatDetail, name: 'adminChatDetail', builder: (context, state) => AdminChatDetailPage(chatId: state.pathParameters['id'] ?? '')),
-    GoRoute(path: AppRoutes.adminUsers, name: 'adminUsers', builder: (context, state) => const AdminUserManagementPage()),
-    GoRoute(path: AppRoutes.adminRoles, name: 'adminRoles', builder: (context, state) => const AdminRoleManagementPage()),
-    GoRoute(path: AppRoutes.adminSettings, name: 'adminSettings', builder: (context, state) => const AdminSystemSettingsPage()),
-    GoRoute(path: AppRoutes.shopStaffHome, name: 'shopStaffHome', builder: (context, state) => const ShopStaffHomePage()),
-    GoRoute(path: AppRoutes.shopStaffConfirmOrders, name: 'shopStaffConfirmOrders', builder: (context, state) => const ShopStaffConfirmOrdersPage()),
-    GoRoute(path: AppRoutes.shopStaffPacking, name: 'shopStaffPacking', builder: (context, state) => ShopStaffPackingPage(orderId: state.pathParameters['id'] ?? '')),
-    GoRoute(path: AppRoutes.shopStaffHandover, name: 'shopStaffHandover', builder: (context, state) => const ShopStaffHandoverPage()),
-    GoRoute(path: AppRoutes.shopStaffOrderTimeline, name: 'shopStaffOrderTimeline', builder: (context, state) => ShopStaffOrderTimelinePage(orderId: state.pathParameters['id'] ?? '')),
-    GoRoute(path: AppRoutes.deliveryHome, name: 'deliveryHome', builder: (context, state) => const DeliveryHomePage()),
-    GoRoute(path: AppRoutes.deliveryAssignedOrders, name: 'deliveryAssignedOrders', builder: (context, state) => const AssignedOrdersPage()),
-    GoRoute(path: AppRoutes.deliveryStatusUpdate, name: 'deliveryStatusUpdate', builder: (context, state) => DeliveryStatusUpdatePage(orderId: state.pathParameters['id'] ?? '')),
-    GoRoute(path: AppRoutes.deliveryFailedReport, name: 'deliveryFailedReport', builder: (context, state) => FailedDeliveryReportPage(orderId: state.pathParameters['id'] ?? '')),
-    GoRoute(path: AppRoutes.deliveryAccount, name: 'deliveryAccount', builder: (context, state) => const ShipperAccountPage()),
+    GoRoute(
+      path: AppRoutes.adminCategories,
+      name: 'adminCategories',
+      builder: (context, state) => const AdminCategoryManagementPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminBrands,
+      name: 'adminBrands',
+      builder: (context, state) => const AdminBrandManagementPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminDeliveryMonitoring,
+      name: 'adminDeliveryMonitoring',
+      builder: (context, state) => const AdminDeliveryMonitoringPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminChatRooms,
+      name: 'adminChatRooms',
+      builder: (context, state) => const AdminChatRoomsPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminChatDetail,
+      name: 'adminChatDetail',
+      builder: (context, state) =>
+          AdminChatDetailPage(chatId: state.pathParameters['id'] ?? ''),
+    ),
+    GoRoute(
+      path: AppRoutes.adminUsers,
+      name: 'adminUsers',
+      builder: (context, state) => const AdminUserManagementPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminRoles,
+      name: 'adminRoles',
+      builder: (context, state) => const AdminRoleManagementPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminSettings,
+      name: 'adminSettings',
+      builder: (context, state) => const AdminSystemSettingsPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.shopStaffHome,
+      name: 'shopStaffHome',
+      builder: (context, state) => const ShopStaffHomePage(),
+    ),
+    GoRoute(
+      path: AppRoutes.shopStaffConfirmOrders,
+      name: 'shopStaffConfirmOrders',
+      builder: (context, state) => const ShopStaffConfirmOrdersPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.shopStaffPacking,
+      name: 'shopStaffPacking',
+      builder: (context, state) =>
+          ShopStaffPackingPage(orderId: state.pathParameters['id'] ?? ''),
+    ),
+    GoRoute(
+      path: AppRoutes.shopStaffHandover,
+      name: 'shopStaffHandover',
+      builder: (context, state) => const ShopStaffHandoverPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.shopStaffOrderTimeline,
+      name: 'shopStaffOrderTimeline',
+      builder: (context, state) =>
+          ShopStaffOrderTimelinePage(orderId: state.pathParameters['id'] ?? ''),
+    ),
+    GoRoute(
+      path: AppRoutes.deliveryHome,
+      name: 'deliveryHome',
+      builder: (context, state) => const DeliveryHomePage(),
+    ),
+    GoRoute(
+      path: AppRoutes.deliveryAssignedOrders,
+      name: 'deliveryAssignedOrders',
+      builder: (context, state) => const AssignedOrdersPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.deliveryStatusUpdate,
+      name: 'deliveryStatusUpdate',
+      builder: (context, state) =>
+          DeliveryStatusUpdatePage(orderId: state.pathParameters['id'] ?? ''),
+    ),
+    GoRoute(
+      path: AppRoutes.deliveryFailedReport,
+      name: 'deliveryFailedReport',
+      builder: (context, state) =>
+          FailedDeliveryReportPage(orderId: state.pathParameters['id'] ?? ''),
+    ),
+    GoRoute(
+      path: AppRoutes.deliveryAccount,
+      name: 'deliveryAccount',
+      builder: (context, state) => const ShipperAccountPage(),
+    ),
   ],
   errorBuilder: (context, state) => const NotFoundPage(),
 );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/sportshop_router.dart';
 import '../../controller/admin/admin_catalog_controller.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
@@ -23,6 +24,7 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
   late final AdminCatalogController _controller = AdminCatalogController(
     adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
   );
+  _StaffDetailTab _selectedTab = _StaffDetailTab.info;
 
   @override
   void initState() {
@@ -43,6 +45,14 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
     if (mounted) {
       setState(() {});
     }
+  }
+
+  void _closePage() {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+    context.go(AppRoutes.adminStaff);
   }
 
   Future<void> _toggleStatus(bool status) async {
@@ -80,7 +90,7 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: context.pop,
+          onPressed: _closePage,
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('CHI TIẾT NHÂN VIÊN'),
@@ -232,48 +242,226 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
         ),
         const SizedBox(height: AppSpacing.xxl),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: ['THÔNG TIN', 'LỊCH LÀM VIỆC', 'HIỆU SUẤT']
+          children: _StaffDetailTab.values
               .map(
-                (label) => Text(
-                  label,
-                  style: AppTextStyles.caption.copyWith(
-                    fontWeight: FontWeight.w900,
+                (tab) => Expanded(
+                  child: _StaffTabButton(
+                    label: tab.label,
+                    selected: _selectedTab == tab,
+                    onTap: () => setState(() => _selectedTab = tab),
                   ),
                 ),
               )
               .toList(),
         ),
         const SizedBox(height: AppSpacing.sm),
-        Container(height: 3, width: 120, color: AppColors.primary),
-        const SizedBox(height: AppSpacing.xl),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppRadius.xl),
-            border: Border.all(color: AppColors.border),
+        Align(
+          alignment: _selectedTab.alignment,
+          child: FractionallySizedBox(
+            widthFactor: 1 / _StaffDetailTab.values.length,
+            child: Container(height: 3, color: AppColors.primary),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.xl),
-            child: Column(
-              children: [
-                _InfoRow(label: 'MÃ NHÂN VIÊN', value: user.id),
-                const Divider(height: AppSpacing.xl),
-                _InfoRow(label: 'EMAIL', value: user.email),
-                const Divider(height: AppSpacing.xl),
-                _InfoRow(
-                  label: 'SỐ ĐIỆN THOẠI',
-                  value: user.phoneNumber.isEmpty
-                      ? 'Chưa cập nhật'
-                      : user.phoneNumber,
-                ),
-                const Divider(height: AppSpacing.xl),
-                _InfoRow(
-                  label: 'TRẠNG THÁI',
-                  value: user.status ? 'Hoạt động' : 'Vô hiệu',
-                ),
-              ],
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        _StaffTabContent(tab: _selectedTab, user: user),
+      ],
+    );
+  }
+}
+
+enum _StaffDetailTab {
+  info('THÔNG TIN', Alignment.centerLeft),
+  schedule('LỊCH LÀM VIỆC', Alignment.centerRight);
+
+  const _StaffDetailTab(this.label, this.alignment);
+
+  final String label;
+  final Alignment alignment;
+}
+
+class _StaffTabButton extends StatelessWidget {
+  const _StaffTabButton({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: AppTextStyles.caption.copyWith(
+            color: selected ? AppColors.primary : AppColors.textSecondary,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StaffTabContent extends StatelessWidget {
+  const _StaffTabContent({required this.tab, required this.user});
+
+  final _StaffDetailTab tab;
+  final AdminUserModel user;
+
+  @override
+  Widget build(BuildContext context) {
+    return switch (tab) {
+      _StaffDetailTab.info => _InfoCard(user: user),
+      _StaffDetailTab.schedule => _ScheduleCard(roleName: user.roleName),
+    };
+  }
+}
+
+class _InfoCard extends StatelessWidget {
+  const _InfoCard({required this.user});
+
+  final AdminUserModel user;
+
+  @override
+  Widget build(BuildContext context) {
+    return _PanelCard(
+      child: Column(
+        children: [
+          _InfoRow(label: 'MÃ NHÂN VIÊN', value: user.id),
+          const Divider(height: AppSpacing.xl),
+          _InfoRow(label: 'EMAIL', value: user.email),
+          const Divider(height: AppSpacing.xl),
+          _InfoRow(
+            label: 'SỐ ĐIỆN THOẠI',
+            value: user.phoneNumber.isEmpty
+                ? 'Chưa cập nhật'
+                : user.phoneNumber,
+          ),
+          const Divider(height: AppSpacing.xl),
+          _InfoRow(
+            label: 'TRẠNG THÁI',
+            value: user.status ? 'Hoạt động' : 'Vô hiệu',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ScheduleCard extends StatelessWidget {
+  const _ScheduleCard({required this.roleName});
+
+  final String roleName;
+
+  @override
+  Widget build(BuildContext context) {
+    final shifts = roleName == 'DELIVERY_STAFF'
+        ? const [
+            _ShiftItem('Thứ 2', '08:00 - 12:00', 'Giao khu Quận 1, Quận 3'),
+            _ShiftItem('Thứ 4', '13:00 - 18:00', 'Nhận hàng và giao nội thành'),
+            _ShiftItem('Thứ 7', '09:00 - 16:00', 'Ca cuối tuần'),
+          ]
+        : const [
+            _ShiftItem('Thứ 2', '08:00 - 12:00', 'Xác nhận đơn hàng'),
+            _ShiftItem('Thứ 3', '13:00 - 18:00', 'Đóng gói và kiểm hàng'),
+            _ShiftItem('Thứ 6', '08:00 - 17:00', 'Bàn giao cho shipper'),
+          ];
+
+    return _PanelCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Lịch làm việc tuần này', style: AppTextStyles.subtitle),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'Dữ liệu mẫu dùng để admin xem/xếp ca. Khi nối backend sẽ lấy từ API ca làm việc.',
+            style: AppTextStyles.caption,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          ...shifts.map(
+            (shift) => Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+              child: _ShiftRow(item: shift),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PanelCard extends StatelessWidget {
+  const _PanelCard({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: child,
+      ),
+    );
+  }
+}
+
+class _ShiftItem {
+  const _ShiftItem(this.day, this.time, this.task);
+
+  final String day;
+  final String time;
+  final String task;
+}
+
+class _ShiftRow extends StatelessWidget {
+  const _ShiftRow({required this.item});
+
+  final _ShiftItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 54,
+          height: 54,
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
+          child: Center(
+            child: Text(
+              item.day,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.caption.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(item.time, style: AppTextStyles.subtitle),
+              Text(item.task, style: AppTextStyles.caption),
+            ],
           ),
         ),
       ],

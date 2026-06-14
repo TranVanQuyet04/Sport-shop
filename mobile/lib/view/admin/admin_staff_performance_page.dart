@@ -145,6 +145,10 @@ class _PerformanceContent extends StatelessWidget {
       children: [
         const _Title(),
         const SizedBox(height: AppSpacing.lg),
+        if (_hasDemoMessage) ...[
+          _PerformanceDemoBanner(message: _demoMessage),
+          const SizedBox(height: AppSpacing.lg),
+        ],
         const _Segmented(),
         const SizedBox(height: AppSpacing.xl),
         Row(
@@ -219,6 +223,44 @@ class _PerformanceContent extends StatelessWidget {
           style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
         ),
       ],
+    );
+  }
+
+  bool get _hasDemoMessage => staffUsers.isNotEmpty || orders.isNotEmpty;
+
+  String get _demoMessage {
+    return 'Hiệu suất đang tính từ dữ liệu người dùng/đơn hàng hiện có. Khi backend có phân công đơn theo nhân viên, ranking sẽ chính xác hơn.';
+  }
+}
+
+class _PerformanceDemoBanner extends StatelessWidget {
+  const _PerformanceDemoBanner({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -470,11 +512,12 @@ class _Rank extends StatelessWidget {
   final int rank;
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: AppColors.surface,
+  Widget build(BuildContext context) => Material(
+    color: AppColors.surface,
+    clipBehavior: Clip.antiAlias,
+    shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppRadius.md),
-      border: Border.all(color: AppColors.border),
+      side: const BorderSide(color: AppColors.border),
     ),
     child: ListTile(
       leading: CircleAvatar(

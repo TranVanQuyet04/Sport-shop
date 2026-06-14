@@ -149,11 +149,10 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: AppSpacing.lg),
         const _MembershipCard(),
         const SizedBox(height: AppSpacing.xl),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppRadius.xl),
-          ),
+        Material(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadius.xl),
+          clipBehavior: Clip.antiAlias,
           child: Column(
             children: const [
               _ProfileTile(

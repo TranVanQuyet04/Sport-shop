@@ -20,6 +20,19 @@ class ChatController extends ChangeNotifier {
   bool isLoading = false;
   bool isSending = false;
   String? errorMessage;
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  void _safeNotifyListeners() {
+    if (!_disposed) {
+      notifyListeners();
+    }
+  }
 
   Future<void> sendBotMessage(String content) async {
     final text = content.trim();
@@ -33,7 +46,7 @@ class ChatController extends ChangeNotifier {
       ...messages,
       ChatMessageModel.local(content: text, sender: 'CUSTOMER'),
     ];
-    notifyListeners();
+    _safeNotifyListeners();
 
     try {
       final response = await chatRepository.sendBotMessage(
@@ -58,7 +71,7 @@ class ChatController extends ChangeNotifier {
       ];
     } finally {
       isSending = false;
-      notifyListeners();
+      _safeNotifyListeners();
     }
   }
 
@@ -79,15 +92,20 @@ class ChatController extends ChangeNotifier {
   Future<void> loadAdminRooms() async {
     isLoading = true;
     errorMessage = null;
-    notifyListeners();
+    _safeNotifyListeners();
 
     try {
       rooms = await chatRepository.getAdminRooms();
+      if (rooms.isEmpty) {
+        rooms = _demoRooms;
+      }
     } catch (error) {
-      errorMessage = error.toString();
+      rooms = _demoRooms;
+      errorMessage =
+          'Đang hiển thị phòng chat mẫu vì chưa kết nối được backend.';
     } finally {
       isLoading = false;
-      notifyListeners();
+      _safeNotifyListeners();
     }
   }
 
@@ -107,7 +125,7 @@ class ChatController extends ChangeNotifier {
       ...messages,
       ChatMessageModel.local(content: text, sender: sender),
     ];
-    notifyListeners();
+    _safeNotifyListeners();
 
     try {
       final responseMessages = await chatRepository.sendRoomMessage(
@@ -119,10 +137,45 @@ class ChatController extends ChangeNotifier {
         messages = responseMessages;
       }
     } catch (error) {
-      errorMessage = error.toString();
+      errorMessage =
+          'Tin nhắn đang hiển thị ở chế độ demo vì backend chat chưa sẵn sàng.';
+      messages = [
+        ...messages,
+        ChatMessageModel.local(
+          content:
+              'Đã ghi nhận phản hồi của admin. Khi backend chat sẵn sàng, tin nhắn sẽ được lưu theo phòng #$roomId.',
+          sender: 'SYSTEM',
+        ),
+      ];
     } finally {
       isSending = false;
-      notifyListeners();
+      _safeNotifyListeners();
     }
+  }
+
+  List<ChatRoomModel> get _demoRooms {
+    return [
+      ChatRoomModel(
+        id: 'room-demo-01',
+        customerName: 'Nguyễn Minh Anh',
+        adminName: 'Admin Sportshop',
+        hasUnread: true,
+        lastMessageAt: DateTime.now().subtract(const Duration(minutes: 8)),
+      ),
+      ChatRoomModel(
+        id: 'room-demo-02',
+        customerName: 'Trần Gia Huy',
+        adminName: '',
+        hasUnread: false,
+        lastMessageAt: DateTime.now().subtract(const Duration(hours: 1)),
+      ),
+      ChatRoomModel(
+        id: 'room-demo-03',
+        customerName: 'Lê Hoàng Nam',
+        adminName: 'Shop Staff',
+        hasUnread: true,
+        lastMessageAt: DateTime.now().subtract(const Duration(hours: 3)),
+      ),
+    ];
   }
 }

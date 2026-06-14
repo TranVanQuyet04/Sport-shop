@@ -325,11 +325,10 @@ class _BrandTile extends StatelessWidget {
   final VoidCallback onDelete;
 
   @override
-  Widget build(BuildContext context) => Container(
-    decoration: BoxDecoration(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(AppRadius.xl),
-    ),
+  Widget build(BuildContext context) => Material(
+    color: AppColors.surface,
+    borderRadius: BorderRadius.circular(AppRadius.xl),
+    clipBehavior: Clip.antiAlias,
     child: ListTile(
       minVerticalPadding: AppSpacing.lg,
       leading: Container(

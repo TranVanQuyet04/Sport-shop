@@ -8,6 +8,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_state.dart';
+import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/order_status_badge.dart';
 import '../../model/common/order_status.dart';
 import '../../model/customer/order_model.dart';
@@ -76,32 +77,80 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> {
 
     return ListView.separated(
       padding: const EdgeInsets.all(AppSpacing.lg),
-      itemCount: _controller.orders.length + 3,
+      itemCount:
+          _controller.orders.length +
+          3 +
+          (_controller.errorMessage == null ? 0 : 1),
       separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
       itemBuilder: (context, index) {
         if (index == 0) {
           return _AdminTitle(
             title: 'Quản lý đơn hàng',
-            count: '${_controller.orders.length}',
+            count: '${_controller.orders.length}/${_controller.totalOrders}',
           );
         }
-        if (index == 1) {
-          return const TextField(
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: 'Tìm kiếm mã đơn, tên khách hàng...',
-            ),
+        if (index == 1 && _controller.errorMessage != null) {
+          return _AdminInlineBanner(
+            message: _controller.errorMessage!,
+            onRefresh: _controller.loadOrders,
           );
         }
-        if (index == 2) {
-          return const _OrderTabs();
+        final contentIndex = _controller.errorMessage == null
+            ? index
+            : index - 1;
+        if (contentIndex == 1) {
+          return const AppTextField(
+            label: 'Tìm kiếm',
+            prefixIcon: Icons.search,
+            hintText: 'Tìm kiếm mã đơn, tên khách hàng...',
+          );
+        }
+        if (contentIndex == 2) {
+          return _OrderTabs(
+            selectedStatus: _controller.selectedStatus,
+            onChanged: _controller.selectStatus,
+          );
         }
         return _AdminOrderCard(
-          order: _controller.orders[index - 3],
+          order: _controller.orders[contentIndex - 3],
           isBusy: _controller.isUpdating,
           onNextStatus: _controller.updateOrderStatus,
         );
       },
+    );
+  }
+}
+
+class _AdminInlineBanner extends StatelessWidget {
+  const _AdminInlineBanner({required this.message, required this.onRefresh});
+
+  final String message;
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.info.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, color: AppColors.info),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              ),
+            ),
+            TextButton(onPressed: onRefresh, child: const Text('Thử lại')),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -148,40 +197,60 @@ class _AdminTitle extends StatelessWidget {
 }
 
 class _OrderTabs extends StatelessWidget {
-  const _OrderTabs();
+  const _OrderTabs({required this.selectedStatus, required this.onChanged});
+
+  final OrderStatus? selectedStatus;
+  final ValueChanged<OrderStatus?> onChanged;
 
   @override
   Widget build(BuildContext context) {
+    const tabs = [
+      _OrderTabItem(label: 'Tất cả'),
+      _OrderTabItem(label: 'Chờ xác nhận', status: OrderStatus.pending),
+      _OrderTabItem(label: 'Đã xác nhận', status: OrderStatus.confirmed),
+      _OrderTabItem(label: 'Đang đóng gói', status: OrderStatus.packing),
+      _OrderTabItem(label: 'Đang giao', status: OrderStatus.shipped),
+      _OrderTabItem(label: 'Hoàn thành', status: OrderStatus.completed),
+    ];
+
     return SizedBox(
-      height: 36,
+      height: 40,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children:
-            [
-                  'Tất cả',
-                  'Chờ xác nhận',
-                  'Đang đóng gói',
-                  'Đang giao',
-                  'Hoàn thành',
-                ]
-                .map(
-                  (tab) => Padding(
-                    padding: const EdgeInsets.only(right: AppSpacing.lg),
-                    child: Text(
-                      tab,
-                      style: AppTextStyles.body.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: tab == 'Tất cả'
-                            ? AppColors.primary
-                            : AppColors.textSecondary,
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
+        children: tabs.map((tab) {
+          final selected = selectedStatus == tab.status;
+          return Padding(
+            padding: const EdgeInsets.only(right: AppSpacing.sm),
+            child: ChoiceChip(
+              label: Text(tab.label),
+              selected: selected,
+              showCheckmark: false,
+              onSelected: (_) => onChanged(tab.status),
+              labelStyle: AppTextStyles.caption.copyWith(
+                fontWeight: FontWeight.w900,
+                color: selected ? Colors.white : AppColors.textSecondary,
+              ),
+              selectedColor: AppColors.primary,
+              backgroundColor: AppColors.surface,
+              side: BorderSide(
+                color: selected ? AppColors.primary : AppColors.border,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppRadius.xl),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
+}
+
+class _OrderTabItem {
+  const _OrderTabItem({required this.label, this.status});
+
+  final String label;
+  final OrderStatus? status;
 }
 
 class _AdminOrderCard extends StatelessWidget {
