@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -103,7 +103,7 @@ class _TrackingPageState extends State<TrackingPage> {
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         if (_controller.errorMessage != null) ...[
-          _TrackingDemoBanner(message: _controller.errorMessage!),
+          _TrackingErrorBanner(message: _controller.errorMessage!),
           const SizedBox(height: AppSpacing.lg),
         ],
         DecoratedBox(
@@ -304,8 +304,8 @@ class _TrackingPageState extends State<TrackingPage> {
   }
 }
 
-class _TrackingDemoBanner extends StatelessWidget {
-  const _TrackingDemoBanner({required this.message});
+class _TrackingErrorBanner extends StatelessWidget {
+  const _TrackingErrorBanner({required this.message});
 
   final String message;
 
@@ -423,3 +423,4 @@ class _TimelineItem extends StatelessWidget {
     );
   }
 }
+

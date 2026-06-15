@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../controller/chat/chat_controller.dart' as app_chat;
@@ -75,7 +75,7 @@ class _AdminChatRoomsPageState extends State<AdminChatRoomsPage> {
               )
             else ...[
               if (_controller.errorMessage != null) ...[
-                _ChatDemoBanner(message: _controller.errorMessage!),
+                _ChatErrorBanner(message: _controller.errorMessage!),
                 const SizedBox(height: AppSpacing.lg),
               ],
               if (_controller.rooms.isEmpty)
@@ -100,8 +100,8 @@ class _AdminChatRoomsPageState extends State<AdminChatRoomsPage> {
   }
 }
 
-class _ChatDemoBanner extends StatelessWidget {
-  const _ChatDemoBanner({required this.message});
+class _ChatErrorBanner extends StatelessWidget {
+  const _ChatErrorBanner({required this.message});
 
   final String message;
 
@@ -162,3 +162,4 @@ class _ChatRoomTile extends StatelessWidget {
     );
   }
 }
+

@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../app/sportshop_router.dart';
+import '../../controller/admin/admin_catalog_controller.dart';
+import '../../controller/admin/admin_orders_controller.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_bottom_sheet.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_state.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/order_status_badge.dart';
+import '../../model/admin/admin_lookup_model.dart';
 import '../../model/common/order_status.dart';
+import '../../model/customer/order_model.dart';
 import '../admin/widgets/admin_app_bar.dart';
 
 class ShopStaffHandoverPage extends StatefulWidget {
@@ -20,97 +27,155 @@ class ShopStaffHandoverPage extends StatefulWidget {
 }
 
 class _ShopStaffHandoverPageState extends State<ShopStaffHandoverPage> {
-  static const _shippers = [
-    'Lê Minh Khang - DELIVERY_STAFF',
-    'Trần Quốc Bảo - DELIVERY_STAFF',
-    'Nguyễn Hoàng Nam - SHIPPER',
-  ];
+  late final AdminOrdersController _ordersController = AdminOrdersController(
+    orderRepository: AppDependencies.instance.orderRepository,
+  );
+  late final AdminCatalogController _catalogController = AdminCatalogController(
+    adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
+  );
+  final _noteController = TextEditingController();
+  final Set<String> _selectedOrderIds = {};
+  AdminUserModel? _selectedShipper;
+  bool _isSubmitting = false;
 
-  final Set<String> _selectedOrderIds = {'AV-8829', 'AV-8830', 'AV-8831'};
-  String _selectedShipper = _shippers.first;
+  @override
+  void initState() {
+    super.initState();
+    _ordersController.addListener(_onControllerChanged);
+    _catalogController.addListener(_onControllerChanged);
+    _loadData();
+  }
+
+  @override
+  void dispose() {
+    _ordersController
+      ..removeListener(_onControllerChanged)
+      ..dispose();
+    _catalogController
+      ..removeListener(_onControllerChanged)
+      ..dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  void _onControllerChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> _loadData() async {
+    await Future.wait([
+      _ordersController.loadOrders(),
+      _catalogController.loadUsers(),
+    ]);
+  }
+
+  List<OrderModel> get _readyOrders {
+    return _ordersController.orders.where((order) {
+      final status = order.status.toUpperCase();
+      return status == 'PACKING' || status == 'SHIPPED';
+    }).toList();
+  }
+
+  List<AdminUserModel> get _shippers {
+    return _catalogController.users.where((user) {
+      final role = user.roleName.toUpperCase();
+      return user.status && (role == 'SHIPPER' || role == 'DELIVERY_STAFF');
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     final selectedCount = _selectedOrderIds.length;
+    final isLoading =
+        (_ordersController.isLoading || _catalogController.isLoading) &&
+        _readyOrders.isEmpty;
+    final errorMessage =
+        _ordersController.errorMessage ?? _catalogController.errorMessage;
+
     return Scaffold(
       appBar: const AdminAppBar(),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        children: [
-          const _Header(),
-          const SizedBox(height: AppSpacing.xl),
-          const _DemoBanner(),
-          const SizedBox(height: AppSpacing.xl),
-          Text('Chọn nhân viên giao hàng', style: AppTextStyles.subtitle),
-          const SizedBox(height: AppSpacing.sm),
-          InkWell(
-            borderRadius: BorderRadius.circular(AppRadius.lg),
-            onTap: _showShipperPicker,
-            child: AbsorbPointer(
-              child: AppTextField(
-                label: 'Nhân viên giao hàng',
-                initialValue: _selectedShipper,
-                prefixIcon: Icons.local_shipping_outlined,
-                suffixIcon: Icons.keyboard_arrow_down,
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Đơn hàng sẵn sàng (03)',
-                  style: AppTextStyles.subtitle,
-                ),
-              ),
-              TextButton(
-                onPressed: _toggleAll,
-                child: Text(
-                  selectedCount == 3 ? 'Bỏ chọn' : 'Chọn tất cả',
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.secondary,
-                    fontWeight: FontWeight.w900,
+      body: RefreshIndicator(
+        onRefresh: _loadData,
+        child: isLoading
+            ? const AppLoadingState(title: 'Dang tai don ban giao')
+            : errorMessage != null && _readyOrders.isEmpty
+            ? AppErrorState(
+                title: 'Khong tai duoc ban giao',
+                message: errorMessage,
+                onAction: _loadData,
+              )
+            : ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                children: [
+                  const _Header(),
+                  const SizedBox(height: AppSpacing.xl),
+                  Text('Chon nhan vien giao hang', style: AppTextStyles.subtitle),
+                  const SizedBox(height: AppSpacing.sm),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
+                    onTap: _showShipperPicker,
+                    child: AbsorbPointer(
+                      child: AppTextField(
+                        label: 'Nhan vien giao hang',
+                        initialValue: _selectedShipper == null
+                            ? ''
+                            : '${_selectedShipper!.fullName} - ${_selectedShipper!.roleName}',
+                        prefixIcon: Icons.local_shipping_outlined,
+                        suffixIcon: Icons.keyboard_arrow_down,
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: AppSpacing.xl),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Don hang san sang (${_readyOrders.length})',
+                          style: AppTextStyles.subtitle,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: _toggleAll,
+                        child: Text(
+                          selectedCount == _readyOrders.length
+                              ? 'Bo chon'
+                              : 'Chon tat ca',
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.secondary,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  if (_readyOrders.isEmpty)
+                    const AppEmptyState(
+                      title: 'Khong co don san sang',
+                      message: 'Don PACKING hoac SHIPPED se hien thi tai day.',
+                    )
+                  else
+                    ..._readyOrders.map(
+                      (order) => _ReadyOrder(
+                        order: order,
+                        selected: _selectedOrderIds.contains(order.id),
+                        onChanged: _toggleOrder,
+                      ),
+                    ),
+                  const SizedBox(height: AppSpacing.xl),
+                  AppTextField(
+                    controller: _noteController,
+                    label: 'Ghi chu ban giao',
+                    prefixIcon: Icons.edit_note_outlined,
+                    maxLines: 4,
+                    hintText: 'Nhap luu y cho nhan vien giao hang...',
+                  ),
+                  const SizedBox(height: 120),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          _ReadyOrder(
-            id: 'AV-8829',
-            name: 'Apex Velocity Pro-Run V2',
-            price: '1.250.000đ',
-            icon: Icons.directions_run,
-            selected: _selectedOrderIds.contains('AV-8829'),
-            onChanged: _toggleOrder,
-          ),
-          _ReadyOrder(
-            id: 'AV-8830',
-            name: 'Apex Stealth Watch Edition',
-            price: '3.400.000đ',
-            icon: Icons.watch_outlined,
-            selected: _selectedOrderIds.contains('AV-8830'),
-            onChanged: _toggleOrder,
-          ),
-          _ReadyOrder(
-            id: 'AV-8831',
-            name: 'Aero-Carbon Performance',
-            price: '5.100.000đ',
-            icon: Icons.sports_football_outlined,
-            selected: _selectedOrderIds.contains('AV-8831'),
-            onChanged: _toggleOrder,
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          const AppTextField(
-            label: 'Ghi chú bàn giao',
-            prefixIcon: Icons.edit_note_outlined,
-            maxLines: 4,
-            hintText:
-                'Nhập lưu ý cho nhân viên giao hàng, ví dụ: giao trong sáng nay...',
-          ),
-          const SizedBox(height: 120),
-        ],
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
@@ -120,15 +185,15 @@ class _ShopStaffHandoverPageState extends State<ShopStaffHandoverPage> {
             children: [
               Row(
                 children: [
-                  Text('Đã chọn: ', style: AppTextStyles.caption),
+                  Text('Da chon: ', style: AppTextStyles.caption),
                   Text(
-                    '$selectedCount đơn hàng',
+                    '$selectedCount don hang',
                     style: AppTextStyles.caption.copyWith(
                       fontWeight: FontWeight.w900,
                     ),
                   ),
                   const Spacer(),
-                  Text('Tổng cộng: ', style: AppTextStyles.caption),
+                  Text('Tong cong: ', style: AppTextStyles.caption),
                   Text(
                     _selectedTotal,
                     style: AppTextStyles.caption.copyWith(
@@ -139,10 +204,13 @@ class _ShopStaffHandoverPageState extends State<ShopStaffHandoverPage> {
               ),
               const SizedBox(height: AppSpacing.md),
               AppButton(
-                label: 'BÀN GIAO GIAO HÀNG',
+                label: 'BAN GIAO GIAO HANG',
                 variant: AppButtonVariant.secondary,
                 icon: Icons.local_shipping_outlined,
-                onPressed: selectedCount == 0 ? null : _handover,
+                isLoading: _isSubmitting,
+                onPressed: selectedCount == 0 || _selectedShipper == null
+                    ? null
+                    : _handover,
               ),
             ],
           ),
@@ -152,16 +220,10 @@ class _ShopStaffHandoverPageState extends State<ShopStaffHandoverPage> {
   }
 
   String get _selectedTotal {
-    final values = {'AV-8829': 1250000, 'AV-8830': 3400000, 'AV-8831': 5100000};
-    final total = _selectedOrderIds.fold<int>(
-      0,
-      (sum, id) => sum + (values[id] ?? 0),
-    );
-    final text = total.toString().replaceAllMapped(
-      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-      (match) => '${match[1]}.',
-    );
-    return '$textđ';
+    final total = _readyOrders
+        .where((order) => _selectedOrderIds.contains(order.id))
+        .fold<int>(0, (sum, order) => sum + order.totalAmount);
+    return '${NumberFormat.decimalPattern('vi_VN').format(total)}d';
   }
 
   void _toggleOrder(String id, bool selected) {
@@ -176,12 +238,12 @@ class _ShopStaffHandoverPageState extends State<ShopStaffHandoverPage> {
 
   void _toggleAll() {
     setState(() {
-      if (_selectedOrderIds.length == 3) {
+      if (_selectedOrderIds.length == _readyOrders.length) {
         _selectedOrderIds.clear();
       } else {
         _selectedOrderIds
           ..clear()
-          ..addAll(['AV-8829', 'AV-8830', 'AV-8831']);
+          ..addAll(_readyOrders.map((order) => order.id));
       }
     });
   }
@@ -189,41 +251,74 @@ class _ShopStaffHandoverPageState extends State<ShopStaffHandoverPage> {
   void _showShipperPicker() {
     showAppBottomSheet<void>(
       context: context,
-      title: 'Chọn nhân viên giao hàng',
-      subtitle: 'Danh sách mẫu dùng cho demo UI-first.',
-      child: Column(
-        children: _shippers
-            .map(
-              (shipper) => ListTile(
-                onTap: () {
-                  setState(() => _selectedShipper = shipper);
-                  Navigator.pop(context);
-                },
-                leading: Icon(
-                  _selectedShipper == shipper
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_off,
-                  color: _selectedShipper == shipper
-                      ? AppColors.secondary
-                      : AppColors.textSecondary,
-                ),
-                title: Text(shipper, style: AppTextStyles.body),
-              ),
+      title: 'Chon nhan vien giao hang',
+      subtitle: 'Danh sach lay truc tiep tu backend.',
+      child: _shippers.isEmpty
+          ? const AppEmptyState(
+              title: 'Chua co shipper',
+              message: 'Tao user SHIPPER hoac DELIVERY_STAFF truoc.',
             )
-            .toList(),
-      ),
+          : Column(
+              children: _shippers
+                  .map(
+                    (shipper) => ListTile(
+                      onTap: () {
+                        setState(() => _selectedShipper = shipper);
+                        Navigator.pop(context);
+                      },
+                      leading: Icon(
+                        _selectedShipper?.id == shipper.id
+                            ? Icons.radio_button_checked
+                            : Icons.radio_button_off,
+                        color: _selectedShipper?.id == shipper.id
+                            ? AppColors.secondary
+                            : AppColors.textSecondary,
+                      ),
+                      title: Text(shipper.fullName, style: AppTextStyles.body),
+                      subtitle: Text(shipper.roleName),
+                    ),
+                  )
+                  .toList(),
+            ),
     );
   }
 
-  void _handover() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Đã bàn giao ${_selectedOrderIds.length} đơn cho $_selectedShipper ở chế độ demo.',
-        ),
-      ),
-    );
-    context.go(AppRoutes.shopStaffOrderTimeline.replaceFirst(':id', 'AV-8829'));
+  Future<void> _handover() async {
+    final shipper = _selectedShipper;
+    if (shipper == null) {
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+    try {
+      for (final orderId in _selectedOrderIds) {
+        await AppDependencies.instance.apiClient.putJson(
+          '/admin/order-assignments/orders/$orderId',
+          data: {
+            'staffId': int.parse(shipper.id),
+            'note': _noteController.text.trim(),
+          },
+        );
+      }
+      if (!mounted) return;
+      final selectedCount = _selectedOrderIds.length;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Da ban giao $selectedCount don cho ${shipper.fullName}.')),
+      );
+      final firstOrderId = _selectedOrderIds.isEmpty ? '' : _selectedOrderIds.first;
+      context.go(
+        AppRoutes.shopStaffOrderTimeline.replaceFirst(':id', firstOrderId),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.toString())),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
   }
 }
 
@@ -236,12 +331,12 @@ class _Header extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Bàn giao vận chuyển',
+          'Ban giao van chuyen',
           style: AppTextStyles.display.copyWith(fontSize: 30),
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          'Kiểm tra và xác nhận bàn giao các đơn hàng đã đóng gói cho nhân viên giao hàng.',
+          'Kiem tra va xac nhan ban giao don hang cho nhan vien giao hang.',
           style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
         ),
       ],
@@ -249,50 +344,14 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _DemoBanner extends StatelessWidget {
-  const _DemoBanner();
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.info.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Row(
-          children: [
-            const Icon(Icons.info_outline, color: AppColors.info),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                'Handover đang dùng dữ liệu mẫu. Sau này backend cần API lưu phân công shipper.',
-                style: AppTextStyles.caption.copyWith(color: AppColors.info),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _ReadyOrder extends StatelessWidget {
   const _ReadyOrder({
-    required this.id,
-    required this.name,
-    required this.price,
-    required this.icon,
+    required this.order,
     required this.selected,
     required this.onChanged,
   });
 
-  final String id;
-  final String name;
-  final String price;
-  final IconData icon;
+  final OrderModel order;
   final bool selected;
   final void Function(String id, bool selected) onChanged;
 
@@ -317,17 +376,17 @@ class _ReadyOrder extends StatelessWidget {
               color: AppColors.surfaceMuted,
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
-            child: Icon(icon, color: AppColors.secondary),
+            child: const Icon(Icons.local_shipping_outlined, color: AppColors.secondary),
           ),
           const SizedBox(width: AppSpacing.lg),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('#$id', style: AppTextStyles.body),
-                Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text('#${order.id}', style: AppTextStyles.body),
+                Text(order.firstProductName, maxLines: 1, overflow: TextOverflow.ellipsis),
                 Text(
-                  price,
+                  '${NumberFormat.decimalPattern('vi_VN').format(order.totalAmount)}d',
                   style: AppTextStyles.caption.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
@@ -335,10 +394,10 @@ class _ReadyOrder extends StatelessWidget {
               ],
             ),
           ),
-          const OrderStatusBadge(status: OrderStatus.packing),
+          OrderStatusBadge(status: OrderStatus.fromApi(order.status)),
           Checkbox(
             value: selected,
-            onChanged: (value) => onChanged(id, value ?? false),
+            onChanged: (value) => onChanged(order.id, value ?? false),
             activeColor: AppColors.secondary,
           ),
         ],

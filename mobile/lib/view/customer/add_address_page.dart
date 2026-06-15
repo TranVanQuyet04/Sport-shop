@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../controller/customer/address_controller.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
+import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_text_field.dart';
 
 class AddAddressPage extends StatefulWidget {
   const AddAddressPage({super.key});
@@ -21,7 +23,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
   final _districtController = TextEditingController();
   final _wardController = TextEditingController();
   final _streetController = TextEditingController();
+
   bool _isDefault = true;
+  bool _hasSubmitted = false;
 
   late final AddressController _controller = AddressController(
     addressRepository: AppDependencies.instance.addressRepository,
@@ -53,6 +57,33 @@ class _AddAddressPageState extends State<AddAddressPage> {
     }
   }
 
+  String? _requiredError(TextEditingController controller, String message) {
+    if (!_hasSubmitted || controller.text.trim().isNotEmpty) {
+      return null;
+    }
+    return message;
+  }
+
+  String? get _phoneError {
+    if (!_hasSubmitted || _phoneController.text.trim().isEmpty) {
+      return _requiredError(_phoneController, 'Vui lòng nhập số điện thoại.');
+    }
+    final isValid = RegExp(r'^(0|\+84)[0-9\s.]{8,13}$').hasMatch(
+      _phoneController.text.trim(),
+    );
+    return isValid ? null : 'Số điện thoại chưa đúng định dạng.';
+  }
+
+  bool get _canSubmit {
+    return _nameController.text.trim().isNotEmpty &&
+        _phoneController.text.trim().isNotEmpty &&
+        _phoneError == null &&
+        _cityController.text.trim().isNotEmpty &&
+        _districtController.text.trim().isNotEmpty &&
+        _wardController.text.trim().isNotEmpty &&
+        _streetController.text.trim().isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,59 +99,90 @@ class _AddAddressPageState extends State<AddAddressPage> {
         children: [
           Text('Thông tin người nhận', style: AppTextStyles.title),
           const SizedBox(height: AppSpacing.lg),
-          TextField(
+          AppTextField(
+            label: 'Họ và tên',
+            hintText: 'Nguyễn Văn A',
             controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Họ và tên',
-              prefixIcon: Icon(Icons.person_outline),
-            ),
+            prefixIcon: Icons.person_outline,
+            textInputAction: TextInputAction.next,
+            errorText: _requiredError(_nameController, 'Vui lòng nhập họ tên.'),
+            onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: AppSpacing.lg),
-          TextField(
+          AppTextField(
+            label: 'Số điện thoại',
+            hintText: '09xx xxx xxx',
             controller: _phoneController,
-            decoration: const InputDecoration(
-              labelText: 'Số điện thoại',
-              prefixIcon: Icon(Icons.phone_outlined),
-            ),
+            prefixIcon: Icons.phone_outlined,
+            keyboardType: TextInputType.phone,
+            textInputAction: TextInputAction.next,
+            errorText: _phoneError,
+            onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: AppSpacing.xl),
           Text('Địa chỉ giao hàng', style: AppTextStyles.title),
           const SizedBox(height: AppSpacing.lg),
-          TextField(
+          AppTextField(
+            label: 'Tỉnh / Thành phố',
+            hintText: 'TP. Hồ Chí Minh',
             controller: _cityController,
-            decoration: const InputDecoration(
-              labelText: 'Tỉnh / Thành phố',
-              prefixIcon: Icon(Icons.location_city_outlined),
-            ),
+            prefixIcon: Icons.location_city_outlined,
+            textInputAction: TextInputAction.next,
+            errorText: _requiredError(_cityController, 'Vui lòng nhập tỉnh/thành phố.'),
+            onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: AppSpacing.lg),
-          TextField(
+          AppTextField(
+            label: 'Quận / Huyện',
+            hintText: 'Quận 1',
             controller: _districtController,
-            decoration: const InputDecoration(labelText: 'Quận / Huyện'),
+            prefixIcon: Icons.map_outlined,
+            textInputAction: TextInputAction.next,
+            errorText: _requiredError(_districtController, 'Vui lòng nhập quận/huyện.'),
+            onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: AppSpacing.lg),
-          TextField(
+          AppTextField(
+            label: 'Phường / Xã',
+            hintText: 'Phường Bến Nghé',
             controller: _wardController,
-            decoration: const InputDecoration(labelText: 'Phường / Xã'),
+            prefixIcon: Icons.place_outlined,
+            textInputAction: TextInputAction.next,
+            errorText: _requiredError(_wardController, 'Vui lòng nhập phường/xã.'),
+            onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: AppSpacing.lg),
-          TextField(
+          AppTextField(
+            label: 'Địa chỉ cụ thể',
+            hintText: 'Số nhà, tên đường, tòa nhà...',
             controller: _streetController,
-            minLines: 3,
-            maxLines: 4,
-            decoration: const InputDecoration(labelText: 'Địa chỉ cụ thể'),
+            prefixIcon: Icons.home_outlined,
+            maxLines: 3,
+            textInputAction: TextInputAction.done,
+            errorText: _requiredError(_streetController, 'Vui lòng nhập địa chỉ cụ thể.'),
+            onChanged: (_) => setState(() {}),
+            onSubmitted: (_) => _saveAddress(),
           ),
           const SizedBox(height: AppSpacing.lg),
-          SwitchListTile(
-            value: _isDefault,
-            onChanged: (value) => setState(() => _isDefault = value),
-            title: const Text('Đặt làm địa chỉ mặc định'),
+          Material(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            child: SwitchListTile(
+              value: _isDefault,
+              onChanged: (value) => setState(() => _isDefault = value),
+              title: const Text('Đặt làm địa chỉ mặc định'),
+              secondary: const Icon(Icons.star_border_outlined),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                side: const BorderSide(color: AppColors.border),
+              ),
+            ),
           ),
           if (_controller.errorMessage != null) ...[
             const SizedBox(height: AppSpacing.md),
             Text(
               _controller.errorMessage!,
-              style: const TextStyle(color: Colors.red),
+              style: AppTextStyles.caption.copyWith(color: AppColors.error),
             ),
           ],
         ],
@@ -140,6 +202,11 @@ class _AddAddressPageState extends State<AddAddressPage> {
   }
 
   Future<void> _saveAddress() async {
+    setState(() => _hasSubmitted = true);
+    if (!_canSubmit) {
+      return;
+    }
+
     final success = await _controller.createAddress(
       recipientName: _nameController.text.trim(),
       phoneNumber: _phoneController.text.trim(),

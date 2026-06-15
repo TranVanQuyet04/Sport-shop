@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../controller/admin/admin_catalog_controller.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_state.dart';
-import '../../model/admin/admin_lookup_model.dart';
 import 'widgets/admin_bottom_nav.dart';
 
 class AdminLeaveManagementPage extends StatefulWidget {
@@ -19,79 +17,66 @@ class AdminLeaveManagementPage extends StatefulWidget {
 }
 
 class _AdminLeaveManagementPageState extends State<AdminLeaveManagementPage> {
-  late final AdminCatalogController _controller = AdminCatalogController(
-    adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
-  );
-  final Set<String> _approvedIds = {};
-  final Set<String> _rejectedIds = {};
+  final List<_LeaveRequestData> _requests = [];
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
-    _controller.loadUsers();
+    _loadLeaves();
   }
 
-  @override
-  void dispose() {
-    _controller
-      ..removeListener(_onControllerChanged)
-      ..dispose();
-    super.dispose();
-  }
-
-  void _onControllerChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  List<AdminUserModel> get _staffUsers {
-    return _controller.users.where((user) {
-      final role = user.roleName.toUpperCase();
-      return role == 'SHOP_STAFF' ||
-          role == 'DELIVERY_STAFF' ||
-          role == 'SHIPPER' ||
-          role == 'STAFF';
-    }).toList();
-  }
-
-  List<_LeaveRequestData> get _requests {
-    final reasons = [
-      'Nghỉ ốm, cần đi khám và nghỉ ngơi.',
-      'Việc gia đình riêng, cần xử lý trong ngày.',
-      'Xin nghỉ phép cá nhân theo lịch đã báo trước.',
-    ];
-    return _staffUsers.take(6).toList().asMap().entries.map((entry) {
-      final user = entry.value;
-      final date = DateTime.now().add(Duration(days: entry.key + 1));
-      return _LeaveRequestData(
-        id: user.id,
-        name: user.fullName,
-        role: user.roleName,
-        date: date,
-        days: entry.key.isEven ? 1 : 2,
-        reason: reasons[entry.key % reasons.length],
+  Future<void> _loadLeaves() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      final response = await AppDependencies.instance.apiClient.getJson(
+        '/admin/leave-requests',
       );
-    }).toList();
+      final data = response['data'];
+      final requests = data is List
+          ? data
+              .whereType<Map>()
+              .map((json) => _LeaveRequestData.fromJson(json))
+              .toList()
+          : <_LeaveRequestData>[];
+      if (mounted) {
+        setState(() {
+          _requests
+            ..clear()
+            ..addAll(requests);
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(() => _errorMessage = error.toString());
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   Future<void> _decideLeave(_LeaveRequestData request, bool approve) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(approve ? 'Duyệt nghỉ phép?' : 'Từ chối nghỉ phép?'),
+        title: Text(approve ? 'Duyet nghi phep?' : 'Tu choi nghi phep?'),
         content: Text(
-          '${request.name} xin nghỉ ${request.days} ngày. Xác nhận thao tác này?',
+          '${request.name} xin nghi ${request.days} ngay. Xac nhan thao tac nay?',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Hủy'),
+            child: const Text('Huy'),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text(approve ? 'Duyệt' : 'Từ chối'),
+            child: Text(approve ? 'Duyet' : 'Tu choi'),
           ),
         ],
       ),
@@ -99,47 +84,44 @@ class _AdminLeaveManagementPageState extends State<AdminLeaveManagementPage> {
     if (confirmed != true) {
       return;
     }
-    setState(() {
-      if (approve) {
-        _approvedIds.add(request.id);
-        _rejectedIds.remove(request.id);
-      } else {
-        _rejectedIds.add(request.id);
-        _approvedIds.remove(request.id);
+
+    try {
+      await AppDependencies.instance.apiClient.patchJson(
+        '/admin/leave-requests/${request.id}/decision',
+        data: {'status': approve ? 'APPROVED' : 'REJECTED'},
+      );
+      await _loadLeaves();
+    } catch (error) {
+      if (!mounted) {
+        return;
       }
-    });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.toString())),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final requests = _requests;
-    final pendingRequests = requests
-        .where(
-          (request) =>
-              !_approvedIds.contains(request.id) &&
-              !_rejectedIds.contains(request.id),
-        )
+    final pendingRequests = _requests
+        .where((request) => request.status.toUpperCase() == 'PENDING')
         .toList();
-    final decidedRequests = requests
-        .where(
-          (request) =>
-              _approvedIds.contains(request.id) ||
-              _rejectedIds.contains(request.id),
-        )
+    final decidedRequests = _requests
+        .where((request) => request.status.toUpperCase() != 'PENDING')
         .toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quản lý nghỉ phép'),
+        title: const Text('Quan ly nghi phep'),
         actions: [
           IconButton(
-            onPressed: _controller.isLoading ? null : _controller.loadUsers,
+            onPressed: _isLoading ? null : _loadLeaves,
             icon: const Icon(Icons.refresh),
           ),
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: _controller.loadUsers,
+        onRefresh: _loadLeaves,
         child: _buildBody(pendingRequests, decidedRequests),
       ),
       bottomNavigationBar: const AdminBottomNav(selectedIndex: 3),
@@ -150,14 +132,14 @@ class _AdminLeaveManagementPageState extends State<AdminLeaveManagementPage> {
     List<_LeaveRequestData> pendingRequests,
     List<_LeaveRequestData> decidedRequests,
   ) {
-    if (_controller.isLoading && _staffUsers.isEmpty) {
-      return const AppLoadingState(title: 'Đang tải nghỉ phép');
+    if (_isLoading && _requests.isEmpty) {
+      return const AppLoadingState(title: 'Dang tai nghi phep');
     }
-    if (_controller.errorMessage != null && _staffUsers.isEmpty) {
+    if (_errorMessage != null && _requests.isEmpty) {
       return AppErrorState(
-        title: 'Không tải được nhân viên',
-        message: _controller.errorMessage!,
-        onAction: _controller.loadUsers,
+        title: 'Khong tai duoc nghi phep',
+        message: _errorMessage!,
+        onAction: _loadLeaves,
       );
     }
 
@@ -167,31 +149,26 @@ class _AdminLeaveManagementPageState extends State<AdminLeaveManagementPage> {
       children: [
         const _Title(),
         const SizedBox(height: AppSpacing.xl),
-        if (_controller.errorMessage != null) ...[
-          _LeaveDemoBanner(
-            message: _controller.errorMessage!,
-            onRefresh: _controller.loadUsers,
-          ),
+        if (_errorMessage != null) ...[
+          _LeaveErrorBanner(message: _errorMessage!, onRefresh: _loadLeaves),
           const SizedBox(height: AppSpacing.lg),
         ],
-        _CalendarCard(requests: _requests),
-        const SizedBox(height: AppSpacing.xl),
         Row(
           children: [
             const Expanded(
               child: Text(
-                'Đang chờ duyệt',
+                'Dang cho duyet',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
               ),
             ),
-            Chip(label: Text('${pendingRequests.length} yêu cầu')),
+            Chip(label: Text('${pendingRequests.length} yeu cau')),
           ],
         ),
         const SizedBox(height: AppSpacing.md),
         if (pendingRequests.isEmpty)
           const AppEmptyState(
-            title: 'Không có yêu cầu chờ duyệt',
-            message: 'Các yêu cầu nghỉ phép mới sẽ xuất hiện tại đây.',
+            title: 'Khong co yeu cau cho duyet',
+            message: 'Cac yeu cau nghi phep moi se hien thi tai day.',
           )
         else
           ...pendingRequests.map(
@@ -206,13 +183,13 @@ class _AdminLeaveManagementPageState extends State<AdminLeaveManagementPage> {
           ),
         const SizedBox(height: AppSpacing.xl),
         const Text(
-          'Hoạt động gần đây',
+          'Hoat dong gan day',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: AppSpacing.md),
         if (decidedRequests.isEmpty)
           Text(
-            'Chưa có yêu cầu nào được duyệt hoặc từ chối trong phiên này.',
+            'Chua co yeu cau nao duoc duyet hoac tu choi.',
             style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
           )
         else
@@ -221,25 +198,18 @@ class _AdminLeaveManagementPageState extends State<AdminLeaveManagementPage> {
               padding: const EdgeInsets.only(bottom: AppSpacing.md),
               child: _RecentLeave(
                 name: request.name,
-                status: _approvedIds.contains(request.id)
-                    ? 'Đã duyệt - ${request.dateLabel}'
-                    : 'Từ chối - ${request.dateLabel}',
-                ok: _approvedIds.contains(request.id),
+                status: '${request.statusLabel} - ${request.dateLabel}',
+                ok: request.status.toUpperCase() == 'APPROVED',
               ),
             ),
           ),
-        const SizedBox(height: AppSpacing.lg),
-        Text(
-          'Ghi chú: backend chưa có API nghỉ phép, nên trạng thái duyệt/từ chối hiện chỉ lưu tạm trên màn hình.',
-          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
-        ),
       ],
     );
   }
 }
 
-class _LeaveDemoBanner extends StatelessWidget {
-  const _LeaveDemoBanner({required this.message, required this.onRefresh});
+class _LeaveErrorBanner extends StatelessWidget {
+  const _LeaveErrorBanner({required this.message, required this.onRefresh});
 
   final String message;
   final VoidCallback onRefresh;
@@ -264,7 +234,7 @@ class _LeaveDemoBanner extends StatelessWidget {
                 style: AppTextStyles.caption.copyWith(color: AppColors.info),
               ),
             ),
-            TextButton(onPressed: onRefresh, child: const Text('Thử lại')),
+            TextButton(onPressed: onRefresh, child: const Text('Thu lai')),
           ],
         ),
       ),
@@ -280,6 +250,7 @@ class _LeaveRequestData {
     required this.date,
     required this.days,
     required this.reason,
+    required this.status,
   });
 
   final String id;
@@ -288,8 +259,33 @@ class _LeaveRequestData {
   final DateTime date;
   final int days;
   final String reason;
+  final String status;
+
+  factory _LeaveRequestData.fromJson(Map json) {
+    return _LeaveRequestData(
+      id: json['id']?.toString() ?? '',
+      name: json['fullName']?.toString() ?? 'Nhan vien',
+      role: json['roleName']?.toString() ?? '',
+      date: DateTime.tryParse(json['startDate']?.toString() ?? '') ??
+          DateTime.now(),
+      days: int.tryParse(json['days']?.toString() ?? '') ?? 1,
+      reason: json['reason']?.toString() ?? '',
+      status: json['status']?.toString() ?? 'PENDING',
+    );
+  }
 
   String get dateLabel => '${date.day}/${date.month}';
+
+  String get statusLabel {
+    final normalized = status.toUpperCase();
+    if (normalized == 'APPROVED') {
+      return 'Da duyet';
+    }
+    if (normalized == 'REJECTED') {
+      return 'Tu choi';
+    }
+    return 'Dang cho';
+  }
 }
 
 class _Title extends StatelessWidget {
@@ -302,82 +298,14 @@ class _Title extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Quản lý nghỉ phép',
+          'Quan ly nghi phep',
           style: AppTextStyles.display.copyWith(fontSize: 34),
         ),
         Text(
-          'Tháng ${now.month}, ${now.year}',
+          'Thang ${now.month}, ${now.year}',
           style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
         ),
       ],
-    );
-  }
-}
-
-class _CalendarCard extends StatelessWidget {
-  const _CalendarCard({required this.requests});
-
-  final List<_LeaveRequestData> requests;
-
-  @override
-  Widget build(BuildContext context) {
-    final now = DateTime.now();
-    final days = List.generate(28, (index) => now.add(Duration(days: index)));
-    final requestDays = requests.map((request) => request.date.day).toSet();
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text('Tháng ${now.month}', style: AppTextStyles.title),
-                const Spacer(),
-                const Icon(Icons.chevron_left),
-                const Icon(Icons.chevron_right),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 7,
-                mainAxisSpacing: AppSpacing.md,
-              ),
-              itemCount: days.length,
-              itemBuilder: (context, index) {
-                final day = days[index];
-                final active = requestDays.contains(day.day);
-                return Center(
-                  child: Container(
-                    width: 42,
-                    height: 42,
-                    decoration: BoxDecoration(
-                      color: active ? AppColors.primary : Colors.transparent,
-                      borderRadius: BorderRadius.circular(AppRadius.md),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${day.day}',
-                        style: TextStyle(
-                          color: active ? Colors.white : AppColors.primary,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -399,69 +327,39 @@ class _LeaveRequest extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadius.xl),
+        border: Border.all(color: AppColors.border),
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                const CircleAvatar(child: Icon(Icons.person)),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(request.name, style: AppTextStyles.subtitle),
-                      Text(request.role),
-                    ],
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(request.dateLabel, style: AppTextStyles.subtitle),
-                    Text(
-                      '${request.days} ngày',
-                      style: AppTextStyles.body.copyWith(
-                        color: AppColors.secondary,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: AppColors.surfaceMuted,
-                borderRadius: BorderRadius.circular(AppRadius.md),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Lý do: ${request.reason}'),
-                ),
+            Text(request.name, style: AppTextStyles.title),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              '${request.role} - ${request.days} ngay - ${request.dateLabel}',
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textSecondary,
               ),
             ),
             const SizedBox(height: AppSpacing.md),
+            Text(request.reason, style: AppTextStyles.body),
+            const SizedBox(height: AppSpacing.lg),
             Row(
               children: [
                 Expanded(
                   child: AppButton(
-                    label: 'Từ chối',
-                    variant: AppButtonVariant.outline,
+                    label: 'Tu choi',
                     onPressed: onReject,
+                    variant: AppButtonVariant.secondary,
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: AppButton(
-                    label: 'Duyệt',
-                    variant: AppButtonVariant.secondary,
+                    label: 'Duyet',
                     onPressed: onApprove,
+                    variant: AppButtonVariant.primary,
                   ),
                 ),
               ],
@@ -486,21 +384,18 @@ class _RecentLeave extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.surface,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        side: BorderSide(color: ok ? AppColors.success : AppColors.secondary),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: ListTile(
         leading: Icon(
-          ok ? Icons.check_circle_outline : Icons.cancel_outlined,
-          color: ok ? AppColors.success : AppColors.secondary,
+          ok ? Icons.check_circle : Icons.cancel,
+          color: ok ? AppColors.success : AppColors.error,
         ),
-        title: Text(name, style: AppTextStyles.subtitle),
+        title: Text(name, style: AppTextStyles.body),
         subtitle: Text(status),
-        trailing: const Icon(Icons.chevron_right),
       ),
     );
   }

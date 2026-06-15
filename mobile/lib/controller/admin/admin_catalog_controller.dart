@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import '../../core/mock/admin_demo_data.dart';
 import '../../model/admin/admin_lookup_model.dart';
 import '../../model/customer/product_detail_model.dart';
 import '../../model/customer/product_summary_model.dart';
@@ -36,15 +35,11 @@ class AdminCatalogController extends ChangeNotifier {
 
   Future<void> loadProducts() => _load(() async {
     products = await adminCatalogRepository.getProducts();
-    if (products.isEmpty) {
-      products = AdminDemoData.products;
-    }
-  }, fallback: () => products = AdminDemoData.products);
+  });
 
-  Future<void> loadProductDetail(String id) => _load(
-    () async =>
-        selectedProduct = await adminCatalogRepository.getProductDetail(id),
-  );
+  Future<void> loadProductDetail(String id) => _load(() async {
+    selectedProduct = await adminCatalogRepository.getProductDetail(id);
+  });
 
   Future<bool> saveProduct({
     String? id,
@@ -141,29 +136,19 @@ class AdminCatalogController extends ChangeNotifier {
 
   Future<void> loadCategories() => _load(() async {
     categories = await adminCatalogRepository.getCategories();
-    if (categories.isEmpty) {
-      categories = AdminDemoData.categories;
-    }
-  }, fallback: () => categories = AdminDemoData.categories);
+  });
 
   Future<void> loadBrands() => _load(() async {
     brands = await adminCatalogRepository.getBrands();
-    if (brands.isEmpty) {
-      brands = AdminDemoData.brands;
-    }
-  }, fallback: () => brands = AdminDemoData.brands);
+  });
 
   Future<void> loadUsers() => _load(() async {
     users = await adminCatalogRepository.getUsers();
-    if (users.isEmpty) {
-      users = AdminDemoData.users;
-    }
-  }, fallback: () => users = AdminDemoData.users);
+  });
 
   Future<void> loadUserDetail(String id) => _load(() async {
     selectedUser = await adminCatalogRepository.getUserDetail(id);
-    selectedUser ??= _demoUserById(id);
-  }, fallback: () => selectedUser = _demoUserById(id));
+  });
 
   Future<bool> saveUser({
     String? id,
@@ -204,13 +189,6 @@ class AdminCatalogController extends ChangeNotifier {
       await adminCatalogRepository.deleteUser(id);
       users = await adminCatalogRepository.getUsers();
     });
-  }
-
-  AdminUserModel _demoUserById(String id) {
-    return AdminDemoData.users.firstWhere(
-      (user) => user.id == id,
-      orElse: () => AdminDemoData.users.first,
-    );
   }
 
   Future<bool> saveCategory({
@@ -280,10 +258,7 @@ class AdminCatalogController extends ChangeNotifier {
     });
   }
 
-  Future<void> _load(
-    Future<void> Function() action, {
-    VoidCallback? fallback,
-  }) async {
+  Future<void> _load(Future<void> Function() action) async {
     isLoading = true;
     errorMessage = null;
     _safeNotifyListeners();
@@ -291,10 +266,7 @@ class AdminCatalogController extends ChangeNotifier {
     try {
       await action();
     } catch (error) {
-      fallback?.call();
-      errorMessage = fallback == null
-          ? error.toString()
-          : 'Đang hiển thị dữ liệu mẫu vì chưa kết nối được backend.';
+      errorMessage = error.toString();
     } finally {
       isLoading = false;
       _safeNotifyListeners();

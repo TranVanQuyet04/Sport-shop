@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
@@ -499,3 +499,4 @@ class _InfoRow extends StatelessWidget {
     );
   }
 }
+

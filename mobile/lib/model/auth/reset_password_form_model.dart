@@ -18,6 +18,8 @@ class ResetPasswordFormModel {
       newPassword.isNotEmpty &&
       confirmPassword.isNotEmpty;
 
+  bool get hasValidToken => token.trim().isNotEmpty;
+  bool get hasValidPassword => RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$').hasMatch(newPassword);
   bool get passwordsMatch => newPassword == confirmPassword;
 
   ResetPasswordFormModel copyWith({

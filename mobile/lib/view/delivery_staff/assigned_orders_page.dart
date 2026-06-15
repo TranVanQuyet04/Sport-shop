@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../controller/delivery_staff/delivery_orders_controller.dart';
@@ -93,7 +93,7 @@ class _AssignedOrdersPageState extends State<AssignedOrdersPage> {
           );
         }
         if (index == 2 && _controller.errorMessage != null) {
-          return _DeliveryDemoBanner(
+          return _DeliveryErrorBanner(
             message: _controller.errorMessage!,
             onRefresh: _controller.loadOrders,
           );
@@ -130,8 +130,8 @@ class _AssignedOrdersPageState extends State<AssignedOrdersPage> {
   }
 }
 
-class _DeliveryDemoBanner extends StatelessWidget {
-  const _DeliveryDemoBanner({required this.message, required this.onRefresh});
+class _DeliveryErrorBanner extends StatelessWidget {
+  const _DeliveryErrorBanner({required this.message, required this.onRefresh});
 
   final String message;
   final VoidCallback onRefresh;
@@ -247,3 +247,4 @@ class _AssignedOrderCard extends StatelessWidget {
     );
   }
 }
+

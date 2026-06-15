@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import '../../core/mock/admin_demo_data.dart';
 import '../../model/admin/dashboard_report_model.dart';
 import '../../repository/admin/admin_report_repository.dart';
 
@@ -40,9 +39,8 @@ class AdminDashboardController extends ChangeNotifier {
         endDate: now,
       );
     } catch (error) {
-      report = AdminDemoData.dashboardReport;
-      errorMessage =
-          'Đang hiển thị dashboard mẫu vì chưa kết nối được backend.';
+      report = null;
+      errorMessage = error.toString();
     } finally {
       isLoading = false;
       _safeNotifyListeners();

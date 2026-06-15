@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../controller/admin/admin_catalog_controller.dart';
@@ -153,7 +153,7 @@ class _AdminRoleManagementPageState extends State<AdminRoleManagementPage> {
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         if (_controller.errorMessage != null) ...[
-          _RoleDemoBanner(
+          _RoleErrorBanner(
             message: _controller.errorMessage!,
             onRefresh: _controller.loadUsers,
           ),
@@ -234,8 +234,8 @@ class _AdminRoleManagementPageState extends State<AdminRoleManagementPage> {
   }
 }
 
-class _RoleDemoBanner extends StatelessWidget {
-  const _RoleDemoBanner({required this.message, required this.onRefresh});
+class _RoleErrorBanner extends StatelessWidget {
+  const _RoleErrorBanner({required this.message, required this.onRefresh});
 
   final String message;
   final VoidCallback onRefresh;
@@ -487,3 +487,4 @@ class _SecurityNote extends StatelessWidget {
     ),
   );
 }
+

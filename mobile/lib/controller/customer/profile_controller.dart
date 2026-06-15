@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import '../../core/mock/customer_demo_data.dart';
 import '../../model/customer/profile_model.dart';
 import '../../repository/customer/profile_repository.dart';
 
@@ -21,8 +20,8 @@ class ProfileController extends ChangeNotifier {
     try {
       profile = await profileRepository.getMyProfile();
     } catch (error) {
-      profile = CustomerDemoData.profile;
-      errorMessage = 'Đang hiển thị hồ sơ mẫu vì chưa kết nối được backend.';
+      profile = null;
+      errorMessage = error.toString();
     } finally {
       isLoading = false;
       notifyListeners();

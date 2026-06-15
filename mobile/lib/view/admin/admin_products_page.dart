@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -177,7 +177,7 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
       separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
       itemBuilder: (context, index) {
         if (index == 0 && _controller.errorMessage != null) {
-          return _ProductDemoBanner(
+          return _ProductErrorBanner(
             message: _controller.errorMessage!,
             onRefresh: _controller.loadProducts,
           );
@@ -224,8 +224,8 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
   }
 }
 
-class _ProductDemoBanner extends StatelessWidget {
-  const _ProductDemoBanner({required this.message, required this.onRefresh});
+class _ProductErrorBanner extends StatelessWidget {
+  const _ProductErrorBanner({required this.message, required this.onRefresh});
 
   final String message;
   final VoidCallback onRefresh;
@@ -523,3 +523,4 @@ class _ProductAdminCard extends StatelessWidget {
     );
   }
 }
+

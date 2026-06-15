@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -71,7 +71,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             if (_controller.isLoading)
               const LinearProgressIndicator(minHeight: 3),
             if (_controller.errorMessage != null) ...[
-              _AdminDemoBanner(
+              _AdminErrorBanner(
                 message: _controller.errorMessage!,
                 onRefresh: _controller.loadDashboard,
               ),
@@ -201,8 +201,8 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
   }
 }
 
-class _AdminDemoBanner extends StatelessWidget {
-  const _AdminDemoBanner({required this.message, required this.onRefresh});
+class _AdminErrorBanner extends StatelessWidget {
+  const _AdminErrorBanner({required this.message, required this.onRefresh});
 
   final String message;
   final VoidCallback onRefresh;
@@ -451,3 +451,4 @@ class _ActivityCard extends StatelessWidget {
     );
   }
 }
+

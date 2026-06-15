@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
@@ -21,8 +22,16 @@ class FailedDeliveryReportPage extends StatefulWidget {
 }
 
 class _FailedDeliveryReportPageState extends State<FailedDeliveryReportPage> {
-  String _reason = 'Khách không nghe máy';
+  final _noteController = TextEditingController();
+  String _reason = 'Khach khong nghe may';
   bool _hasPhoto = false;
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,24 +41,22 @@ class _FailedDeliveryReportPageState extends State<FailedDeliveryReportPage> {
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
           Text(
-            'Báo cáo giao thất bại',
+            'Bao cao giao that bai',
             style: AppTextStyles.display.copyWith(fontSize: 30),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Đơn #${widget.orderId} cần ghi nhận lý do rõ ràng trước khi chuyển FAILED hoặc RETURNED.',
+            'Don #${widget.orderId} se duoc luu truc tiep len backend.',
             style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.xl),
-          const _DemoBanner(),
-          const SizedBox(height: AppSpacing.xl),
-          Text('Lý do', style: AppTextStyles.subtitle),
+          Text('Ly do', style: AppTextStyles.subtitle),
           const SizedBox(height: AppSpacing.md),
           ...[
-            'Khách không nghe máy',
-            'Sai địa chỉ giao hàng',
-            'Khách hẹn giao lại',
-            'Khách từ chối nhận hàng',
+            'Khach khong nghe may',
+            'Sai dia chi giao hang',
+            'Khach hen giao lai',
+            'Khach tu choi nhan hang',
           ].map(
             (reason) => _ReasonTile(
               label: reason,
@@ -58,7 +65,7 @@ class _FailedDeliveryReportPageState extends State<FailedDeliveryReportPage> {
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
-          Text('Ảnh minh chứng', style: AppTextStyles.subtitle),
+          Text('Anh minh chung', style: AppTextStyles.subtitle),
           const SizedBox(height: AppSpacing.md),
           InkWell(
             borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -87,8 +94,8 @@ class _FailedDeliveryReportPageState extends State<FailedDeliveryReportPage> {
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       _hasPhoto
-                          ? 'Đã thêm ảnh minh chứng mẫu'
-                          : 'Chụp hoặc tải ảnh lên',
+                          ? 'Da dinh kem anh minh chung'
+                          : 'Danh dau co anh minh chung',
                     ),
                   ],
                 ),
@@ -96,11 +103,12 @@ class _FailedDeliveryReportPageState extends State<FailedDeliveryReportPage> {
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
-          const AppTextField(
-            label: 'Ghi chú chi tiết',
+          AppTextField(
+            controller: _noteController,
+            label: 'Ghi chu chi tiet',
             prefixIcon: Icons.edit_note_outlined,
             maxLines: 4,
-            hintText: 'Nhập ghi chú cho shop/admin...',
+            hintText: 'Nhap ghi chu cho shop/admin...',
           ),
           const SizedBox(height: 120),
         ],
@@ -112,17 +120,19 @@ class _FailedDeliveryReportPageState extends State<FailedDeliveryReportPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               AppButton(
-                label: 'Gửi báo cáo FAILED',
+                label: 'Gui bao cao FAILED',
                 icon: Icons.report_problem_outlined,
                 variant: AppButtonVariant.secondary,
-                onPressed: () => _submit('FAILED'),
+                isLoading: _isSubmitting,
+                onPressed: _isSubmitting ? null : () => _submit('FAILED'),
               ),
               const SizedBox(height: AppSpacing.sm),
               AppButton(
-                label: 'Đánh dấu RETURNED',
+                label: 'Danh dau RETURNED',
                 icon: Icons.keyboard_return_outlined,
                 variant: AppButtonVariant.outline,
-                onPressed: () => _submit('RETURNED'),
+                isLoading: _isSubmitting,
+                onPressed: _isSubmitting ? null : () => _submit('RETURNED'),
               ),
               const SizedBox(height: AppSpacing.md),
               const DeliveryBottomNav(selectedIndex: 3),
@@ -133,45 +143,33 @@ class _FailedDeliveryReportPageState extends State<FailedDeliveryReportPage> {
     );
   }
 
-  void _submit(String status) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Đã ghi nhận $status cho đơn #${widget.orderId}: $_reason.',
-        ),
-      ),
-    );
-    context.go(AppRoutes.deliveryAssignedOrders);
-  }
-}
-
-class _DemoBanner extends StatelessWidget {
-  const _DemoBanner();
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.info.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Row(
-          children: [
-            const Icon(Icons.info_outline, color: AppColors.info),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                'Báo cáo hiện lưu demo trên UI. Backend sau này cần endpoint lưu FAILED/RETURNED và ảnh minh chứng.',
-                style: AppTextStyles.caption.copyWith(color: AppColors.info),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  Future<void> _submit(String status) async {
+    setState(() => _isSubmitting = true);
+    try {
+      await AppDependencies.instance.apiClient.postJson(
+        '/orders/${widget.orderId.replaceAll('#', '')}/delivery-reports',
+        data: {
+          'status': status,
+          'reason': _reason,
+          'note': _noteController.text.trim(),
+          'evidenceImageUrl': _hasPhoto ? 'mobile://evidence-attached' : null,
+        },
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Da luu bao cao $status cho don #${widget.orderId}.')),
+      );
+      context.go(AppRoutes.deliveryAssignedOrders);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.toString())),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
   }
 }
 

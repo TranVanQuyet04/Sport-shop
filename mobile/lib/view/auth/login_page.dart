@@ -8,6 +8,7 @@ import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_text_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -53,107 +54,99 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Đăng nhập')),
       body: SafeArea(
-        child: Padding(
+        child: ListView(
           padding: const EdgeInsets.all(AppSpacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Chào mừng trở lại', style: AppTextStyles.title),
-              const SizedBox(height: AppSpacing.sm),
+          children: [
+            Text('Chào mừng trở lại', style: AppTextStyles.title),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'Đăng nhập để tiếp tục mua sắm tại Sportshop.',
+              style: AppTextStyles.body,
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            AppTextField(
+              label: 'Email',
+              hintText: 'example@sportshop.vn',
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              prefixIcon: Icons.mail_outline,
+              errorText: _controller.emailError,
+              onChanged: _controller.changeEmail,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            AppTextField(
+              label: 'Mật khẩu',
+              hintText: 'Nhập mật khẩu',
+              prefixIcon: Icons.lock_outline,
+              obscureText: true,
+              textInputAction: TextInputAction.done,
+              errorText: _controller.passwordError,
+              onChanged: _controller.changePassword,
+              onSubmitted: (_) => _submit(),
+            ),
+            if (_controller.errorMessage != null) ...[
+              const SizedBox(height: AppSpacing.md),
               Text(
-                'Đăng nhập để tiếp tục mua sắm tại Sportshop.',
-                style: AppTextStyles.body,
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              TextField(
-                keyboardType: TextInputType.emailAddress,
-                onChanged: _controller.changeEmail,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  prefixIcon: Icon(Icons.mail_outline),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              TextField(
-                obscureText: !_controller.form.isPasswordVisible,
-                onChanged: _controller.changePassword,
-                decoration: InputDecoration(
-                  labelText: 'Mật khẩu',
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    onPressed: _controller.togglePasswordVisibility,
-                    icon: Icon(
-                      _controller.form.isPasswordVisible
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                    ),
-                  ),
-                ),
-              ),
-              if (_controller.errorMessage != null) ...[
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  _controller.errorMessage!,
-                  style: AppTextStyles.caption.copyWith(color: AppColors.error),
-                ),
-              ],
-              const SizedBox(height: AppSpacing.xl),
-              AppButton(
-                label: 'Đăng nhập',
-                isLoading: _controller.isLoading,
-                onPressed: _submit,
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              Text('Xem nhanh UI theo vai trò', style: AppTextStyles.subtitle),
-              const SizedBox(height: AppSpacing.sm),
-              Wrap(
-                spacing: AppSpacing.sm,
-                runSpacing: AppSpacing.sm,
-                children: [
-                  _RolePreviewChip(
-                    label: 'Customer',
-                    icon: Icons.storefront_outlined,
-                    onTap: () => context.go(AppRoutes.customerHome),
-                  ),
-                  _RolePreviewChip(
-                    label: 'Admin',
-                    icon: Icons.dashboard_outlined,
-                    onTap: () => context.go(AppRoutes.adminDashboard),
-                  ),
-                  _RolePreviewChip(
-                    label: 'Shop Staff',
-                    icon: Icons.inventory_2_outlined,
-                    onTap: () => context.go(AppRoutes.shopStaffHome),
-                  ),
-                  _RolePreviewChip(
-                    label: 'Delivery',
-                    icon: Icons.local_shipping_outlined,
-                    onTap: () => context.go(AppRoutes.deliveryHome),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Center(
-                child: TextButton(
-                  onPressed: () => context.go(AppRoutes.register),
-                  child: const Text('Chưa có tài khoản? Đăng ký ngay'),
-                ),
-              ),
-              Center(
-                child: TextButton(
-                  onPressed: () => context.go(AppRoutes.forgotPassword),
-                  child: const Text('Quên mật khẩu?'),
-                ),
-              ),
-              Center(
-                child: TextButton.icon(
-                  onPressed: () => context.go(AppRoutes.guestChat),
-                  icon: const Icon(Icons.support_agent_outlined),
-                  label: const Text('Chat hỗ trợ khách vãng lai'),
-                ),
+                _controller.errorMessage!,
+                style: AppTextStyles.caption.copyWith(color: AppColors.error),
               ),
             ],
-          ),
+            const SizedBox(height: AppSpacing.xl),
+            AppButton(
+              label: 'Đăng nhập',
+              isLoading: _controller.isLoading,
+              onPressed: _submit,
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            Text('Xem nhanh UI theo vai trò', style: AppTextStyles.subtitle),
+            const SizedBox(height: AppSpacing.sm),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
+                _RolePreviewChip(
+                  label: 'Customer',
+                  icon: Icons.storefront_outlined,
+                  onTap: () => context.go(AppRoutes.customerHome),
+                ),
+                _RolePreviewChip(
+                  label: 'Admin',
+                  icon: Icons.dashboard_outlined,
+                  onTap: () => context.go(AppRoutes.adminDashboard),
+                ),
+                _RolePreviewChip(
+                  label: 'Shop Staff',
+                  icon: Icons.inventory_2_outlined,
+                  onTap: () => context.go(AppRoutes.shopStaffHome),
+                ),
+                _RolePreviewChip(
+                  label: 'Delivery',
+                  icon: Icons.local_shipping_outlined,
+                  onTap: () => context.go(AppRoutes.deliveryHome),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+            Center(
+              child: TextButton(
+                onPressed: () => context.go(AppRoutes.register),
+                child: const Text('Chưa có tài khoản? Đăng ký ngay'),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                onPressed: () => context.go(AppRoutes.forgotPassword),
+                child: const Text('Quên mật khẩu?'),
+              ),
+            ),
+            Center(
+              child: TextButton.icon(
+                onPressed: () => context.go(AppRoutes.guestChat),
+                icon: const Icon(Icons.support_agent_outlined),
+                label: const Text('Chat hỗ trợ khách vãng lai'),
+              ),
+            ),
+          ],
         ),
       ),
     );

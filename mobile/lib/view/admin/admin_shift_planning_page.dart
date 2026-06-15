@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../controller/admin/admin_catalog_controller.dart';
 import '../../core/constants/app_spacing.dart';
@@ -22,12 +22,15 @@ class _AdminShiftPlanningPageState extends State<AdminShiftPlanningPage> {
     adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
   );
   final Map<String, Set<String>> _shiftsByUserId = {};
+  final Map<String, int> _shiftIdsByUserShift = {};
+  bool _isSaving = false;
+  String? _shiftErrorMessage;
 
   @override
   void initState() {
     super.initState();
     _controller.addListener(_onControllerChanged);
-    _controller.loadUsers();
+    _loadData();
   }
 
   @override
@@ -54,6 +57,108 @@ class _AdminShiftPlanningPageState extends State<AdminShiftPlanningPage> {
     }).toList();
   }
 
+  Future<void> _loadData() async {
+    await _controller.loadUsers();
+    await _loadShifts();
+  }
+
+  Future<void> _loadShifts() async {
+    final today = _dateOnly(DateTime.now());
+    try {
+      final response = await AppDependencies.instance.apiClient.getJson(
+        '/admin/work-shifts',
+        queryParameters: {'startDate': today, 'endDate': today},
+      );
+      final data = response['data'];
+      if (data is! List) {
+        return;
+      }
+      final shifts = <String, Set<String>>{};
+      final ids = <String, int>{};
+      for (final item in data) {
+        if (item is! Map) {
+          continue;
+        }
+        final userId = item['userId']?.toString();
+        final shiftCode = item['shiftCode']?.toString();
+        final id = int.tryParse(item['id']?.toString() ?? '');
+        if (userId == null || shiftCode == null) {
+          continue;
+        }
+        shifts.putIfAbsent(userId, () => <String>{}).add(shiftCode);
+        if (id != null) {
+          ids['$userId:$shiftCode'] = id;
+        }
+      }
+      if (mounted) {
+        setState(() {
+          _shiftErrorMessage = null;
+          _shiftsByUserId
+            ..clear()
+            ..addAll(shifts);
+          _shiftIdsByUserShift
+            ..clear()
+            ..addAll(ids);
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(() => _shiftErrorMessage = error.toString());
+      }
+    }
+  }
+
+  Future<void> _saveShifts() async {
+    setState(() => _isSaving = true);
+    final today = _dateOnly(DateTime.now());
+    try {
+      for (final entry in _shiftsByUserId.entries) {
+        for (final shift in entry.value) {
+          final key = '${entry.key}:$shift';
+          if (_shiftIdsByUserShift.containsKey(key)) {
+            continue;
+          }
+          final response = await AppDependencies.instance.apiClient.postJson(
+            '/admin/work-shifts',
+            data: {
+              'userId': int.parse(entry.key),
+              'shiftDate': today,
+              'shiftCode': shift,
+              'note': 'Created from mobile admin',
+            },
+          );
+          final id = int.tryParse(response['id']?.toString() ?? '');
+          if (id != null) {
+            _shiftIdsByUserShift[key] = id;
+          }
+        }
+      }
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Da luu lich ca len backend.')),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.toString())),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
+  }
+
+  String _dateOnly(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
+  }
+
   void _toggleShift(AdminUserModel user, String shift, bool selected) {
     setState(() {
       final shifts = _shiftsByUserId.putIfAbsent(user.id, () => <String>{});
@@ -70,22 +175,19 @@ class _AdminShiftPlanningPageState extends State<AdminShiftPlanningPage> {
     return Scaffold(
       appBar: const AdminAppBar(),
       body: RefreshIndicator(
-        onRefresh: _controller.loadUsers,
+        onRefresh: _loadData,
         child: _buildBody(),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.secondary,
         foregroundColor: Colors.white,
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Backend chưa có API lưu ca trực, lịch hiện đang lưu tạm trên màn hình.',
-              ),
-            ),
-          );
-        },
-        child: const Icon(Icons.save_outlined),
+        onPressed: _isSaving ? null : _saveShifts,
+        child: _isSaving
+            ? const SizedBox.square(
+                dimension: 22,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Icon(Icons.save_outlined),
       ),
       bottomNavigationBar: const AdminBottomNav(selectedIndex: 3),
     );
@@ -100,7 +202,7 @@ class _AdminShiftPlanningPageState extends State<AdminShiftPlanningPage> {
       return AppErrorState(
         title: 'Không tải được nhân viên',
         message: _controller.errorMessage!,
-        onAction: _controller.loadUsers,
+        onAction: _loadData,
       );
     }
 
@@ -110,10 +212,10 @@ class _AdminShiftPlanningPageState extends State<AdminShiftPlanningPage> {
       children: [
         const _Header(),
         const SizedBox(height: AppSpacing.xl),
-        if (_controller.errorMessage != null) ...[
-          _ShiftDemoBanner(
-            message: _controller.errorMessage!,
-            onRefresh: _controller.loadUsers,
+        if ((_controller.errorMessage ?? _shiftErrorMessage) != null) ...[
+          _ShiftErrorBanner(
+            message: (_controller.errorMessage ?? _shiftErrorMessage)!,
+            onRefresh: _loadData,
           ),
           const SizedBox(height: AppSpacing.lg),
         ],
@@ -154,18 +256,13 @@ class _AdminShiftPlanningPageState extends State<AdminShiftPlanningPage> {
               ),
             ),
           ),
-        const SizedBox(height: AppSpacing.lg),
-        Text(
-          'Ghi chú: backend chưa có endpoint lịch làm việc, nên các ca đang chọn chỉ lưu tạm trong phiên hiện tại.',
-          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
-        ),
       ],
     );
   }
 }
 
-class _ShiftDemoBanner extends StatelessWidget {
-  const _ShiftDemoBanner({required this.message, required this.onRefresh});
+class _ShiftErrorBanner extends StatelessWidget {
+  const _ShiftErrorBanner({required this.message, required this.onRefresh});
 
   final String message;
   final VoidCallback onRefresh;
@@ -422,3 +519,5 @@ class _ShiftChip extends StatelessWidget {
     );
   }
 }
+
+

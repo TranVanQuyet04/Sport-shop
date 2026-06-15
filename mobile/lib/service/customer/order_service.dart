@@ -6,6 +6,10 @@ abstract interface class OrderService {
 
   Future<List<OrderModel>> getAllOrders();
 
+  Future<OrderModel> getMyOrderById(String orderId);
+
+  Future<OrderModel> getAdminOrderById(String orderId);
+
   Future<OrderModel> updateStatus({
     required String orderId,
     required String status,
@@ -28,6 +32,18 @@ class OrderApiService implements OrderService {
   Future<List<OrderModel>> getAllOrders() async {
     final json = await _apiClient.getJson('/orders/admin');
     return _parseOrders(json);
+  }
+
+  @override
+  Future<OrderModel> getMyOrderById(String orderId) async {
+    final json = await _apiClient.getJson('/orders/$orderId');
+    return OrderModel.fromJson(json);
+  }
+
+  @override
+  Future<OrderModel> getAdminOrderById(String orderId) async {
+    final json = await _apiClient.getJson('/orders/admin/$orderId');
+    return OrderModel.fromJson(json);
   }
 
   @override

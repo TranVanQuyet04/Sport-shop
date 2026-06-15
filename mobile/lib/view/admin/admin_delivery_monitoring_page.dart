@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../controller/admin/admin_orders_controller.dart';
 import '../../core/constants/app_spacing.dart';
@@ -116,7 +116,7 @@ class _AdminDeliveryMonitoringPageState
         const _Header(),
         const SizedBox(height: AppSpacing.lg),
         if (_controller.errorMessage != null) ...[
-          _DeliveryDemoBanner(
+          _DeliveryErrorBanner(
             message: _controller.errorMessage!,
             onRefresh: _controller.loadOrders,
           ),
@@ -176,8 +176,8 @@ class _AdminDeliveryMonitoringPageState
   }
 }
 
-class _DeliveryDemoBanner extends StatelessWidget {
-  const _DeliveryDemoBanner({required this.message, required this.onRefresh});
+class _DeliveryErrorBanner extends StatelessWidget {
+  const _DeliveryErrorBanner({required this.message, required this.onRefresh});
 
   final String message;
   final VoidCallback onRefresh;
@@ -386,3 +386,4 @@ class _DeliveryCard extends StatelessWidget {
     };
   }
 }
+

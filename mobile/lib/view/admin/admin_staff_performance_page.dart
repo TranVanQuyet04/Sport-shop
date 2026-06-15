@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../controller/admin/admin_catalog_controller.dart';
 import '../../controller/admin/admin_orders_controller.dart';
@@ -145,8 +145,8 @@ class _PerformanceContent extends StatelessWidget {
       children: [
         const _Title(),
         const SizedBox(height: AppSpacing.lg),
-        if (_hasDemoMessage) ...[
-          _PerformanceDemoBanner(message: _demoMessage),
+        if (_hasInfoMessage) ...[
+          _PerformanceInfoBanner(message: _infoMessage),
           const SizedBox(height: AppSpacing.lg),
         ],
         const _Segmented(),
@@ -226,15 +226,15 @@ class _PerformanceContent extends StatelessWidget {
     );
   }
 
-  bool get _hasDemoMessage => staffUsers.isNotEmpty || orders.isNotEmpty;
+  bool get _hasInfoMessage => staffUsers.isNotEmpty || orders.isNotEmpty;
 
-  String get _demoMessage {
+  String get _infoMessage {
     return 'Hiệu suất đang tính từ dữ liệu người dùng/đơn hàng hiện có. Khi backend có phân công đơn theo nhân viên, ranking sẽ chính xác hơn.';
   }
 }
 
-class _PerformanceDemoBanner extends StatelessWidget {
-  const _PerformanceDemoBanner({required this.message});
+class _PerformanceInfoBanner extends StatelessWidget {
+  const _PerformanceInfoBanner({required this.message});
 
   final String message;
 
@@ -536,3 +536,4 @@ class _Rank extends StatelessWidget {
     ),
   );
 }
+

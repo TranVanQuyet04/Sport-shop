@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../controller/admin/admin_catalog_controller.dart';
 import '../../controller/admin/admin_orders_controller.dart';
@@ -28,6 +28,7 @@ class _AdminOrderAssignmentPageState extends State<AdminOrderAssignmentPage> {
     adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
   );
   final Map<String, AdminUserModel> _assignedStaffByOrderId = {};
+  String? _assignmentErrorMessage;
 
   @override
   void initState() {
@@ -59,6 +60,46 @@ class _AdminOrderAssignmentPageState extends State<AdminOrderAssignmentPage> {
       _ordersController.loadOrders(),
       _catalogController.loadUsers(),
     ]);
+    await _loadAssignments();
+  }
+
+  Future<void> _loadAssignments() async {
+    try {
+      final response = await AppDependencies.instance.apiClient.getJson(
+        '/admin/order-assignments',
+      );
+      final data = response['data'];
+      if (data is! List) {
+        return;
+      }
+      final usersById = {
+        for (final user in _catalogController.users) user.id: user,
+      };
+      final assignments = <String, AdminUserModel>{};
+      for (final item in data) {
+        if (item is! Map) {
+          continue;
+        }
+        final orderId = item['orderId']?.toString();
+        final staffId = item['staffId']?.toString();
+        final staff = staffId == null ? null : usersById[staffId];
+        if (orderId != null && staff != null) {
+          assignments[orderId] = staff;
+        }
+      }
+      if (mounted) {
+        setState(() {
+          _assignmentErrorMessage = null;
+          _assignedStaffByOrderId
+            ..clear()
+            ..addAll(assignments);
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(() => _assignmentErrorMessage = error.toString());
+      }
+    }
   }
 
   List<OrderModel> get _assignableOrders {
@@ -93,6 +134,23 @@ class _AdminOrderAssignmentPageState extends State<AdminOrderAssignmentPage> {
     if (selectedStaff == null) {
       return;
     }
+    try {
+      await AppDependencies.instance.apiClient.putJson(
+        '/admin/order-assignments/orders/${order.id.replaceAll('#', '')}',
+        data: {
+          'staffId': int.parse(selectedStaff.id),
+          'note': 'Assigned from mobile admin',
+        },
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.toString())),
+      );
+      return;
+    }
     setState(() => _assignedStaffByOrderId[order.id] = selectedStaff);
     if (!mounted) {
       return;
@@ -110,7 +168,9 @@ class _AdminOrderAssignmentPageState extends State<AdminOrderAssignmentPage> {
         (_ordersController.isLoading || _catalogController.isLoading) &&
         _assignableOrders.isEmpty;
     final errorMessage =
-        _ordersController.errorMessage ?? _catalogController.errorMessage;
+        _ordersController.errorMessage ??
+        _catalogController.errorMessage ??
+        _assignmentErrorMessage;
 
     return Scaffold(
       appBar: const AdminAppBar(),
@@ -147,13 +207,6 @@ class _AdminOrderAssignmentPageState extends State<AdminOrderAssignmentPage> {
                         ),
                       ),
                     ),
-                  const SizedBox(height: AppSpacing.lg),
-                  Text(
-                    'Ghi chú: backend chưa có API lưu phân công đơn hàng, nên lựa chọn nhân viên hiện chỉ lưu tạm trên màn hình.',
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
                 ],
               ),
       ),

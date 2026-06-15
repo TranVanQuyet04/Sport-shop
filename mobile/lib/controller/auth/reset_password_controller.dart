@@ -10,11 +10,20 @@ class ResetPasswordController extends ChangeNotifier {
 
   ResetPasswordFormModel _form = const ResetPasswordFormModel();
   bool _isLoading = false;
+  bool _hasSubmitted = false;
   String? _errorMessage;
 
   ResetPasswordFormModel get form => _form;
   bool get isLoading => _isLoading;
+  bool get hasSubmitted => _hasSubmitted;
   String? get errorMessage => _errorMessage;
+  String? get tokenError => !_hasSubmitted || _form.hasValidToken ? null : 'Vui lòng nhập token.';
+  String? get passwordError => !_hasSubmitted || _form.newPassword.isEmpty || _form.hasValidPassword
+      ? null
+      : 'Mật khẩu cần ít nhất 8 ký tự, gồm chữ và số.';
+  String? get confirmPasswordError => !_hasSubmitted || _form.confirmPassword.isEmpty || _form.passwordsMatch
+      ? null
+      : 'Mật khẩu xác nhận không khớp.';
 
   void changeToken(String value) {
     _form = _form.copyWith(token: value);
@@ -45,8 +54,14 @@ class ResetPasswordController extends ChangeNotifier {
   }
 
   Future<bool> submit() async {
+    _hasSubmitted = true;
     if (!_form.canSubmit) {
       _errorMessage = 'Vui lòng nhập token và mật khẩu mới.';
+      notifyListeners();
+      return false;
+    }
+    if (!_form.hasValidPassword) {
+      _errorMessage = 'Vui lòng kiểm tra lại mật khẩu mới.';
       notifyListeners();
       return false;
     }

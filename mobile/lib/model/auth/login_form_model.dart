@@ -10,6 +10,8 @@ class LoginFormModel {
   final bool isPasswordVisible;
 
   bool get canSubmit => email.trim().isNotEmpty && password.isNotEmpty;
+  bool get hasValidEmail => RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email.trim());
+  bool get hasValidPassword => password.isNotEmpty;
 
   LoginFormModel copyWith({
     String? email,

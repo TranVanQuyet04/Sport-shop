@@ -10,11 +10,16 @@ class ForgotPasswordController extends ChangeNotifier {
 
   ForgotPasswordFormModel _form = const ForgotPasswordFormModel();
   bool _isLoading = false;
+  bool _hasSubmitted = false;
   String? _errorMessage;
 
   ForgotPasswordFormModel get form => _form;
   bool get isLoading => _isLoading;
+  bool get hasSubmitted => _hasSubmitted;
   String? get errorMessage => _errorMessage;
+  String? get emailError => !_hasSubmitted || _form.email.trim().isEmpty || _form.hasValidEmail
+      ? null
+      : 'Email chưa đúng định dạng.';
 
   void changeEmail(String value) {
     _form = _form.copyWith(email: value);
@@ -23,8 +28,14 @@ class ForgotPasswordController extends ChangeNotifier {
   }
 
   Future<bool> submit() async {
+    _hasSubmitted = true;
     if (!_form.canSubmit) {
       _errorMessage = 'Vui lòng nhập email.';
+      notifyListeners();
+      return false;
+    }
+    if (!_form.hasValidEmail) {
+      _errorMessage = 'Email chưa đúng định dạng.';
       notifyListeners();
       return false;
     }

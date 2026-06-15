@@ -1,217 +1,142 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
+import '../../controller/admin/admin_dashboard_controller.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import 'widgets/admin_app_bar.dart';
 import 'widgets/admin_bottom_nav.dart';
+import 'widgets/admin_stat_card.dart';
 
-class AdminRevenuePage extends StatelessWidget {
+class AdminRevenuePage extends StatefulWidget {
   const AdminRevenuePage({super.key});
 
   @override
+  State<AdminRevenuePage> createState() => _AdminRevenuePageState();
+}
+
+class _AdminRevenuePageState extends State<AdminRevenuePage> {
+  late final AdminDashboardController _controller = AdminDashboardController(
+    adminReportRepository: AppDependencies.instance.adminReportRepository,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onChanged);
+    _controller.loadDashboard();
+  }
+
+  @override
+  void dispose() {
+    _controller
+      ..removeListener(_onChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final report = _controller.report;
+    final moneyFormatter = NumberFormat.decimalPattern('vi_VN');
+    final numberFormatter = NumberFormat.decimalPattern('vi_VN');
+    final revenue = moneyFormatter.format(report?.totalRevenue ?? 0);
+    final orders = numberFormatter.format(report?.totalOrders ?? 0);
+    final pendingOrders = numberFormatter.format(report?.pendingOrders ?? 0);
+    final newUsers = numberFormatter.format(report?.newUsers ?? 0);
+
     return Scaffold(
       appBar: const AdminAppBar(largeLogo: true),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        children: [
-          Text(
-            'Tổng quan Doanh thu',
-            style: AppTextStyles.display.copyWith(fontSize: 30),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            'Cập nhật lúc 09:41, hôm nay. Dữ liệu demo cho giai đoạn UI-first.',
-            style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          const _RevenueDemoBanner(),
-          const SizedBox(height: AppSpacing.lg),
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.xs),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceMuted,
-              borderRadius: BorderRadius.circular(AppRadius.md),
-            ),
-            child: Row(
-              children: ['Ngày', 'Tuần', 'Tháng', 'Quý', 'Năm'].map((label) {
-                final active = label == 'Ngày';
-                return Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.sm,
-                    ),
-                    decoration: BoxDecoration(
-                      color: active ? AppColors.surface : Colors.transparent,
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                    ),
-                    child: Text(
-                      label,
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.xl),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.xl),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _RevenueMetric(
-                          label: 'TỔNG DOANH THU',
-                          value: '1.284.000.000đ',
-                          growth: '+12.5%',
-                        ),
-                      ),
-                      _RevenueMetric(
-                        label: 'ĐƠN HÀNG',
-                        value: '3.412',
-                        growth: '+8.2%',
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                  SizedBox(
-                    height: 220,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [72, 110, 145, 190, 225, 170, 205].map((
-                        height,
-                      ) {
-                        final active = height == 225;
-                        return Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: Container(
-                              height: height.toDouble(),
-                              decoration: BoxDecoration(
-                                color: active
-                                    ? AppColors.primary
-                                    : AppColors.surfaceMuted,
-                                borderRadius: BorderRadius.circular(
-                                  AppRadius.sm,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: ['08:00', '12:00', '16:00', '20:00', '00:00']
-                        .map((e) => Text(e, style: AppTextStyles.caption))
-                        .toList(),
-                  ),
-                ],
+      body: RefreshIndicator(
+        onRefresh: _controller.loadDashboard,
+        child: ListView(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          children: [
+            if (_controller.isLoading)
+              const LinearProgressIndicator(minHeight: 3),
+            if (_controller.errorMessage != null) ...[
+              _RevenueErrorBanner(
+                message: _controller.errorMessage!,
+                onRefresh: _controller.loadDashboard,
               ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          const Row(
-            children: [
-              Expanded(
-                child: _RevenueInsight(
-                  icon: Icons.trending_up,
-                  label: 'Tăng trưởng',
-                  value: '+12.5%',
-                ),
-              ),
-              SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: _RevenueInsight(
-                  icon: Icons.receipt_long,
-                  label: 'AOV',
-                  value: '376k',
-                ),
-              ),
+              const SizedBox(height: AppSpacing.lg),
             ],
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          Text('Phân tích theo danh mục', style: AppTextStyles.title),
-          const SizedBox(height: AppSpacing.md),
-          const Row(
-            children: [
-              Expanded(
-                child: _CategoryRevenue(
-                  icon: Icons.directions_run,
-                  title: 'GIÀY CHẠY BỘ',
-                  value: '542.0tr',
-                  progress: 0.45,
+            Text(
+              'Tong quan doanh thu',
+              style: AppTextStyles.display.copyWith(fontSize: 30),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              'Du lieu duoc lay truc tiep tu API bao cao backend.',
+              style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            SizedBox(
+              height: 164,
+              child: AdminStatCard(
+                title: 'Doanh thu hom nay',
+                value: '${revenue}d',
+                subtitle: 'Tong hop theo ngay',
+                icon: Icons.payments_outlined,
+                dark: true,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 150,
+                    child: AdminStatCard(
+                      title: 'Tong don',
+                      value: orders,
+                      subtitle: '$pendingOrders don cho xu ly',
+                      icon: Icons.shopping_bag_outlined,
+                    ),
+                  ),
                 ),
-              ),
-              SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: _CategoryRevenue(
-                  icon: Icons.checkroom,
-                  title: 'QUẦN ÁO',
-                  value: '315.5tr',
-                  progress: 0.32,
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(
+                  child: SizedBox(
+                    height: 150,
+                    child: AdminStatCard(
+                      title: 'Nguoi dung moi',
+                      value: newUsers,
+                      subtitle: 'Trong ngay',
+                      icon: Icons.badge_outlined,
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          const _CategoryRevenue(
-            icon: Icons.trending_up,
-            title: 'PHỤ KIỆN',
-            value: '426.5tr',
-            progress: 0.54,
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          Row(
-            children: [
-              Expanded(
-                child: Text('Sản phẩm bán chạy', style: AppTextStyles.title),
-              ),
-              TextButton(onPressed: () {}, child: const Text('Xem tất cả')),
-            ],
-          ),
-          const _BestSeller(
-            name: 'Apex Carbon Pro',
-            orders: '342 đơn hàng',
-            value: '4.2M',
-            growth: '+4.5%',
-          ),
-          const _BestSeller(
-            name: 'Velocity Compression',
-            orders: '288 đơn hàng',
-            value: '1.1M',
-            growth: '+12.1%',
-          ),
-          const _BestSeller(
-            name: 'Pace Split Shorts',
-            orders: '195 đơn hàng',
-            value: '0.8M',
-            growth: '-2.3%',
-          ),
-        ],
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            _RevenueSummary(
+              revenue: revenue,
+              orders: orders,
+              pendingOrders: pendingOrders,
+              newUsers: newUsers,
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: const AdminBottomNav(selectedIndex: 0),
     );
   }
 }
 
-class _RevenueDemoBanner extends StatelessWidget {
-  const _RevenueDemoBanner();
+class _RevenueErrorBanner extends StatelessWidget {
+  const _RevenueErrorBanner({required this.message, required this.onRefresh});
+
+  final String message;
+  final VoidCallback onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -229,10 +154,11 @@ class _RevenueDemoBanner extends StatelessWidget {
             const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
-                'Revenue hiện dùng số liệu mẫu. Khi backend có API báo cáo chi tiết, chỉ cần thay data source.',
+                message,
                 style: AppTextStyles.caption.copyWith(color: AppColors.info),
               ),
             ),
+            TextButton(onPressed: onRefresh, child: const Text('Thu lai')),
           ],
         ),
       ),
@@ -240,97 +166,18 @@ class _RevenueDemoBanner extends StatelessWidget {
   }
 }
 
-class _RevenueInsight extends StatelessWidget {
-  const _RevenueInsight({
-    required this.icon,
-    required this.label,
-    required this.value,
+class _RevenueSummary extends StatelessWidget {
+  const _RevenueSummary({
+    required this.revenue,
+    required this.orders,
+    required this.pendingOrders,
+    required this.newUsers,
   });
 
-  final IconData icon;
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Row(
-          children: [
-            CircleAvatar(
-              backgroundColor: AppColors.surfaceMuted,
-              foregroundColor: AppColors.secondary,
-              child: Icon(icon),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(label, style: AppTextStyles.caption),
-                  Text(value, style: AppTextStyles.title),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _RevenueMetric extends StatelessWidget {
-  const _RevenueMetric({
-    required this.label,
-    required this.value,
-    required this.growth,
-  });
-
-  final String label;
-  final String value;
-  final String growth;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w900),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Text(value, style: AppTextStyles.display.copyWith(fontSize: 26)),
-        Text(
-          '↗ $growth',
-          style: AppTextStyles.caption.copyWith(
-            color: AppColors.secondary,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _CategoryRevenue extends StatelessWidget {
-  const _CategoryRevenue({
-    required this.icon,
-    required this.title,
-    required this.value,
-    required this.progress,
-  });
-
-  final IconData icon;
-  final String title;
-  final String value;
-  final double progress;
+  final String revenue;
+  final String orders;
+  final String pendingOrders;
+  final String newUsers;
 
   @override
   Widget build(BuildContext context) {
@@ -345,23 +192,12 @@ class _CategoryRevenue extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: AppColors.secondary),
+            Text('Chi so van hanh', style: AppTextStyles.title),
             const SizedBox(height: AppSpacing.md),
-            Text(
-              title,
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(value, style: AppTextStyles.title),
-            const SizedBox(height: AppSpacing.md),
-            LinearProgressIndicator(
-              value: progress,
-              color: AppColors.primary,
-              backgroundColor: AppColors.surfaceMuted,
-            ),
+            _SummaryLine(label: 'Doanh thu', value: '${revenue}d'),
+            _SummaryLine(label: 'Tong don hang', value: orders),
+            _SummaryLine(label: 'Don can xu ly', value: pendingOrders),
+            _SummaryLine(label: 'Nguoi dung moi', value: newUsers),
           ],
         ),
       ),
@@ -369,47 +205,25 @@ class _CategoryRevenue extends StatelessWidget {
   }
 }
 
-class _BestSeller extends StatelessWidget {
-  const _BestSeller({
-    required this.name,
-    required this.orders,
-    required this.value,
-    required this.growth,
-  });
+class _SummaryLine extends StatelessWidget {
+  const _SummaryLine({required this.label, required this.value});
 
-  final String name;
-  final String orders;
+  final String label;
   final String value;
-  final String growth;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-      leading: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          color: AppColors.surfaceMuted,
-          borderRadius: BorderRadius.circular(AppRadius.md),
-        ),
-        child: const Icon(Icons.directions_run, color: AppColors.secondary),
-      ),
-      title: Text(name, style: AppTextStyles.subtitle),
-      subtitle: Text(orders),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      child: Row(
         children: [
-          Text(value, style: AppTextStyles.title),
-          Text(
-            growth,
-            style: AppTextStyles.caption.copyWith(
-              color: growth.startsWith('-')
-                  ? AppColors.primary
-                  : AppColors.secondary,
+          Expanded(
+            child: Text(
+              label,
+              style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
             ),
           ),
+          Text(value, style: AppTextStyles.title),
         ],
       ),
     );

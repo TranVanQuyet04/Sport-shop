@@ -54,7 +54,28 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final product = _controller.product ?? _fallbackProduct(widget.productId);
+    final product = _controller.product;
+    if (product == null) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: context.pop,
+            icon: const Icon(Icons.arrow_back),
+          ),
+          title: const Center(child: Text('CHI TIET')),
+          actions: const [
+            IconButton(onPressed: null, icon: Icon(Icons.share_outlined)),
+          ],
+        ),
+        body: _controller.isLoading
+            ? const AppLoadingState(title: 'Dang tai chi tiet san pham')
+            : AppErrorState(
+                title: 'Khong tai duoc chi tiet san pham',
+                message: _controller.errorMessage ?? 'San pham khong ton tai.',
+                onAction: _controller.loadProduct,
+              ),
+      );
+    }
     final colors = product.colors.isEmpty
         ? ['Đen', 'Đỏ', 'Trắng']
         : product.colors;
@@ -68,9 +89,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       selectedSize: sizes[currentSizeIndex],
       selectedColor: colors[currentColorIndex],
     );
-    final displayPrice = product.displayPrice == 0
-        ? 3500000
-        : product.displayPrice;
+    final displayPrice = product.displayPrice;
     final price = NumberFormat.decimalPattern('vi_VN').format(displayPrice);
 
     return Scaffold(
@@ -88,16 +107,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         children: [
           if (_controller.isLoading)
             const LinearProgressIndicator(minHeight: 3),
-          if (_controller.errorMessage != null)
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: AppErrorState(
-                title: 'Không tải được chi tiết sản phẩm',
-                message:
-                    'Đang hiển thị dữ liệu mẫu. Hãy thử lại khi backend sẵn sàng.',
-                onAction: _controller.loadProduct,
-              ),
-            ),
           Container(
             height: 500,
             color: const Color(0xFFECEFF1),
@@ -332,60 +341,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Đang chuyển tiếp ở chế độ demo vì backend chưa sẵn sàng.',
-          ),
-        ),
+        SnackBar(content: Text(error.toString())),
       );
-      context.go(goToCheckout ? AppRoutes.checkout : AppRoutes.cart);
-      return;
+      
     } finally {
       if (mounted) {
         setState(() => _isAddingToCart = false);
       }
     }
-  }
-
-  ProductDetailModel _fallbackProduct(String productId) {
-    return ProductDetailModel(
-      id: productId,
-      name: 'Nike Air Max 270',
-      description:
-          'Nike Air Max 270 mang đến phong cách hiện đại kết hợp với đệm Air lớn, tạo cảm giác êm và nổi bật.',
-      category: 'Giày chạy bộ',
-      brand: 'Nike',
-      sport: 'Running',
-      variants: const [
-        ProductVariantModel(
-          id: '1',
-          sku: 'NIKE-270-BLK-40',
-          size: '40',
-          color: 'Đen',
-          price: 3500000,
-          stockQuantity: 8,
-          imageUrls: [],
-        ),
-        ProductVariantModel(
-          id: '2',
-          sku: 'NIKE-270-RED-41',
-          size: '41',
-          color: 'Đỏ',
-          price: 3500000,
-          stockQuantity: 6,
-          imageUrls: [],
-        ),
-        ProductVariantModel(
-          id: '3',
-          sku: 'NIKE-270-WHT-42',
-          size: '42',
-          color: 'Trắng',
-          price: 3500000,
-          stockQuantity: 4,
-          imageUrls: [],
-        ),
-      ],
-    );
   }
 
   Color _parseColor(String value) {

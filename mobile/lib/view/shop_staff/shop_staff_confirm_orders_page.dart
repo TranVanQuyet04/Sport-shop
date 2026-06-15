@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -82,7 +82,7 @@ class _ShopStaffConfirmOrdersPageState
       separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
       itemBuilder: (context, index) {
         if (index == 0 && _controller.errorMessage != null) {
-          return _ShopStaffDemoBanner(
+          return _ShopStaffErrorBanner(
             message: _controller.errorMessage!,
             onRefresh: _controller.loadOrders,
           );
@@ -144,8 +144,8 @@ class _ShopStaffConfirmOrdersPageState
   }
 }
 
-class _ShopStaffDemoBanner extends StatelessWidget {
-  const _ShopStaffDemoBanner({required this.message, required this.onRefresh});
+class _ShopStaffErrorBanner extends StatelessWidget {
+  const _ShopStaffErrorBanner({required this.message, required this.onRefresh});
 
   final String message;
   final VoidCallback onRefresh;
@@ -309,3 +309,4 @@ class _ConfirmCard extends StatelessWidget {
     );
   }
 }
+

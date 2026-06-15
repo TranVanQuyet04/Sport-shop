@@ -18,27 +18,13 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<OrderModel?> getMyOrderById(String orderId) async {
-    final normalized = orderId.replaceAll('#', '');
-    final orders = await getMyOrders();
-    for (final order in orders) {
-      if (order.id == normalized) {
-        return order;
-      }
-    }
-    return null;
+  Future<OrderModel> getMyOrderById(String orderId) async {
+    return _orderService.getMyOrderById(orderId.replaceAll('#', ''));
   }
 
   @override
-  Future<OrderModel?> getAdminOrderById(String orderId) async {
-    final normalized = orderId.replaceAll('#', '');
-    final orders = await getAllOrders();
-    for (final order in orders) {
-      if (order.id == normalized) {
-        return order;
-      }
-    }
-    return null;
+  Future<OrderModel> getAdminOrderById(String orderId) async {
+    return _orderService.getAdminOrderById(orderId.replaceAll('#', ''));
   }
 
   @override

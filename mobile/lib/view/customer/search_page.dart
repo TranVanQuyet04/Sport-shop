@@ -1,113 +1,133 @@
 import 'package:flutter/material.dart';
 
+import '../../controller/customer/customer_home_controller.dart';
 import '../../core/constants/app_spacing.dart';
-import '../../core/mock/customer_demo_data.dart';
+import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_bottom_sheet.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_state.dart';
 import '../../core/widgets/app_text_field.dart';
 import 'widgets/customer_bottom_nav.dart';
 import 'widgets/product_card.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
   @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  late final CustomerHomeController _controller = CustomerHomeController(
+    productRepository: AppDependencies.instance.productRepository,
+  );
+  String _keyword = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onControllerChanged);
+    _controller.loadHome();
+  }
+
+  @override
+  void dispose() {
+    _controller
+      ..removeListener(_onControllerChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onControllerChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final products = _controller.recommendedProducts.where((product) {
+      final keyword = _keyword.trim().toLowerCase();
+      if (keyword.isEmpty) {
+        return true;
+      }
+      return product.name.toLowerCase().contains(keyword) ||
+          product.brand.toLowerCase().contains(keyword) ||
+          product.category.toLowerCase().contains(keyword);
+    }).toList();
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Tìm kiếm')),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        children: [
-          AppTextField(
-            label: 'Từ khóa',
-            hintText: 'Tìm giày, áo, phụ kiện...',
-            prefixIcon: Icons.search,
-            suffixIcon: Icons.tune,
-            textInputAction: TextInputAction.search,
-            onSubmitted: (_) {},
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: () => _showFilterSheet(context),
-              icon: const Icon(Icons.tune),
-              label: const Text('Bộ lọc nâng cao'),
+      appBar: AppBar(title: const Text('Tim kiem')),
+      body: RefreshIndicator(
+        onRefresh: _controller.loadHome,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          children: [
+            AppTextField(
+              label: 'Tu khoa',
+              hintText: 'Tim giay, ao, phu kien...',
+              prefixIcon: Icons.search,
+              suffixIcon: Icons.tune,
+              textInputAction: TextInputAction.search,
+              onChanged: (value) => setState(() => _keyword = value),
+              onSubmitted: (value) => setState(() => _keyword = value),
             ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Text('Tìm kiếm gần đây', style: AppTextStyles.subtitle),
-          const SizedBox(height: AppSpacing.md),
-          const Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
-            children: [
-              _KeywordChip(label: 'Nike Air Max'),
-              _KeywordChip(label: 'Áo chạy bộ'),
-              _KeywordChip(label: 'Giày training nam'),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          Text('Danh mục phổ biến', style: AppTextStyles.subtitle),
-          const SizedBox(height: AppSpacing.md),
-          const Row(
-            children: [
-              Expanded(
-                child: _CategoryShortcut(
-                  icon: Icons.directions_run,
-                  label: 'Running',
-                ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () => _showFilterSheet(context),
+                icon: const Icon(Icons.tune),
+                label: const Text('Bo loc nang cao'),
               ),
-              SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: _CategoryShortcut(
-                  icon: Icons.fitness_center,
-                  label: 'Training',
-                ),
-              ),
-              SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: _CategoryShortcut(
-                  icon: Icons.sports_basketball,
-                  label: 'Phụ kiện',
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          Row(
-            children: [
-              Expanded(
-                child: Text('Gợi ý cho bạn', style: AppTextStyles.title),
-              ),
-              Text(
-                '${CustomerDemoData.products.length} sản phẩm',
-                style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: CustomerDemoData.products.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: AppSpacing.lg,
-              mainAxisSpacing: AppSpacing.xl,
-              childAspectRatio: 0.72,
             ),
-            itemBuilder: (context, index) {
-              return ProductCard(
-                product: CustomerDemoData.products[index],
-                index: index,
-              );
-            },
-          ),
-        ],
+            const SizedBox(height: AppSpacing.lg),
+            Row(
+              children: [
+                Expanded(
+                  child: Text('Goi y cho ban', style: AppTextStyles.title),
+                ),
+                Text(
+                  '${products.length} san pham',
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            if (_controller.isLoading && products.isEmpty)
+              const AppLoadingState(title: 'Dang tai san pham')
+            else if (_controller.errorMessage != null && products.isEmpty)
+              AppErrorState(
+                title: 'Khong tai duoc san pham',
+                message: _controller.errorMessage!,
+                onAction: _controller.loadHome,
+              )
+            else if (products.isEmpty)
+              const AppEmptyState(
+                title: 'Khong co san pham',
+                message: 'Thu doi tu khoa tim kiem hoac tai lai danh sach.',
+              )
+            else
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: products.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: AppSpacing.lg,
+                  mainAxisSpacing: AppSpacing.xl,
+                  childAspectRatio: 0.72,
+                ),
+                itemBuilder: (context, index) {
+                  return ProductCard(product: products[index], index: index);
+                },
+              ),
+          ],
+        ),
       ),
       bottomNavigationBar: const CustomerBottomNav(selectedIndex: 1),
     );
@@ -116,15 +136,15 @@ class SearchPage extends StatelessWidget {
   void _showFilterSheet(BuildContext context) {
     showAppBottomSheet<void>(
       context: context,
-      title: 'Bộ lọc sản phẩm',
-      subtitle: 'Thu hẹp kết quả theo thương hiệu, môn thể thao và ngân sách.',
+      title: 'Bo loc san pham',
+      subtitle: 'Loc tren danh sach san pham lay truc tiep tu backend.',
       child: const _FilterContent(),
       actions: [
         Row(
           children: [
             Expanded(
               child: AppButton(
-                label: 'Đặt lại',
+                label: 'Dat lai',
                 variant: AppButtonVariant.outline,
                 onPressed: () => Navigator.pop(context),
               ),
@@ -132,7 +152,7 @@ class SearchPage extends StatelessWidget {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: AppButton(
-                label: 'Áp dụng',
+                label: 'Ap dung',
                 variant: AppButtonVariant.secondary,
                 onPressed: () => Navigator.pop(context),
               ),
@@ -152,68 +172,28 @@ class _FilterContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Thương hiệu', style: AppTextStyles.subtitle),
+        Text('Thuong hieu', style: AppTextStyles.subtitle),
         const SizedBox(height: AppSpacing.md),
         const Wrap(
           spacing: AppSpacing.sm,
           runSpacing: AppSpacing.sm,
           children: [
-            _SelectableChip(label: 'Nike', selected: true),
-            _SelectableChip(label: 'Adidas'),
-            _SelectableChip(label: 'Puma'),
-            _SelectableChip(label: 'Under Armour'),
+            _SelectableChip(label: 'AeroFit', selected: true),
+            _SelectableChip(label: 'StrideX'),
           ],
         ),
         const SizedBox(height: AppSpacing.xl),
-        Text('Môn thể thao', style: AppTextStyles.subtitle),
+        Text('Mon the thao', style: AppTextStyles.subtitle),
         const SizedBox(height: AppSpacing.md),
         const Wrap(
           spacing: AppSpacing.sm,
           runSpacing: AppSpacing.sm,
           children: [
             _SelectableChip(label: 'Running', selected: true),
-            _SelectableChip(label: 'Gym'),
             _SelectableChip(label: 'Football'),
-            _SelectableChip(label: 'Yoga'),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.xl),
-        Text('Khoảng giá', style: AppTextStyles.subtitle),
-        const SizedBox(height: AppSpacing.md),
-        RangeSlider(
-          values: const RangeValues(450000, 3500000),
-          min: 0,
-          max: 5000000,
-          divisions: 10,
-          labels: const RangeLabels('450k', '3.5tr'),
-          onChanged: (_) {},
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Row(
-          children: [
-            Text('0đ', style: AppTextStyles.caption),
-            const Spacer(),
-            Text('5.000.000đ', style: AppTextStyles.caption),
           ],
         ),
       ],
-    );
-  }
-}
-
-class _KeywordChip extends StatelessWidget {
-  const _KeywordChip({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return ActionChip(
-      avatar: const Icon(Icons.history, size: 18),
-      label: Text(label),
-      onPressed: () {},
-      backgroundColor: AppColors.surface,
-      side: const BorderSide(color: AppColors.border),
     );
   }
 }
@@ -235,44 +215,6 @@ class _SelectableChip extends StatelessWidget {
       labelStyle: AppTextStyles.caption.copyWith(
         color: selected ? AppColors.textInverse : AppColors.textPrimary,
         fontWeight: FontWeight.w800,
-      ),
-    );
-  }
-}
-
-class _CategoryShortcut extends StatelessWidget {
-  const _CategoryShortcut({required this.icon, required this.label});
-
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.lg,
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: AppColors.secondary),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.caption.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -24,6 +24,8 @@ class AuthRepositoryImpl implements AuthRepository {
     await tokenStorage.saveTokens(
       accessToken: session.accessToken,
       refreshToken: session.refreshToken,
+      role: session.role,
+      email: session.email,
     );
     apiClient.setBearerToken(session.accessToken);
     return session;

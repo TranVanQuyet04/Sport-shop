@@ -11,11 +11,26 @@ class LoginController extends ChangeNotifier {
 
   LoginFormModel _form = const LoginFormModel();
   bool _isLoading = false;
+  bool _hasSubmitted = false;
   String? _errorMessage;
 
   LoginFormModel get form => _form;
   bool get isLoading => _isLoading;
+  bool get hasSubmitted => _hasSubmitted;
   String? get errorMessage => _errorMessage;
+  String? get emailError {
+    if (!_hasSubmitted || _form.email.trim().isEmpty || _form.hasValidEmail) {
+      return null;
+    }
+    return 'Email chưa đúng định dạng.';
+  }
+
+  String? get passwordError {
+    if (!_hasSubmitted || _form.hasValidPassword) {
+      return null;
+    }
+    return 'Vui lòng nhập mật khẩu.';
+  }
 
   void changeEmail(String value) {
     _form = _form.copyWith(email: value);
@@ -35,8 +50,14 @@ class LoginController extends ChangeNotifier {
   }
 
   Future<String?> submit() async {
+    _hasSubmitted = true;
     if (!_form.canSubmit) {
       _errorMessage = 'Vui lòng nhập email và mật khẩu.';
+      notifyListeners();
+      return null;
+    }
+    if (!_form.hasValidEmail) {
+      _errorMessage = 'Email chưa đúng định dạng.';
       notifyListeners();
       return null;
     }
@@ -66,8 +87,11 @@ class LoginController extends ChangeNotifier {
     return switch (normalizedRole) {
       'ADMIN' => AppRoutes.adminDashboard,
       'SHOP_STAFF' => AppRoutes.shopStaffHome,
+      'STAFF' => AppRoutes.shopStaffHome,
       'DELIVERY_STAFF' => AppRoutes.deliveryHome,
+      'SHIPPER' => AppRoutes.deliveryHome,
       'CUSTOMER' => AppRoutes.customerHome,
+      'MEMBER' => AppRoutes.customerHome,
       _ => AppRoutes.customerHome,
     };
   }

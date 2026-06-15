@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import '../core/di/app_dependencies.dart';
 import '../view/auth/login_page.dart';
 import '../view/auth/forgot_password_page.dart';
 import '../view/auth/register_page.dart';
@@ -48,9 +49,6 @@ import '../view/delivery_staff/failed_delivery_report_page.dart';
 import '../view/delivery_staff/shipper_account_page.dart';
 import '../view/public/guest_chat_page.dart';
 import '../view/public/not_found_page.dart';
-import '../view/public/shared_form_demo_page.dart';
-import '../view/public/shared_states_demo_page.dart';
-import '../view/public/status_badges_demo_page.dart';
 import '../view/public/unauthorized_page.dart';
 import '../view/splash/splash_page.dart';
 import '../view/shop_staff/shop_staff_confirm_orders_page.dart';
@@ -66,9 +64,6 @@ abstract final class AppRoutes {
   static const forgotPassword = '/forgot-password';
   static const resetPassword = '/reset-password';
   static const guestChat = '/guest-chat';
-  static const sharedStatesDemo = '/demo/states';
-  static const sharedFormDemo = '/demo/form';
-  static const statusBadgesDemo = '/demo/status-badges';
   static const unauthorized = '/unauthorized';
   static const onboarding = '/onboarding';
   static const customerHome = '/customer/home';
@@ -122,6 +117,54 @@ abstract final class AppRoutes {
 
 final sportshopRouter = GoRouter(
   initialLocation: AppRoutes.splash,
+  redirect: (context, state) async {
+    final path = state.uri.path;
+    final dependencies = AppDependencies.instance;
+    final token = await dependencies.tokenStorage.readAccessToken();
+    final role = _normalizeRole(await dependencies.tokenStorage.readRole());
+
+    if (token != null && token.isNotEmpty) {
+      dependencies.apiClient.setBearerToken(token);
+    }
+
+    final isPublicPath =
+        path == AppRoutes.splash ||
+        path == AppRoutes.login ||
+        path == AppRoutes.register ||
+        path == AppRoutes.forgotPassword ||
+        path == AppRoutes.resetPassword ||
+        path == AppRoutes.guestChat ||
+        path == AppRoutes.unauthorized ||
+        path == AppRoutes.onboarding ||
+        path.startsWith('/customer/products') ||
+        path == AppRoutes.search ||
+        path == AppRoutes.customerHome;
+
+    if ((token == null || token.isEmpty) && !isPublicPath) {
+      return AppRoutes.login;
+    }
+
+    if (token != null && token.isNotEmpty && path == AppRoutes.login) {
+      return _homeForRole(role);
+    }
+
+    if (path.startsWith('/admin') && role != 'ADMIN') {
+      return _homeForRole(role);
+    }
+    if (path.startsWith('/shop-staff') &&
+        role != 'SHOP_STAFF' &&
+        role != 'STAFF' &&
+        role != 'ADMIN') {
+      return _homeForRole(role);
+    }
+    if (path.startsWith('/delivery-staff') &&
+        role != 'SHIPPER' &&
+        role != 'DELIVERY_STAFF' &&
+        role != 'ADMIN') {
+      return _homeForRole(role);
+    }
+    return null;
+  },
   routes: [
     GoRoute(
       path: AppRoutes.splash,
@@ -152,21 +195,6 @@ final sportshopRouter = GoRouter(
       path: AppRoutes.guestChat,
       name: 'guestChat',
       builder: (context, state) => const GuestChatPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.sharedStatesDemo,
-      name: 'sharedStatesDemo',
-      builder: (context, state) => const SharedStatesDemoPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.sharedFormDemo,
-      name: 'sharedFormDemo',
-      builder: (context, state) => const SharedFormDemoPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.statusBadgesDemo,
-      name: 'statusBadgesDemo',
-      builder: (context, state) => const StatusBadgesDemoPage(),
     ),
     GoRoute(
       path: AppRoutes.unauthorized,
@@ -424,3 +452,17 @@ final sportshopRouter = GoRouter(
   ],
   errorBuilder: (context, state) => const NotFoundPage(),
 );
+
+String _normalizeRole(String? role) {
+  return (role ?? '').toUpperCase().replaceFirst('ROLE_', '').trim();
+}
+
+String _homeForRole(String role) {
+  return switch (role) {
+    'ADMIN' => AppRoutes.adminDashboard,
+    'SHOP_STAFF' || 'STAFF' => AppRoutes.shopStaffHome,
+    'SHIPPER' || 'DELIVERY_STAFF' => AppRoutes.deliveryHome,
+    'MEMBER' || 'CUSTOMER' => AppRoutes.customerHome,
+    _ => AppRoutes.login,
+  };
+}

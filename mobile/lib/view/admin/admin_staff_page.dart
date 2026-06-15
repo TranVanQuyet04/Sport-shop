@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
@@ -93,7 +93,7 @@ class _AdminStaffPageState extends State<AdminStaffPage> {
         const _StaffHeader(),
         const SizedBox(height: AppSpacing.xl),
         if (_controller.errorMessage != null) ...[
-          _StaffDemoBanner(
+          _StaffErrorBanner(
             message: _controller.errorMessage!,
             onRefresh: _controller.loadUsers,
           ),
@@ -176,8 +176,8 @@ class _AdminStaffPageState extends State<AdminStaffPage> {
   }
 }
 
-class _StaffDemoBanner extends StatelessWidget {
-  const _StaffDemoBanner({required this.message, required this.onRefresh});
+class _StaffErrorBanner extends StatelessWidget {
+  const _StaffErrorBanner({required this.message, required this.onRefresh});
 
   final String message;
   final VoidCallback onRefresh;
@@ -350,3 +350,4 @@ class _StaffCard extends StatelessWidget {
     );
   }
 }
+

@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import '../../core/mock/customer_demo_data.dart';
 import '../../model/customer/order_model.dart';
 import '../../repository/customer/order_repository.dart';
 
@@ -20,12 +19,9 @@ class OrdersController extends ChangeNotifier {
 
     try {
       orders = await orderRepository.getMyOrders();
-      if (orders.isEmpty) {
-        orders = CustomerDemoData.orders;
-      }
     } catch (error) {
-      orders = CustomerDemoData.orders;
-      errorMessage = 'Đang hiển thị đơn hàng mẫu vì chưa kết nối được backend.';
+      orders = const [];
+      errorMessage = error.toString();
     } finally {
       isLoading = false;
       notifyListeners();

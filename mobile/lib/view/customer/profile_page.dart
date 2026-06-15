@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
@@ -90,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         if (_controller.errorMessage != null) ...[
-          _DemoProfileBanner(message: _controller.errorMessage!),
+          _ProfileErrorBanner(message: _controller.errorMessage!),
           const SizedBox(height: AppSpacing.lg),
         ],
         const SizedBox(height: AppSpacing.xl),
@@ -207,8 +207,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-class _DemoProfileBanner extends StatelessWidget {
-  const _DemoProfileBanner({required this.message});
+class _ProfileErrorBanner extends StatelessWidget {
+  const _ProfileErrorBanner({required this.message});
 
   final String message;
 
@@ -364,3 +364,4 @@ class _ProfileTile extends StatelessWidget {
     );
   }
 }
+

@@ -24,6 +24,10 @@ class RegisterFormModel {
       password.isNotEmpty &&
       confirmPassword.isNotEmpty;
 
+  bool get hasValidName => fullName.trim().length >= 2;
+  bool get hasValidEmail => RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email.trim());
+  bool get hasValidPhone => RegExp(r'^(0|\+84)[0-9\s.]{8,13}$').hasMatch(phoneNumber.trim());
+  bool get hasValidPassword => RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$').hasMatch(password);
   bool get passwordsMatch => password == confirmPassword;
 
   RegisterFormModel copyWith({
