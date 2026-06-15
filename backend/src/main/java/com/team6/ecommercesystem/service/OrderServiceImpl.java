@@ -4,7 +4,6 @@ import com.team6.ecommercesystem.dto.request.OrderCreationRequest;
 import com.team6.ecommercesystem.dto.response.OrderResponse;
 import com.team6.ecommercesystem.model.*;
 import com.team6.ecommercesystem.model.enums.OrderStatus;
-import com.team6.ecommercesystem.model.enums.PaymentMethod;
 import com.team6.ecommercesystem.repository.*;
 import com.team6.ecommercesystem.utils.OrderMapper;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +24,8 @@ public class OrderServiceImpl implements  OrderService {
     private final UserAddressRepository addressRepository;
     private final ProductVariantRepository variantRepository;
     private final UserRepository userRepository;
+    private final OrderAssignmentRepository assignmentRepository;
+    private final DeliveryReportRepository deliveryReportRepository;
 
     @Override
     public User getCurrentUser() {
@@ -119,11 +120,29 @@ public class OrderServiceImpl implements  OrderService {
     }
 
     @Override
+    public OrderResponse getMyOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        User user = getCurrentUser();
+        if (order.getUser() == null || !order.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Order not found");
+        }
+        return OrderMapper.toResponse(order);
+    }
+
+    @Override
     public List<OrderResponse> getAllOrders() {
         return orderRepository.findAll()
                 .stream()
                 .map(OrderMapper::toResponse)
                 .toList();
+    }
+
+    @Override
+    public OrderResponse getOrderForAdmin(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        return OrderMapper.toResponse(order);
     }
 
     @Override
@@ -133,31 +152,16 @@ public class OrderServiceImpl implements  OrderService {
 
         User currentUser = getCurrentUser();
         String roleCode = currentUser.getRole().getRoleCode();
-
         OrderStatus currentStatus = order.getStatus();
-        PaymentMethod paymentMethod = order.getPaymentMethod();
 
-        if (roleCode.equals("SHIPPER")){
-            boolean isValidTransition = false;
-
-            //1. Lấy hàng đi giao
-            if (newStatus == OrderStatus.SHIPPING) {
-                if (paymentMethod == PaymentMethod.COD && currentStatus == OrderStatus.PENDING) isValidTransition = true;
-                if (paymentMethod != PaymentMethod.COD && currentStatus == OrderStatus.PAID) isValidTransition = true;
-            }
-            // 2. Giao thành công hoặc thất bại
-            else if (currentStatus == OrderStatus.SHIPPING &&
-                    (newStatus == OrderStatus.DELIVERED || newStatus == OrderStatus.CANCELLED)) {
-                isValidTransition = true;
-            }
-            if (!isValidTransition) {
-                throw new IllegalArgumentException("Shipper không được phép chuyển trạng thái từ " +
-                        currentStatus + " sang " + newStatus + " cho đơn hàng " + paymentMethod);
-            }
+        if (roleCode.equals("SHOP_STAFF")) {
+            validateShopStaffTransition(currentStatus, newStatus);
+        } else if (roleCode.equals("SHIPPER")) {
+            validateShipperTransition(currentStatus, newStatus);
         } else if (!roleCode.equals("ADMIN")) {
-            throw new RuntimeException("Bạn không có quyền cập nhật trạng thái đơn hàng");
+            throw new RuntimeException("Ban khong co quyen cap nhat trang thai don hang");
         }
-        // Cập nhật và lưu
+
         order.setStatus(newStatus);
         return OrderMapper.toResponse(orderRepository.save(order));
     }
@@ -165,22 +169,56 @@ public class OrderServiceImpl implements  OrderService {
     @Override
     public OrderResponse userUpdateOrderStatus(Long orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+                .orElseThrow(() -> new RuntimeException("Khong tim thay don hang"));
 
         User currentUser = getCurrentUser();
         OrderStatus currentStatus = order.getStatus();
 
-        if (currentStatus != OrderStatus.DELIVERED) {
-            throw new RuntimeException("Trạng thái đơn hàng hiện tại không cho phép cập nhật.");
+        if (order.getUser() == null || !order.getUser().getId().equals(currentUser.getId())) {
+            throw new RuntimeException("Ban khong co quyen cap nhat don hang nay");
         }
 
-        if (status == OrderStatus.CANCELLED || status == OrderStatus.COMPLETED) {
+        if (status == OrderStatus.CANCELLED && currentStatus == OrderStatus.PENDING) {
             order.setStatus(status);
-            orderRepository.save(order);
+        } else if (status == OrderStatus.COMPLETED && currentStatus == OrderStatus.SHIPPED) {
+            order.setStatus(status);
         } else {
-            throw new RuntimeException("Trạng thái cập nhật không hợp lệ (Chỉ được phép Hủy hoặc Xác nhận đã nhận hàng)");
+            throw new RuntimeException("Trang thai cap nhat khong hop le");
         }
 
         return OrderMapper.toResponse(orderRepository.save(order));
     }
+
+    @Override
+    public void deleteOrderForAdmin(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        if (order.getStatus() != OrderStatus.PENDING && order.getStatus() != OrderStatus.CANCELLED) {
+            throw new IllegalArgumentException("Only pending or cancelled orders can be deleted");
+        }
+        assignmentRepository.findByOrderId(orderId).ifPresent(assignmentRepository::delete);
+        deliveryReportRepository.findByOrderIdOrderByCreatedAtDesc(orderId).forEach(deliveryReportRepository::delete);
+        orderRepository.delete(order);
+    }
+
+    private void validateShopStaffTransition(OrderStatus currentStatus, OrderStatus newStatus) {
+        boolean valid =
+                (currentStatus == OrderStatus.PENDING && newStatus == OrderStatus.CONFIRMED)
+                || (currentStatus == OrderStatus.CONFIRMED && newStatus == OrderStatus.PACKING)
+                || (currentStatus == OrderStatus.PACKING && newStatus == OrderStatus.SHIPPED);
+
+        if (!valid) {
+            throw new IllegalArgumentException("Shop staff khong duoc chuyen trang thai tu " + currentStatus + " sang " + newStatus);
+        }
+    }
+
+    private void validateShipperTransition(OrderStatus currentStatus, OrderStatus newStatus) {
+        boolean valid = currentStatus == OrderStatus.SHIPPED
+                && (newStatus == OrderStatus.COMPLETED || newStatus == OrderStatus.CANCELLED);
+
+        if (!valid) {
+            throw new IllegalArgumentException("Shipper khong duoc chuyen trang thai tu " + currentStatus + " sang " + newStatus);
+        }
+    }
+
 }

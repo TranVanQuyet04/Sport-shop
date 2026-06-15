@@ -39,8 +39,7 @@ public class UserServiceImpl implements UserService{
     public UserResponse createUser(UserRequest request) {
         validateNewUser(request.getEmail(), request.getPhoneNumber(), request.getPassword(), request.getConfirmPassword());
 
-        Role role = roleRepository.findByRoleName(request.getRoleName())
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + request.getRoleName()));
+        Role role = resolveRole(request.getRoleName());
 
         User user = buildUser(request.getFullName(), request.getEmail(), request.getPhoneNumber(), request.getPassword(), role);
         return UserMapper.toUserResponse(userRepository.save(user));
@@ -70,9 +69,7 @@ public class UserServiceImpl implements UserService{
         if (request.getStatus() != null) user.setStatus(request.getStatus());
 
         if (request.getRoleName() != null) {
-            Role role = roleRepository.findByRoleName(request.getRoleName())
-                    .orElseThrow(() -> new IllegalArgumentException("Role not found: " + request.getRoleName()));
-            user.setRole(role);
+            user.setRole(resolveRole(request.getRoleName()));
         }
 
         return UserMapper.toDetailDto(userRepository.save(user));
@@ -151,6 +148,24 @@ public class UserServiceImpl implements UserService{
                 .status(true)
                 .role(role)
                 .build();
+    }
+
+    private Role resolveRole(String roleValue) {
+        if (roleValue == null || roleValue.isBlank()) {
+            throw new IllegalArgumentException("Role is required");
+        }
+
+        String normalized = roleValue.trim().toUpperCase();
+        normalized = switch (normalized) {
+            case "CUSTOMER" -> "MEMBER";
+            case "DELIVERY_STAFF" -> "SHIPPER";
+            case "STAFF" -> "SHOP_STAFF";
+            default -> normalized;
+        };
+
+        return roleRepository.findByRoleCode(normalized.toUpperCase())
+                .or(() -> roleRepository.findByRoleName(roleValue.trim()))
+                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleValue));
     }
 
     private User findUserById(Long id) {

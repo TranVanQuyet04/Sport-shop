@@ -19,6 +19,11 @@ public class BrandService {
         return brandRepository.findAll();
     }
 
+    public Brand getById(Long id) {
+        return brandRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Brand not found"));
+    }
+
     public Brand create(CreateBrandDTO dto) {
         Brand brand = Brand.builder()
                 .brandName(dto.getName())

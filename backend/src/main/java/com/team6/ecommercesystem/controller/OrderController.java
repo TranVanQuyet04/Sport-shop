@@ -33,8 +33,20 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getMyOrders());
     }
 
+    @GetMapping("/my-orders")
+    @Operation(summary = "Get my order history alias", description = "Mobile-compatible alias for my orders")
+    public ResponseEntity<List<OrderResponse>> getMyOrdersAlias() {
+        return getMyOrders();
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get my order detail")
+    public ResponseEntity<OrderResponse> getMyOrder(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getMyOrder(id));
+    }
+
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SHIPPER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SHOP_STAFF') or hasRole('SHIPPER')")
     @Operation(summary = "Update order status", description = "Shipper/Admin update order status")
     public ResponseEntity<OrderResponse> updateOrderStatus(
             @PathVariable Long id,
@@ -43,10 +55,25 @@ public class OrderController {
     }
 
     @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SHOP_STAFF') or hasRole('SHIPPER')")
     @Operation(summary = "Get all order history")
     public ResponseEntity<List<OrderResponse>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    @GetMapping("/admin/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SHOP_STAFF') or hasRole('SHIPPER')")
+    @Operation(summary = "Get order detail for staff")
+    public ResponseEntity<OrderResponse> getOrderForAdmin(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getOrderForAdmin(id));
+    }
+
+    @DeleteMapping("/admin/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Delete pending/cancelled order for admin")
+    public ResponseEntity<Void> deleteOrderForAdmin(@PathVariable Long id) {
+        orderService.deleteOrderForAdmin(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/orderStatus")

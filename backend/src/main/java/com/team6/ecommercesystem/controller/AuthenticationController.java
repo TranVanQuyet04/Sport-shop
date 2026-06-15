@@ -66,6 +66,13 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/refresh-token")
+    @Operation(summary = "Refresh token alias", description = "Mobile-compatible alias for refresh token")
+    public ResponseEntity<LoginResponse> refreshTokenAlias(@Valid @RequestBody RefreshTokenRequest request)
+            throws ParseException, JOSEException {
+        return refreshToken(request);
+    }
+
     @PutMapping("/change-pass")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Change password", description = "Changes the authenticated user's password")

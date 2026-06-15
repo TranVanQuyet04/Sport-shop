@@ -27,6 +27,22 @@ public class CollectionController {
         return ResponseEntity.ok(collectionService.getAllCollections());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CollectionResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(collectionService.getCollectionById(id));
+    }
+
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<CollectionResponse> getBySlug(@PathVariable String slug) {
+        return ResponseEntity.ok(collectionService.getCollectionBySlug(slug));
+    }
+
+    @PutMapping("/admin/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CollectionResponse> update(@PathVariable Long id, @RequestBody CollectionRequest request) {
+        return ResponseEntity.ok(collectionService.updateCollection(id, request));
+    }
+
     @DeleteMapping("/admin/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

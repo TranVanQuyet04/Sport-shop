@@ -12,6 +12,7 @@ public class RoleSeeder {
 
     public void seed() {
         createIfMissing("ADMIN", "Quan Tri Vien", "Toan quyen quan ly he thong");
+        createIfMissing("SHOP_STAFF", "Nhan Vien Cua Hang", "Xac nhan va dong goi don hang");
         createIfMissing("SHIPPER", "Nguoi giao hang", "Giao hang va cap nhat trang thai don hang");
         createIfMissing("MEMBER", "Thanh Vien", "Nguoi dung thong thuong");
     }

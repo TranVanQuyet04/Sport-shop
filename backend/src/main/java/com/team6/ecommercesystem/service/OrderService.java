@@ -11,7 +11,10 @@ public interface OrderService {
     User getCurrentUser();
     OrderResponse createOrder(OrderCreationRequest request);
     List<OrderResponse> getMyOrders();
+    OrderResponse getMyOrder(Long orderId);
     OrderResponse updateOrderStatus(Long orderId, OrderStatus newStatus);
     List<OrderResponse> getAllOrders();
+    OrderResponse getOrderForAdmin(Long orderId);
     OrderResponse userUpdateOrderStatus(Long orderId, OrderStatus status);
+    void deleteOrderForAdmin(Long orderId);
 }

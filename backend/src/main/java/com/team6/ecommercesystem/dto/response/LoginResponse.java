@@ -10,5 +10,8 @@ import lombok.Setter;
 public class LoginResponse {
     private String accessToken;
     private String refreshToken;
+    private String role;
+    private String roleName;
+    private String roleDisplayName;
     private UserResponse user;
 }

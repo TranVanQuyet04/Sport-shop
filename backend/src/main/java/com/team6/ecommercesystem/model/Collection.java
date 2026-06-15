@@ -26,6 +26,6 @@ public class Collection {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CollectionProduct> collectionProducts;
 }

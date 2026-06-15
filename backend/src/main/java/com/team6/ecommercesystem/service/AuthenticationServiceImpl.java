@@ -117,6 +117,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
             return LoginResponse.builder()
                     .accessToken(accessPayload.getToken())
                     .refreshToken(refreshPayload.getToken())
+                    .role(user.getRole().getRoleCode())
+                    .roleName(user.getRole().getRoleCode())
+                    .roleDisplayName(user.getRole().getRoleName())
                     .user(UserMapper.toUserResponse(user))
                     .build();
         } catch (AuthenticationException e) {
@@ -190,6 +193,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         return LoginResponse.builder()
                 .accessToken(newAccessPayload.getToken())
                 .refreshToken(newRefreshPayLoad.getToken())
+                .role(user.getRole().getRoleCode())
+                .roleName(user.getRole().getRoleCode())
+                .roleDisplayName(user.getRole().getRoleName())
                 .user(UserMapper.toUserResponse(user))
                 .build();
     }

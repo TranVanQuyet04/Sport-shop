@@ -27,6 +27,18 @@ public class UserSeeder {
                 "ADMIN"
         );
         createOrRepairUser(
+                "Shop Staff User",
+                "shopstaff@example.com",
+                "0323456789",
+                "SHOP_STAFF"
+        );
+        createOrRepairUser(
+                "Shipper User",
+                "shipper@example.com",
+                "0333456789",
+                "SHIPPER"
+        );
+        createOrRepairUser(
                 "Member User",
                 "member@example.com",
                 "0987654321",

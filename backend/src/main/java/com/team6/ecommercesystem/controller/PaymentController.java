@@ -51,7 +51,7 @@ public class PaymentController {
             if (order != null) {
                 if ("00".equals(vnp_ResponseCode)) {
                     // Thanh toán thành công -> Cập nhật trạng thái
-                    order.setStatus(OrderStatus.PAID);
+                    order.setStatus(OrderStatus.CONFIRMED);
                     orderRepository.save(order);
 
                     System.out.println(frontendUrl);

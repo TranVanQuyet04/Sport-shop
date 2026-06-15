@@ -20,6 +20,13 @@ public class ChatMessageService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatBotService chatBotService;
 
+    public List<ChatMessage> getMessages(Long roomId) {
+        if (!chatRoomRepository.existsById(roomId)) {
+            throw new RuntimeException("Room khong ton tai");
+        }
+        return chatMessageRepository.findByRoomIdOrderBySentAtAsc(roomId);
+    }
+
     public List<ChatMessage> sendMessage(Long roomId, SendMessageRequest request) {
 
         ChatRoom room = chatRoomRepository.findById(roomId)
@@ -35,6 +42,9 @@ public class ChatMessageService {
                 .build();
 
         chatMessageRepository.save(message);
+        room.setLastMessageAt(message.getSentAt());
+        room.setHasUnread(!"ADMIN".equalsIgnoreCase(request.getSender()));
+        chatRoomRepository.save(room);
 
         // 2️⃣ Nếu là AI room và sender là CUSTOMER → gọi AI
         if (room.getType() == ChatRoomType.AI_SUPPORT
@@ -60,6 +70,9 @@ public class ChatMessageService {
                     .build();
 
             chatMessageRepository.save(aiMessage);
+            room.setLastMessageAt(aiMessage.getSentAt());
+            room.setHasUnread(false);
+            chatRoomRepository.save(room);
         }
 
         // 3️⃣ Trả về toàn bộ messages

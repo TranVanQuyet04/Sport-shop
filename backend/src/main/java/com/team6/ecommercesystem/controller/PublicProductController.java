@@ -1,8 +1,10 @@
 package com.team6.ecommercesystem.controller;
 
 import com.team6.ecommercesystem.dto.response.BrandResponse;
+import com.team6.ecommercesystem.dto.response.CategoryResponse;
 import com.team6.ecommercesystem.dto.response.ProductDetailResponse;
 import com.team6.ecommercesystem.dto.response.ProductSummaryResponse;
+import com.team6.ecommercesystem.service.CategoryService;
 import com.team6.ecommercesystem.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,6 +21,7 @@ import java.util.List;
 public class PublicProductController {
 
     private final ProductService productService;
+    private final CategoryService categoryService;
 
     @GetMapping
     @Operation(
@@ -51,5 +54,14 @@ public class PublicProductController {
     )
     public ResponseEntity<List<BrandResponse>> getBrand(){
         return ResponseEntity.ok(productService.getAllBrand());
+    }
+
+    @GetMapping("/categories")
+    @Operation(
+            summary = "Get categories",
+            description = "Lay danh sach danh muc san pham"
+    )
+    public ResponseEntity<List<CategoryResponse>> getCategories() {
+        return ResponseEntity.ok(categoryService.getAll());
     }
 }

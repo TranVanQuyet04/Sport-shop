@@ -37,6 +37,17 @@ public class BrandController {
         return response;
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Map<String, Object> getById(@PathVariable Long id) {
+        Brand brand = brandService.getById(id);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", brand);
+
+        return response;
+    }
+
     // CREATE
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
