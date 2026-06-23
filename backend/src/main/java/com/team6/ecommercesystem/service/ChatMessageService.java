@@ -20,6 +20,13 @@ public class ChatMessageService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatBotService chatBotService;
 
+    public List<ChatMessage> getMessages(Long roomId) {
+        if (!chatRoomRepository.existsById(roomId)) {
+            throw new RuntimeException("Room khong ton tai");
+        }
+        return chatMessageRepository.findByRoomIdOrderBySentAtAsc(roomId);
+    }
+
     public List<ChatMessage> sendMessage(Long roomId, SendMessageRequest request) {
 
         ChatRoom room = chatRoomRepository.findById(roomId)

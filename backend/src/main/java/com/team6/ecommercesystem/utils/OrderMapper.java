@@ -16,6 +16,7 @@ public class OrderMapper {
                 .id(order.getId())
                 .orderDate(order.getOrderDate())
                 .status(order.getStatus())
+                .deliveryStatus(toDeliveryStatus(order))
                 .totalAmount(order.getTotalAmount())
                 .paymentMethod(order.getPaymentMethod())
                 .recipientName(order.getRecipientName())
@@ -24,6 +25,19 @@ public class OrderMapper {
                 .note(order.getNote())
                 .items(order.getOrderItems().stream().map(OrderMapper::toItemResponse).collect(Collectors.toList()))
                 .build();
+    }
+
+    private static String toDeliveryStatus(Order order) {
+        if (order.getStatus() == null) {
+            return "WAITING_PICKUP";
+        }
+        return switch (order.getStatus()) {
+            case PAID -> "WAITING_PICKUP";
+            case SHIPPING -> "OUT_FOR_DELIVERY";
+            case DELIVERED, COMPLETED -> "DELIVERED";
+            case CANCELLED -> "RETURNED";
+            case PENDING -> "WAITING_PICKUP";
+        };
     }
 
     private static OrderItemResponse toItemResponse(OrderItem item) {

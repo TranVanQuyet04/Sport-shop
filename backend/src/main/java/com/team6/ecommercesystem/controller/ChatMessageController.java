@@ -15,6 +15,11 @@ public class ChatMessageController {
 
     private final ChatMessageService chatMessageService;
 
+    @GetMapping("/rooms/{roomId}/messages")
+    public List<ChatMessage> getMessages(@PathVariable Long roomId) {
+        return chatMessageService.getMessages(roomId);
+    }
+
     @PostMapping("/rooms/{roomId}/messages")
     public List<ChatMessage> sendMessage(
             @PathVariable Long roomId,

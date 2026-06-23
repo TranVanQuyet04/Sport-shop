@@ -12,8 +12,11 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -25,6 +28,7 @@ import java.util.List;
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private static final String[] PUBLIC_ENDPOINTS = {
@@ -48,8 +52,11 @@ public class SecurityConfiguration {
     private static final String ALLOWED_HEADERS_ALL = "*";
     private static final int BCRYPT_STRENGTH = 12;
 
-    @Value("${cors.allowed-origins}")
+    @Value("${cors.allowed-origins:}")
     private String[] allowedOrigins;
+
+    @Value("${cors.allowed-origin-patterns:}")
+    private String[] allowedOriginPatterns;
 
     private final UserDetailServiceCustomizer userDetailServiceCustomizer;
     private final JwtDecoderConfiguration jwtDecoderConfiguration;
@@ -65,7 +72,10 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoderConfiguration )));
+                        .jwt(jwtConfigurer -> jwtConfigurer
+                                .decoder(jwtDecoderConfiguration)
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                        ));
         log.info("Security filter chain configured successfully");
         return http.build();
     }
@@ -73,7 +83,15 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
+        List<String> origins = nonBlankList(allowedOrigins);
+        List<String> originPatterns = nonBlankList(allowedOriginPatterns);
+
+        if (!origins.isEmpty()) {
+            configuration.setAllowedOrigins(origins);
+        }
+        if (!originPatterns.isEmpty()) {
+            configuration.setAllowedOriginPatterns(originPatterns);
+        }
         configuration.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
         ));
@@ -83,8 +101,19 @@ public class SecurityConfiguration {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration(CORS_MAPPING_PATTERN, configuration);
 
-        log.info("CORS configuration initialized with allowed origins: {}", Arrays.toString(allowedOrigins));
+        log.info("CORS configuration initialized with allowed origins: {}, allowed origin patterns: {}",
+                origins, originPatterns);
         return source;
+    }
+
+    private List<String> nonBlankList(String[] values) {
+        if (values == null) {
+            return List.of();
+        }
+        return Arrays.stream(values)
+                .map(String::trim)
+                .filter(value -> !value.isEmpty())
+                .toList();
     }
 
     @Bean
@@ -101,5 +130,16 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         log.info("Password encoder configured with BCrypt strength: {}", BCRYPT_STRENGTH);
         return new BCryptPasswordEncoder(BCRYPT_STRENGTH);
+    }
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        authoritiesConverter.setAuthoritiesClaimName("roles");
+        authoritiesConverter.setAuthorityPrefix("ROLE_");
+
+        JwtAuthenticationConverter authenticationConverter = new JwtAuthenticationConverter();
+        authenticationConverter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+        return authenticationConverter;
     }
 }

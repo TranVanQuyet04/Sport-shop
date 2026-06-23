@@ -32,6 +32,12 @@ public class UserSeeder {
                 "0987654321",
                 "MEMBER"
         );
+        createOrRepairUser(
+                "Shipper User",
+                "shipper@example.com",
+                "0912345678",
+                "SHIPPER"
+        );
     }
 
     private void createOrRepairUser(String fullName, String email, String phoneNumber, String roleCode) {

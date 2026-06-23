@@ -39,8 +39,7 @@ public class UserServiceImpl implements UserService{
     public UserResponse createUser(UserRequest request) {
         validateNewUser(request.getEmail(), request.getPhoneNumber(), request.getPassword(), request.getConfirmPassword());
 
-        Role role = roleRepository.findByRoleName(request.getRoleName())
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + request.getRoleName()));
+        Role role = findRole(request.getRoleName());
 
         User user = buildUser(request.getFullName(), request.getEmail(), request.getPhoneNumber(), request.getPassword(), role);
         return UserMapper.toUserResponse(userRepository.save(user));
@@ -70,8 +69,7 @@ public class UserServiceImpl implements UserService{
         if (request.getStatus() != null) user.setStatus(request.getStatus());
 
         if (request.getRoleName() != null) {
-            Role role = roleRepository.findByRoleName(request.getRoleName())
-                    .orElseThrow(() -> new IllegalArgumentException("Role not found: " + request.getRoleName()));
+            Role role = findRole(request.getRoleName());
             user.setRole(role);
         }
 
@@ -156,5 +154,11 @@ public class UserServiceImpl implements UserService{
     private User findUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+    }
+
+    private Role findRole(String roleNameOrCode) {
+        return roleRepository.findByRoleCode(roleNameOrCode)
+                .or(() -> roleRepository.findByRoleName(roleNameOrCode))
+                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleNameOrCode));
     }
 }
