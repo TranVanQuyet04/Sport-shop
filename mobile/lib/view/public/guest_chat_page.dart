@@ -77,9 +77,6 @@ class _GuestChatPageState extends State<GuestChatPage> {
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('Chat hỗ trợ'),
-        actions: const [
-          IconButton(onPressed: null, icon: Icon(Icons.more_vert)),
-        ],
       ),
       body: Column(
         children: [
@@ -148,11 +145,6 @@ class _GuestChatPageState extends State<GuestChatPage> {
               padding: const EdgeInsets.all(AppSpacing.lg),
               child: Row(
                 children: [
-                  IconButton.outlined(
-                    onPressed: null,
-                    icon: const Icon(Icons.add),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: TextField(
                       controller: _messageController,

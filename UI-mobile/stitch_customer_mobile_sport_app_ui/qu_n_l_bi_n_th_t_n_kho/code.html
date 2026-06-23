@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-press {
+            transform: scale(0.95);
+            transition: transform 0.15s ease;
+        }
+        .custom-shadow {
+            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container": "#eeeeee",
+                        "on-surface-variant": "#4c4546",
+                        "outline-variant": "#cfc4c5",
+                        "tertiary-fixed": "#e2e2e2",
+                        "secondary-container": "#e51a38",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1c1c",
+                        "inverse-surface": "#2f3131",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "on-secondary-fixed": "#410007",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "background": "#f9f9f9",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "tertiary": "#000000",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-secondary-fixed-variant": "#92001d",
+                        "surface-bright": "#f9f9f9",
+                        "on-primary-fixed": "#1b1b1b",
+                        "outline": "#7e7576",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "surface": "#f9f9f9",
+                        "on-secondary-container": "#fffbff",
+                        "primary": "#000000",
+                        "on-tertiary-container": "#838484",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary-container": "#1b1b1b",
+                        "inverse-primary": "#c6c6c6",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e2e2e2",
+                        "secondary-fixed": "#ffdad8",
+                        "surface-tint": "#5e5e5e",
+                        "on-primary-fixed-variant": "#474747",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-container": "#848484",
+                        "surface-dim": "#dadada",
+                        "secondary": "#bb0027",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e8e8e8",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#1a1c1c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "gutter-mobile": "12px",
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "touch-target-min": "44px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "button": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim flex justify-between items-center w-full px-margin-mobile h-touch-target-min fixed top-0 z-50">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="Admin Profile" data-alt="A professional studio portrait of a modern tech administrator in a clean white office setting. The lighting is bright and high-contrast, reflecting a professional sportswear brand aesthetic. The color palette is dominated by stark blacks and whites with subtle red accents in the background, conveying a high-performance and disciplined atmosphere." src="https://lh3.googleusercontent.com/aida/AP1WRLuKbxeUbmeoYf1MGw-SZUzBNPI7B3AiRz5T0cd8hFdlYZsFj-Dk-bTAf3ZnH6LsnOjLU_tfb6VPlo-d_ipgElDDI2ACe46O0J-z-ltkXJUt1MeML0OYpVY9RXPZbXLiQxfy5KhC2fgFiId7WOaThoP0odoGuIcpywe8nCeqBXufPkz9-TCELg_nssuGDzZ7cWOWjfD5-LyD5juYJJ-rGD7biYRFSlTb8RZOBO3CHGTSS2TTwQkjjRfCykk"/>
+</div>
+<h1 class="text-title-md font-title-md font-bold text-primary dark:text-primary-fixed">Admin Dashboard</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity">notifications</button>
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity">search</button>
+</div>
+</header>
+<main class="mt-16 px-margin-mobile">
+<!-- Header Section -->
+<div class="py-6">
+<h2 class="text-headline-lg-mobile font-headline-lg-mobile text-primary mb-2">Quản lý kho hàng</h2>
+<p class="text-body-sm text-on-surface-variant">Kiểm soát biến thể và số lượng tồn kho cho mẫu giày Performance Pro X1.</p>
+</div>
+<!-- Inventory Summary (Bento Style) -->
+<div class="grid grid-cols-2 gap-4 mb-section-gap">
+<div class="bg-surface-container-lowest p-4 rounded-xl custom-shadow border-l-4 border-secondary">
+<span class="text-label-bold font-label-bold text-on-surface-variant uppercase tracking-wider">Cảnh báo</span>
+<div class="flex items-end justify-between mt-1">
+<span class="text-display-lg font-display-lg text-secondary">04</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<p class="text-body-sm mt-2">Biến thể sắp hết hàng</p>
+</div>
+<div class="bg-primary p-4 rounded-xl custom-shadow">
+<span class="text-label-bold font-label-bold text-surface-container uppercase tracking-wider">Tổng tồn</span>
+<div class="flex items-end justify-between mt-1">
+<span class="text-display-lg font-display-lg text-surface-container-lowest">1,240</span>
+<span class="material-symbols-outlined text-surface-container-lowest">inventory_2</span>
+</div>
+<p class="text-body-sm text-surface-container mt-2">Sản phẩm hiện có</p>
+</div>
+</div>
+<!-- Variant Filter & Search -->
+<div class="flex gap-2 mb-6 overflow-x-auto pb-2 no-scrollbar">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-full text-label-bold font-label-bold whitespace-nowrap active:scale-95 transition-transform">Tất cả</button>
+<button class="bg-surface-container text-on-surface px-4 py-2 rounded-full text-label-bold font-label-bold whitespace-nowrap active:scale-95 transition-transform">Size 40-42</button>
+<button class="bg-surface-container text-on-surface px-4 py-2 rounded-full text-label-bold font-label-bold whitespace-nowrap active:scale-95 transition-transform">Màu Đen</button>
+<button class="bg-surface-container text-on-surface px-4 py-2 rounded-full text-label-bold font-label-bold whitespace-nowrap active:scale-95 transition-transform">Màu Đỏ</button>
+</div>
+<!-- Variant Card List -->
+<div class="space-y-4">
+<!-- Variant Item 1 (Low Stock) -->
+<div class="bg-surface-container-lowest rounded-xl p-4 custom-shadow border border-outline-variant/30 flex gap-4">
+<div class="w-20 h-20 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Nike Red" data-alt="A high-performance red athletic sneaker captured from a dynamic side profile in a clean commercial photography style. The background is a soft, neutral grey to emphasize the vibrant red and sleek black accents of the shoe. The lighting is crisp, highlighting the technical mesh fabric and structured sole, reflecting a professional e-commerce aesthetic." src="https://lh3.googleusercontent.com/aida/AP1WRLvs426bjI7ukohYnLeaXoCfhCShOuoaCzNQIG6lzMFIPcO0nPvqM2IGgfpOOIEuZxc4_di3Xgojr_3AMNL9RsUqn6K0NzDEnO_UgFO8gcAeH0OJy0Ged05Aenc-VTuoGpe6blGzoyDI9uoDkv4FqFAozc1igTzbA46R6lfc2GQ9KT1xS0sAEX41IGjN_76Pp4qh0YcVHI4498VzZ5DI_F63_Az9gzdTJ3gVNjfX_HtPmZK6n0NPNpCiKEk"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<span class="text-label-bold font-label-bold text-secondary bg-secondary-fixed px-2 py-0.5 rounded text-[10px] uppercase">Sắp hết</span>
+<h3 class="text-body-lg font-bold text-primary mt-1">SKU: PRO-X1-RED-42</h3>
+<p class="text-body-sm text-on-surface-variant italic">Màu Đỏ • Size 42</p>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">edit_note</button>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex items-center gap-3 bg-surface-container rounded-lg p-1">
+<button class="w-8 h-8 flex items-center justify-center bg-white rounded-md shadow-sm active:scale-90 transition-transform" onclick="updateStock(this, -1)">
+<span class="material-symbols-outlined text-primary text-sm">remove</span>
+</button>
+<span class="text-body-lg font-bold w-8 text-center stock-count">03</span>
+<button class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-md shadow-sm active:scale-90 transition-transform" onclick="updateStock(this, 1)">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="text-right">
+<span class="text-label-bold font-label-bold text-secondary">Còn 03 SP</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Variant Item 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 custom-shadow border border-outline-variant/30 flex gap-4">
+<div class="w-20 h-20 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Nike Black" data-alt="A premium black sports shoe with neon highlights, shot on a light grey platform. The lighting is modern and directional, creating subtle shadows and emphasizing the athletic silhouette. The atmosphere is professional and powerful, consistent with high-performance sports brand imagery using a black and grey palette." src="https://lh3.googleusercontent.com/aida/AP1WRLvOJQFF6c46Bs3KtwMV6osRmhKShXPwDilnbHIgb1TN2SCHYl0IWzhSK7rE6MKLoFeLDEFZI1S6IVf2PV--UneABIf7nnyte5I3z3N8tB8xqRGA8QXOPvxHWqk4KCi5XzrOdd5fEEmHxKhe8EdGcqrDvo5RVcxBg0LV8kaPskKeMDl928OKojp5Du2SmOW96g0LEJJp26qUGlL5RnG-5_JDfkv1503D44ohPd_gZY6PovGe6FuizUCUekE"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-body-lg font-bold text-primary">SKU: PRO-X1-BLK-40</h3>
+<p class="text-body-sm text-on-surface-variant italic">Màu Đen • Size 40</p>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant">edit_note</button>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex items-center gap-3 bg-surface-container rounded-lg p-1">
+<button class="w-8 h-8 flex items-center justify-center bg-white rounded-md shadow-sm active:scale-90 transition-transform" onclick="updateStock(this, -1)">
+<span class="material-symbols-outlined text-primary text-sm">remove</span>
+</button>
+<span class="text-body-lg font-bold w-8 text-center stock-count">48</span>
+<button class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-md shadow-sm active:scale-90 transition-transform" onclick="updateStock(this, 1)">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="text-right">
+<span class="text-label-bold font-label-bold text-primary-container">Còn 48 SP</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Variant Item 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 custom-shadow border border-outline-variant/30 flex gap-4">
+<div class="w-20 h-20 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Nike White" data-alt="A pristine white running shoe designed for elite athletes, displayed against a high-contrast dark background to make the white pop. The lighting is sophisticated and highlights the breathable texture of the material. The aesthetic is clean and modern, evoking a sense of speed and professional performance." src="https://lh3.googleusercontent.com/aida/AP1WRLvfVfZw1qc1GfRmffRzjDxJ7k1mpucrO5DmJrQIMaX90F_ooZ7kmyM_DSwCOd7unWWFSJjknhqWkp5eWMpbyM-ULVDfEVGw20dmQngFT4DadciZNfN-sWrUSiWqUL9Mg4xnmhwU82WNPHMzU4jO-297dQKDbZ0T5BX8tjlgs_E9R7Mt707sKhExJMQECv9fOfJVdzYQYGuVA6csZ1q34ylA_-sJXCEGOtK_unEeAe1ZCtiN9XkPvN0HQ0U"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-body-lg font-bold text-primary">SKU: PRO-X1-WHT-41</h3>
+<p class="text-body-sm text-on-surface-variant italic">Màu Trắng • Size 41</p>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant">edit_note</button>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex items-center gap-3 bg-surface-container rounded-lg p-1">
+<button class="w-8 h-8 flex items-center justify-center bg-white rounded-md shadow-sm active:scale-90 transition-transform" onclick="updateStock(this, -1)">
+<span class="material-symbols-outlined text-primary text-sm">remove</span>
+</button>
+<span class="text-body-lg font-bold w-8 text-center stock-count">125</span>
+<button class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-md shadow-sm active:scale-90 transition-transform" onclick="updateStock(this, 1)">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="text-right">
+<span class="text-label-bold font-label-bold text-primary-container">Còn 125 SP</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Add Variant Button -->
+<div class="mt-8 flex justify-center">
+<button class="flex items-center gap-2 text-primary font-button border-2 border-primary px-8 py-3 rounded-xl active:scale-95 transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+                Thêm biến thể mới
+            </button>
+</div>
+</main>
+<!-- FAB: Save Changes (Highly Contextual) -->
+<div class="fixed bottom-24 right-6 z-50">
+<button class="w-14 h-14 bg-secondary text-white rounded-full flex items-center justify-center shadow-lg hover:bg-opacity-90 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">save</span>
+</button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter-mobile pb-safe h-16 bg-surface-container-lowest dark:bg-surface-container-low shadow-sm rounded-t-xl border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-bold font-label-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed font-bold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="text-label-bold font-label-bold">Catalog</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-label-bold font-label-bold">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-label-bold font-label-bold">Staff</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-bold font-label-bold">Settings</span>
+</a>
+</nav>
+<script>
+        function updateStock(btn, amount) {
+            const container = btn.parentElement;
+            const display = container.querySelector('.stock-count');
+            let current = parseInt(display.innerText);
+            let newVal = Math.max(0, current + amount);
+            display.innerText = newVal.toString().padStart(2, '0');
+            
+            // Interaction feedback
+            btn.classList.add('active-press');
+            setTimeout(() => btn.classList.remove('active-press'), 150);
+        }
+    </script>
+</body></html>

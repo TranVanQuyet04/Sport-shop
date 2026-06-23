@@ -1,4 +1,5 @@
 import '../../core/network/api_client.dart';
+import '../../core/network/api_endpoints.dart';
 import '../../model/customer/address_model.dart';
 import '../../model/customer/order_model.dart';
 
@@ -19,7 +20,7 @@ class CheckoutApiService implements CheckoutService {
 
   @override
   Future<List<AddressModel>> getAddresses() async {
-    final json = await _apiClient.getJson('/user/addresses');
+    final json = await _apiClient.getJson(ApiEndpoints.addresses);
     final rawItems = json['result'] ?? json['data'] ?? json;
     if (rawItems is! List) {
       return const [];

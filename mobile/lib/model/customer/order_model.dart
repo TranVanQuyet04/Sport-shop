@@ -2,6 +2,7 @@ class OrderModel {
   const OrderModel({
     required this.id,
     required this.status,
+    required this.deliveryStatus,
     required this.totalAmount,
     required this.paymentMethod,
     required this.recipientName,
@@ -14,6 +15,7 @@ class OrderModel {
 
   final String id;
   final String status;
+  final String deliveryStatus;
   final int totalAmount;
   final String paymentMethod;
   final String recipientName;
@@ -25,7 +27,7 @@ class OrderModel {
 
   String get firstProductName {
     if (items.isEmpty) {
-      return 'Đơn hàng Sportshop';
+      return '';
     }
     return items.first.productName;
   }
@@ -52,6 +54,7 @@ class OrderModel {
     return OrderModel(
       id: (source['id'] ?? '').toString(),
       status: (source['status'] ?? '').toString(),
+      deliveryStatus: (source['deliveryStatus'] ?? '').toString(),
       totalAmount: _toInt(source['totalAmount']),
       paymentMethod: (source['paymentMethod'] ?? '').toString(),
       recipientName: (source['recipientName'] ?? '').toString(),
@@ -92,7 +95,7 @@ class OrderItemModel {
       if (size.isNotEmpty) 'Size: $size',
       if (color.isNotEmpty) color,
     ];
-    return parts.isEmpty ? 'Biến thể sản phẩm' : parts.join(' | ');
+    return parts.join(' | ');
   }
 
   factory OrderItemModel.fromJson(Map<String, dynamic> json) {
@@ -102,7 +105,7 @@ class OrderItemModel {
     return OrderItemModel(
       id: (json['id'] ?? '').toString(),
       variantId: (json['variantId'] ?? '').toString(),
-      productName: (json['productName'] ?? 'Sản phẩm').toString(),
+      productName: (json['productName'] ?? '').toString(),
       size: (json['size'] ?? '').toString(),
       color: (json['color'] ?? '').toString(),
       price: price,

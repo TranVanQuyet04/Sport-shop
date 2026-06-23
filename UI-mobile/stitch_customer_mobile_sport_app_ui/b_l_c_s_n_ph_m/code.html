@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#92001d",
+                    "primary-container": "#1b1b1b",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-container": "#eeeeee",
+                    "error-container": "#ffdad6",
+                    "on-background": "#1a1c1c",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#e51a38",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-surface": "#1a1c1c",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f3f3f3",
+                    "surface-tint": "#5e5e5e",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "surface-variant": "#e2e2e2",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#e2e2e2",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "secondary": "#bb0027",
+                    "surface-dim": "#dadada",
+                    "primary": "#000000",
+                    "on-primary-fixed": "#1b1b1b",
+                    "tertiary-container": "#1a1c1c",
+                    "surface": "#f9f9f9",
+                    "outline": "#7e7576",
+                    "inverse-primary": "#c6c6c6",
+                    "secondary-fixed": "#ffdad8",
+                    "primary-fixed": "#e2e2e2",
+                    "on-secondary-container": "#fffbff",
+                    "on-tertiary-container": "#838484",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "inverse-surface": "#2f3131",
+                    "on-surface-variant": "#4c4546",
+                    "surface-bright": "#f9f9f9",
+                    "background": "#f9f9f9",
+                    "on-primary-fixed-variant": "#474747",
+                    "outline-variant": "#cfc4c5",
+                    "on-primary-container": "#848484",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#410007",
+                    "tertiary": "#000000"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "32px",
+                    "gutter-mobile": "12px",
+                    "margin-mobile": "16px",
+                    "base": "4px",
+                    "touch-target-min": "44px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "button": ["Inter"],
+                    "title-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-bold": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .bottom-sheet-transition {
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        
+        .active-chip {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #000000;
+            cursor: pointer;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-lg text-on-surface min-h-screen">
+<!-- Background Content (Mock Product List) -->
+<div class="p-margin-mobile">
+<header class="flex justify-between items-center mb-8">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black tracking-tighter text-primary">SPORTSWEAR</h1>
+<button class="w-11 h-11 flex items-center justify-center rounded-full bg-surface-container-low">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+</header>
+<div class="grid grid-cols-2 gap-4">
+<!-- Mock Product Card 1 -->
+<div class="flex flex-col gap-2">
+<div class="aspect-[3/4] bg-surface-container-highest rounded-xl overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="A professional studio photograph of a sleek red Nike running shoe displayed against a clean, minimal light gray background. The lighting is sharp and high-contrast, highlighting the textures of the high-performance fabric and rubber sole. The overall aesthetic is modern and energetic, echoing elite athletic discipline with a bold black and white theme and vibrant red accents." src="https://lh3.googleusercontent.com/aida/AP1WRLtdHRmnf0BU5bBca9k_65ya9kTx251D2NNphEgtixfu2wQYUn8svAITNY-tXkY3mrSNHbs-XlV5SfvUir7NQmTC3OZ4FzLv83XV3Dv9gUhdn36g-KAo_OqLzugb8wYtbVPIUDQPRC6kllb2jJsLOHW1i6DbsokylTP7s9nB0UEDZJma9_NwLmg8fDd04_Ud4rYqeuf1n1HX6ZBOLUsuTvQR1kNPsXZSVN_PjjWz-xrxgAwvDx6Up7cnUyI"/>
+<div class="absolute top-2 left-2 bg-secondary text-on-secondary px-2 py-1 text-label-bold font-label-bold rounded-sm">GIẢM GIÁ</div>
+</div>
+<div class="px-1">
+<p class="font-label-bold text-label-bold text-on-surface-variant">NIKE</p>
+<p class="font-body-sm text-body-sm font-semibold truncate">Air Max Performance 2024</p>
+<p class="font-title-md text-title-md font-bold">2.450.000đ</p>
+</div>
+</div>
+<!-- Mock Product Card 2 -->
+<div class="flex flex-col gap-2">
+<div class="aspect-[3/4] bg-surface-container-highest rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A minimalist professional product shot of a premium black smartwatch with a breathable sport band, set on a bright architectural surface. The lighting is soft yet directional, emphasizing the sophisticated design and high-tech feel. The scene is clean and high-contrast, perfectly fitting a professional sportswear brand identity with deep blacks and clinical whites." src="https://lh3.googleusercontent.com/aida/AP1WRLsSbu0r8OS154sFQDvc9MmjVrqn004gRrVsOj5MmxNO7wF1mlsBsWjPgW-1mE9oWhYUGmj5j5XiSwtBD-puUeLJmZ4khoMZaZ60UTOlyCN-ZfMydB_NPFXi7WzWU0jJZ5SVfsjI4NtXol7FPIRgA7qIDOrJSN7-BGIi-FI7Tyzr2blLTIcPkkEyewA2NrIlb_m-WdaQac57wESZCHEFNDzaeQ4ee2bDRp4sD47ORb7tTzg4MsB_Eq3f2LU"/>
+</div>
+<div class="px-1">
+<p class="font-label-bold text-label-bold text-on-surface-variant">ADIDAS</p>
+<p class="font-body-sm text-body-sm font-semibold truncate">Training Pro Watch</p>
+<p class="font-title-md text-title-md font-bold">1.890.000đ</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Backdrop -->
+<div class="fixed inset-0 bg-black/40 z-[60] backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none" id="modal-backdrop"></div>
+<!-- Filter Bottom Sheet -->
+<div class="fixed inset-x-0 bottom-0 bg-surface-container-lowest rounded-t-[32px] z-[70] bottom-sheet-transition translate-y-full flex flex-col max-h-[813px]" id="filter-sheet">
+<!-- Handle -->
+<div class="w-full flex justify-center py-4">
+<div class="w-12 h-1.5 bg-outline-variant rounded-full"></div>
+</div>
+<!-- Header -->
+<div class="px-margin-mobile flex justify-between items-center pb-6">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile font-bold">Bộ lọc</h2>
+<button class="text-secondary font-button text-button hover:opacity-70 transition-opacity" id="reset-btn">Thiết lập lại</button>
+</div>
+<!-- Filter Content (Scrollable) -->
+<div class="flex-1 overflow-y-auto px-margin-mobile no-scrollbar">
+<!-- Price Range -->
+<section class="mb-section-gap">
+<div class="flex justify-between items-end mb-4">
+<h3 class="font-title-md text-title-md">Khoảng giá</h3>
+<span class="text-body-sm font-semibold text-on-surface-variant">0đ - 5.000.000đ</span>
+</div>
+<div class="relative h-12 flex items-center">
+<input class="range-slider w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" max="5000000" min="0" step="100000" type="range" value="2500000"/>
+</div>
+</section>
+<!-- Brands -->
+<section class="mb-section-gap">
+<h3 class="font-title-md text-title-md mb-4">Thương hiệu</h3>
+<div class="flex flex-wrap gap-2">
+<button class="px-6 py-3 rounded-lg border-1.5 border-outline-variant font-button text-button transition-all active:scale-95 active-chip">Nike</button>
+<button class="px-6 py-3 rounded-lg border-1.5 border-outline-variant font-button text-button transition-all active:scale-95 bg-surface-container-low">Adidas</button>
+<button class="px-6 py-3 rounded-lg border-1.5 border-outline-variant font-button text-button transition-all active:scale-95 bg-surface-container-low">Puma</button>
+<button class="px-6 py-3 rounded-lg border-1.5 border-outline-variant font-button text-button transition-all active:scale-95 bg-surface-container-low">Reebok</button>
+</div>
+</section>
+<!-- Categories -->
+<section class="mb-section-gap">
+<h3 class="font-title-md text-title-md mb-4">Danh mục</h3>
+<div class="flex flex-wrap gap-2">
+<button class="px-6 py-3 rounded-lg bg-surface-container-low font-button text-button transition-all active:scale-95">Giày</button>
+<button class="px-6 py-3 rounded-lg active-chip font-button text-button transition-all active:scale-95">Áo</button>
+<button class="px-6 py-3 rounded-lg bg-surface-container-low font-button text-button transition-all active:scale-95">Quần</button>
+<button class="px-6 py-3 rounded-lg bg-surface-container-low font-button text-button transition-all active:scale-95">Phụ kiện</button>
+</div>
+</section>
+<!-- Sports -->
+<section class="mb-section-gap">
+<h3 class="font-title-md text-title-md mb-4">Môn thể thao</h3>
+<div class="flex flex-wrap gap-2">
+<button class="px-6 py-3 rounded-lg bg-surface-container-low font-button text-button transition-all active:scale-95">Chạy bộ</button>
+<button class="px-6 py-3 rounded-lg bg-surface-container-low font-button text-button transition-all active:scale-95">Gym</button>
+<button class="px-6 py-3 rounded-lg active-chip font-button text-button transition-all active:scale-95">Bóng đá</button>
+<button class="px-6 py-3 rounded-lg bg-surface-container-low font-button text-button transition-all active:scale-95">Tennis</button>
+</div>
+</section>
+<!-- Colors -->
+<section class="mb-section-gap">
+<h3 class="font-title-md text-title-md mb-4">Màu sắc</h3>
+<div class="flex flex-wrap gap-4">
+<button class="w-10 h-10 rounded-full bg-primary ring-2 ring-offset-2 ring-primary relative transition-transform active:scale-90">
+<span class="material-symbols-outlined text-on-primary absolute inset-0 flex items-center justify-center text-sm" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-secondary transition-transform active:scale-90"></button>
+<button class="w-10 h-10 rounded-full bg-blue-600 transition-transform active:scale-90"></button>
+<button class="w-10 h-10 rounded-full bg-white border border-outline-variant transition-transform active:scale-90"></button>
+<button class="w-10 h-10 rounded-full bg-green-600 transition-transform active:scale-90"></button>
+</div>
+</section>
+</div>
+<!-- Footer Actions -->
+<div class="p-margin-mobile bg-surface-container-lowest shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<button class="w-full h-14 bg-secondary text-on-secondary font-button text-button rounded-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2" id="apply-btn">
+<span>Áp dụng</span>
+<span class="text-on-secondary-fixed-variant opacity-80 text-body-sm">(124 sản phẩm)</span>
+</button>
+</div>
+</div>
+<!-- Toggle Trigger (FAB for Demo) -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg z-50 flex items-center justify-center transition-transform active:scale-90" id="open-filter">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<!-- Navigation Shell (As defined in JSON) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center pt-2 pb-safe px-gutter-mobile bg-surface-container-lowest rounded-t-xl border-t border-outline-variant shadow-sm">
+<a class="flex flex-col items-center justify-center text-secondary font-bold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-bold text-label-bold">Trang chủ</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-bold text-label-bold">Tìm kiếm</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label-bold text-label-bold">Giỏ hàng</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-bold text-label-bold">Đơn hàng</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-bold text-label-bold">Cá nhân</span>
+</a>
+</nav>
+<script>
+        const openBtn = document.getElementById('open-filter');
+        const backdrop = document.getElementById('modal-backdrop');
+        const sheet = document.getElementById('filter-sheet');
+        const applyBtn = document.getElementById('apply-btn');
+
+        function toggleModal(show) {
+            if (show) {
+                backdrop.classList.remove('opacity-0', 'pointer-events-none');
+                backdrop.classList.add('opacity-100');
+                sheet.classList.remove('translate-y-full');
+                document.body.style.overflow = 'hidden';
+            } else {
+                backdrop.classList.add('opacity-0', 'pointer-events-none');
+                backdrop.classList.remove('opacity-100');
+                sheet.classList.add('translate-y-full');
+                document.body.style.overflow = '';
+            }
+        }
+
+        openBtn.addEventListener('click', () => toggleModal(true));
+        backdrop.addEventListener('click', () => toggleModal(false));
+        applyBtn.addEventListener('click', () => {
+            // Simulate loading
+            applyBtn.innerHTML = '<span class="animate-spin material-symbols-outlined">sync</span>';
+            setTimeout(() => {
+                applyBtn.innerHTML = '<span>Áp dụng</span>';
+                toggleModal(false);
+            }, 600);
+        });
+
+        // Swipe down to close simulation
+        let startY = 0;
+        sheet.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+        });
+
+        sheet.addEventListener('touchmove', (e) => {
+            const currentY = e.touches[0].clientY;
+            const deltaY = currentY - startY;
+            if (deltaY > 0 && sheet.scrollTop <= 0) {
+                sheet.style.transform = `translateY(${deltaY}px)`;
+            }
+        });
+
+        sheet.addEventListener('touchend', (e) => {
+            const currentY = e.changedTouches[0].clientY;
+            const deltaY = currentY - startY;
+            sheet.style.transform = '';
+            if (deltaY > 150) {
+                toggleModal(false);
+            }
+        });
+
+        // Toggle chip states
+        const chips = document.querySelectorAll('button:not(#open-filter):not(#apply-btn):not(#reset-btn)');
+        chips.forEach(chip => {
+            if(!chip.classList.contains('w-10')) { // Exclude color dots
+                chip.addEventListener('click', () => {
+                    const siblings = chip.parentElement.children;
+                    for (let sibling of siblings) {
+                        sibling.classList.remove('active-chip');
+                        sibling.classList.add('bg-surface-container-low');
+                    }
+                    chip.classList.remove('bg-surface-container-low');
+                    chip.classList.add('active-chip');
+                });
+            }
+        });
+
+        // Auto open on load for presentation
+        setTimeout(() => toggleModal(true), 800);
+    </script>
+</body></html>

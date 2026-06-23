@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-secondary-container": "#fffbff",
+                    "surface-dim": "#dadada",
+                    "secondary-fixed": "#ffdad8",
+                    "on-error-container": "#93000a",
+                    "primary-fixed": "#e2e2e2",
+                    "inverse-surface": "#2f3131",
+                    "surface-bright": "#f9f9f9",
+                    "inverse-primary": "#c6c6c6",
+                    "background": "#f9f9f9",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "surface-container-low": "#f3f3f3",
+                    "primary-container": "#1b1b1b",
+                    "on-surface": "#1a1c1c",
+                    "tertiary-container": "#1a1c1c",
+                    "surface-container-high": "#e8e8e8",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "secondary-container": "#e51a38",
+                    "tertiary": "#000000",
+                    "surface-tint": "#5e5e5e",
+                    "outline-variant": "#cfc4c5",
+                    "surface-variant": "#e2e2e2",
+                    "outline": "#7e7576",
+                    "on-secondary-fixed": "#410007",
+                    "surface-container-highest": "#e2e2e2",
+                    "secondary": "#bb0027",
+                    "on-secondary-fixed-variant": "#92001d",
+                    "surface-container": "#eeeeee",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#1b1b1b",
+                    "on-primary-container": "#848484",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1a1c1c",
+                    "on-tertiary-container": "#838484",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4c4546",
+                    "on-primary": "#ffffff",
+                    "surface": "#f9f9f9",
+                    "primary": "#000000",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-primary-fixed-variant": "#474747",
+                    "tertiary-fixed": "#e2e2e2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "32px",
+                    "gutter-mobile": "12px",
+                    "touch-target-min": "44px",
+                    "base": "4px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "button": ["Inter"],
+                    "title-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-bold": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #f9f9f9; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .active-scale:active { transform: scale(0.96); }
+        .permission-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .role-expanded { height: auto; max-height: 200px; opacity: 1; margin-top: 12px; }
+        .role-collapsed { height: 0; max-height: 0; opacity: 0; overflow: hidden; margin-top: 0; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-lg text-on-surface">
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface dark:bg-surface-dim flex justify-between items-center px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-3">
+<button class="active-scale transition-transform duration-150">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="text-title-md font-title-md text-primary">Quản lý quyền hạn</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="notifications">notifications</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a senior system administrator in a clean modern office setting. The lighting is bright and high-key, reflecting a light-mode UI aesthetic. The overall mood is focused and professional, dominated by a palette of white, gray, and subtle black accents." src="https://lh3.googleusercontent.com/aida/AP1WRLvl3eFRDoHTRg-D7rf8_vpu71qbes3Hyv6Wf7skWaJOeaLpmyvuzPF39lw4yOavtOBdRx8gMKsdA7nd-aQ_FPQ6XoZxDfzXzRlBTn_4g7QoH7nnzxKwoLKzkzOK0jLWg6ckWOJX23zCfiTvpsUF1S079AKQkyy9Emb3q6fTuS5jfeifdMIoLpyMvz_LKH_zLnl-YTAv1-2bRrq5aIITfGogCsfvbes9dIeQJ-WZBkjCC4eHuFfQnpKkJTo"/>
+</div>
+</div>
+</header>
+<main class="pt-20 pb-24 px-margin-mobile">
+<!-- Search & Action Row -->
+<div class="flex items-center gap-3 mb-6">
+<div class="flex-1 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-body-lg">search</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary transition-all text-body-sm" placeholder="Tìm kiếm vai trò..." type="text"/>
+</div>
+<button class="w-touch-target-min h-touch-target-min flex items-center justify-center bg-primary text-on-primary rounded-xl active-scale transition-transform shadow-sm">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<!-- Section Title -->
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-label-bold font-label-bold text-on-surface-variant uppercase tracking-wider">Danh sách vai trò (4)</h2>
+<button class="text-secondary font-label-bold text-label-bold">Cập nhật nhanh</button>
+</div>
+<!-- Role List (Bento-style items) -->
+<div class="space-y-4">
+<!-- ADMIN ROLE -->
+<div class="permission-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant active-scale cursor-pointer" onclick="toggleRole('admin')">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary" data-icon="admin_panel_settings">admin_panel_settings</span>
+</div>
+<div>
+<h3 class="text-body-lg font-bold text-primary">ADMIN</h3>
+<p class="text-body-sm text-on-surface-variant">02 thành viên</p>
+</div>
+</div>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">edit</span>
+</button>
+</div>
+<div class="role-collapsed" id="role-admin">
+<div class="pt-4 border-t border-outline-variant">
+<p class="text-label-bold font-label-bold text-secondary mb-2">TÓM TẮT QUYỀN HẠN</p>
+<p class="text-body-sm text-on-surface">Toàn quyền hệ thống: Quản lý người dùng, cấu hình kho, cài đặt tài chính và báo cáo toàn cục.</p>
+</div>
+</div>
+</div>
+<!-- SHOP_STAFF ROLE -->
+<div class="permission-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant active-scale cursor-pointer" onclick="toggleRole('shop')">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="store">store</span>
+</div>
+<div>
+<h3 class="text-body-lg font-bold text-primary">SHOP_STAFF</h3>
+<p class="text-body-sm text-on-surface-variant">12 thành viên</p>
+</div>
+</div>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">edit</span>
+</button>
+</div>
+<div class="role-collapsed" id="role-shop">
+<div class="pt-4 border-t border-outline-variant">
+<p class="text-label-bold font-label-bold text-secondary mb-2">TÓM TẮT QUYỀN HẠN</p>
+<p class="text-body-sm text-on-surface">Xử lý đơn &amp; Kho: Tiếp nhận đơn hàng, quản lý tồn kho sản phẩm, cập nhật trạng thái đơn hàng.</p>
+</div>
+</div>
+</div>
+<!-- DELIVERY_STAFF ROLE -->
+<div class="permission-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant active-scale cursor-pointer" onclick="toggleRole('delivery')">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="local_shipping">local_shipping</span>
+</div>
+<div>
+<h3 class="text-body-lg font-bold text-primary">DELIVERY_STAFF</h3>
+<p class="text-body-sm text-on-surface-variant">08 thành viên</p>
+</div>
+</div>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">edit</span>
+</button>
+</div>
+<div class="role-collapsed" id="role-delivery">
+<div class="pt-4 border-t border-outline-variant">
+<p class="text-label-bold font-label-bold text-secondary mb-2">TÓM TẮT QUYỀN HẠN</p>
+<p class="text-body-sm text-on-surface">Giao vận: Truy cập thông tin vận chuyển, lộ trình giao hàng, xác nhận hoàn tất giao nhận.</p>
+</div>
+</div>
+</div>
+<!-- CUSTOMER ROLE -->
+<div class="permission-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant active-scale cursor-pointer" onclick="toggleRole('customer')">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="person">person</span>
+</div>
+<div>
+<h3 class="text-body-lg font-bold text-primary">CUSTOMER</h3>
+<p class="text-body-sm text-on-surface-variant">1,240 thành viên</p>
+</div>
+</div>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">edit</span>
+</button>
+</div>
+<div class="role-collapsed" id="role-customer">
+<div class="pt-4 border-t border-outline-variant">
+<p class="text-label-bold font-label-bold text-secondary mb-2">TÓM TẮT QUYỀN HẠN</p>
+<p class="text-body-sm text-on-surface">Người dùng cuối: Mua hàng, theo dõi đơn cá nhân, quản lý thông tin hồ sơ và điểm thưởng.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Tip -->
+<div class="mt-section-gap p-4 bg-secondary-container bg-opacity-10 border-l-4 border-secondary rounded-r-lg">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-secondary">info</span>
+<div>
+<h4 class="text-body-sm font-bold text-secondary">Lưu ý bảo mật</h4>
+<p class="text-body-sm text-on-surface-variant">Việc thay đổi quyền của ADMIN có thể ảnh hưởng đến khả năng truy cập hệ thống của toàn bộ quản trị viên.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter-mobile pb-safe h-16 bg-surface-container-lowest dark:bg-surface-container-low border-t border-outline-variant shadow-sm rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-bold font-label-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-label-bold font-label-bold">Catalog</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-label-bold font-label-bold">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed font-bold active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="text-label-bold font-label-bold">Staff</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-bold font-label-bold">Settings</span>
+</a>
+</nav>
+<script>
+        function toggleRole(roleId) {
+            const content = document.getElementById(`role-${roleId}`);
+            const isExpanded = content.classList.contains('role-expanded');
+            
+            // Close all others
+            document.querySelectorAll('.role-expanded').forEach(el => {
+                if (el.id !== `role-${roleId}`) {
+                    el.classList.replace('role-expanded', 'role-collapsed');
+                }
+            });
+
+            // Toggle current
+            if (isExpanded) {
+                content.classList.replace('role-expanded', 'role-collapsed');
+            } else {
+                content.classList.replace('role-collapsed', 'role-expanded');
+            }
+        }
+    </script>
+</body></html>

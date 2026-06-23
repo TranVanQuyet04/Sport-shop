@@ -62,33 +62,32 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             onPressed: context.pop,
             icon: const Icon(Icons.arrow_back),
           ),
-          title: const Center(child: Text('CHI TIET')),
-          actions: const [
-            IconButton(onPressed: null, icon: Icon(Icons.share_outlined)),
-          ],
+          title: const Center(child: Text('CHI TIẾT')),
         ),
         body: _controller.isLoading
-            ? const AppLoadingState(title: 'Dang tai chi tiet san pham')
+            ? const AppLoadingState(title: 'Đang tải chi tiết sản phẩm')
             : AppErrorState(
-                title: 'Khong tai duoc chi tiet san pham',
-                message: _controller.errorMessage ?? 'San pham khong ton tai.',
+                title: 'Không tải được chi tiết sản phẩm',
+                message: _controller.errorMessage ?? 'Sản phẩm không tồn tại.',
                 onAction: _controller.loadProduct,
               ),
       );
     }
-    final colors = product.colors.isEmpty
-        ? ['Đen', 'Đỏ', 'Trắng']
-        : product.colors;
-    final sizes = product.sizes.isEmpty
-        ? ['38', '39', '40', '41', '42', '43', '44']
-        : product.sizes;
-    final currentColorIndex = selectedColor.clamp(0, colors.length - 1);
-    final currentSizeIndex = selectedSizeIndex.clamp(0, sizes.length - 1);
-    final selectedVariant = _findSelectedVariant(
-      product,
-      selectedSize: sizes[currentSizeIndex],
-      selectedColor: colors[currentColorIndex],
-    );
+    final colors = product.colors;
+    final sizes = product.sizes;
+    final currentColorIndex = colors.isEmpty
+        ? 0
+        : selectedColor.clamp(0, colors.length - 1);
+    final currentSizeIndex = sizes.isEmpty
+        ? 0
+        : selectedSizeIndex.clamp(0, sizes.length - 1);
+    final selectedVariant = product.variants.isEmpty
+        ? null
+        : _findSelectedVariant(
+            product,
+            selectedSize: sizes.isEmpty ? '' : sizes[currentSizeIndex],
+            selectedColor: colors.isEmpty ? '' : colors[currentColorIndex],
+          );
     final displayPrice = product.displayPrice;
     final price = NumberFormat.decimalPattern('vi_VN').format(displayPrice);
 
@@ -99,9 +98,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Center(child: Text('CHI TIẾT')),
-        actions: const [
-          IconButton(onPressed: null, icon: Icon(Icons.share_outlined)),
-        ],
       ),
       body: ListView(
         children: [
@@ -123,6 +119,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     : Image.network(
                         product.imageUrls.first,
                         fit: BoxFit.cover,
+                        webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                         errorBuilder: (context, error, stackTrace) =>
                             const Icon(
                               Icons.directions_run,
@@ -173,14 +170,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   style: AppTextStyles.display.copyWith(fontSize: 30),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                Text(
-                  product.description.isEmpty
-                      ? 'Sản phẩm thể thao hiệu năng cao, phù hợp cho tập luyện và sử dụng hằng ngày.'
-                      : product.description,
-                  style: AppTextStyles.body.copyWith(
-                    color: AppColors.textPrimary.withValues(alpha: 0.78),
+                if (product.description.isNotEmpty)
+                  Text(
+                    product.description,
+                    style: AppTextStyles.body.copyWith(
+                      color: AppColors.textPrimary.withValues(alpha: 0.78),
+                    ),
                   ),
-                ),
                 const SizedBox(height: AppSpacing.xl),
                 const Divider(),
                 const SizedBox(height: AppSpacing.lg),
@@ -192,15 +188,21 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                Row(
-                  children: List.generate(colors.length, (index) {
-                    return _ColorDot(
-                      color: _parseColor(colors[index]),
-                      selected: currentColorIndex == index,
-                      onTap: () => setState(() => selectedColor = index),
-                    );
-                  }),
-                ),
+                if (colors.isEmpty)
+                  const AppEmptyState(
+                    title: 'Chưa có màu sắc',
+                    message: 'Backend chưa trả về biến thể màu sắc.',
+                  )
+                else
+                  Row(
+                    children: List.generate(colors.length, (index) {
+                      return _ColorDot(
+                        color: _parseColor(colors[index]),
+                        selected: currentColorIndex == index,
+                        onTap: () => setState(() => selectedColor = index),
+                      );
+                    }),
+                  ),
                 const SizedBox(height: AppSpacing.xl),
                 Row(
                   children: [
@@ -222,32 +224,37 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: List.generate(sizes.length, (index) {
-                    return ChoiceChip(
-                      label: SizedBox(
-                        width: 48,
-                        child: Center(child: Text(sizes[index])),
-                      ),
-                      selected: currentSizeIndex == index,
-                      onSelected: (_) =>
-                          setState(() => selectedSizeIndex = index),
-                      selectedColor: AppColors.primary,
-                      labelStyle: TextStyle(
-                        color: currentSizeIndex == index
-                            ? Colors.white
-                            : AppColors.primary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    );
-                  }),
-                ),
+                if (sizes.isEmpty)
+                  const AppEmptyState(
+                    title: 'Chưa có size',
+                    message: 'Backend chưa trả về biến thể size.',
+                  )
+                else
+                  Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.sm,
+                    children: List.generate(sizes.length, (index) {
+                      return ChoiceChip(
+                        label: SizedBox(
+                          width: 48,
+                          child: Center(child: Text(sizes[index])),
+                        ),
+                        selected: currentSizeIndex == index,
+                        onSelected: (_) =>
+                            setState(() => selectedSizeIndex = index),
+                        selectedColor: AppColors.primary,
+                        labelStyle: TextStyle(
+                          color: currentSizeIndex == index
+                              ? Colors.white
+                              : AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      );
+                    }),
+                  ),
                 const SizedBox(height: AppSpacing.xl),
                 const _InfoTile(title: 'Chính sách vận chuyển'),
                 const _InfoTile(title: 'Chính sách đổi trả'),
-                const _InfoTile(title: 'Đánh giá (128)', trailing: '☆ 4.8'),
                 const SizedBox(height: 96),
               ],
             ),
@@ -268,7 +275,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   label: 'THÊM VÀO GIỎ',
                   variant: AppButtonVariant.outline,
                   isLoading: _isAddingToCart,
-                  onPressed: () => _addToCart(selectedVariant),
+                  onPressed: selectedVariant == null
+                      ? null
+                      : () => _addToCart(selectedVariant),
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -277,8 +286,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   label: 'MUA NGAY',
                   variant: AppButtonVariant.secondary,
                   isLoading: _isAddingToCart,
-                  onPressed: () =>
-                      _addToCart(selectedVariant, goToCheckout: true),
+                  onPressed: selectedVariant == null
+                      ? null
+                      : () => _addToCart(selectedVariant, goToCheckout: true),
                 ),
               ),
             ],
@@ -340,10 +350,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.toString())),
-      );
-      
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.toString())));
     } finally {
       if (mounted) {
         setState(() => _isAddingToCart = false);
@@ -411,10 +420,9 @@ class _ColorDot extends StatelessWidget {
 }
 
 class _InfoTile extends StatelessWidget {
-  const _InfoTile({required this.title, this.trailing});
+  const _InfoTile({required this.title});
 
   final String title;
-  final String? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -425,7 +433,7 @@ class _InfoTile extends StatelessWidget {
         style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700),
       ),
       trailing: Text(
-        trailing ?? '›',
+        '›',
         style: AppTextStyles.body.copyWith(color: AppColors.secondary),
       ),
     );

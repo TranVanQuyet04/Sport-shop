@@ -1,4 +1,6 @@
+import '../../model/admin/collection_model.dart';
 import '../../model/admin/admin_lookup_model.dart';
+import '../../model/common/backend_models.dart';
 import '../../model/customer/product_detail_model.dart';
 import '../../model/customer/product_summary_model.dart';
 import '../../service/admin/admin_catalog_service.dart';
@@ -103,6 +105,10 @@ class AdminCatalogRepositoryImpl implements AdminCatalogRepository {
       _adminCatalogService.getCategories();
 
   @override
+  Future<AdminCategoryModel> getCategoryDetail(String id) =>
+      _adminCatalogService.getCategoryDetail(id);
+
+  @override
   Future<AdminCategoryModel> createCategory({
     required String name,
     required String description,
@@ -176,6 +182,9 @@ class AdminCatalogRepositoryImpl implements AdminCatalogRepository {
   Future<List<AdminUserModel>> getUsers() => _adminCatalogService.getUsers();
 
   @override
+  Future<List<AdminRoleModel>> getRoles() => _adminCatalogService.getRoles();
+
+  @override
   Future<AdminUserModel> getUserDetail(String id) =>
       _adminCatalogService.getUserDetail(id);
 
@@ -217,4 +226,101 @@ class AdminCatalogRepositoryImpl implements AdminCatalogRepository {
 
   @override
   Future<void> deleteUser(String id) => _adminCatalogService.deleteUser(id);
+
+  @override
+  Future<List<SportModel>> getSports() => _adminCatalogService.getSports();
+
+  @override
+  Future<SportModel> getSportDetail(String id) =>
+      _adminCatalogService.getSportDetail(id);
+
+  @override
+  Future<SportModel> createSport({
+    required String name,
+    required String description,
+  }) {
+    return _adminCatalogService.createSport(
+      name: name,
+      description: description,
+    );
+  }
+
+  @override
+  Future<SportModel> updateSport({
+    required String id,
+    required String name,
+    required String description,
+  }) {
+    return _adminCatalogService.updateSport(
+      id: id,
+      name: name,
+      description: description,
+    );
+  }
+
+  @override
+  Future<void> deleteSport(String id) => _adminCatalogService.deleteSport(id);
+
+  @override
+  Future<List<CollectionModel>> getCollections() =>
+      _adminCatalogService.getCollections();
+
+  @override
+  Future<CollectionModel> createCollection({
+    required String name,
+    required String slug,
+    required String description,
+    required String imageUrl,
+    required String type,
+    required bool isActive,
+    String? startDate,
+    String? endDate,
+    required List<String> variantIds,
+  }) {
+    return _adminCatalogService.createCollection(
+      name: name,
+      slug: slug,
+      description: description,
+      imageUrl: imageUrl,
+      type: type,
+      isActive: isActive,
+      startDate: startDate,
+      endDate: endDate,
+      variantIds: variantIds,
+    );
+  }
+
+  @override
+  Future<void> deleteCollection(String id) =>
+      _adminCatalogService.deleteCollection(id);
+
+  @override
+  Future<Map<String, dynamic>> suggestProduct({
+    required String productName,
+    required String description,
+  }) {
+    return _adminCatalogService.suggestProduct(
+      productName: productName,
+      description: description,
+    );
+  }
+
+  @override
+  Future<ProductDetailModel> confirmProduct({
+    required String name,
+    required String description,
+    required String categoryName,
+    required String brandName,
+    required String sportName,
+    required List<Map<String, dynamic>> variants,
+  }) {
+    return _adminCatalogService.confirmProduct(
+      name: name,
+      description: description,
+      categoryName: categoryName,
+      brandName: brandName,
+      sportName: sportName,
+      variants: variants,
+    );
+  }
 }

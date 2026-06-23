@@ -31,6 +31,11 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
+  Future<List<ChatMessageModel>> getRoomMessages(String roomId) {
+    return _chatService.getRoomMessages(roomId);
+  }
+
+  @override
   Future<List<ChatMessageModel>> sendRoomMessage({
     required String roomId,
     required String content,

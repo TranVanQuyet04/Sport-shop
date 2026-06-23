@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thêm/Sửa địa chỉ - SPORTSWEAR</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .form-input-focus:focus-within {
+            border-color: #000000;
+            border-width: 2px;
+        }
+        .toggle-checkbox:checked {
+            right: 0;
+            background-color: #000000;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #e2e2e2;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#92001d",
+                        "primary-container": "#1b1b1b",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-container": "#eeeeee",
+                        "error-container": "#ffdad6",
+                        "on-background": "#1a1c1c",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#e51a38",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-surface": "#1a1c1c",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-tint": "#5e5e5e",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e2e2e2",
+                        "surface-variant": "#e2e2e2",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#e2e2e2",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "secondary": "#bb0027",
+                        "surface-dim": "#dadada",
+                        "primary": "#000000",
+                        "on-primary-fixed": "#1b1b1b",
+                        "tertiary-container": "#1a1c1c",
+                        "surface": "#f9f9f9",
+                        "outline": "#7e7576",
+                        "inverse-primary": "#c6c6c6",
+                        "secondary-fixed": "#ffdad8",
+                        "primary-fixed": "#e2e2e2",
+                        "on-secondary-container": "#fffbff",
+                        "on-tertiary-container": "#838484",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "inverse-surface": "#2f3131",
+                        "on-surface-variant": "#4c4546",
+                        "surface-bright": "#f9f9f9",
+                        "background": "#f9f9f9",
+                        "on-primary-fixed-variant": "#474747",
+                        "outline-variant": "#cfc4c5",
+                        "on-primary-container": "#848484",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#410007",
+                        "tertiary": "#000000"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "gutter-mobile": "12px",
+                        "margin-mobile": "16px",
+                        "base": "4px",
+                        "touch-target-min": "44px"
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-on-surface flex justify-between items-center px-margin-mobile h-14 w-full z-50 fixed top-0">
+<button class="flex items-center justify-center w-touch-target-min h-touch-target-min text-primary dark:text-inverse-primary active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black tracking-tighter text-primary dark:text-on-primary-fixed">ĐỊA CHỈ</h1>
+<button class="flex items-center justify-center w-touch-target-min h-touch-target-min text-on-surface-variant dark:text-outline active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-20 pb-24 px-margin-mobile">
+<div class="max-w-md mx-auto">
+<p class="font-title-md text-title-md mb-6">Thêm địa chỉ mới</p>
+<form class="space-y-4" id="address-form">
+<!-- Section: Contact Info -->
+<div class="space-y-4">
+<div class="relative">
+<label class="font-label-bold text-label-bold uppercase text-on-surface-variant mb-1 block">Họ và tên</label>
+<input class="w-full h-12 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 font-body-lg text-body-lg focus:border-primary focus:ring-0 transition-all" placeholder="Nhập họ tên người nhận" type="text"/>
+</div>
+<div class="relative">
+<label class="font-label-bold text-label-bold uppercase text-on-surface-variant mb-1 block">Số điện thoại</label>
+<input class="w-full h-12 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 font-body-lg text-body-lg focus:border-primary focus:ring-0 transition-all" placeholder="Nhập số điện thoại" type="tel"/>
+</div>
+</div>
+<!-- Divider -->
+<div class="h-px bg-outline-variant my-6"></div>
+<!-- Section: Location Info -->
+<div class="space-y-4">
+<div class="relative">
+<label class="font-label-bold text-label-bold uppercase text-on-surface-variant mb-1 block">Tỉnh / Thành phố</label>
+<div class="relative">
+<select class="w-full h-12 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 font-body-lg text-body-lg appearance-none focus:border-primary focus:ring-0 transition-all">
+<option disabled="" selected="" value="">Chọn Tỉnh / Thành phố</option>
+<option>Hà Nội</option>
+<option>TP. Hồ Chí Minh</option>
+<option>Đà Nẵng</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="relative">
+<label class="font-label-bold text-label-bold uppercase text-on-surface-variant mb-1 block">Quận / Huyện</label>
+<div class="relative">
+<select class="w-full h-12 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 font-body-lg text-body-lg appearance-none focus:border-primary focus:ring-0 transition-all">
+<option disabled="" selected="" value="">Chọn</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-sm" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="relative">
+<label class="font-label-bold text-label-bold uppercase text-on-surface-variant mb-1 block">Phường / Xã</label>
+<div class="relative">
+<select class="w-full h-12 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 font-body-lg text-body-lg appearance-none focus:border-primary focus:ring-0 transition-all">
+<option disabled="" selected="" value="">Chọn</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-sm" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<div class="relative">
+<label class="font-label-bold text-label-bold uppercase text-on-surface-variant mb-1 block">Địa chỉ chi tiết</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-4 font-body-lg text-body-lg focus:border-primary focus:ring-0 transition-all resize-none" placeholder="Số nhà, tên đường, tòa nhà..." rows="3"></textarea>
+</div>
+</div>
+<!-- Settings: Default Toggle -->
+<div class="flex items-center justify-between py-4 mt-4 bg-surface-container-low px-4 rounded-xl">
+<div>
+<p class="font-button text-button text-primary">Đặt làm địa chỉ mặc định</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Sử dụng địa chỉ này cho các đơn hàng sau</p>
+</div>
+<label class="inline-flex relative items-center cursor-pointer" for="toggle-default">
+<input class="sr-only peer" id="toggle-default" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<!-- Action Button -->
+<div class="pt-8">
+<button class="w-full h-touch-target-min bg-secondary text-on-secondary font-button text-button rounded-full shadow-lg active:scale-95 transition-all duration-200 uppercase tracking-widest" type="button">
+                        Lưu địa chỉ
+                    </button>
+</div>
+</form>
+</div>
+</main>
+<!-- Map Preview Placeholder (Bento Style) -->
+<section class="px-margin-mobile mb-24 max-w-md mx-auto">
+<div class="relative h-48 w-full rounded-2xl overflow-hidden shadow-sm group">
+<img alt="Bản đồ vị trí" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A clean, minimalist vector map illustration of an urban metropolitan area. The map uses a sophisticated monochromatic palette with deep blacks and cool grays, featuring sharp lines for streets and blocks. High-key lighting creates a modern and professional aesthetic, while a single vibrant red pin drops on a specific location to indicate focus. The overall mood is high-performance, technical, and urgent." data-location="Ho Chi Minh City" src="https://lh3.googleusercontent.com/aida/AP1WRLvCU8aHRDn3PtMjtWu4baxzloE5GdyNhyFPw-gpSsELeUFcUapWQAO5ULROMSy0wKKjfV5bs_Giwvw_hppUdhCXaBryUmWyDDvQpOZ22SbCzsvSKHffN2zeNa3X8af0YqDKp8Q4mNKHa7BtfgCKqZKYpyWn13ANi65dxjJ5N-ALz0d-Q54LdDOxKTUptKqAauM24Zht0M8vHup_RzTP4TUENn9_PnoMVE0rXGQUh9PwyIP2Q7wuy3BnTQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+<div class="absolute bottom-4 left-4 flex items-center bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm">
+<span class="material-symbols-outlined text-secondary text-sm mr-2" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="font-label-bold text-label-bold text-primary">Xem trên bản đồ</span>
+</div>
+</div>
+</section>
+<!-- Bottom Navigation Shell (Omitted as per Destination Rule for Task-Focused pages, but providing for context of shared component logic if this were a main tab) -->
+<!-- Not rendered here because this is a specific sub-page/form journey -->
+<script>
+        // Micro-interactions for form feedback
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('focus', () => {
+                element.parentElement.classList.add('scale-[1.01]');
+            });
+            element.addEventListener('blur', () => {
+                element.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Simple button active state visual
+        const saveBtn = document.querySelector('button[type="button"]');
+        saveBtn.addEventListener('click', function() {
+            this.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span>';
+            setTimeout(() => {
+                this.innerHTML = 'Lưu thành công';
+                this.classList.replace('bg-secondary', 'bg-primary');
+            }, 1000);
+        });
+    </script>
+</body></html>

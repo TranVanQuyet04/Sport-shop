@@ -1,3 +1,5 @@
+import '../../core/auth/role_mapper.dart';
+
 class ProfileModel {
   const ProfileModel({
     required this.id,
@@ -21,10 +23,10 @@ class ProfileModel {
         : json;
     return ProfileModel(
       id: (source['id'] ?? '').toString(),
-      fullName: (source['fullName'] ?? 'Khách hàng Sportshop').toString(),
+      fullName: (source['fullName'] ?? '').toString(),
       email: (source['email'] ?? '').toString(),
       phoneNumber: (source['phoneNumber'] ?? '').toString(),
-      roleName: (source['roleName'] ?? '').toString(),
+      roleName: RoleMapper.normalize((source['roleName'] ?? '').toString()),
       status: source['status'] != false,
     );
   }

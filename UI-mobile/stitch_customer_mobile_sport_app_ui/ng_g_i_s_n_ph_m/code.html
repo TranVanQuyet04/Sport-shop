@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "tertiary-fixed-dim": "#c6c6c7",
+                "surface-container": "#eeeeee",
+                "outline": "#7e7576",
+                "on-primary": "#ffffff",
+                "tertiary": "#000000",
+                "on-tertiary-container": "#838484",
+                "on-primary-container": "#848484",
+                "background": "#f9f9f9",
+                "surface-container-high": "#e8e8e8",
+                "on-tertiary-fixed-variant": "#454747",
+                "inverse-surface": "#2f3131",
+                "primary": "#000000",
+                "outline-variant": "#cfc4c5",
+                "on-primary-fixed": "#1b1b1b",
+                "on-secondary-container": "#fffbff",
+                "primary-fixed-dim": "#c6c6c6",
+                "on-secondary-fixed-variant": "#92001d",
+                "error": "#ba1a1a",
+                "on-tertiary": "#ffffff",
+                "secondary-fixed": "#ffdad8",
+                "inverse-on-surface": "#f1f1f1",
+                "tertiary-container": "#1a1c1c",
+                "surface-container-lowest": "#ffffff",
+                "surface": "#f9f9f9",
+                "on-tertiary-fixed": "#1a1c1c",
+                "surface-dim": "#dadada",
+                "primary-fixed": "#e2e2e2",
+                "on-surface": "#1a1c1c",
+                "on-error-container": "#93000a",
+                "secondary-container": "#e51a38",
+                "on-secondary-fixed": "#410007",
+                "surface-variant": "#e2e2e2",
+                "on-secondary": "#ffffff",
+                "primary-container": "#1b1b1b",
+                "on-primary-fixed-variant": "#474747",
+                "surface-bright": "#f9f9f9",
+                "secondary": "#bb0027",
+                "surface-container-low": "#f3f3f3",
+                "error-container": "#ffdad6",
+                "on-background": "#1a1c1c",
+                "surface-container-highest": "#e2e2e2",
+                "on-error": "#ffffff",
+                "inverse-primary": "#c6c6c6",
+                "surface-tint": "#5e5e5e",
+                "secondary-fixed-dim": "#ffb3b1",
+                "tertiary-fixed": "#e2e2e2",
+                "on-surface-variant": "#4c4546"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "section-gap": "32px",
+                "gutter-mobile": "12px",
+                "margin-mobile": "16px",
+                "touch-target-min": "44px",
+                "base": "4px"
+            },
+            "fontFamily": {
+                "body-sm": ["Inter"],
+                "body-lg": ["Inter"],
+                "button": ["Inter"],
+                "title-md": ["Inter"],
+                "headline-lg-mobile": ["Inter"],
+                "headline-lg": ["Inter"],
+                "label-bold": ["Inter"],
+                "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .checklist-item.checked {
+            opacity: 0.6;
+            background-color: #f3f3f3;
+        }
+        .custom-checkbox:checked + label .check-icon {
+            display: block;
+        }
+        .hidden-checkbox:checked ~ .item-card {
+            border-color: #000000;
+            background-color: #f9f9f9;
+        }
+        .hidden-checkbox:checked ~ .item-card .status-indicator {
+            background-color: #000000;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-container-low w-full top-0 sticky flex items-center justify-between px-margin-mobile h-touch-target-min border-b border-outline-variant dark:border-outline z-50">
+<div class="flex items-center gap-2">
+<button class="hover:opacity-80 transition-opacity active:scale-95 duration-100">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-display-lg text-[24px] font-extrabold tracking-tighter text-primary dark:text-primary-fixed uppercase">APEX VELOCITY</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</div>
+</header>
+<main class="px-margin-mobile pt-6 max-w-2xl mx-auto">
+<!-- Order Header Info -->
+<section class="mb-section-gap">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="font-label-bold text-label-bold text-outline uppercase tracking-wider">ĐƠN HÀNG #AV-98421</p>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mt-1">Chi tiết đóng gói</h2>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary font-label-bold text-label-bold rounded-full">CONFIRMED</span>
+</div>
+<!-- Customer Note -->
+<div class="mt-4 p-4 bg-surface-container-low rounded-xl border-l-4 border-secondary">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">priority_high</span>
+<span class="font-label-bold text-label-bold text-secondary">GHI CHÚ KHÁCH HÀNG</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">"Vui lòng bọc kỹ phần hộp giày, tôi mua làm quà tặng. Cảm ơn shop!" - <span class="font-bold">Trần Hoàng Long</span></p>
+</div>
+</section>
+<!-- Packing Checklist -->
+<section class="space-y-4">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-title-md text-title-md">Danh sách sản phẩm (3)</h3>
+<span class="font-label-bold text-label-bold text-outline" id="progress-text">0/3 ĐÃ SOẠN</span>
+</div>
+<!-- Item 1 -->
+<div class="relative group">
+<input class="hidden-checkbox hidden peer" id="item-1" onchange="updateProgress()" type="checkbox"/>
+<label class="item-card flex items-center p-3 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition-all cursor-pointer hover:border-primary peer-checked:bg-surface-container-low" for="item-1">
+<div class="w-20 h-20 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A high-performance professional running shoe in vibrant red and black, set against a clean studio background. The lighting is crisp and high-contrast, emphasizing the sleek textures of the athletic gear. This shot embodies the powerful and urgent aesthetic of the Apex Velocity brand, using a monochromatic base with aggressive red accents for a modern sports feel." src="https://lh3.googleusercontent.com/aida/AP1WRLuy7RGOUkgUpcdrZVnoZoUSh1OjxinMZ6jxqpki0BBwoN10QaClWg1mbZizVzCtGlTDDcOAEh2rIk5VS6oiFPZBVJ2O92Svbo0_gmtc4BvWcobvlM-9N8Cb6nef8QB4-Fy3nnw77s8FMI-oS__OUa5IBu4uFtIjzgIKFfO5foKXXyXM7i-Mjyfq8167WKCFKxGadoq9ghDbuQYGnPbeJRShFx3IavdSnz6iQx6xTb_se1gLZifZ26olTW8"/>
+</div>
+<div class="ml-4 flex-grow">
+<h4 class="font-button text-button text-primary leading-tight">Pro-Swift Elite Runner</h4>
+<div class="flex gap-3 mt-1">
+<p class="font-body-sm text-body-sm text-on-surface-variant">Size: <span class="text-primary font-bold">42</span></p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Màu: <span class="text-primary font-bold">Crimson</span></p>
+</div>
+<p class="font-label-bold text-label-bold text-secondary mt-1">SL: 01</p>
+</div>
+<div class="status-indicator w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center transition-colors peer-checked:bg-primary">
+<span class="material-symbols-outlined text-white text-lg opacity-0 peer-checked:opacity-100">check</span>
+</div>
+</label>
+</div>
+<!-- Item 2 -->
+<div class="relative group">
+<input class="hidden-checkbox hidden peer" id="item-2" onchange="updateProgress()" type="checkbox"/>
+<label class="item-card flex items-center p-3 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition-all cursor-pointer hover:border-primary peer-checked:bg-surface-container-low" for="item-2">
+<div class="w-20 h-20 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Premium technical compression t-shirt in deep obsidian black, displayed in a high-key lighting environment. The fabric has a visible high-tech mesh texture that looks breathable and durable. The image maintains a minimalist yet professional look consistent with high-end sports apparel e-commerce, focusing on structural integrity and clarity." src="https://lh3.googleusercontent.com/aida/AP1WRLuf1ZBqz7RSD0odCBARgqUQByV4d-umQ5tL-HNtzfuQ7QwO154CVybB2TENvLmQbmfezx22pzNIYVng1Nw2Ljhdh54NEDsgm4viVmObMNF868QLI1RGmA2vyNJ9Rsyl7okFR8x1E5irx2-WX7DiJyRYa6ZkaYBQWyJMyyO-YAm1SpS7pwU4MuXG4EU7F4YuudkchDCHIBsam-gLt32M9raHz735ky3Cy6zIi2wbZN8ksCIie70XC7M2dD0"/>
+</div>
+<div class="ml-4 flex-grow">
+<h4 class="font-button text-button text-primary leading-tight">Aero-Dry Training Tee</h4>
+<div class="flex gap-3 mt-1">
+<p class="font-body-sm text-body-sm text-on-surface-variant">Size: <span class="text-primary font-bold">L</span></p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Màu: <span class="text-primary font-bold">Black</span></p>
+</div>
+<p class="font-label-bold text-label-bold text-secondary mt-1">SL: 02</p>
+</div>
+<div class="status-indicator w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-white text-lg opacity-0">check</span>
+</div>
+</label>
+</div>
+<!-- Item 3 -->
+<div class="relative group">
+<input class="hidden-checkbox hidden peer" id="item-3" onchange="updateProgress()" type="checkbox"/>
+<label class="item-card flex items-center p-3 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition-all cursor-pointer hover:border-primary peer-checked:bg-surface-container-low" for="item-3">
+<div class="w-20 h-20 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Elite performance athletic shorts in charcoal gray, featuring reinforced stitching and a sleek, modern cut. The product is presented on a neutral light gray background with subtle ambient shadows for depth. The aesthetic is clean and high-performance, emphasizing discipline and reliable athletic gear through professional product photography." src="https://lh3.googleusercontent.com/aida/AP1WRLuf2oKEYWwnsDCtwUmzi4pQW63gqn8Fklxaga59yVJFrHTloGrHZpnLhc6hkdGcKqBSlsDF01PI06i9tevvwlv23ieoCSttIfol1cBCrQsDWDy7dEGIk_iXCiOszH4WJIId-1Dv5uObh3sZnnMGlbQAIHjLgmxk6Temky6k9oZgPUPhjpZi-uHpz0qSNkUjSVY5WxiPbdcsOLYYu_Wh6rNUNZX8-J8HvfjkeBzCeoj5eO_5XdYrIzu8tIA"/>
+</div>
+<div class="ml-4 flex-grow">
+<h4 class="font-button text-button text-primary leading-tight">Velocity Tech Shorts</h4>
+<div class="flex gap-3 mt-1">
+<p class="font-body-sm text-body-sm text-on-surface-variant">Size: <span class="text-primary font-bold">XL</span></p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Màu: <span class="text-primary font-bold">Charcoal</span></p>
+</div>
+<p class="font-label-bold text-label-bold text-secondary mt-1">SL: 01</p>
+</div>
+<div class="status-indicator w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-white text-lg opacity-0">check</span>
+</div>
+</label>
+</div>
+</section>
+<!-- Packing Instructions -->
+<section class="mt-section-gap mb-8">
+<h3 class="font-title-md text-title-md mb-4">Hướng dẫn đóng gói</h3>
+<div class="grid grid-cols-2 gap-3">
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-primary mb-2">inventory_2</span>
+<p class="font-label-bold text-label-bold">Hộp Size M</p>
+</div>
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-primary mb-2">branding_watermark</span>
+<p class="font-label-bold text-label-bold">Dán 2 Tem Seal</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full bg-surface dark:bg-surface-container-lowest p-gutter-mobile shadow-[0_-4px_12px_rgba(0,0,0,0.08)] z-50">
+<div class="max-w-2xl mx-auto">
+<div class="w-full h-1 bg-surface-container-high rounded-full mb-4 overflow-hidden" id="packing-progress-bar">
+<div class="h-full bg-secondary transition-all duration-500 w-0" id="progress-fill"></div>
+</div>
+<button class="w-full h-14 bg-outline text-white font-button text-button rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" disabled="" id="complete-btn">
+<span class="material-symbols-outlined">package_2</span>
+                HOÀN TẤT ĐÓNG GÓI
+            </button>
+</div>
+</div>
+<!-- Success Modal (Hidden) -->
+<div class="fixed inset-0 bg-primary/40 backdrop-blur-sm z-[100] flex items-center justify-center hidden p-margin-mobile" id="success-modal">
+<div class="bg-surface-container-lowest p-8 rounded-3xl w-full max-w-sm text-center shadow-2xl">
+<div class="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-2">Đã hoàn tất!</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8">Trạng thái đơn hàng #AV-98421 đã được cập nhật thành PACKING.</p>
+<button class="w-full h-12 bg-primary text-white font-button text-button rounded-xl hover:bg-opacity-90 transition-all" onclick="closeModal()">
+                Tiếp tục đơn tiếp theo
+            </button>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-gutter-mobile py-2 bg-surface dark:bg-surface-container-lowest md:hidden hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-opacity">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-opacity">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-bold text-label-bold">Catalog</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary dark:text-secondary-container bg-surface-container-high dark:bg-surface-container rounded-lg p-2 transition-opacity">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label-bold text-label-bold">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-opacity">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-bold text-label-bold">Staff</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-opacity">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</div>
+</nav>
+<script>
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.hidden-checkbox');
+            const checkedCount = Array.from(checkboxes).filter(c => c.checked).length;
+            const total = checkboxes.length;
+            const progress = (checkedCount / total) * 100;
+            
+            // Update Progress Text
+            document.getElementById('progress-text').textContent = `${checkedCount}/${total} ĐÃ SOẠN`;
+            
+            // Update Progress Bar
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+            
+            // Update Button
+            const btn = document.getElementById('complete-btn');
+            if (checkedCount === total) {
+                btn.disabled = false;
+                btn.classList.remove('bg-outline');
+                btn.classList.add('bg-secondary');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('bg-outline');
+                btn.classList.remove('bg-secondary');
+            }
+        }
+
+        document.getElementById('complete-btn').addEventListener('click', function() {
+            document.getElementById('success-modal').classList.remove('hidden');
+        });
+
+        function closeModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+            // Mock navigation back
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Reset state
+            document.querySelectorAll('.hidden-checkbox').forEach(c => c.checked = false);
+            updateProgress();
+        }
+    </script>
+</body></html>

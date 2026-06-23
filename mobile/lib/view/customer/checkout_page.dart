@@ -27,6 +27,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   late final CheckoutController _controller = CheckoutController(
     cartRepository: AppDependencies.instance.cartRepository,
     checkoutRepository: AppDependencies.instance.checkoutRepository,
+    paymentRepository: AppDependencies.instance.paymentRepository,
   );
 
   @override
@@ -226,7 +227,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
       return;
     }
     if (success) {
-      context.go(AppRoutes.orderSuccess);
+      context.go(
+        AppRoutes.orderSuccess,
+        extra: {
+          'order': _controller.createdOrder,
+          'paymentUrl': _controller.paymentUrl,
+        },
+      );
       return;
     }
     ScaffoldMessenger.of(context).showSnackBar(
@@ -451,6 +458,7 @@ class _CheckoutItem extends StatelessWidget {
                 : Image.network(
                     item.imageUrl,
                     fit: BoxFit.cover,
+                    webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                     errorBuilder: (context, error, stackTrace) {
                       return const Icon(
                         Icons.directions_run,

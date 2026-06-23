@@ -25,6 +25,16 @@ abstract interface class AuthService {
     required String newPassword,
     required String confirmPassword,
   });
+
+  Future<AuthSessionModel> refreshToken(String refreshToken);
+
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String confirmPassword,
+  });
+
+  Future<void> logout();
 }
 
 class AuthApiService implements AuthService {
@@ -91,5 +101,35 @@ class AuthApiService implements AuthService {
         'confirmPassword': confirmPassword,
       },
     );
+  }
+
+  @override
+  Future<AuthSessionModel> refreshToken(String refreshToken) async {
+    final json = await _apiClient.postJson(
+      ApiEndpoints.refreshToken,
+      data: {'refreshToken': refreshToken},
+    );
+    return AuthSessionModel.fromJson(json);
+  }
+
+  @override
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    await _apiClient.putJson(
+      ApiEndpoints.changePassword,
+      data: {
+        'oldPassword': oldPassword,
+        'newPassword': newPassword,
+        'confirmPassword': confirmPassword,
+      },
+    );
+  }
+
+  @override
+  Future<void> logout() async {
+    await _apiClient.postJson(ApiEndpoints.logout);
   }
 }

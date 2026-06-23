@@ -13,6 +13,8 @@ abstract interface class ChatService {
 
   Future<List<ChatRoomModel>> getMyRooms(String customerName);
 
+  Future<List<ChatMessageModel>> getRoomMessages(String roomId);
+
   Future<List<ChatMessageModel>> sendRoomMessage({
     required String roomId,
     required String content,
@@ -65,6 +67,12 @@ class ChatApiService implements ChatService {
   }
 
   @override
+  Future<List<ChatMessageModel>> getRoomMessages(String roomId) async {
+    final json = await _apiClient.getJson('/chat/rooms/$roomId/messages');
+    return _parseMessages(json);
+  }
+
+  @override
   Future<List<ChatMessageModel>> sendRoomMessage({
     required String roomId,
     required String content,
@@ -78,12 +86,7 @@ class ChatApiService implements ChatService {
     if (rawItems is! List) {
       return const [];
     }
-    return rawItems
-        .whereType<Map>()
-        .map(
-          (item) => ChatMessageModel.fromJson(Map<String, dynamic>.from(item)),
-        )
-        .toList();
+    return _parseMessages(json);
   }
 
   List<ChatRoomModel> _parseRooms(Map<String, dynamic> json) {
@@ -94,6 +97,19 @@ class ChatApiService implements ChatService {
     return rawItems
         .whereType<Map>()
         .map((item) => ChatRoomModel.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+
+  List<ChatMessageModel> _parseMessages(Map<String, dynamic> json) {
+    final rawItems = json['result'] ?? json['data'] ?? json;
+    if (rawItems is! List) {
+      return const [];
+    }
+    return rawItems
+        .whereType<Map>()
+        .map(
+          (item) => ChatMessageModel.fromJson(Map<String, dynamic>.from(item)),
+        )
         .toList();
   }
 }

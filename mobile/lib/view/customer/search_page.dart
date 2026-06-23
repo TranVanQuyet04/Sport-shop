@@ -59,7 +59,7 @@ class _SearchPageState extends State<SearchPage> {
     }).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Tim kiem')),
+      appBar: AppBar(title: const Text('Tìm kiếm')),
       body: RefreshIndicator(
         onRefresh: _controller.loadHome,
         child: ListView(
@@ -67,8 +67,8 @@ class _SearchPageState extends State<SearchPage> {
           padding: const EdgeInsets.all(AppSpacing.lg),
           children: [
             AppTextField(
-              label: 'Tu khoa',
-              hintText: 'Tim giay, ao, phu kien...',
+              label: 'Từ khóa',
+              hintText: 'Tìm giày, áo, phụ kiện...',
               prefixIcon: Icons.search,
               suffixIcon: Icons.tune,
               textInputAction: TextInputAction.search,
@@ -80,17 +80,17 @@ class _SearchPageState extends State<SearchPage> {
               child: TextButton.icon(
                 onPressed: () => _showFilterSheet(context),
                 icon: const Icon(Icons.tune),
-                label: const Text('Bo loc nang cao'),
+                label: const Text('Bộ lọc nâng cao'),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
             Row(
               children: [
                 Expanded(
-                  child: Text('Goi y cho ban', style: AppTextStyles.title),
+                  child: Text('Gợi ý cho bạn', style: AppTextStyles.title),
                 ),
                 Text(
-                  '${products.length} san pham',
+                  '${products.length} sản phẩm',
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -99,17 +99,17 @@ class _SearchPageState extends State<SearchPage> {
             ),
             const SizedBox(height: AppSpacing.md),
             if (_controller.isLoading && products.isEmpty)
-              const AppLoadingState(title: 'Dang tai san pham')
+              const AppLoadingState(title: 'Đang tải sản phẩm')
             else if (_controller.errorMessage != null && products.isEmpty)
               AppErrorState(
-                title: 'Khong tai duoc san pham',
+                title: 'Không tải được sản phẩm',
                 message: _controller.errorMessage!,
                 onAction: _controller.loadHome,
               )
             else if (products.isEmpty)
               const AppEmptyState(
-                title: 'Khong co san pham',
-                message: 'Thu doi tu khoa tim kiem hoac tai lai danh sach.',
+                title: 'Không có sản phẩm',
+                message: 'Thử đổi từ khóa tìm kiếm hoặc tải lại danh sách.',
               )
             else
               GridView.builder(
@@ -136,15 +136,15 @@ class _SearchPageState extends State<SearchPage> {
   void _showFilterSheet(BuildContext context) {
     showAppBottomSheet<void>(
       context: context,
-      title: 'Bo loc san pham',
-      subtitle: 'Loc tren danh sach san pham lay truc tiep tu backend.',
+      title: 'Bộ lọc sản phẩm',
+      subtitle: 'Lọc trên danh sách sản phẩm lấy trực tiếp từ backend.',
       child: const _FilterContent(),
       actions: [
         Row(
           children: [
             Expanded(
               child: AppButton(
-                label: 'Dat lai',
+                label: 'Đặt lại',
                 variant: AppButtonVariant.outline,
                 onPressed: () => Navigator.pop(context),
               ),
@@ -152,7 +152,7 @@ class _SearchPageState extends State<SearchPage> {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: AppButton(
-                label: 'Ap dung',
+                label: 'Áp dụng',
                 variant: AppButtonVariant.secondary,
                 onPressed: () => Navigator.pop(context),
               ),
@@ -172,7 +172,7 @@ class _FilterContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Thuong hieu', style: AppTextStyles.subtitle),
+        Text('Thương hiệu', style: AppTextStyles.subtitle),
         const SizedBox(height: AppSpacing.md),
         const Wrap(
           spacing: AppSpacing.sm,
@@ -183,7 +183,7 @@ class _FilterContent extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.xl),
-        Text('Mon the thao', style: AppTextStyles.subtitle),
+        Text('Môn thể thao', style: AppTextStyles.subtitle),
         const SizedBox(height: AppSpacing.md),
         const Wrap(
           spacing: AppSpacing.sm,

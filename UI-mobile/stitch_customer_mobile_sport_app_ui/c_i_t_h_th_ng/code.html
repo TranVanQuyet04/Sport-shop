@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-press:active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease-out;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+            background-color: #f9f9f9;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "on-secondary-container": "#fffbff",
+                      "surface-dim": "#dadada",
+                      "secondary-fixed": "#ffdad8",
+                      "on-error-container": "#93000a",
+                      "primary-fixed": "#e2e2e2",
+                      "inverse-surface": "#2f3131",
+                      "surface-bright": "#f9f9f9",
+                      "inverse-primary": "#c6c6c6",
+                      "background": "#f9f9f9",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "surface-container-low": "#f3f3f3",
+                      "primary-container": "#1b1b1b",
+                      "on-surface": "#1a1c1c",
+                      "tertiary-container": "#1a1c1c",
+                      "surface-container-high": "#e8e8e8",
+                      "secondary-fixed-dim": "#ffb3b1",
+                      "secondary-container": "#e51a38",
+                      "tertiary": "#000000",
+                      "surface-tint": "#5e5e5e",
+                      "outline-variant": "#cfc4c5",
+                      "surface-variant": "#e2e2e2",
+                      "outline": "#7e7576",
+                      "on-secondary-fixed": "#410007",
+                      "surface-container-highest": "#e2e2e2",
+                      "secondary": "#bb0027",
+                      "on-secondary-fixed-variant": "#92001d",
+                      "surface-container": "#eeeeee",
+                      "primary-fixed-dim": "#c6c6c6",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-fixed": "#1b1b1b",
+                      "on-primary-container": "#848484",
+                      "error": "#ba1a1a",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-secondary": "#ffffff",
+                      "on-background": "#1a1c1c",
+                      "on-tertiary-container": "#838484",
+                      "error-container": "#ffdad6",
+                      "on-error": "#ffffff",
+                      "on-surface-variant": "#4c4546",
+                      "on-primary": "#ffffff",
+                      "surface": "#f9f9f9",
+                      "primary": "#000000",
+                      "inverse-on-surface": "#f1f1f1",
+                      "on-primary-fixed-variant": "#474747",
+                      "tertiary-fixed": "#e2e2e2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-gap": "32px",
+                      "gutter-mobile": "12px",
+                      "touch-target-min": "44px",
+                      "base": "4px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "button": ["Inter"],
+                      "title-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "label-bold": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a fitness coach with a focused and confident expression, set against a clean, minimal white studio background. The lighting is high-key and modern, emphasizing a professional high-performance sports brand aesthetic. The color palette is strictly monochrome with sharp details, reflecting a modern administrative interface style." src="https://lh3.googleusercontent.com/aida/AP1WRLt2BGiP7G6rVnR96QzaLT3dLhnRht16cmBCgfb-cv1_n5fXGidQFbXbXtzjxdlLrjV61BRENjdjVEJcn6L0dPYNiPAjxo-C1ymNIWHGnwqyzL6MHMR-y0jPY_FoyQyxYl6djySgLOjVjq94Xhx8GPl7TToWNLYzVwRLBroqaBFyLQfVP6qVe0MZCfzHexM-2W63lGgNUpf-nNfKiyOk4ewTyl90t08eSkybiCNAcvmaTFnr6wY5qbw5-tY"/>
+</div>
+<h1 class="text-title-md font-title-md font-bold text-primary">Admin Dashboard</h1>
+</div>
+<button class="material-symbols-outlined text-primary hover:opacity-80 active:scale-95 transition-transform duration-150">notifications</button>
+</header>
+<!-- Content Canvas -->
+<main class="px-margin-mobile mt-6">
+<!-- Hero Profile Section -->
+<section class="mb-section-gap">
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_24px_-12px_rgba(0,0,0,0.04)] flex flex-col items-center text-center">
+<div class="relative group">
+<div class="w-24 h-24 rounded-full border-2 border-secondary overflow-hidden mb-4 active-press cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="A close-up portrait of a male administrative lead in a high-performance sportswear brand environment. He is wearing a sleek black technical polo shirt. The background is a blurred, high-contrast modern office with minimalist lighting. The overall mood is powerful and urgent, featuring a clean white and deep black palette with professional photographic quality." src="https://lh3.googleusercontent.com/aida/AP1WRLuc37m4l9LpSKfIRs3nUpxMsEWU9bwSyi4p1dam4yckBVYBVIFxOkcRHNTo-6FwIkfnJ_DB1gtE9E-HT3QyEeTdsiZ4FCYS24ezcftB2KM1a_DI3QUf_r5errxYuFeG9IIftmw26X4cBTuhmpxsAmJeLxAWRPdR0y7SXnXFg5tBRdzNG85GpHBLJ9umhCtlDfp2a0yJpIXBNwaeUAhxMMWB_Tv67pXFV0hXHDQZku_UgB9BxFsjkyJumMY"/>
+</div>
+<div class="absolute bottom-4 right-0 bg-secondary text-on-secondary p-1 rounded-full border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-sm block">edit</span>
+</div>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">Trần Anh Tuấn</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">admin.tuan@sportswear.vn</p>
+<div class="mt-4 inline-flex items-center gap-2 bg-primary px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-on-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-label-bold font-label-bold text-on-primary">QUẢN TRỊ VIÊN CAO CẤP</span>
+</div>
+</div>
+</section>
+<!-- Menu List -->
+<section class="space-y-4">
+<h3 class="text-label-bold font-label-bold text-on-surface-variant px-1 uppercase tracking-widest">Cài đặt hệ thống</h3>
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden divide-y divide-outline-variant shadow-[0_12px_24px_-12px_rgba(0,0,0,0.04)]">
+<!-- Item: Personal Info -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-container transition-colors active:bg-surface-container-high text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<span class="font-button text-button">Thông tin cá nhân</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<!-- Item: Change Password -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-container transition-colors active:bg-surface-container-high text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">lock</span>
+</div>
+<span class="font-button text-button">Đổi mật khẩu</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<!-- Item: Notifications -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-container transition-colors active:bg-surface-container-high text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">notifications_active</span>
+</div>
+<span class="font-button text-button">Cài đặt thông báo</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<!-- Item: Language -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-container transition-colors active:bg-surface-container-high text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">language</span>
+</div>
+<div class="flex flex-col">
+<span class="font-button text-button">Ngôn ngữ</span>
+<span class="text-label-bold font-label-bold text-secondary">Tiếng Việt</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Logout Button -->
+<section class="mt-12 mb-8">
+<button class="w-full bg-secondary text-on-secondary h-14 rounded-xl font-button text-button flex items-center justify-center gap-2 active:scale-[0.97] transition-all shadow-lg shadow-secondary/20">
+<span class="material-symbols-outlined">logout</span>
+<span>Đăng xuất</span>
+</button>
+<p class="text-center mt-6 text-label-bold font-label-bold text-outline uppercase tracking-tighter opacity-50">
+                Version 4.2.0-Alpha
+            </p>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter-mobile pb-safe h-16 bg-surface-container-lowest border-t border-outline-variant shadow-sm rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-bold font-label-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-label-bold font-label-bold">Catalog</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-label-bold font-label-bold">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-label-bold font-label-bold">Staff</span>
+</a>
+<!-- Active Tab: Settings (Thiết lập Admin) -->
+<a class="flex flex-col items-center justify-center text-secondary font-bold active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="text-label-bold font-label-bold">Settings</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for menu items
+        document.querySelectorAll('button.w-full').forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                btn.style.opacity = '0.7';
+            });
+            btn.addEventListener('touchend', () => {
+                btn.style.opacity = '1';
+            });
+        });
+    </script>
+</body></html>

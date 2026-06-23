@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "tertiary-fixed": "#e2e2e2",
+                    "secondary": "#bb0027",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-secondary-container": "#fffbff",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-surface": "#1a1c1c",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#ffdad8",
+                    "error": "#ba1a1a",
+                    "on-primary-container": "#848484",
+                    "outline-variant": "#cfc4c5",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#eeeeee",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#e2e2e2",
+                    "on-background": "#1a1c1c",
+                    "surface-bright": "#f9f9f9",
+                    "secondary-container": "#e51a38",
+                    "on-primary-fixed-variant": "#474747",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#7e7576",
+                    "on-primary-fixed": "#1b1b1b",
+                    "on-surface-variant": "#4c4546",
+                    "surface": "#f9f9f9",
+                    "inverse-on-surface": "#f1f1f1",
+                    "surface-dim": "#dadada",
+                    "tertiary-container": "#1a1c1c",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-highest": "#e2e2e2",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "tertiary": "#000000",
+                    "on-secondary-fixed-variant": "#92001d",
+                    "on-secondary-fixed": "#410007",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-container-low": "#f3f3f3",
+                    "on-tertiary-container": "#838484",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#5e5e5e",
+                    "background": "#f9f9f9",
+                    "primary-container": "#1b1b1b",
+                    "inverse-surface": "#2f3131",
+                    "inverse-primary": "#c6c6c6",
+                    "primary": "#000000"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter-mobile": "12px",
+                    "base": "4px",
+                    "section-gap": "32px",
+                    "touch-target-min": "44px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "button": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "title-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .success-animation {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .bg-mesh {
+            background-color: #f9f9f9;
+            background-image: radial-gradient(at 0% 0%, rgba(227, 24, 55, 0.03) 0, transparent 50%), 
+                              radial-gradient(at 100% 100%, rgba(0, 0, 0, 0.02) 0, transparent 50%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-mesh min-h-screen font-body-sm text-on-surface flex flex-col overflow-x-hidden">
+<!-- TopAppBar: Predicted Component from JSON - Applied with manual logic for Forgot Password Context -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-touch-target-min bg-surface shadow-sm">
+<button class="flex items-center justify-center w-10 h-10 active:bg-surface-container-low transition-colors active:scale-95 duration-200" onclick="window.history.back()">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black italic tracking-tighter text-primary">APEX VELOCITY</h1>
+<div class="w-10"></div> <!-- Spacer for symmetry -->
+</header>
+<main class="flex-1 mt-16 px-margin-mobile flex flex-col items-center pt-section-gap">
+<!-- Illustration Section -->
+<div class="w-full flex justify-center mb-8">
+<div class="relative w-48 h-48 bg-surface-container-low rounded-full flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 bg-secondary/5 animate-pulse"></div>
+<img alt="Password Recovery Illustration" class="w-32 h-32 object-contain mix-blend-multiply opacity-80" data-alt="A clean, minimalist vector illustration of a digital security shield with a keyhole in the center, rendered in high-performance athletic styling. The color palette consists of sharp blacks, pristine whites, and a single striking accent of high-contrast red. The lighting is crisp and modern, reflecting a premium sports tech brand aesthetic with geometric patterns in the background." src="https://lh3.googleusercontent.com/aida/AP1WRLvGVowKeQErrmmm-gy0Y_6Y8bZouT5uxJGMi4qRQ9dBkMylnEPLka5ncI9l9N7b9jMq4URWW-DFPxEBF9wdTg3_9qA6GNB35jRxHB2tow7suSr6H_scqKwSJWT3LA-BUMlSawAM3OCn1nLyswad9drDkcg_-PoI4vp3FW1C_uYYE7_wvoCVYiDJ4N9ZMioJwqq_Gi1hxkl-1mOdguVoFAoqmIqMBLOYFqU1W1QYgLlxapH1_ZjcqvsJ-9Y"/>
+</div>
+</div>
+<!-- Content Section -->
+<div class="w-full max-w-sm text-center">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-2">Quên mật khẩu</h2>
+<p class="font-body-sm text-on-surface-variant mb-section-gap leading-relaxed">
+                Nhập email của bạn để nhận hướng dẫn đặt lại mật khẩu. Chúng tôi sẽ gửi một liên kết bảo mật đến hòm thư của bạn.
+            </p>
+</div>
+<!-- Form Section -->
+<div class="w-full max-w-sm space-y-6" id="forgot-password-form">
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant ml-1 uppercase" for="email">Email của bạn</label>
+<div class="relative group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline group-focus-within:text-primary transition-colors" data-icon="mail">mail</span>
+<input class="w-full h-14 pl-12 pr-4 bg-surface-container-lowest border border-outline-variant rounded-lg focus:ring-0 focus:border-primary transition-all font-body-lg text-body-lg outline-none" id="email" placeholder="example@email.com" type="email"/>
+</div>
+</div>
+<button class="w-full h-14 bg-secondary text-on-secondary font-button text-button rounded-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-secondary/20" id="submit-btn" onclick="handleRequest()">
+<span>GỬI YÊU CẦU</span>
+<span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</div>
+<!-- Success Message (Hidden by default) -->
+<div class="hidden w-full max-w-sm text-center success-animation" id="success-state">
+<div class="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-on-secondary text-4xl" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h3 class="font-title-md text-title-md text-primary mb-3">Đã gửi yêu cầu thành công!</h3>
+<p class="font-body-sm text-on-surface-variant mb-8 leading-relaxed">
+                Vui lòng kiểm tra email của bạn để thực hiện các bước tiếp theo. Nếu không thấy, hãy kiểm tra thư mục Spam.
+            </p>
+<button class="w-full h-14 border-2 border-primary text-primary font-button text-button rounded-lg active:bg-surface-container-highest transition-colors uppercase" onclick="window.location.reload()">
+                Quay lại đăng nhập
+            </button>
+</div>
+</main>
+<!-- Footer Help -->
+<footer class="mt-auto py-8 text-center px-margin-mobile">
+<p class="font-body-sm text-on-surface-variant">
+            Bạn cần trợ giúp thêm? <a class="text-secondary font-bold underline" href="#">Liên hệ hỗ trợ</a>
+</p>
+</footer>
+<script>
+        function handleRequest() {
+            const emailInput = document.getElementById('email');
+            const submitBtn = document.getElementById('submit-btn');
+            const form = document.getElementById('forgot-password-form');
+            const successState = document.getElementById('success-state');
+
+            if (!emailInput.value || !emailInput.value.includes('@')) {
+                emailInput.classList.add('border-error');
+                emailInput.parentElement.classList.add('shake');
+                setTimeout(() => emailInput.parentElement.classList.remove('shake'), 500);
+                return;
+            }
+
+            // Simulate Loading State
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            `;
+
+            // Transition to Success after 1.5s
+            setTimeout(() => {
+                form.classList.add('hidden');
+                successState.classList.remove('hidden');
+                
+                // Micro-interaction: Confetti-like trigger
+                triggerSuccessPulse();
+            }, 1500);
+        }
+
+        function triggerSuccessPulse() {
+            const circle = document.querySelector('#success-state div');
+            circle.classList.add('animate-ping');
+            setTimeout(() => circle.classList.remove('animate-ping'), 500);
+        }
+
+        // Handle focus states and error clearing
+        document.getElementById('email').addEventListener('input', function() {
+            this.classList.remove('border-error');
+        });
+    </script>
+<style>
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+    </style>
+</body></html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-secondary-container": "#fffbff",
+                    "surface-dim": "#dadada",
+                    "secondary-fixed": "#ffdad8",
+                    "on-error-container": "#93000a",
+                    "primary-fixed": "#e2e2e2",
+                    "inverse-surface": "#2f3131",
+                    "surface-bright": "#f9f9f9",
+                    "inverse-primary": "#c6c6c6",
+                    "background": "#f9f9f9",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "surface-container-low": "#f3f3f3",
+                    "primary-container": "#1b1b1b",
+                    "on-surface": "#1a1c1c",
+                    "tertiary-container": "#1a1c1c",
+                    "surface-container-high": "#e8e8e8",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "secondary-container": "#e51a38",
+                    "tertiary": "#000000",
+                    "surface-tint": "#5e5e5e",
+                    "outline-variant": "#cfc4c5",
+                    "surface-variant": "#e2e2e2",
+                    "outline": "#7e7576",
+                    "on-secondary-fixed": "#410007",
+                    "surface-container-highest": "#e2e2e2",
+                    "secondary": "#bb0027",
+                    "on-secondary-fixed-variant": "#92001d",
+                    "surface-container": "#eeeeee",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#1b1b1b",
+                    "on-primary-container": "#848484",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1a1c1c",
+                    "on-tertiary-container": "#838484",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4c4546",
+                    "on-primary": "#ffffff",
+                    "surface": "#f9f9f9",
+                    "primary": "#000000",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-primary-fixed-variant": "#474747",
+                    "tertiary-fixed": "#e2e2e2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "32px",
+                    "gutter-mobile": "12px",
+                    "touch-target-min": "44px",
+                    "base": "4px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "button": ["Inter"],
+                    "title-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-bold": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+            background-color: #f9f9f9;
+        }
+        .brand-card-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+        .active-press:active {
+            transform: scale(0.97);
+            transition: transform 0.1s ease-out;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-lg text-on-background selection:bg-secondary selection:text-on-secondary">
+<!-- Top App Bar -->
+<header class="bg-surface dark:bg-surface-container-low w-full top-0 sticky z-40 border-b border-outline-variant dark:border-outline flex items-center justify-between px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-4">
+<button class="text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity active:scale-95 duration-100">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-display-lg text-[24px] font-extrabold tracking-tighter text-primary dark:text-primary-fixed">APEX VELOCITY</h1>
+</div>
+<div class="flex items-center">
+<button class="text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity active:scale-95 duration-100">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<main class="pb-24">
+<!-- Search & Header Section -->
+<section class="px-margin-mobile pt-6 pb-4">
+<div class="mb-6">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-1">Quản lý thương hiệu</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Tùy chỉnh danh mục thương hiệu trong hệ thống của bạn.</p>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+</div>
+<input class="block w-full h-[48px] pl-11 pr-4 bg-[#E0E0E0] border-none rounded-xl focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200 font-body-sm" placeholder="Tìm kiếm thương hiệu..." type="text"/>
+</div>
+</section>
+<!-- Brand List Section -->
+<section class="px-margin-mobile space-y-4">
+<!-- Brand Card: Nike -->
+<div class="brand-card-shadow bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between active-press border border-transparent hover:border-outline-variant transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-surface-container rounded-lg flex items-center justify-center overflow-hidden">
+<img alt="Nike Logo" class="w-10 h-10 object-contain" data-alt="A clean, minimalist monochrome Nike swoosh logo centered on a light gray architectural background. The lighting is bright and professional, evoking a high-end sport fashion boutique aesthetic. The composition is centered and balanced, reflecting power and performance in a modern digital UI design." src="https://lh3.googleusercontent.com/aida/AP1WRLvM1BHxQcSXWbypI0RY0NfPfOrj7d6EjVNOX0898skjVNcW0iHpW1qpjf1irg3KnY99QSeVZBUl0GvLfwX8RF3W03Az4tgfm-lCIgwbZ3lS1ga4kxhAc3yD-CP37rYTptA72PzSLgcqnbRxNW5KnFasrZjqebLICj4osBqYq62Rv0VPW46W5fA3_NyrNgiCbBROxxyaqmh_5qLitNrYWjhogN4auI2PnPHNEPdPZsJLMiHny3EC-Hrqww"/>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-primary">Nike</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">1,240 sản phẩm</p>
+</div>
+</div>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+<!-- Brand Card: Adidas -->
+<div class="brand-card-shadow bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between active-press border border-transparent hover:border-outline-variant transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-surface-container rounded-lg flex items-center justify-center overflow-hidden">
+<img alt="Adidas Logo" class="w-10 h-10 object-contain" data-alt="A minimalist Adidas three-stripes logo presented in high-contrast black on a neutral light gray background. The scene is lit with soft, diffused studio lighting suitable for a professional e-commerce platform. The aesthetic is clean and urgent, focusing on the structural integrity of the brand identity within a premium sportswear context." src="https://lh3.googleusercontent.com/aida/AP1WRLvxLddBw9wjOnhbdhUH5cVCc084YLxn39Ho5UNYIDgZAx-50JoeQPyI5luDaF90iFPCOKwNshm26TzF90AOeuNn6sfFwDEj18dh9N4R0wmG_jzC_SPJx_p_Qkpkm-lMSxZpjsfrFaqzJpbEFPzzUDnbIBgKbY8vuQAdx9PjRPmq6CNwfz7H_QIAYAXA83dP4GNwYzOh_xNnT-9JHs4kvoKi1QSugsSG_8UKdep0KU7CZC3WHuTh-GI8pIk"/>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-primary">Adidas</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">892 sản phẩm</p>
+</div>
+</div>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+<!-- Brand Card: Puma -->
+<div class="brand-card-shadow bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between active-press border border-transparent hover:border-outline-variant transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-surface-container rounded-lg flex items-center justify-center overflow-hidden">
+<img alt="Puma Logo" class="w-10 h-10 object-contain" data-alt="The Puma jumping cat logo rendered in sleek black against a pristine white and gray gradient background. The lighting highlights the dynamic silhouette of the brand mark, creating a sense of momentum and high-performance energy. The overall visual style is modern, stark, and professional for a premium sportswear brand management interface." src="https://lh3.googleusercontent.com/aida/AP1WRLvyj7OeQ6hoqBIddpBXzHW8Bf7p65RTo03BdRM7tw-M0Vt5RU7aXILFtmxY6IbXG3AF3iDq2zIgcKxdUjMrA9L0gAHEA2IDFbD0h1AZ8SKWL6RHSt6FDTJEBiJf55dT9RhOAaYTpYi-SsZ-u8IJTveZsp8i0NQickTgKWeprCZ_1axxQWvbB51h9HXYEw6UnoxaSfPBofQO5_QmtDP9aYvqZOx1PnA3dQ5XrFwCBIFO_Imz88dJiwgzLko"/>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-primary">Puma</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">456 sản phẩm</p>
+</div>
+</div>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+<!-- Brand Card: Under Armour -->
+<div class="brand-card-shadow bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between active-press border border-transparent hover:border-outline-variant transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-surface-container rounded-lg flex items-center justify-center overflow-hidden">
+<img alt="Under Armour Logo" class="w-10 h-10 object-contain" data-alt="Under Armour logo in deep black set against a high-tech minimalist light gray environment. The lighting is sharp, emphasizing the discipline and technical performance aspect of the brand. The composition is clean and uncluttered, adhering to the monochromatic and high-contrast theme of the sportswear e-commerce application." src="https://lh3.googleusercontent.com/aida/AP1WRLsc2ImCBJcwp2KHjBNs31opUjBWWYyP-CIPzPpldLGxzyzfgV2c_C8osdN4SRl3QKHpDfAoi7s3BUpO9EJU5ycA4J3PP_18IQ9HEd4IEiMD8_WOxWg8AsU-OUCTFbwdjtpclUWKw0Vs19B598CL5BNHuFeQn3l0UvkOJT8lhK03TXBNbltP5fBh8ybckNHwmsf5-u7c_ldhXzDgDuyf09eoLn3vJraVCXz5q6-WxEpByIFoFK8ctvScEw"/>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-primary">Under Armour</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">312 sản phẩm</p>
+</div>
+</div>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-secondary text-on-secondary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-50">
+<span class="material-symbols-outlined text-[32px]" data-icon="add">add</span>
+</button>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-gutter-mobile py-2 bg-surface dark:bg-surface-container-lowest shadow-[0_-4px_12px_rgba(0,0,0,0.04)] z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-bold text-label-bold mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-container bg-surface-container-high dark:bg-surface-container rounded-lg p-2 active:scale-90 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-bold text-label-bold mt-1">Catalog</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-label-bold text-label-bold mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-bold text-label-bold mt-1">Staff</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-bold text-label-bold mt-1">Settings</span>
+</a>
+</nav>
+<script>
+        // Simple search filtering simulation
+        const searchInput = document.querySelector('input[type="text"]');
+        const cards = document.querySelectorAll('.brand-card-shadow');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            cards.forEach(card => {
+                const name = card.querySelector('h3').textContent.toLowerCase();
+                if (name.includes(term)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Micro-interaction for FAB
+        const fab = document.querySelector('.fixed.bottom-24');
+        fab.addEventListener('click', () => {
+            console.log('Thêm thương hiệu mới');
+            // Logic to open a modal would go here
+        });
+    </script>
+</body></html>

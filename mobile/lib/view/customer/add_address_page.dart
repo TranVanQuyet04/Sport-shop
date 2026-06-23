@@ -101,7 +101,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             label: 'Họ và tên',
-            hintText: 'Nguyễn Văn A',
+            hintText: 'Nhập họ và tên',
             controller: _nameController,
             prefixIcon: Icons.person_outline,
             textInputAction: TextInputAction.next,
@@ -111,7 +111,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             label: 'Số điện thoại',
-            hintText: '09xx xxx xxx',
+            hintText: 'Nhập số điện thoại',
             controller: _phoneController,
             prefixIcon: Icons.phone_outlined,
             keyboardType: TextInputType.phone,
@@ -124,7 +124,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             label: 'Tỉnh / Thành phố',
-            hintText: 'TP. Hồ Chí Minh',
+            hintText: 'Nhập tỉnh hoặc thành phố',
             controller: _cityController,
             prefixIcon: Icons.location_city_outlined,
             textInputAction: TextInputAction.next,
@@ -134,7 +134,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             label: 'Quận / Huyện',
-            hintText: 'Quận 1',
+            hintText: 'Nhập quận hoặc huyện',
             controller: _districtController,
             prefixIcon: Icons.map_outlined,
             textInputAction: TextInputAction.next,
@@ -144,7 +144,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             label: 'Phường / Xã',
-            hintText: 'Phường Bến Nghé',
+            hintText: 'Nhập phường hoặc xã',
             controller: _wardController,
             prefixIcon: Icons.place_outlined,
             textInputAction: TextInputAction.next,

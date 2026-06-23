@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Quản lý Nghỉ phép</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-secondary-container": "#fffbff",
+                        "surface-dim": "#dadada",
+                        "secondary-fixed": "#ffdad8",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e2e2e2",
+                        "inverse-surface": "#2f3131",
+                        "surface-bright": "#f9f9f9",
+                        "inverse-primary": "#c6c6c6",
+                        "background": "#f9f9f9",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-container-low": "#f3f3f3",
+                        "primary-container": "#1b1b1b",
+                        "on-surface": "#1a1c1c",
+                        "tertiary-container": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "secondary-container": "#e31837",
+                        "tertiary": "#000000",
+                        "surface-tint": "#5e5e5e",
+                        "outline-variant": "#cfc4c5",
+                        "surface-variant": "#e2e2e2",
+                        "outline": "#7e7576",
+                        "on-secondary-fixed": "#410007",
+                        "secondary": "#E31837",
+                        "on-secondary-fixed-variant": "#92001d",
+                        "surface-container": "#eeeeee",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#1b1b1b",
+                        "on-primary-container": "#848484",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "on-tertiary-container": "#838484",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#4c4546",
+                        "on-primary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "primary": "#000000",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-fixed-variant": "#474747",
+                        "tertiary-fixed": "#e2e2e2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "gutter-mobile": "12px",
+                        "touch-target-min": "44px",
+                        "base": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "button": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-bold": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+            background-color: #f9f9f9;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .custom-shadow {
+            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.04);
+        }
+        .active-scale:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease-out;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-lg text-on-surface">
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface flex justify-between items-center px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high">
+<img alt="Admin Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a male administrative manager in a well-lit modern corporate environment. He is wearing a crisp black blazer and has a confident, approachable expression. The lighting is high-key and bright, maintaining the minimalist black and white aesthetic of the UI. Soft ambient shadows provide depth against the blurred office background." src="https://lh3.googleusercontent.com/aida/AP1WRLscnQETRtcPSQnUFjAoyqj7G4eB7hwQTXc3gPKHzcJ4PIIHQrqFt6NfKyJPNKkq90dvhAMe9NkDR8tJtC-yRtccGFseboEUbpXZmDEBVrEFQznI8V694TkY-3-PaCsLAVIatu9iG5Pxbg1qW8OLR9JtPdbkeRFGfXwCtIhUmuZn32nfw-cGyZMv8xE7LkiNW7ySwHDu0gUlRYIHqCsTjbPeWpx35j8zUr-gl1UxlVoVmEowoGeuowhFvA"/>
+</div>
+<h1 class="text-title-md font-title-md text-primary">Admin Dashboard</h1>
+</div>
+<button class="material-symbols-outlined text-primary hover:opacity-80 active-scale" data-icon="notifications">notifications</button>
+</header>
+<main class="pt-16 pb-24 px-margin-mobile max-w-md mx-auto">
+<!-- Page Title -->
+<section class="mt-4 mb-6">
+<h2 class="text-headline-lg-mobile font-headline-lg-mobile text-primary">Quản lý Nghỉ phép</h2>
+<p class="text-body-sm text-on-surface-variant">Tháng 10, 2023</p>
+</section>
+<!-- Calendar Component -->
+<section class="bg-surface-container-lowest rounded-xl p-4 custom-shadow mb-section-gap">
+<div class="flex justify-between items-center mb-4">
+<span class="font-bold text-body-lg">Tháng 10</span>
+<div class="flex gap-4">
+<button class="material-symbols-outlined text-on-surface-variant active-scale" data-icon="chevron_left">chevron_left</button>
+<button class="material-symbols-outlined text-on-surface-variant active-scale" data-icon="chevron_right">chevron_right</button>
+</div>
+</div>
+<div class="calendar-grid text-center mb-2">
+<span class="text-label-bold font-label-bold text-on-surface-variant opacity-60">CN</span>
+<span class="text-label-bold font-label-bold text-on-surface-variant opacity-60">T2</span>
+<span class="text-label-bold font-label-bold text-on-surface-variant opacity-60">T3</span>
+<span class="text-label-bold font-label-bold text-on-surface-variant opacity-60">T4</span>
+<span class="text-label-bold font-label-bold text-on-surface-variant opacity-60">T5</span>
+<span class="text-label-bold font-label-bold text-on-surface-variant opacity-60">T6</span>
+<span class="text-label-bold font-label-bold text-on-surface-variant opacity-60">T7</span>
+</div>
+<div class="calendar-grid gap-y-1">
+<!-- Row 1 -->
+<button class="h-10 flex items-center justify-center text-body-sm text-on-surface-variant opacity-30">27</button>
+<button class="h-10 flex items-center justify-center text-body-sm text-on-surface-variant opacity-30">28</button>
+<button class="h-10 flex items-center justify-center text-body-sm text-on-surface-variant opacity-30">29</button>
+<button class="h-10 flex items-center justify-center text-body-sm text-on-surface-variant opacity-30">30</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">1</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">2</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">3</button>
+<!-- Row 2 -->
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">4</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold relative">
+                    5 <span class="absolute bottom-1 w-1 h-1 rounded-full bg-secondary"></span>
+</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">6</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">7</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">8</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">9</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">10</button>
+<!-- Row 3 -->
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold relative">
+                    11 <span class="absolute bottom-1 w-1 h-1 rounded-full bg-secondary"></span>
+</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">12</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">13</button>
+<button class="h-10 flex items-center justify-center bg-primary text-white rounded-lg font-bold">14</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold relative">
+                    15 <span class="absolute bottom-1 w-1 h-1 rounded-full bg-secondary"></span>
+</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">16</button>
+<button class="h-10 flex items-center justify-center text-body-sm font-semibold">17</button>
+</div>
+</section>
+<!-- Pending Requests Section -->
+<section class="space-y-4">
+<div class="flex justify-between items-center px-1">
+<h3 class="text-title-md font-title-md text-primary">Đang chờ duyệt</h3>
+<span class="text-label-bold font-label-bold bg-surface-container-high px-2 py-1 rounded-full">3 Yêu cầu</span>
+</div>
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 custom-shadow animate-in slide-in-from-bottom-2 duration-300">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img alt="Staff 1" class="w-full h-full object-cover" data-alt="A portrait of a young professional woman with a bright and energetic smile. She is in a minimalist, high-key studio setting with soft grey tones. Her clothing is a sharp, modern white athletic jacket. The image is clean, powerful, and focuses on professional reliability with a high-contrast lighting style that matches the black and red UI accents." src="https://lh3.googleusercontent.com/aida/AP1WRLuCEVru8iYyZp_zQVeydkZgwLiETs7Mm20bPXvm-9_T2Y4xBvf-bBowIAwkSd9QCGnroc7mivWLGDpG2GCMAOJOFHgVlEoqW-XRUi8XRZmq3LCxeG5dWL7aIyZmuJGHCfByKftdmsaEXmNFYpceJ0ypbgUy5cXaMFh7EUpu_f-OYRQw5WeTadh9litLz9X7ofCRIrw6QGwSM5Y97Way45FxFXSqOQLVel5elZ3YKmLorQCZyMUGP0DHOVA"/>
+</div>
+<div>
+<p class="font-bold text-body-lg text-primary">Nguyễn Thu Hà</p>
+<p class="text-body-sm text-on-surface-variant">Phòng Kinh doanh</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-primary">15 Th10</p>
+<p class="text-body-sm text-secondary font-bold">1 ngày</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg mb-4">
+<p class="text-body-sm text-on-surface">Lý do: Nghỉ ốm (Cảm cúm theo mùa, cần đi khám bác sĩ).</p>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="h-10 border-1.5 border-primary border-[1.5px] rounded-lg text-primary font-bold active-scale hover:bg-surface-container-high transition-colors">Từ chối</button>
+<button class="h-10 bg-secondary rounded-lg text-white font-bold active-scale shadow-sm transition-transform">Duyệt</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 custom-shadow animate-in slide-in-from-bottom-4 duration-500">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img alt="Staff 2" class="w-full h-full object-cover" data-alt="A close-up portrait of a male staff member with a friendly yet disciplined appearance. The lighting is sophisticated and directional, creating a modern professional vibe. He is wearing a black high-performance polo shirt. The background is a clean, minimalist off-white, ensuring the subject stands out in a high-contrast aesthetic that aligns with the premium sportsbook design language." src="https://lh3.googleusercontent.com/aida/AP1WRLssRX48MmP3Wd_DYb9JZVtRr813cyUAa5VoVZAJ9QOXzttcH0gmZK-d8fOmuqEom6sPanxyBDCDSzInBow93N5TbNg0GzutVLFukX8lrzTHlQ6zYRrgK2LjmUN0EZkL7PyRnxMLIldI7lMbR6tY-38IbKgSYaoLWR9OFTddm04NOJt75LdYR86aCHi6vUJdwk93-RFdG_E9boJrNZK1jVfQvadv47-LDcuO1jHaey-srwndW3ygfZBeSGg"/>
+</div>
+<div>
+<p class="font-bold text-body-lg text-primary">Trần Minh Quân</p>
+<p class="text-body-sm text-on-surface-variant">Phòng Kỹ thuật</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-primary">11 Th10</p>
+<p class="text-body-sm text-secondary font-bold">2 ngày</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg mb-4">
+<p class="text-body-sm text-on-surface">Lý do: Việc gia đình riêng (Giải quyết thủ tục nhà đất).</p>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="h-10 border-1.5 border-primary border-[1.5px] rounded-lg text-primary font-bold active-scale hover:bg-surface-container-high transition-colors">Từ chối</button>
+<button class="h-10 bg-secondary rounded-lg text-white font-bold active-scale shadow-sm transition-transform">Duyệt</button>
+</div>
+</div>
+<!-- Recent Activity Title -->
+<div class="pt-4 px-1">
+<h3 class="text-title-md font-title-md text-primary">Hoạt động gần đây</h3>
+</div>
+<!-- Status List Item 1 -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border-l-4 border-emerald-500">
+<div class="flex items-center gap-3">
+<div class="material-symbols-outlined text-emerald-500" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</div>
+<div>
+<p class="font-bold text-body-lg text-primary">Lê Văn Sâm</p>
+<p class="text-body-sm text-on-surface-variant">Đã duyệt - 05 Th10</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-40" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Status List Item 2 -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border-l-4 border-secondary">
+<div class="flex items-center gap-3">
+<div class="material-symbols-outlined text-secondary" data-icon="cancel" style="font-variation-settings: 'FILL' 1;">cancel</div>
+<div>
+<p class="font-bold text-body-lg text-primary">Phạm Mỹ Linh</p>
+<p class="text-body-sm text-on-surface-variant">Từ chối - 04 Th10</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-40" data-icon="chevron_right">chevron_right</span>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-lowest flex justify-around items-center px-gutter-mobile pb-safe h-16 rounded-t-xl shadow-sm border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-label-bold font-label-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-label-bold font-label-bold">Catalog</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="text-label-bold font-label-bold">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-surface-container transition-colors p-2 rounded-lg active-scale" href="#">
+<span class="material-symbols-outlined" data-icon="groups" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="text-label-bold font-label-bold">Staff</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-label-bold font-label-bold">Settings</span>
+</a>
+</nav>
+<script>
+        // Simple Micro-interactions
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Mock interaction for approve/reject
+                if (this.innerText === 'Duyệt' || this.innerText === 'Từ chối') {
+                    const card = this.closest('.bg-surface-container-lowest');
+                    card.style.opacity = '0.5';
+                    card.style.transform = 'translateX(100px)';
+                    card.style.transition = 'all 0.5s ease-in-out';
+                    setTimeout(() => card.remove(), 500);
+                }
+            });
+        });
+    </script>
+</body></html>

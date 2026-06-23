@@ -61,13 +61,13 @@ class _RegisterPageState extends State<RegisterPage> {
           Text('Đăng ký', style: AppTextStyles.display.copyWith(fontSize: 34)),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'Tham gia cộng đồng Apex Velocity để nhận ưu đãi và trải nghiệm mua sắm tốt nhất.',
+            'Tạo tài khoản để mua sắm và theo dõi đơn hàng từ hệ thống.',
             style: AppTextStyles.body.copyWith(fontSize: 18, color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.xl),
           AppTextField(
             label: 'Họ và tên',
-            hintText: 'Nguyễn Văn A',
+            hintText: 'Nhập họ và tên',
             prefixIcon: Icons.person_outline,
             textInputAction: TextInputAction.next,
             errorText: _controller.fullNameError,
@@ -76,7 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             label: 'Email',
-            hintText: 'example@apex.com',
+            hintText: 'email@example.com',
             prefixIcon: Icons.mail_outline,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
@@ -86,7 +86,7 @@ class _RegisterPageState extends State<RegisterPage> {
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             label: 'Số điện thoại',
-            hintText: '09xx xxx xxx',
+            hintText: 'Nhập số điện thoại',
             prefixIcon: Icons.phone_outlined,
             keyboardType: TextInputType.phone,
             textInputAction: TextInputAction.next,

@@ -1,0 +1,20 @@
+Tôi vừa upload thêm 2 file:
+1. 00-master-prompt.md
+2. 01-customer-storefront.md
+
+Hãy đọc 2 file này để hiểu rõ hơn về vai trò người dùng, trách nhiệm nghiệp vụ và luồng demo tổng thể của dự án.
+
+Không cần tạo lại toàn bộ UI từ đầu. Hãy dùng thông tin mới này để kiểm tra và điều chỉnh các màn hình đã tạo từ batch 0-6.
+
+Cụ thể:
+- Đảm bảo UI có đủ các role: Guest, Customer, Shop Staff, Delivery Staff/Shipper, Admin.
+- Đảm bảo mỗi role chỉ thấy đúng màn hình và hành động thuộc trách nhiệm của mình.
+- Customer chỉ mua hàng, quản lý tài khoản, xem đơn, tracking, xác nhận đã nhận hàng.
+- Shop Staff chỉ xử lý đơn trước khi giao: confirm, pack, handover to delivery.
+- Delivery Staff/Shipper chỉ cập nhật trạng thái giao hàng.
+- Admin quản lý toàn bộ hệ thống.
+- Kiểm tra lại navigation, sidebar, dashboard, order workflow, delivery workflow và tracking timeline để khớp với trách nhiệm trong file đã upload.
+- Nếu còn thiếu màn hình hoặc action theo role, hãy bổ sung.
+- Nếu có màn hình/action sai quyền role, hãy chỉnh lại.
+
+Hãy cập nhật thiết kế hiện tại dựa trên 2 file mới này.

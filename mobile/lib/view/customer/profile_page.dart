@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
@@ -54,11 +54,10 @@ class _ProfilePageState extends State<ProfilePage> {
         title: const SportshopLogo(),
         actions: [
           IconButton(
-            tooltip: 'Làm mới',
+            tooltip: 'Refresh',
             onPressed: _controller.isLoading ? null : _controller.loadProfile,
             icon: const Icon(Icons.refresh),
           ),
-          const IconButton(onPressed: null, icon: Icon(Icons.menu)),
         ],
       ),
       body: RefreshIndicator(
@@ -71,22 +70,24 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildBody(ProfileModel? profile) {
     if (_controller.isLoading && profile == null) {
-      return const AppLoadingState(title: 'Đang tải hồ sơ');
+      return const AppLoadingState(title: 'Loading profile');
     }
     if (_controller.errorMessage != null && profile == null) {
       return AppErrorState(
-        title: 'Không tải được hồ sơ',
+        title: 'Could not load profile',
         message: _controller.errorMessage!,
         onAction: _controller.loadProfile,
       );
     }
 
-    final fullName = profile?.fullName ?? 'Khách hàng Sportshop';
+    final fullName = profile?.fullName ?? '';
     final email = profile?.email ?? '';
-    final phone = profile?.phoneNumber ?? 'Chưa cập nhật số điện thoại';
-    final role = profile?.roleName ?? 'CUSTOMER';
+    final phone = profile?.phoneNumber ?? '';
+    final role = profile?.roleName ?? '';
+    final status = profile?.status == true ? 'Active' : 'Disabled';
 
     return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         if (_controller.errorMessage != null) ...[
@@ -94,89 +95,57 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: AppSpacing.lg),
         ],
         const SizedBox(height: AppSpacing.xl),
-        Center(
-          child: Stack(
-            children: [
-              const CircleAvatar(
-                radius: 70,
-                backgroundColor: AppColors.primary,
-                child: Icon(Icons.person, color: Colors.white, size: 70),
-              ),
-              Positioned(
-                right: 0,
-                bottom: 6,
-                child: CircleAvatar(
-                  backgroundColor: AppColors.primary,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.edit, color: Colors.white, size: 18),
-                  ),
-                ),
-              ),
-            ],
+        const Center(
+          child: CircleAvatar(
+            radius: 70,
+            backgroundColor: AppColors.primary,
+            child: Icon(Icons.person, color: Colors.white, size: 70),
           ),
         ),
         const SizedBox(height: AppSpacing.xl),
         Text(
-          fullName,
+          fullName.isEmpty ? 'Profile' : fullName,
           style: AppTextStyles.display.copyWith(fontSize: 34),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          '$role • $email',
+          [role, email].where((value) => value.isNotEmpty).join(' - '),
           style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          phone,
+          phone.isEmpty ? 'Phone not updated' : phone,
           style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.xl),
-        const Row(
-          children: [
-            Expanded(
-              child: _MetricCard(value: '12', label: 'ĐƠN HÀNG'),
-            ),
-            SizedBox(width: AppSpacing.lg),
-            Expanded(
-              child: _MetricCard(value: '840', label: 'ĐIỂM THƯỞNG'),
-            ),
-          ],
+        _ProfileInfoCard(
+          profile: profile,
+          status: status,
         ),
-        const SizedBox(height: AppSpacing.lg),
-        const _MembershipCard(),
         const SizedBox(height: AppSpacing.xl),
         Material(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadius.xl),
           clipBehavior: Clip.antiAlias,
-          child: Column(
-            children: const [
-              _ProfileTile(
-                icon: Icons.person_outline,
-                title: 'Thông tin cá nhân',
-              ),
+          child: const Column(
+            children: [
               _ProfileTile(
                 icon: Icons.location_on_outlined,
-                title: 'Sổ địa chỉ',
+                title: 'Address book',
                 route: AppRoutes.addressBook,
               ),
               _ProfileTile(
                 icon: Icons.receipt_long_outlined,
-                title: 'Đơn hàng của tôi',
+                title: 'My orders',
                 route: AppRoutes.orders,
               ),
               _ProfileTile(
                 icon: Icons.help_outline,
-                title: 'Trung tâm hỗ trợ',
+                title: 'Support center',
                 route: AppRoutes.customerSupport,
-              ),
-              _ProfileTile(
-                icon: Icons.settings_outlined,
-                title: 'Cài đặt',
                 last: true,
               ),
             ],
@@ -192,15 +161,74 @@ class _ProfilePageState extends State<ProfilePage> {
               borderRadius: BorderRadius.circular(AppRadius.lg),
             ),
           ),
-          onPressed: () => context.go(AppRoutes.login),
+          onPressed: _logout,
           icon: const Icon(Icons.logout),
-          label: const Text('Đăng xuất'),
+          label: const Text('Logout'),
         ),
-        const SizedBox(height: AppSpacing.xl),
+      ],
+    );
+  }
+
+  Future<void> _logout() async {
+    await AppDependencies.instance.authRepository.logout();
+    if (!mounted) {
+      return;
+    }
+    context.go(AppRoutes.login);
+  }
+}
+
+class _ProfileInfoCard extends StatelessWidget {
+  const _ProfileInfoCard({required this.profile, required this.status});
+
+  final ProfileModel? profile;
+  final String status;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          children: [
+            _ProfileInfoRow(label: 'User ID', value: profile?.id ?? '-'),
+            const Divider(height: AppSpacing.xl),
+            _ProfileInfoRow(label: 'Role', value: profile?.roleName ?? '-'),
+            const Divider(height: AppSpacing.xl),
+            _ProfileInfoRow(label: 'Status', value: status),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfileInfoRow extends StatelessWidget {
+  const _ProfileInfoRow({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
         Text(
-          'Phiên bản 4.2.0 • Sportswear Pro',
-          style: AppTextStyles.body.copyWith(color: AppColors.border),
-          textAlign: TextAlign.center,
+          label,
+          style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+        ),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Text(
+            value.isEmpty ? '-' : value,
+            textAlign: TextAlign.right,
+            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w900),
+          ),
         ),
       ],
     );
@@ -222,105 +250,9 @@ class _ProfileErrorBanner extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
-        child: Row(
-          children: [
-            const Icon(Icons.info_outline, color: AppColors.info),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                message,
-                style: AppTextStyles.caption.copyWith(color: AppColors.info),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _MembershipCard extends StatelessWidget {
-  const _MembershipCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Row(
-          children: [
-            const CircleAvatar(
-              backgroundColor: AppColors.secondary,
-              foregroundColor: AppColors.textInverse,
-              child: Icon(Icons.workspace_premium_outlined),
-            ),
-            const SizedBox(width: AppSpacing.lg),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Thành viên Velocity',
-                    style: AppTextStyles.subtitle.copyWith(
-                      color: AppColors.textInverse,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    'Còn 160 điểm để lên hạng Pro Runner.',
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textInverse.withValues(alpha: 0.72),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(Icons.chevron_right, color: AppColors.textInverse),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _MetricCard extends StatelessWidget {
-  const _MetricCard({required this.value, required this.label});
-
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: AppTextStyles.display.copyWith(
-                color: AppColors.secondary,
-                fontSize: 30,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(label, style: AppTextStyles.body.copyWith(letterSpacing: 2)),
-          ],
+        child: Text(
+          message,
+          style: AppTextStyles.caption.copyWith(color: AppColors.info),
         ),
       ),
     );
@@ -364,4 +296,3 @@ class _ProfileTile extends StatelessWidget {
     );
   }
 }
-

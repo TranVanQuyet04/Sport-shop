@@ -78,7 +78,7 @@ class CartItemModel {
       if (size.isNotEmpty) 'Size: $size',
       if (color.isNotEmpty) color,
     ];
-    return parts.isEmpty ? 'Biến thể sản phẩm' : parts.join(' | ');
+    return parts.join(' | ');
   }
 
   factory CartItemModel.fromJson(Map<String, dynamic> json) {
@@ -89,7 +89,7 @@ class CartItemModel {
     return CartItemModel(
       id: (json['id'] ?? '').toString(),
       variantId: (json['variantId'] ?? '').toString(),
-      productName: (json['productName'] ?? 'Sản phẩm').toString(),
+      productName: (json['productName'] ?? '').toString(),
       size: (json['size'] ?? '').toString(),
       color: (json['color'] ?? '').toString(),
       price: price,

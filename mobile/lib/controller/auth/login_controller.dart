@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../../app/sportshop_router.dart';
+import '../../core/auth/role_mapper.dart';
 import '../../model/auth/login_form_model.dart';
 import '../../repository/auth/auth_repository.dart';
 
@@ -83,14 +84,10 @@ class LoginController extends ChangeNotifier {
   }
 
   String _routeForRole(String? role) {
-    final normalizedRole = role?.toUpperCase().replaceFirst('ROLE_', '').trim();
+    final normalizedRole = RoleMapper.normalize(role);
     return switch (normalizedRole) {
       'ADMIN' => AppRoutes.adminDashboard,
-      'SHOP_STAFF' => AppRoutes.shopStaffHome,
-      'STAFF' => AppRoutes.shopStaffHome,
-      'DELIVERY_STAFF' => AppRoutes.deliveryHome,
       'SHIPPER' => AppRoutes.deliveryHome,
-      'CUSTOMER' => AppRoutes.customerHome,
       'MEMBER' => AppRoutes.customerHome,
       _ => AppRoutes.customerHome,
     };

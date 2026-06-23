@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .active-tab .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "on-secondary-fixed-variant": "#92001d",
+                "primary-container": "#1b1b1b",
+                "surface-container-high": "#e8e8e8",
+                "surface-container": "#eeeeee",
+                "error-container": "#ffdad6",
+                "on-background": "#1a1c1c",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#e51a38",
+                "on-tertiary-fixed-variant": "#454747",
+                "on-surface": "#1a1c1c",
+                "error": "#ba1a1a",
+                "surface-container-low": "#f3f3f3",
+                "surface-tint": "#5e5e5e",
+                "tertiary-fixed-dim": "#c6c6c7",
+                "on-error-container": "#93000a",
+                "surface-container-highest": "#e2e2e2",
+                "surface-variant": "#e2e2e2",
+                "primary-fixed-dim": "#c6c6c6",
+                "inverse-on-surface": "#f1f1f1",
+                "on-tertiary": "#ffffff",
+                "on-error": "#ffffff",
+                "tertiary-fixed": "#e2e2e2",
+                "secondary-fixed-dim": "#ffb3b1",
+                "secondary": "#bb0027",
+                "surface-dim": "#dadada",
+                "primary": "#000000",
+                "on-primary-fixed": "#1b1b1b",
+                "tertiary-container": "#1a1c1c",
+                "surface": "#f9f9f9",
+                "outline": "#7e7576",
+                "inverse-primary": "#c6c6c6",
+                "secondary-fixed": "#ffdad8",
+                "primary-fixed": "#e2e2e2",
+                "on-secondary-container": "#fffbff",
+                "on-tertiary-container": "#838484",
+                "on-primary": "#ffffff",
+                "on-tertiary-fixed": "#1a1c1c",
+                "inverse-surface": "#2f3131",
+                "on-surface-variant": "#4c4546",
+                "surface-bright": "#f9f9f9",
+                "background": "#f9f9f9",
+                "on-primary-fixed-variant": "#474747",
+                "outline-variant": "#cfc4c5",
+                "on-primary-container": "#848484",
+                "on-secondary": "#ffffff",
+                "on-secondary-fixed": "#410007",
+                "tertiary": "#000000"
+              },
+              "spacing": {
+                "section-gap": "32px",
+                "gutter-mobile": "12px",
+                "margin-mobile": "16px",
+                "base": "4px",
+                "touch-target-min": "44px"
+              },
+              "fontSize": {
+                "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- Top AppBar -->
+<header class="bg-surface dark:bg-on-surface flex justify-between items-center px-margin-mobile h-14 w-full z-50 sticky top-0">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black tracking-tighter text-primary dark:text-on-primary-fixed">SPORTSWEAR</h1>
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 active:scale-95 transition-transform duration-150 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="hover:opacity-80 active:scale-95 transition-transform duration-150 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</header>
+<main class="max-w-md mx-auto px-margin-mobile pt-8">
+<!-- Profile Header Section -->
+<section class="flex flex-col items-center mb-section-gap">
+<div class="relative group">
+<div class="w-32 h-32 rounded-full border-4 border-surface-container-highest overflow-hidden shadow-sm transition-transform duration-300 group-hover:scale-105">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A professional studio portrait of a confident athlete with short dark hair, wearing a sleek black performance training shirt. The lighting is high-contrast and dramatic, emphasizing athletic build. The background is a clean, neutral gray gallery wall, reflecting a high-end sportswear brand aesthetic. The overall mood is powerful, disciplined, and modern." src="https://lh3.googleusercontent.com/aida/AP1WRLvC0JrkEPEL73yXLAeL9fedixbk0Rk7XPwlQW0JyWR4TzbDwLEzIpw1d6gcaDw239__IjAbkzGQHgq7weVPbfrFIbca-Eo1DnDZYbs78b64dDhOIY_sAABIepaiZTxR54zTDpz_sGhZzxXXGbA_xXmy9LcPKYjILMX54S9-xCrhqzM5yUjQqoZcKGBtHR1LBDfyUpP0fXzmG9LzWdKHCycrQp0Wvno1Ez9rC-dxjvbuB-kF384npM6dsg"/>
+</div>
+<button class="absolute bottom-1 right-1 bg-primary text-on-primary p-2 rounded-full shadow-lg active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="text-center mt-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Nguyễn Văn An</h2>
+<p class="font-body-sm text-on-surface-variant">Thành viên Elite • an.nguyen@example.com</p>
+</div>
+</section>
+<!-- Stats Grid (Bento Style) -->
+<section class="grid grid-cols-2 gap-4 mb-section-gap">
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/30 flex flex-col items-center justify-center">
+<span class="text-secondary font-display-lg text-[24px]">12</span>
+<span class="font-label-bold text-on-surface-variant uppercase tracking-wider">Đơn hàng</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/30 flex flex-col items-center justify-center">
+<span class="text-secondary font-display-lg text-[24px]">2.5k</span>
+<span class="font-label-bold text-on-surface-variant uppercase tracking-wider">Điểm thưởng</span>
+</div>
+</section>
+<!-- Management List -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-section-gap">
+<nav class="flex flex-col">
+<!-- List Item -->
+<a class="flex items-center justify-between p-4 border-b border-outline-variant hover:bg-surface-container-low transition-colors active:scale-[0.99]" href="#">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+<span class="font-title-md text-body-lg text-primary">Thông tin cá nhân</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 border-b border-outline-variant hover:bg-surface-container-low transition-colors active:scale-[0.99]" href="#">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+</div>
+<span class="font-title-md text-body-lg text-primary">Sổ địa chỉ</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 border-b border-outline-variant hover:bg-surface-container-low transition-colors active:scale-[0.99]" href="#">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+</div>
+<span class="font-title-md text-body-lg text-primary">Đơn hàng của tôi</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 border-b border-outline-variant hover:bg-surface-container-low transition-colors active:scale-[0.99]" href="#">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</div>
+<span class="font-title-md text-body-lg text-primary">Trung tâm hỗ trợ</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors active:scale-[0.99]" href="#">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</div>
+<span class="font-title-md text-body-lg text-primary">Cài đặt</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</a>
+</nav>
+</section>
+<!-- Logout Button -->
+<div class="px-2">
+<button class="w-full bg-surface-container-highest text-on-surface-variant font-button py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-outline-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Đăng xuất
+            </button>
+</div>
+<div class="mt-8 text-center pb-10">
+<p class="font-label-bold text-outline-variant">Phiên bản 4.2.0 • Sportswear Pro</p>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center pt-2 pb-safe px-gutter-mobile bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant shadow-sm rounded-t-xl">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low p-2 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-bold text-label-bold">Trang chủ</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low p-2 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-bold text-label-bold">Tìm kiếm</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low p-2 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-label-bold text-label-bold">Giỏ hàng</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low p-2 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-bold text-label-bold">Đơn hàng</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-surface-container-low p-2 active:scale-90 transition-all duration-200 active-tab">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-bold text-label-bold">Cá nhân</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for list items
+        document.querySelectorAll('nav a').forEach(item => {
+            item.addEventListener('click', (e) => {
+                // Smooth tap feedback would happen here
+            });
+        });
+
+        // Simple ripple effect for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                let x = e.clientX - e.target.offsetLeft;
+                let y = e.clientY - e.target.offsetTop;
+            });
+        });
+    </script>
+</body></html>

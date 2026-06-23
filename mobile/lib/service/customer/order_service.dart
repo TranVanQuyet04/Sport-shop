@@ -1,4 +1,6 @@
 import '../../core/network/api_client.dart';
+import '../../core/network/api_endpoints.dart';
+import '../../core/network/api_exception.dart';
 import '../../model/customer/order_model.dart';
 
 abstract interface class OrderService {
@@ -24,26 +26,24 @@ class OrderApiService implements OrderService {
 
   @override
   Future<List<OrderModel>> getMyOrders() async {
-    final json = await _apiClient.getJson('/orders');
+    final json = await _apiClient.getJson(ApiEndpoints.myOrders);
     return _parseOrders(json);
   }
 
   @override
   Future<List<OrderModel>> getAllOrders() async {
-    final json = await _apiClient.getJson('/orders/admin');
+    final json = await _apiClient.getJson(ApiEndpoints.adminOrders);
     return _parseOrders(json);
   }
 
   @override
   Future<OrderModel> getMyOrderById(String orderId) async {
-    final json = await _apiClient.getJson('/orders/$orderId');
-    return OrderModel.fromJson(json);
+    return _findOrderById(await getMyOrders(), orderId);
   }
 
   @override
   Future<OrderModel> getAdminOrderById(String orderId) async {
-    final json = await _apiClient.getJson('/orders/admin/$orderId');
-    return OrderModel.fromJson(json);
+    return _findOrderById(await getAllOrders(), orderId);
   }
 
   @override
@@ -60,6 +60,16 @@ class OrderApiService implements OrderService {
       queryParameters: {'status': status},
     );
     return OrderModel.fromJson(json);
+  }
+
+  OrderModel _findOrderById(List<OrderModel> orders, String orderId) {
+    final cleanId = orderId.replaceAll('#', '').trim();
+    for (final order in orders) {
+      if (order.id.replaceAll('#', '').trim() == cleanId) {
+        return order;
+      }
+    }
+    throw const ApiException('Không tìm thấy đơn hàng.', statusCode: 404);
   }
 
   List<OrderModel> _parseOrders(Map<String, dynamic> json) {

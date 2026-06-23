@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#410007",
+                    "primary-container": "#1b1b1b",
+                    "outline-variant": "#cfc4c5",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-secondary-fixed-variant": "#92001d",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "inverse-on-surface": "#f1f1f1",
+                    "surface-dim": "#dadada",
+                    "tertiary": "#000000",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-variant": "#e2e2e2",
+                    "secondary-fixed": "#ffdad8",
+                    "on-primary-fixed": "#1b1b1b",
+                    "primary-fixed": "#e2e2e2",
+                    "on-error": "#ffffff",
+                    "surface-bright": "#f9f9f9",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#e51a38",
+                    "outline": "#7e7576",
+                    "inverse-primary": "#c6c6c6",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#4c4546",
+                    "inverse-surface": "#2f3131",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "surface": "#f9f9f9",
+                    "on-primary-fixed-variant": "#474747",
+                    "secondary": "#bb0027",
+                    "surface-tint": "#5e5e5e",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "on-secondary-container": "#fffbff",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "tertiary-fixed": "#e2e2e2",
+                    "tertiary-container": "#1a1c1c",
+                    "primary": "#000000",
+                    "surface-container-low": "#f3f3f3",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-container": "#838484",
+                    "background": "#f9f9f9",
+                    "on-primary-container": "#848484",
+                    "surface-container": "#eeeeee",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#1a1c1c",
+                    "on-error-container": "#93000a",
+                    "on-background": "#1a1c1c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter-mobile": "12px",
+                    "section-gap": "32px",
+                    "margin-mobile": "16px",
+                    "base": "4px",
+                    "touch-target-min": "44px"
+            },
+            "fontFamily": {
+                    "title-md": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "button": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .cart-item-enter { animation: slideIn 0.3s ease-out forwards; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top Navigation Bar -->
+<header class="bg-surface dark:bg-on-surface flex justify-between items-center px-margin-mobile h-14 w-full z-50 fixed top-0">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary dark:text-inverse-primary hover:opacity-80 active:scale-95 transition-transform duration-150">menu</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black tracking-tighter text-primary dark:text-on-primary-fixed">SPORTSWEAR</h1>
+</div>
+<button class="material-symbols-outlined text-primary dark:text-inverse-primary hover:opacity-80 active:scale-95 transition-transform duration-150">notifications</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="mt-14 px-margin-mobile pt-6" id="cart-container">
+<div class="flex justify-between items-end mb-6">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile">Giỏ hàng</h2>
+<span class="font-body-sm text-on-surface-variant" id="item-count">3 sản phẩm</span>
+</div>
+<!-- Cart List -->
+<div class="space-y-4" id="cart-list">
+<!-- Item 1 -->
+<div class="cart-item bg-surface-container-lowest p-4 rounded-xl shadow-sm flex gap-4 relative overflow-hidden group">
+<div class="w-24 h-24 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Nike Air Max" class="w-full h-full object-cover" data-alt="A professional studio product shot of a vibrant red Nike Air Max sneaker placed on a clean, light gray surface. The lighting is high-contrast and dramatic, emphasizing the sleek curves and high-performance materials of the shoe. The overall aesthetic is modern, athletic, and premium, consistent with a high-end sportswear brand's visual identity." src="https://lh3.googleusercontent.com/aida/AP1WRLtXYx2yDLpNarBYG6ND-x6p9z-eep4-E60gkRfGy3_iR-wFbHUPuEbnGMPgpCl3iVYQ2G-z9IEWZbF-9irjQZLFqjOmkZOUL1UAJdLvCq-DUzqAV7vIdB23_WdYiXi_bnrl7_sbNppy0ClACHp7my2K9w5hqyRJD9m36yxdhBD4z7aSPyoO7R_tDEBbFT2X55xUJyFxy25MYTsvqi0fGMBOj_BXLK-XhkRQOPvu_3bC_BZFLDOzteAj3Rg"/>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-title-md text-primary leading-tight">Nike Air Max Alpha</h3>
+<button class="material-symbols-outlined text-outline hover:text-secondary transition-colors">delete</button>
+</div>
+<p class="font-body-sm text-on-surface-variant">Size: 42 | Đỏ Crimson</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-title-md text-primary">2.450.000đ</span>
+<div class="flex items-center bg-surface-container rounded-full border border-outline-variant">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant rounded-full transition-colors active:scale-90">-</button>
+<span class="px-2 font-label-bold">1</span>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant rounded-full transition-colors active:scale-90">+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="cart-item bg-surface-container-lowest p-4 rounded-xl shadow-sm flex gap-4">
+<div class="w-24 h-24 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Pro Compression Top" class="w-full h-full object-cover" data-alt="Close-up detailed shot of a high-performance black compression shirt for athletes, featuring breathable mesh panels and reflective stitching. The fabric texture is clearly visible, conveying durability and professional quality. Shot in a minimalist gym setting with soft atmospheric lighting that highlights the charcoal and obsidian tones of the garment." src="https://lh3.googleusercontent.com/aida/AP1WRLtuMxm8pqYTxHLwsaygbjh1_ozx3Qjsu0XfAaRmHWPVxwuehxhleE7ZP4_SJcNtBxwuatFGF-dYMMLCIqZy8yeod0ZrGU0N345XDuxiC_cyaPqoDRmk0_X_-25blUTK9Rcja-OSIGdvQNFRzNSVzR_GO3VvQKF5AHug12U7OAORHA9r5kRPI9T1peWZODRQmNiXx3Fv3mq6SSu9juEy2AfBHhOgyYlLYQW0E2R_XrJ3fcP2NiRUhJXRDA"/>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-title-md text-primary leading-tight">Pro Compression Top</h3>
+<button class="material-symbols-outlined text-outline hover:text-secondary transition-colors">delete</button>
+</div>
+<p class="font-body-sm text-on-surface-variant">Size: L | Đen Nhám</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-title-md text-primary">850.000đ</span>
+<div class="flex items-center bg-surface-container rounded-full border border-outline-variant">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant rounded-full transition-colors active:scale-90">-</button>
+<span class="px-2 font-label-bold">2</span>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant rounded-full transition-colors active:scale-90">+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="cart-item bg-surface-container-lowest p-4 rounded-xl shadow-sm flex gap-4">
+<div class="w-24 h-24 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Dri-FIT Shorts" class="w-full h-full object-cover" data-alt="A pair of sleek, dark gray athletic running shorts displayed on a clean white background. The shorts feature a subtle geometric pattern and an elastic waistband. The lighting is bright and even, capturing the lightweight nature of the Dri-FIT material. The image reflects a clean, high-performance athletic lifestyle aesthetic." src="https://lh3.googleusercontent.com/aida/AP1WRLsrfgc_RzSr-k9JRD9PdqLjqHCrvrWgOM5d0PtmrR34PedGSLjUuoBI0dvajBdY70nt0zKDKPnXx5pWAwir5Hl20HTaL2NNLR7fsc3bRoXh8f6sIrHjyxcm04FmC1Org3QSVFRfZdab1hrtWyoIfAy07MTUpzqlZW6caqlRuhqp4DH4kHyLH9PigophXSzZ6yY8HrWqmq5gPU_AIpslxlcSoZwpM2yTYE3QzAnpd53GzkrRQH3purJRR1g"/>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-title-md text-primary leading-tight">Dri-FIT Elite Shorts</h3>
+<button class="material-symbols-outlined text-outline hover:text-secondary transition-colors">delete</button>
+</div>
+<p class="font-body-sm text-on-surface-variant">Size: M | Xám Titan</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-title-md text-primary">690.000đ</span>
+<div class="flex items-center bg-surface-container rounded-full border border-outline-variant">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant rounded-full transition-colors active:scale-90">-</button>
+<span class="px-2 font-label-bold">1</span>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant rounded-full transition-colors active:scale-90">+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty State (Hidden by default) -->
+<div class="hidden flex flex-col items-center justify-center pt-20 text-center" id="empty-state">
+<div class="w-64 h-64 mb-8">
+<img alt="Empty Cart" class="w-full h-full object-contain opacity-20 grayscale" data-alt="A minimalist artistic representation of an empty shopping space with a single, sleek sneaker silhouette in the background. The scene is bathed in soft, diffused light, creating a calm and spacious feeling. The color palette is monochromatic with shades of light gray and white, conveying a fresh start for a shopping journey in a premium digital storefront." src="https://lh3.googleusercontent.com/aida/AP1WRLuweFgU9HvpIvRgW4IfmkjaEYdImFv1oGa2GcM6DQnjzgD9jHCvxq-N6aY5ajRj7zjxROsH2jLdz3OjnbQQnaCkCiRS3oG4ml2UqVCNLMl_40MRZAVRiTrp0s7yHVQPhItsq-F8cb8hGYqgaQuKczJU_h1Tpmvzr9l6WB4fdk7g9v-kFJsCOVLldzMEB317MQxRrJ5fbqn9eUvBL2CH3OY0SjwWtsOYQAzRWyWlAbHhdSmhhZw6l_Dtuh0"/>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile mb-2">Giỏ hàng đang trống</h3>
+<p class="font-body-lg text-on-surface-variant mb-8 px-8">Có vẻ như bạn chưa chọn được món đồ hiệu năng nào cho buổi tập tới.</p>
+<button class="bg-primary text-on-primary px-10 py-4 rounded-full font-button hover:opacity-90 active:scale-95 transition-all">
+                Mua sắm ngay
+            </button>
+</div>
+</main>
+<!-- Sticky Checkout Section -->
+<section class="fixed bottom-16 left-0 right-0 bg-surface-container-lowest border-t border-outline-variant px-margin-mobile pt-4 pb-6 z-40">
+<div class="flex justify-between items-center mb-4">
+<span class="font-body-lg text-on-surface-variant">Tổng tiền tạm tính</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary">4.840.000đ</span>
+</div>
+<button class="w-full bg-secondary text-on-secondary py-4 rounded-xl font-button text-lg flex items-center justify-center gap-2 shadow-lg hover:opacity-90 active:scale-[0.98] transition-all">
+            Thanh toán ngay
+            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</section>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center pt-2 pb-safe px-gutter-mobile bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant dark:border-outline shadow-sm rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low transition-all duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-bold text-label-bold">Trang chủ</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low transition-all duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-bold text-label-bold">Tìm kiếm</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-container font-bold hover:bg-surface-container-low transition-all duration-200 p-2 rounded-lg active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+<span class="font-label-bold text-label-bold">Giỏ hàng</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low transition-all duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-bold text-label-bold">Đơn hàng</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low transition-all duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-bold text-label-bold">Cá nhân</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions and simple state toggle for demo purposes
+        const deleteButtons = document.querySelectorAll('.material-symbols-outlined');
+        deleteButtons.forEach(btn => {
+            if (btn.innerText === 'delete') {
+                btn.addEventListener('click', function() {
+                    const item = this.closest('.cart-item');
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateX(20px)';
+                    setTimeout(() => {
+                        item.remove();
+                        checkEmpty();
+                    }, 300);
+                });
+            }
+        });
+
+        function checkEmpty() {
+            const list = document.getElementById('cart-list');
+            const empty = document.getElementById('empty-state');
+            const summary = document.querySelector('section.fixed');
+            const itemCount = document.getElementById('item-count');
+            
+            if (list.children.length === 0) {
+                list.classList.add('hidden');
+                empty.classList.remove('hidden');
+                summary.classList.add('hidden');
+                itemCount.innerText = '0 sản phẩm';
+            } else {
+                itemCount.innerText = list.children.length + ' sản phẩm';
+            }
+        }
+    </script>
+</body></html>

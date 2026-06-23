@@ -17,7 +17,12 @@ class DeliveryOrdersController extends ChangeNotifier {
   List<OrderModel> get assignedOrders {
     return orders.where((order) {
       final status = OrderStatus.fromApi(order.status);
-      return status == OrderStatus.shipped || status == OrderStatus.completed;
+      final rawStatus = order.status.toUpperCase();
+      final paymentMethod = order.paymentMethod.toUpperCase();
+      return (rawStatus == 'PENDING' && paymentMethod == 'COD') ||
+          rawStatus == 'PAID' ||
+          status == OrderStatus.shipped ||
+          status == OrderStatus.completed;
     }).toList();
   }
 
@@ -38,7 +43,11 @@ class DeliveryOrdersController extends ChangeNotifier {
   }
 
   Future<bool> completeDelivery(String orderId) async {
-    return _updateStatus(orderId, OrderStatus.completed);
+    return _updateStatusValue(orderId, 'DELIVERED');
+  }
+
+  Future<bool> startDelivery(String orderId) async {
+    return _updateStatusValue(orderId, 'SHIPPING');
   }
 
   Future<bool> markFailed(String orderId) async {
@@ -46,6 +55,10 @@ class DeliveryOrdersController extends ChangeNotifier {
   }
 
   Future<bool> _updateStatus(String orderId, OrderStatus status) async {
+    return _updateStatusValue(orderId, status.apiValue);
+  }
+
+  Future<bool> _updateStatusValue(String orderId, String status) async {
     isUpdating = true;
     errorMessage = null;
     notifyListeners();
@@ -53,7 +66,7 @@ class DeliveryOrdersController extends ChangeNotifier {
     try {
       await orderRepository.updateStatus(
         orderId: orderId,
-        status: status.apiValue,
+        status: status,
         asAdminOrShipper: true,
       );
       orders = await orderRepository.getAllOrders();

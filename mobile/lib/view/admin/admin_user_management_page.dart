@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../controller/admin/admin_catalog_controller.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/auth/role_mapper.dart';
 import '../../core/di/app_dependencies.dart';
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_state.dart';
 import '../../model/admin/admin_lookup_model.dart';
+import '../../widgets/shared/absolute_persistent_layout.dart';
 import 'widgets/admin_bottom_nav.dart';
+import 'widgets/admin_design_system.dart';
 
 class AdminUserManagementPage extends StatefulWidget {
   const AdminUserManagementPage({super.key});
@@ -21,16 +23,23 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> {
   late final AdminCatalogController _controller = AdminCatalogController(
     adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
   );
+  final TextEditingController _searchController = TextEditingController();
+  String _selectedRole = 'ALL';
 
   @override
   void initState() {
     super.initState();
     _controller.addListener(_onControllerChanged);
-    _controller.loadUsers();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    await Future.wait([_controller.loadUsers(), _controller.loadRoles()]);
   }
 
   @override
   void dispose() {
+    _searchController.dispose();
     _controller
       ..removeListener(_onControllerChanged)
       ..dispose();
@@ -46,7 +55,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> {
   Future<void> _openUserForm([AdminUserModel? user]) async {
     final result = await showDialog<_UserFormResult>(
       context: context,
-      builder: (_) => _UserFormDialog(user: user),
+      builder: (_) => _UserFormDialog(user: user, roles: _controller.roles),
     );
     if (result == null) {
       return;
@@ -118,18 +127,17 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> {
       title: const Text('Quản lý người dùng'),
       actions: [
         IconButton(
-          onPressed: _controller.isLoading ? null : _controller.loadUsers,
+          onPressed: _controller.isLoading ? null : _loadData,
           icon: const Icon(Icons.refresh),
         ),
       ],
     ),
-    body: RefreshIndicator(
-      onRefresh: _controller.loadUsers,
-      child: _buildBody(),
-    ),
+    body: RefreshIndicator(onRefresh: _loadData, child: _buildBody()),
     floatingActionButton: FloatingActionButton(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       foregroundColor: Colors.white,
+      elevation: 4,
+      shape: const CircleBorder(),
       onPressed: _controller.isSubmitting ? null : () => _openUserForm(),
       child: _controller.isSubmitting
           ? const SizedBox(
@@ -154,45 +162,237 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> {
       );
     }
     if (_controller.users.isEmpty) {
-      return const AppEmptyState(title: 'Chưa có người dùng');
+      return PremiumEmptyState(
+        icon: Icons.manage_accounts_outlined,
+        title: 'Chưa có người dùng',
+        message: 'Tạo tài khoản để phân quyền Admin, Shipper hoặc khách hàng.',
+        actionLabel: 'Thêm mới ngay',
+        onAction: () => _openUserForm(),
+      );
     }
-    return ListView.separated(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      itemCount: _controller.users.length + 3,
-      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
-      itemBuilder: (context, index) {
-        if (index == 0) {
-          return const Text(
-            'Quản lý người dùng',
-            style: TextStyle(fontSize: 34, fontWeight: FontWeight.w900),
+    final visibleUsers = _visibleUsers;
+    final activeUsers = _controller.users.where((user) => user.status).length;
+    final adminUsers = _controller.users
+        .where((user) => RoleMapper.normalize(user.roleName) == 'ADMIN')
+        .length;
+    return AbsolutePersistentLayout(
+      title: 'Quản lý người dùng',
+      subtitle: 'Kiểm soát tài khoản, vai trò và trạng thái truy cập hệ thống.',
+      icon: Icons.manage_accounts_outlined,
+      trailing: _UserCountBadge(count: _controller.users.length),
+      filterAndSearchZone: _UserToolbar(
+        controller: _searchController,
+        selectedRole: _selectedRole,
+        onSearchChanged: (_) => setState(() {}),
+        onRoleChanged: (role) => setState(() => _selectedRole = role),
+        totalUsers: _controller.users.length,
+        activeUsers: activeUsers,
+        adminUsers: adminUsers,
+      ),
+      dynamicContent: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, 0),
+        itemCount: visibleUsers.isEmpty ? 1 : visibleUsers.length,
+        separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
+        itemBuilder: (context, index) {
+          if (visibleUsers.isEmpty) {
+            return PremiumEmptyState(
+              icon: Icons.search_off_rounded,
+              title: 'Không tìm thấy người dùng',
+              message: 'Hãy thử đổi từ khóa hoặc bỏ bộ lọc vai trò hiện tại.',
+              actionLabel: 'Xóa bộ lọc',
+              onAction: () {
+                _searchController.clear();
+                setState(() => _selectedRole = 'ALL');
+              },
+            );
+          }
+          final user = visibleUsers[index];
+          return _UserCard(
+            user: user,
+            onEdit: () => _openUserForm(user),
+            onDelete: () => _deleteUser(user),
           );
-        }
-        if (index == 1) {
-          return const TextField(
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: 'Tìm tên, email...',
-            ),
-          );
-        }
-        if (index == 2) {
-          return const Wrap(
-            spacing: AppSpacing.md,
+        },
+      ),
+    );
+  }
+
+  List<AdminUserModel> get _visibleUsers {
+    final query = _searchController.text.trim().toLowerCase();
+    return _controller.users.where((user) {
+      final normalizedRole = RoleMapper.normalize(user.roleName);
+      final matchesRole =
+          _selectedRole == 'ALL' || normalizedRole == _selectedRole;
+      final matchesQuery =
+          query.isEmpty ||
+          user.fullName.toLowerCase().contains(query) ||
+          user.email.toLowerCase().contains(query) ||
+          user.phoneNumber.toLowerCase().contains(query) ||
+          user.id.toLowerCase().contains(query);
+      return matchesRole && matchesQuery;
+    }).toList();
+  }
+}
+
+class _UserCountBadge extends StatelessWidget {
+  const _UserCountBadge({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
+      decoration: BoxDecoration(
+        color: AdminColors.primarySoft,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+      ),
+      child: Text(
+        '$count tài khoản',
+        style: AppTextStyles.caption.copyWith(
+          color: AdminColors.primary,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+}
+
+class _UserToolbar extends StatelessWidget {
+  const _UserToolbar({
+    required this.controller,
+    required this.selectedRole,
+    required this.onSearchChanged,
+    required this.onRoleChanged,
+    required this.totalUsers,
+    required this.activeUsers,
+    required this.adminUsers,
+  });
+
+  final TextEditingController controller;
+  final String selectedRole;
+  final ValueChanged<String> onSearchChanged;
+  final ValueChanged<String> onRoleChanged;
+  final int totalUsers;
+  final int activeUsers;
+  final int adminUsers;
+
+  @override
+  Widget build(BuildContext context) {
+    return AdminSurface(
+      hoverEnabled: false,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              _RoleChip(label: 'Tất cả', active: true),
-              _RoleChip(label: 'Admin'),
-              _RoleChip(label: 'Shop staff'),
-              _RoleChip(label: 'Delivery'),
+              _UserMetric(label: 'Tổng', value: totalUsers),
+              const SizedBox(width: AppSpacing.sm),
+              _UserMetric(label: 'Hoạt động', value: activeUsers),
+              const SizedBox(width: AppSpacing.sm),
+              _UserMetric(label: 'Admin', value: adminUsers),
             ],
-          );
-        }
-        final user = _controller.users[index - 3];
-        return _UserCard(
-          user: user,
-          onEdit: () => _openUserForm(user),
-          onDelete: () => _deleteUser(user),
-        );
-      },
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          TextField(
+            controller: controller,
+            onChanged: onSearchChanged,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.search_rounded),
+              hintText: 'Tìm tên hoặc email...',
+              suffixIcon: controller.text.isEmpty
+                  ? null
+                  : IconButton(
+                      tooltip: 'Xóa tìm kiếm',
+                      onPressed: () {
+                        controller.clear();
+                        onSearchChanged('');
+                      },
+                      icon: const Icon(Icons.close_rounded),
+                    ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _RoleChip(
+                  label: 'Tất cả',
+                  value: 'ALL',
+                  active: selectedRole == 'ALL',
+                  onSelected: onRoleChanged,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                _RoleChip(
+                  label: 'Admin',
+                  value: 'ADMIN',
+                  active: selectedRole == 'ADMIN',
+                  onSelected: onRoleChanged,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                _RoleChip(
+                  label: 'Shipper',
+                  value: 'SHIPPER',
+                  active: selectedRole == 'SHIPPER',
+                  onSelected: onRoleChanged,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                _RoleChip(
+                  label: 'Member',
+                  value: 'MEMBER',
+                  active: selectedRole == 'MEMBER',
+                  onSelected: onRoleChanged,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _UserMetric extends StatelessWidget {
+  const _UserMetric({required this.label, required this.value});
+
+  final String label;
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: AdminColors.surfaceMuted,
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$value',
+              style: AppTextStyles.title.copyWith(
+                color: AdminColors.textPrimary,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.caption.copyWith(
+                color: AdminColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -218,21 +418,17 @@ class _UserFormResult {
 }
 
 class _UserFormDialog extends StatefulWidget {
-  const _UserFormDialog({this.user});
+  const _UserFormDialog({this.user, required this.roles});
 
   final AdminUserModel? user;
+  final List<AdminRoleModel> roles;
 
   @override
   State<_UserFormDialog> createState() => _UserFormDialogState();
 }
 
 class _UserFormDialogState extends State<_UserFormDialog> {
-  static const List<String> _roles = [
-    'ADMIN',
-    'SHOP_STAFF',
-    'DELIVERY_STAFF',
-    'CUSTOMER',
-  ];
+  static const List<String> _fallbackRoles = ['ADMIN', 'SHIPPER', 'MEMBER'];
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final TextEditingController _fullNameController = TextEditingController(
@@ -252,6 +448,15 @@ class _UserFormDialogState extends State<_UserFormDialog> {
 
   bool get _isEditing => widget.user != null;
 
+  List<String> get _roles {
+    final values = widget.roles
+        .map((role) => RoleMapper.normalize(role.code))
+        .where((role) => role.isNotEmpty)
+        .toSet()
+        .toList();
+    return values.isEmpty ? _fallbackRoles : values;
+  }
+
   @override
   void dispose() {
     _fullNameController.dispose();
@@ -263,17 +468,8 @@ class _UserFormDialogState extends State<_UserFormDialog> {
   }
 
   static String _normalizeRole(String? roleName) {
-    final value = (roleName ?? '').trim().toUpperCase();
-    if (_roles.contains(value)) {
-      return value;
-    }
-    if (value == 'SHIPPER') {
-      return 'DELIVERY_STAFF';
-    }
-    if (value == 'STAFF') {
-      return 'SHOP_STAFF';
-    }
-    return 'CUSTOMER';
+    final value = RoleMapper.normalize(roleName);
+    return _fallbackRoles.contains(value) ? value : 'MEMBER';
   }
 
   void _submit() {
@@ -297,38 +493,46 @@ class _UserFormDialogState extends State<_UserFormDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(_isEditing ? 'Sửa người dùng' : 'Thêm người dùng'),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(
+        _isEditing ? 'Sửa người dùng' : 'Thêm người dùng',
+        style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w800),
+      ),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _DialogField(
+              AdminFormField(
                 controller: _fullNameController,
                 label: 'Họ tên',
                 required: true,
               ),
-              _DialogField(
+              const SizedBox(height: AppSpacing.md),
+              AdminFormField(
                 controller: _emailController,
                 label: 'Email',
                 keyboardType: TextInputType.emailAddress,
                 enabled: !_isEditing,
                 required: true,
               ),
-              _DialogField(
+              const SizedBox(height: AppSpacing.md),
+              AdminFormField(
                 controller: _phoneController,
                 label: 'Số điện thoại',
                 keyboardType: TextInputType.phone,
               ),
               if (!_isEditing) ...[
-                _DialogField(
+                const SizedBox(height: AppSpacing.md),
+                AdminFormField(
                   controller: _passwordController,
                   label: 'Mật khẩu',
                   obscureText: true,
                   required: true,
                 ),
-                _DialogField(
+                const SizedBox(height: AppSpacing.md),
+                AdminFormField(
                   controller: _confirmPasswordController,
                   label: 'Nhập lại mật khẩu',
                   obscureText: true,
@@ -344,9 +548,21 @@ class _UserFormDialogState extends State<_UserFormDialog> {
                   },
                 ),
               ],
+              const SizedBox(height: AppSpacing.md),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Vai trò',
+                  style: AppTextStyles.caption.copyWith(
+                    color: AdminColors.label,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
               DropdownButtonFormField<String>(
                 initialValue: _roleName,
-                decoration: const InputDecoration(labelText: 'Vai trò'),
+                decoration: const InputDecoration(),
                 items: _roles
                     .map(
                       (role) =>
@@ -376,67 +592,51 @@ class _UserFormDialogState extends State<_UserFormDialog> {
           onPressed: () => Navigator.pop(context),
           child: const Text('Hủy'),
         ),
-        FilledButton(onPressed: _submit, child: const Text('Lưu')),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AdminColors.primary,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.md,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+            ),
+          ),
+          onPressed: _submit,
+          child: const Text('Lưu'),
+        ),
       ],
     );
   }
 }
 
-class _DialogField extends StatelessWidget {
-  const _DialogField({
-    required this.controller,
+class _RoleChip extends StatelessWidget {
+  const _RoleChip({
     required this.label,
-    this.keyboardType,
-    this.enabled = true,
-    this.required = false,
-    this.obscureText = false,
-    this.validator,
+    required this.value,
+    required this.active,
+    required this.onSelected,
   });
 
-  final TextEditingController controller;
   final String label;
-  final TextInputType? keyboardType;
-  final bool enabled;
-  final bool required;
-  final bool obscureText;
-  final String? Function(String?)? validator;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        enabled: enabled,
-        obscureText: obscureText,
-        decoration: InputDecoration(labelText: label),
-        validator:
-            validator ??
-            (value) {
-              if (required && (value == null || value.trim().isEmpty)) {
-                return 'Vui lòng nhập $label.';
-              }
-              return null;
-            },
-      ),
-    );
-  }
-}
-
-class _RoleChip extends StatelessWidget {
-  const _RoleChip({required this.label, this.active = false});
-
-  final String label;
+  final String value;
   final bool active;
+  final ValueChanged<String> onSelected;
 
   @override
-  Widget build(BuildContext context) => Chip(
+  Widget build(BuildContext context) => ChoiceChip(
     label: Text(label),
-    backgroundColor: active ? AppColors.primary : AppColors.surfaceMuted,
+    selected: active,
+    onSelected: (_) => onSelected(value),
+    showCheckmark: false,
+    backgroundColor: AdminColors.surface,
+    selectedColor: AdminColors.primary,
     labelStyle: TextStyle(
-      color: active ? Colors.white : AppColors.primary,
-      fontWeight: FontWeight.w900,
+      color: active ? Colors.white : AdminColors.textSecondary,
+      fontWeight: FontWeight.w700,
     ),
   );
 }
@@ -453,67 +653,181 @@ class _UserCard extends StatelessWidget {
   final VoidCallback onDelete;
 
   @override
-  Widget build(BuildContext context) => Container(
-    decoration: BoxDecoration(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(AppRadius.xl),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+  Widget build(BuildContext context) {
+    final displayName = user.fullName.trim().isEmpty
+        ? user.email
+        : user.fullName.trim();
+    final initial = displayName.isEmpty
+        ? '?'
+        : displayName.characters.first.toUpperCase();
+    final role = RoleMapper.normalize(user.roleName);
+
+    return AdminSurface(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CircleAvatar(radius: 36, child: Icon(Icons.person)),
-              const SizedBox(width: AppSpacing.lg),
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    width: 56,
+                    height: 56,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AdminColors.primarySoft,
+                      borderRadius: BorderRadius.circular(AppRadius.xl),
+                    ),
+                    child: Text(
+                      initial,
+                      style: AppTextStyles.title.copyWith(
+                        color: AdminColors.primary,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: -2,
+                    bottom: -2,
+                    child: Container(
+                      width: 15,
+                      height: 15,
+                      decoration: BoxDecoration(
+                        color: user.status
+                            ? AdminColors.success
+                            : AdminColors.textSecondary,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AdminColors.surface,
+                          width: 3,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(user.fullName, style: AppTextStyles.title),
-                    Text(user.email),
+                    Text(
+                      displayName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.subtitle.copyWith(
+                        color: AdminColors.textPrimary,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      user.email,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.caption.copyWith(
+                        color: AdminColors.textSecondary,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  if (value == 'edit') {
-                    onEdit();
-                  } else if (value == 'delete') {
-                    onDelete();
-                  }
-                },
-                itemBuilder: (context) => const [
-                  PopupMenuItem(value: 'edit', child: Text('Sửa')),
-                  PopupMenuItem(value: 'delete', child: Text('Xóa')),
-                ],
-              ),
+              AdminEntityMenu(onEdit: onEdit, onDelete: onDelete),
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
           Row(
             children: [
-              Expanded(
-                child: Text(
-                  'VAI TRÒ\n${user.roleName}',
-                  style: AppTextStyles.body.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
+              _UserPill(
+                label: role.isEmpty ? user.roleName : role,
+                icon: Icons.admin_panel_settings_outlined,
+                color: AdminColors.primary,
+                background: AdminColors.primarySoft,
               ),
-              Text(
-                'TRẠNG THÁI\n${user.status ? 'Hoạt động' : 'Vô hiệu'}',
-                textAlign: TextAlign.right,
-                style: AppTextStyles.body.copyWith(
-                  color: user.status ? AppColors.success : AppColors.secondary,
-                  fontWeight: FontWeight.w900,
-                ),
+              const SizedBox(width: AppSpacing.sm),
+              _UserPill(
+                label: user.status ? 'Hoạt động' : 'Vô hiệu',
+                icon: user.status
+                    ? Icons.check_circle_outline
+                    : Icons.block_outlined,
+                color: user.status ? AdminColors.success : AdminColors.danger,
+                background: user.status
+                    ? AdminColors.successSoft
+                    : AdminColors.dangerSoft,
               ),
             ],
           ),
+          if (user.phoneNumber.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                const Icon(
+                  Icons.phone_outlined,
+                  size: 16,
+                  color: AdminColors.textSecondary,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  user.phoneNumber,
+                  style: AppTextStyles.caption.copyWith(
+                    color: AdminColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
-    ),
-  );
+    );
+  }
+}
+
+class _UserPill extends StatelessWidget {
+  const _UserPill({
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.background,
+  });
+
+  final String label;
+  final IconData icon;
+  final Color color;
+  final Color background;
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: 6,
+        ),
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: color),
+            const SizedBox(width: AppSpacing.xs),
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.caption.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

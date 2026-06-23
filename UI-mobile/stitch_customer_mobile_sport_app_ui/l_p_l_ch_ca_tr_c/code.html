@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+    }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    .active-scale:active { transform: scale(0.95); transition: transform 0.1s; }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "tertiary-fixed-dim": "#c6c6c7",
+                  "on-secondary-container": "#fffbff",
+                  "surface-dim": "#dadada",
+                  "secondary-fixed": "#ffdad8",
+                  "on-error-container": "#93000a",
+                  "primary-fixed": "#e2e2e2",
+                  "inverse-surface": "#2f3131",
+                  "surface-bright": "#f9f9f9",
+                  "inverse-primary": "#c6c6c6",
+                  "background": "#f9f9f9",
+                  "on-tertiary-fixed-variant": "#454747",
+                  "surface-container-low": "#f3f3f3",
+                  "primary-container": "#1b1b1b",
+                  "on-surface": "#1a1c1c",
+                  "tertiary-container": "#1a1c1c",
+                  "surface-container-high": "#e8e8e8",
+                  "secondary-fixed-dim": "#ffb3b1",
+                  "secondary-container": "#e51a38",
+                  "tertiary": "#000000",
+                  "surface-tint": "#5e5e5e",
+                  "outline-variant": "#cfc4c5",
+                  "surface-variant": "#e2e2e2",
+                  "outline": "#7e7576",
+                  "on-secondary-fixed": "#410007",
+                  "surface-container-highest": "#e2e2e2",
+                  "secondary": "#bb0027",
+                  "on-secondary-fixed-variant": "#92001d",
+                  "surface-container": "#eeeeee",
+                  "primary-fixed-dim": "#c6c6c6",
+                  "on-tertiary": "#ffffff",
+                  "surface-container-lowest": "#ffffff",
+                  "on-primary-fixed": "#1b1b1b",
+                  "on-primary-container": "#848484",
+                  "error": "#ba1a1a",
+                  "on-tertiary-fixed": "#1a1c1c",
+                  "on-secondary": "#ffffff",
+                  "on-background": "#1a1c1c",
+                  "on-tertiary-container": "#838484",
+                  "error-container": "#ffdad6",
+                  "on-error": "#ffffff",
+                  "on-surface-variant": "#4c4546",
+                  "on-primary": "#ffffff",
+                  "surface": "#f9f9f9",
+                  "primary": "#000000",
+                  "inverse-on-surface": "#f1f1f1",
+                  "on-primary-fixed-variant": "#474747",
+                  "tertiary-fixed": "#e2e2e2"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "section-gap": "32px",
+                  "gutter-mobile": "12px",
+                  "touch-target-min": "44px",
+                  "base": "4px",
+                  "margin-mobile": "16px"
+          },
+          "fontFamily": {
+                  "headline-lg-mobile": ["Inter"],
+                  "body-lg": ["Inter"],
+                  "button": ["Inter"],
+                  "title-md": ["Inter"],
+                  "headline-lg": ["Inter"],
+                  "display-lg": ["Inter"],
+                  "body-sm": ["Inter"],
+                  "label-bold": ["Inter"]
+          },
+          "fontSize": {
+                  "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                  "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                  "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                  "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                  "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                  "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                  "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                  "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-sm min-h-screen pb-24">
+<!-- Top Navigation Shell -->
+<header class="w-full top-0 sticky z-50 bg-surface border-b border-outline-variant flex items-center justify-between px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95 duration-100">menu</button>
+<h1 class="font-display-lg text-[24px] font-extrabold tracking-tighter text-primary">APEX VELOCITY</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95 duration-100">notifications</button>
+</div>
+</header>
+<main class="px-margin-mobile pt-6">
+<!-- Header Section -->
+<section class="mb-6">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Lập lịch ca trực</h2>
+<p class="text-on-surface-variant font-body-sm">Quản lý đội ngũ vận động viên &amp; nhân viên</p>
+</div>
+<button class="bg-surface-container-high p-2 rounded-lg material-symbols-outlined text-primary active:scale-90 duration-150">calendar_today</button>
+</div>
+<!-- Week View Calendar Strip -->
+<div class="flex justify-between items-center bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] mb-section-gap overflow-x-auto hide-scrollbar gap-3">
+<div class="flex flex-col items-center min-w-[48px] p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="font-label-bold text-on-surface-variant uppercase text-[10px]">T2</span>
+<span class="font-title-md text-primary">12</span>
+</div>
+<div class="flex flex-col items-center min-w-[48px] p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="font-label-bold text-on-surface-variant uppercase text-[10px]">T3</span>
+<span class="font-title-md text-primary">13</span>
+</div>
+<!-- Active Day -->
+<div class="flex flex-col items-center min-w-[48px] p-2 rounded-lg bg-primary text-on-primary shadow-lg ring-2 ring-primary ring-offset-2">
+<span class="font-label-bold uppercase text-[10px] opacity-80">T4</span>
+<span class="font-title-md">14</span>
+</div>
+<div class="flex flex-col items-center min-w-[48px] p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="font-label-bold text-on-surface-variant uppercase text-[10px]">T5</span>
+<span class="font-title-md text-primary">15</span>
+</div>
+<div class="flex flex-col items-center min-w-[48px] p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="font-label-bold text-on-surface-variant uppercase text-[10px]">T6</span>
+<span class="font-title-md text-primary">16</span>
+</div>
+<div class="flex flex-col items-center min-w-[48px] p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="font-label-bold text-on-surface-variant uppercase text-[10px]">T7</span>
+<span class="font-title-md text-primary">17</span>
+</div>
+<div class="flex flex-col items-center min-w-[48px] p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="font-label-bold text-on-surface-variant uppercase text-[10px]">CN</span>
+<span class="font-title-md text-primary">18</span>
+</div>
+</div>
+</section>
+<!-- Staff List Section -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Danh sách nhân sự</h3>
+<span class="text-secondary font-label-bold">8 thành viên</span>
+</div>
+<!-- Staff Member Card 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col gap-4 border-l-4 border-green-500">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Staff Avatar" class="w-12 h-12 rounded-full object-cover" data-alt="A professional headshot of a fit male athletic trainer in his 30s, wearing a black performance moisture-wicking shirt. The background is a clean, brightly lit modern gym with minimalist equipment. The lighting is crisp and energetic, emphasizing a high-contrast sports brand aesthetic with soft shadows." src="https://lh3.googleusercontent.com/aida/AP1WRLstX630GY2Ep_zFUDpQVeJWzR0d8ya0MtYF6x_t-hWXZLNvOtsPkmEbOcr7h4PUSg8kfpVrW2QFqLlagJ1ObEkoHX-0mhyOY4MZ0UZcg3Z3CknEzCSaVq-8QHVE8oSZxg0R6jydgdKvZpbo8SrGtISld18k1zPHwExUZMNpqGghp-5tqNhAxMSKmiGBPU7kf4maVmlIuy1zsl6pRVNXS4oqgyK8B-k6eyfh-7HIIIsyeSfJMICjXLwuXw"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+</div>
+<div>
+<p class="font-title-md text-primary text-[16px]">Trần Nhật Minh</p>
+<p class="text-[12px] text-on-surface-variant">Huấn luyện viên Trưởng</p>
+</div>
+</div>
+<div class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-label-bold">SẴN SÀNG</div>
+</div>
+<div class="flex gap-2">
+<div class="flex-1 bg-secondary text-on-secondary py-2 rounded-lg text-center font-label-bold text-[11px] active:scale-95 duration-150">CA SÁNG</div>
+<div class="flex-1 bg-surface-container py-2 rounded-lg text-center font-label-bold text-[11px] text-on-surface-variant">CA CHIỀU</div>
+<div class="flex-1 bg-surface-container py-2 rounded-lg text-center font-label-bold text-[11px] text-on-surface-variant">CA TỐI</div>
+</div>
+</div>
+<!-- Staff Member Card 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col gap-4 border-l-4 border-amber-500">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Staff Avatar" class="w-12 h-12 rounded-full object-cover" data-alt="A professional studio portrait of a female fitness instructor with an athletic build, wearing a sleek red sports top. The lighting is directional and dramatic, characteristic of a premium sports brand advertisement. The background is a minimalist light gray studio setting, creating a clean and modern high-performance look." src="https://lh3.googleusercontent.com/aida/AP1WRLu6HaLObREUeNS3OUJYm8OeIWeOwBuiJOQ7L48vT2yWME32CylKPHF1um8hj-KeYJ851mHKuPPN-58IIsZAri5ka9LG9zd0o3lLr8Y5pWtQQsK7XO-fYAfUsaGJr2MOqF0OmWylxgVX-xQvdpahCwUhKS9_apbrY9bZDeM506KQ5664lJOA0q9n5HfexxberLjoQJLWEZ6vWJ910c8ygH9N0c4K4zhcjRm4ulaYfRY5Ee8D0mhL6o65uHs"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-amber-500 border-2 border-white rounded-full"></div>
+</div>
+<div>
+<p class="font-title-md text-primary text-[16px]">Lê Phương Thảo</p>
+<p class="text-[12px] text-on-surface-variant">Chuyên viên Yoga</p>
+</div>
+</div>
+<div class="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-[10px] font-label-bold">ĐANG BẬN</div>
+</div>
+<div class="flex gap-2">
+<div class="flex-1 bg-surface-container py-2 rounded-lg text-center font-label-bold text-[11px] text-on-surface-variant">CA SÁNG</div>
+<div class="flex-1 bg-secondary text-on-secondary py-2 rounded-lg text-center font-label-bold text-[11px] active:scale-95 duration-150">CA CHIỀU</div>
+<div class="flex-1 bg-secondary text-on-secondary py-2 rounded-lg text-center font-label-bold text-[11px] active:scale-95 duration-150">CA TỐI</div>
+</div>
+</div>
+<!-- Staff Member Card 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col gap-4 border-l-4 border-outline">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="relative opacity-60">
+<img alt="Staff Avatar" class="w-12 h-12 rounded-full object-cover" data-alt="A close-up portrait of a male gym manager in a professional black polo shirt with a subtle red logo. He has a friendly yet authoritative expression. The image is shot in a high-key lighting style against a bright, minimalist gym lobby. The overall aesthetic is clean, professional, and aligned with a luxury sports equipment brand." src="https://lh3.googleusercontent.com/aida/AP1WRLvlvGq56KSytqC42P7Oo22g29yI3-wKtN7uDEUCmGfd5Crp7VFfHWMqxOqM1r_6v5hGz6DEC5bvAEeu1xnE3Z-_JbaWJT_VY0Jp97i3lSI8iqAFLikvJ2X9oS5bENqfJod6mxi4e--WcCgBPyENX6ztTYxmsJueClV99OMaHyNT3aznv2jRwKJQseiNhr7Cp_BWlde8Xsy_oHvJWfVkYml9ClpAfr_Pvgo7XKn-1Ryr06GkcRRURQbGiH4"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-outline border-2 border-white rounded-full"></div>
+</div>
+<div class="opacity-60">
+<p class="font-title-md text-primary text-[16px]">Nguyễn Hoàng Nam</p>
+<p class="text-[12px] text-on-surface-variant">Quản lý Cơ sở</p>
+</div>
+</div>
+<div class="px-2 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-[10px] font-label-bold">NGHỈ PHÉP</div>
+</div>
+<div class="flex gap-2 opacity-40 grayscale">
+<div class="flex-1 bg-surface-container py-2 rounded-lg text-center font-label-bold text-[11px]">CA SÁNG</div>
+<div class="flex-1 bg-surface-container py-2 rounded-lg text-center font-label-bold text-[11px]">CA CHIỀU</div>
+<div class="flex-1 bg-surface-container py-2 rounded-lg text-center font-label-bold text-[11px]">CA TỐI</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-secondary text-on-secondary rounded-full flex items-center justify-center shadow-xl z-50 active:scale-90 duration-150 transition-all">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-gutter-mobile py-2 bg-surface shadow-[0_-4px_12px_rgba(0,0,0,0.04)] z-50 rounded-t-xl">
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors active:scale-90 duration-150 ease-out">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors active:scale-90 duration-150 ease-out">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-bold text-label-bold">Catalog</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors active:scale-90 duration-150 ease-out">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label-bold text-label-bold">Orders</span>
+</button>
+<!-- Active State: Staff -->
+<button class="flex flex-col items-center justify-center text-secondary bg-surface-container-high rounded-lg p-2 active:scale-90 duration-150 ease-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-bold text-label-bold">Staff</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors active:scale-90 duration-150 ease-out">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</button>
+</nav>
+<script>
+    // Micro-interaction for shift selection
+    document.querySelectorAll('.flex-1.bg-secondary, .flex-1.bg-surface-container').forEach(chip => {
+      chip.addEventListener('click', function() {
+        if (this.classList.contains('bg-secondary')) {
+          this.classList.remove('bg-secondary', 'text-on-secondary');
+          this.classList.add('bg-surface-container', 'text-on-surface-variant');
+        } else {
+          this.classList.remove('bg-surface-container', 'text-on-surface-variant');
+          this.classList.add('bg-secondary', 'text-on-secondary');
+        }
+      });
+    });
+
+    // Simple date scroll snap or feedback
+    const dateItems = document.querySelectorAll('.min-w-\\[48px\\]');
+    dateItems.forEach(item => {
+      item.addEventListener('click', function() {
+        dateItems.forEach(i => {
+          i.classList.remove('bg-primary', 'text-on-primary', 'shadow-lg', 'ring-2', 'ring-primary', 'ring-offset-2');
+          i.classList.add('hover:bg-surface-container-low');
+          i.querySelector('span:first-child').classList.add('text-on-surface-variant');
+          i.querySelector('span:last-child').classList.add('text-primary');
+        });
+        this.classList.add('bg-primary', 'text-on-primary', 'shadow-lg', 'ring-2', 'ring-primary', 'ring-offset-2');
+        this.classList.remove('hover:bg-surface-container-low');
+        this.querySelector('span:first-child').classList.remove('text-on-surface-variant');
+        this.querySelector('span:last-child').classList.remove('text-primary');
+      });
+    });
+  </script>
+</body></html>

@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 
+import '../../model/admin/collection_model.dart';
 import '../../model/admin/admin_lookup_model.dart';
+import '../../model/common/backend_models.dart';
 import '../../model/customer/product_detail_model.dart';
 import '../../model/customer/product_summary_model.dart';
 import '../../repository/admin/admin_catalog_repository.dart';
@@ -15,6 +17,9 @@ class AdminCatalogController extends ChangeNotifier {
   List<AdminCategoryModel> categories = const [];
   List<AdminBrandModel> brands = const [];
   List<AdminUserModel> users = const [];
+  List<AdminRoleModel> roles = const [];
+  List<SportModel> sports = const [];
+  List<CollectionModel> collections = const [];
   AdminUserModel? selectedUser;
   bool isLoading = false;
   bool isSubmitting = false;
@@ -146,6 +151,18 @@ class AdminCatalogController extends ChangeNotifier {
     users = await adminCatalogRepository.getUsers();
   });
 
+  Future<void> loadRoles() => _load(() async {
+    roles = await adminCatalogRepository.getRoles();
+  });
+
+  Future<void> loadSports() => _load(() async {
+    sports = await adminCatalogRepository.getSports();
+  });
+
+  Future<void> loadCollections() => _load(() async {
+    collections = await adminCatalogRepository.getCollections();
+  });
+
   Future<void> loadUserDetail(String id) => _load(() async {
     selectedUser = await adminCatalogRepository.getUserDetail(id);
   });
@@ -255,6 +272,69 @@ class AdminCatalogController extends ChangeNotifier {
     return _submit(() async {
       await adminCatalogRepository.deleteBrand(id);
       brands = await adminCatalogRepository.getBrands();
+    });
+  }
+
+  Future<bool> saveSport({
+    String? id,
+    required String name,
+    required String description,
+  }) {
+    return _submit(() async {
+      if (id == null || id.isEmpty) {
+        await adminCatalogRepository.createSport(
+          name: name,
+          description: description,
+        );
+      } else {
+        await adminCatalogRepository.updateSport(
+          id: id,
+          name: name,
+          description: description,
+        );
+      }
+      sports = await adminCatalogRepository.getSports();
+    });
+  }
+
+  Future<bool> deleteSport(String id) {
+    return _submit(() async {
+      await adminCatalogRepository.deleteSport(id);
+      sports = await adminCatalogRepository.getSports();
+    });
+  }
+
+  Future<bool> createCollection({
+    required String name,
+    required String slug,
+    required String description,
+    required String imageUrl,
+    required String type,
+    required bool isActive,
+    String? startDate,
+    String? endDate,
+    required List<String> variantIds,
+  }) {
+    return _submit(() async {
+      await adminCatalogRepository.createCollection(
+        name: name,
+        slug: slug,
+        description: description,
+        imageUrl: imageUrl,
+        type: type,
+        isActive: isActive,
+        startDate: startDate,
+        endDate: endDate,
+        variantIds: variantIds,
+      );
+      collections = await adminCatalogRepository.getCollections();
+    });
+  }
+
+  Future<bool> deleteCollection(String id) {
+    return _submit(() async {
+      await adminCatalogRepository.deleteCollection(id);
+      collections = await adminCatalogRepository.getCollections();
     });
   }
 

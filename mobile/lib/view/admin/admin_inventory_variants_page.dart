@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import '../../controller/admin/admin_catalog_controller.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_state.dart';
+import '../../core/widgets/hover_effect.dart';
 import '../../model/customer/product_detail_model.dart';
 import 'widgets/admin_bottom_nav.dart';
+import 'widgets/admin_design_system.dart';
 
 class AdminInventoryVariantsPage extends StatefulWidget {
   const AdminInventoryVariantsPage({super.key, required this.productId});
@@ -148,8 +149,10 @@ class _AdminInventoryVariantsPageState
         child: _buildBody(product),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.secondary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
+        elevation: 4,
+        shape: const CircleBorder(),
         onPressed: _controller.isSubmitting ? null : () => _openVariantForm(),
         child: _controller.isSubmitting
             ? const SizedBox(
@@ -175,7 +178,13 @@ class _AdminInventoryVariantsPageState
       );
     }
     if (product == null) {
-      return const AppEmptyState(title: 'Chưa có dữ liệu sản phẩm');
+      return PremiumEmptyState(
+        icon: Icons.inventory_2_outlined,
+        title: 'Chưa có dữ liệu sản phẩm',
+        message: 'Không tìm thấy sản phẩm để quản lý biến thể và tồn kho.',
+        actionLabel: 'Tải lại dữ liệu',
+        onAction: () => _controller.loadProductDetail(widget.productId),
+      );
     }
 
     final variants = product.variants;
@@ -225,9 +234,12 @@ class _AdminInventoryVariantsPageState
         ),
         const SizedBox(height: AppSpacing.xl),
         if (variants.isEmpty)
-          const AppEmptyState(
+          PremiumEmptyState(
+            icon: Icons.inventory_2_outlined,
             title: 'Chưa có biến thể',
             message: 'Bấm nút + để thêm size, màu, SKU và tồn kho.',
+            actionLabel: 'Thêm biến thể',
+            onAction: () => _openVariantForm(),
           )
         else
           ...variants.map(
@@ -410,7 +422,7 @@ class _Title extends StatelessWidget {
       Text(
         'Kiểm soát biến thể và tồn kho cho ${product.name}.',
         style: AppTextStyles.body.copyWith(
-          color: AppColors.textSecondary,
+          color: AdminColors.textSecondary,
           fontSize: 18,
         ),
       ),
@@ -434,42 +446,50 @@ class _StockSummary extends StatelessWidget {
   final bool dark;
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: dark ? AppColors.primary : AppColors.surface,
-      borderRadius: BorderRadius.circular(AppRadius.xl),
-      border: alert
-          ? const Border(left: BorderSide(color: AppColors.secondary, width: 4))
-          : null,
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(AppSpacing.xl),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: AppTextStyles.caption.copyWith(
-              color: dark ? Colors.white : AppColors.primary,
-              fontWeight: FontWeight.w900,
+  Widget build(BuildContext context) => HoverLift(
+    scale: 1.01,
+    dy: -2,
+    borderRadius: BorderRadius.circular(AppRadius.xl),
+    child: DecoratedBox(
+      decoration: BoxDecoration(
+        color: dark ? AdminColors.navy : AdminColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        boxShadow: AdminDesign.cardShadow,
+        border: alert
+            ? const Border(
+                left: BorderSide(color: AdminColors.accent, width: 4),
+              )
+            : null,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: AppTextStyles.caption.copyWith(
+                color: dark ? Colors.white : AdminColors.primary,
+                fontWeight: FontWeight.w900,
+              ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            value,
-            style: AppTextStyles.display.copyWith(
-              fontSize: 42,
-              color: dark ? Colors.white : AppColors.secondary,
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              value,
+              style: AppTextStyles.display.copyWith(
+                fontSize: 42,
+                color: dark ? Colors.white : AdminColors.accent,
+              ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            subtitle,
-            style: AppTextStyles.body.copyWith(
-              color: dark ? Colors.white70 : AppColors.primary,
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              subtitle,
+              style: AppTextStyles.body.copyWith(
+                color: dark ? Colors.white70 : AdminColors.primary,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );
@@ -484,9 +504,9 @@ class _InventoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Chip(
     label: Text(label),
-    backgroundColor: active ? AppColors.primary : AppColors.surfaceMuted,
+    backgroundColor: active ? AdminColors.primary : AdminColors.surfaceMuted,
     labelStyle: TextStyle(
-      color: active ? Colors.white : AppColors.primary,
+      color: active ? Colors.white : AdminColors.primary,
       fontWeight: FontWeight.w900,
     ),
   );
@@ -510,90 +530,95 @@ class _VariantCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final alert = variant.stockQuantity <= 5;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Row(
-          children: [
-            Container(
-              width: 90,
-              height: 90,
-              decoration: BoxDecoration(
-                color: AppColors.surfaceMuted,
-                borderRadius: BorderRadius.circular(AppRadius.md),
+    return HoverLift(
+      scale: 1.01,
+      dy: -2,
+      borderRadius: BorderRadius.circular(AppRadius.xl),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: AdminColors.surface,
+          borderRadius: BorderRadius.circular(AppRadius.xl),
+          boxShadow: AdminDesign.cardShadow,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Row(
+            children: [
+              Container(
+                width: 90,
+                height: 90,
+                decoration: BoxDecoration(
+                  color: AdminColors.surfaceMuted,
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+                child: Icon(
+                  Icons.directions_run,
+                  color: alert ? AdminColors.accent : AdminColors.primary,
+                  size: 48,
+                ),
               ),
-              child: Icon(
-                Icons.directions_run,
-                color: alert ? AppColors.secondary : AppColors.primary,
-                size: 48,
+              const SizedBox(width: AppSpacing.lg),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (alert)
+                      const Chip(
+                        label: Text('SẮP HẾT'),
+                        backgroundColor: Color(0xFFFCE8EE),
+                        labelStyle: TextStyle(color: AdminColors.accent),
+                      ),
+                    Text('SKU: ${variant.sku}', style: AppTextStyles.subtitle),
+                    Text(
+                      'Màu ${variant.color} • Size ${variant.size}',
+                      style: AppTextStyles.body.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Row(
+                      children: [
+                        _QtyButton(label: '-', onTap: onDecrease),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md,
+                          ),
+                          child: Text(
+                            '${variant.stockQuantity}',
+                            style: AppTextStyles.title,
+                          ),
+                        ),
+                        _QtyButton(label: '+', onTap: onIncrease),
+                        const Spacer(),
+                        Text(
+                          'Còn ${variant.stockQuantity} SP',
+                          style: AppTextStyles.body.copyWith(
+                            color: alert
+                                ? AdminColors.accent
+                                : AdminColors.primary,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: AppSpacing.lg),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (alert)
-                    const Chip(
-                      label: Text('SẮP HẾT'),
-                      backgroundColor: Color(0xFFFCE8EE),
-                      labelStyle: TextStyle(color: AppColors.secondary),
-                    ),
-                  Text('SKU: ${variant.sku}', style: AppTextStyles.subtitle),
-                  Text(
-                    'Màu ${variant.color} • Size ${variant.size}',
-                    style: AppTextStyles.body.copyWith(
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Row(
-                    children: [
-                      _QtyButton(label: '-', onTap: onDecrease),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md,
-                        ),
-                        child: Text(
-                          '${variant.stockQuantity}',
-                          style: AppTextStyles.title,
-                        ),
-                      ),
-                      _QtyButton(label: '+', onTap: onIncrease),
-                      const Spacer(),
-                      Text(
-                        'Còn ${variant.stockQuantity} SP',
-                        style: AppTextStyles.body.copyWith(
-                          color: alert
-                              ? AppColors.secondary
-                              : AppColors.primary,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ],
-                  ),
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'edit') {
+                    onEdit();
+                  } else if (value == 'delete') {
+                    onDelete();
+                  }
+                },
+                itemBuilder: (context) => const [
+                  PopupMenuItem(value: 'edit', child: Text('Sửa')),
+                  PopupMenuItem(value: 'delete', child: Text('Xóa')),
                 ],
               ),
-            ),
-            PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'edit') {
-                  onEdit();
-                } else if (value == 'delete') {
-                  onDelete();
-                }
-              },
-              itemBuilder: (context) => const [
-                PopupMenuItem(value: 'edit', child: Text('Sửa')),
-                PopupMenuItem(value: 'delete', child: Text('Xóa')),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -607,22 +632,28 @@ class _QtyButton extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(AppRadius.sm),
-    child: Container(
-      width: 42,
-      height: 42,
-      decoration: BoxDecoration(
-        color: label == '+' ? AppColors.primary : AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(
-            color: label == '+' ? Colors.white : AppColors.primary,
-            fontSize: 22,
+  Widget build(BuildContext context) => HoverLift(
+    interactive: true,
+    scale: 1.06,
+    dy: -1,
+    borderRadius: BorderRadius.circular(AppRadius.lg),
+    child: Material(
+      color: label == '+' ? AdminColors.primary : AdminColors.surfaceMuted,
+      borderRadius: BorderRadius.circular(AppRadius.lg),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: SizedBox(
+          width: 42,
+          height: 42,
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: label == '+' ? Colors.white : AdminColors.primary,
+                fontSize: 22,
+              ),
+            ),
           ),
         ),
       ),

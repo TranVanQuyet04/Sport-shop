@@ -1,4 +1,5 @@
 import '../../core/network/api_client.dart';
+import '../../core/network/api_endpoints.dart';
 import '../../model/customer/profile_model.dart';
 
 abstract interface class ProfileService {
@@ -17,7 +18,7 @@ class ProfileApiService implements ProfileService {
 
   @override
   Future<ProfileModel> getMyProfile() async {
-    final json = await _apiClient.getJson('/user/profile/me');
+    final json = await _apiClient.getJson(ApiEndpoints.profile);
     return ProfileModel.fromJson(json);
   }
 
@@ -27,7 +28,7 @@ class ProfileApiService implements ProfileService {
     required String phoneNumber,
   }) async {
     final json = await _apiClient.putJson(
-      '/user/profile/me',
+      ApiEndpoints.profile,
       data: {'fullName': fullName, 'phoneNumber': phoneNumber},
     );
     return ProfileModel.fromJson(json);

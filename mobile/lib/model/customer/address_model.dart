@@ -21,7 +21,7 @@ class AddressModel {
   final bool isDefault;
   final String fullAddress;
 
-  String get displayName => '$recipientName • $phoneNumber';
+  String get displayName => '$recipientName - $phoneNumber';
 
   String get displayAddress {
     if (fullAddress.isNotEmpty) {

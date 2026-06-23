@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-secondary-container": "#fffbff",
+                        "surface-dim": "#dadada",
+                        "secondary-fixed": "#ffdad8",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e2e2e2",
+                        "inverse-surface": "#2f3131",
+                        "surface-bright": "#f9f9f9",
+                        "inverse-primary": "#c6c6c6",
+                        "background": "#f9f9f9",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-container-low": "#f3f3f3",
+                        "primary-container": "#1b1b1b",
+                        "on-surface": "#1a1c1c",
+                        "tertiary-container": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "secondary-container": "#e51a38",
+                        "tertiary": "#000000",
+                        "surface-tint": "#5e5e5e",
+                        "outline-variant": "#cfc4c5",
+                        "surface-variant": "#e2e2e2",
+                        "outline": "#7e7576",
+                        "on-secondary-fixed": "#410007",
+                        "surface-container-highest": "#e2e2e2",
+                        "secondary": "#bb0027",
+                        "on-secondary-fixed-variant": "#92001d",
+                        "surface-container": "#eeeeee",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#1b1b1b",
+                        "on-primary-container": "#848484",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "on-tertiary-container": "#838484",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#4c4546",
+                        "on-primary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "primary": "#000000",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-fixed-variant": "#474747",
+                        "tertiary-fixed": "#e2e2e2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "gutter-mobile": "12px",
+                        "touch-target-min": "44px",
+                        "base": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "button": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-bold": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .chat-container { height: calc(100vh - 128px); }
+        .message-bubble-admin { border-radius: 16px 16px 4px 16px; }
+        .message-bubble-user { border-radius: 16px 16px 16px 4px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface">
+<!-- Top Navigation Anchor (Shared Component: TopAppBar) -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface flex justify-between items-center w-full px-margin-mobile h-touch-target-min transition-transform duration-150">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center h-10 w-10 active:scale-95 transition-transform" onclick="history.back()">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<div class="flex items-center gap-2">
+<div class="relative">
+<img alt="Avatar" class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A professional close-up studio portrait of a customer, styled in a minimalist and clean aesthetic. The lighting is soft and high-key, highlighting natural skin tones against a light gray background. The overall color palette is monochromatic with subtle textures, reflecting a modern, high-performance athletic brand identity." src="https://lh3.googleusercontent.com/aida/AP1WRLu4xltp9XtSIHyJDzzPZHpIk2JhxGwAGImPEPyARDwK7k0e1S8ldAaSFD9h1dAG3GFY4VA7G0Hw_3MAXQEnjVF2dbYcq7FxC9uI-lIqiEM8Un-ClicDGeC7ab9JcMJyafJiuus42XJ8i47PyWtQs4GTXEzbxINb8j6Rr4Zw7eHoCKIx0GNe-90YoKzMSl1TLXS_T-AS-yb2unR7pMHXy022HQ7Siz1UcuWYeIQyFHztKylEGHNXZC7xNw"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-surface rounded-full"></span>
+</div>
+<div>
+<h1 class="text-title-md font-title-md text-primary leading-tight">Hoàng Anh</h1>
+<p class="text-label-bold font-label-bold text-on-surface-variant flex items-center gap-1">
+                        Đang hoạt động
+                    </p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 hover:opacity-80 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary">call</span>
+</button>
+<button class="p-2 hover:opacity-80 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary">videocam</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-16 pb-20 px-margin-mobile chat-container overflow-y-auto no-scrollbar flex flex-col gap-4">
+<!-- Date Separator -->
+<div class="flex justify-center my-4">
+<span class="bg-surface-container px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Hôm nay</span>
+</div>
+<!-- Customer Message -->
+<div class="flex flex-col items-start max-w-[85%]">
+<div class="bg-surface-container-high text-on-surface p-4 message-bubble-user shadow-sm">
+<p class="text-body-sm font-body-sm">Chào admin, tôi muốn hỏi về đôi giày chạy bộ ProRun X1 mới về ạ. Cho tôi xin bảng size chính xác được không?</p>
+</div>
+<span class="text-[10px] text-on-surface-variant mt-1 ml-1">09:41</span>
+</div>
+<!-- Admin Message -->
+<div class="flex flex-col items-end max-w-[85%] self-end">
+<div class="bg-primary text-on-primary p-4 message-bubble-admin shadow-sm">
+<p class="text-body-sm font-body-sm">Chào bạn Hoàng Anh! Shop sẵn sàng hỗ trợ ạ. Dòng ProRun X1 form hơi ôm, bạn nên tăng 0.5 size so với bình thường nhé.</p>
+</div>
+<div class="flex items-center gap-1 mt-1 mr-1">
+<span class="text-[10px] text-on-surface-variant">09:42</span>
+<span class="material-symbols-outlined text-[12px] text-secondary" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</div>
+</div>
+<!-- Image Message (Customer) -->
+<div class="flex flex-col items-start max-w-[85%]">
+<div class="bg-surface-container-high p-1 message-bubble-user shadow-sm">
+<img class="w-full aspect-square object-cover rounded-xl" data-alt="A cinematic, high-contrast shot of a vibrant red performance running shoe against a dark, minimalist industrial background. The lighting is dramatic, casting soft shadows that emphasize the sleek aerodynamic design and technical fabric textures. The image embodies speed, power, and professional athletic discipline." src="https://lh3.googleusercontent.com/aida/AP1WRLst5oKCw3TWBz9pR9FDEZbuTkqmuyaOQHQ1hJJ6lKLh8WYorri-LQestLw4u00xLTG6awLosalw0QQd6JHsxnBPNSsQ9BdwoBQ54YrsMfd45_OZ0CkJlrwfeNBBXwSxndxKTyzBG13YcH5F2XyzajPfa-sfd44CqaeYQkg7nTHjXVlrAnCMjaKx7o6DXZvuIcrRfblOAOwj7V_xFiQKnTLcm64Qi2Qqg2mkq8efce65RiEpkFg8DNjRphU"/>
+</div>
+<span class="text-[10px] text-on-surface-variant mt-1 ml-1">09:43</span>
+</div>
+<!-- Admin Message -->
+<div class="flex flex-col items-end max-w-[85%] self-end">
+<div class="bg-primary text-on-primary p-4 message-bubble-admin shadow-sm">
+<p class="text-body-sm font-body-sm">Đây là bảng size chi tiết cho dòng này, bạn tham khảo nhé!</p>
+</div>
+</div>
+<!-- Product Link Card (Admin) -->
+<div class="flex flex-col items-end max-w-[85%] self-end">
+<div class="bg-surface-container-lowest border border-outline-variant p-3 rounded-xl shadow-sm flex gap-3 items-center active:scale-[0.98] transition-transform">
+<img class="w-16 h-16 rounded-lg object-cover bg-surface-container" data-alt="A clean, studio-lit product photograph of a professional lime green soccer cleat. The image is set against a neutral off-white background with minimal soft shadows. The composition is focused and sharp, highlighting the premium craftsmanship and athletic performance nature of the gear." src="https://lh3.googleusercontent.com/aida/AP1WRLu7JwqxZ-Ez-MALLmF-roEojF1g2FrxF8Hxm0ZppQGEyrROvoxr5IT9fEBmNcymlpo0oUJSuehS-z0q95R3Jn9F8dtwTcgmKYzWYlOS_k66nTLB5hrcHyOpfIWOAddgKB8iQBwFPNWkMGbG8WAdWIB96TubEgS9vj_4SlkZSy4oAgjnzWdnw2vwOMp7TkKp-FmXuomtMNBmRgyLKrJVp7y14fbwxwl5duDvbbuCFjWyast_VHjq4gNJu3M"/>
+<div class="flex-1">
+<p class="text-label-bold font-label-bold text-primary line-clamp-1">ProRun X1 Ultra Speed</p>
+<p class="text-body-sm font-body-sm text-secondary font-bold">2.450.000đ</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<span class="text-[10px] text-on-surface-variant mt-1 mr-1">09:44</span>
+</div>
+</main>
+<!-- Bottom Input Bar -->
+<footer class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-lowest shadow-sm pb-safe h-20 px-4 flex items-center gap-2 border-t border-outline-variant">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors rounded-full active:scale-90 duration-200">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<div class="flex-1 relative">
+<input class="w-full bg-surface-container border-none rounded-full px-4 py-2.5 text-body-sm focus:ring-2 focus:ring-primary transition-all" placeholder="Nhập tin nhắn..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">mood</span>
+</button>
+</div>
+<button class="w-10 h-10 flex items-center justify-center bg-secondary text-on-secondary rounded-full active:scale-90 transition-transform shadow-md shadow-secondary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</footer>
+<!-- Floating Action Button Contextual (Hidden as per requirement for Chat screen) -->
+<script>
+        // Micro-interaction: Scroll to bottom on load
+        window.addEventListener('load', () => {
+            const container = document.querySelector('main');
+            container.scrollTop = container.scrollHeight;
+        });
+
+        // Toggle focus state visual cues
+        const chatInput = document.querySelector('input');
+        chatInput.addEventListener('focus', () => {
+            document.querySelector('footer').classList.add('shadow-lg');
+        });
+        chatInput.addEventListener('blur', () => {
+            document.querySelector('footer').classList.remove('shadow-lg');
+        });
+    </script>
+</body></html>

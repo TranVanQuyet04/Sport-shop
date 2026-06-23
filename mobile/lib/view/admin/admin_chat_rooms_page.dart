@@ -1,16 +1,17 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../controller/chat/chat_controller.dart' as app_chat;
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../model/chat/chat_model.dart';
+import '../../widgets/shared/absolute_persistent_layout.dart';
 import '../../core/widgets/app_state.dart';
 import '../../core/widgets/app_text_field.dart';
 import 'widgets/admin_app_bar.dart';
 import 'widgets/admin_bottom_nav.dart';
+import 'widgets/admin_design_system.dart';
 
 class AdminChatRoomsPage extends StatefulWidget {
   const AdminChatRoomsPage({super.key});
@@ -21,6 +22,8 @@ class AdminChatRoomsPage extends StatefulWidget {
 
 class _AdminChatRoomsPageState extends State<AdminChatRoomsPage> {
   late final app_chat.ChatController _controller;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _AdminChatRoomsPageState extends State<AdminChatRoomsPage> {
 
   @override
   void dispose() {
+    _searchController.dispose();
     _controller.removeListener(_onControllerChanged);
     _controller.dispose();
     super.dispose();
@@ -47,88 +51,93 @@ class _AdminChatRoomsPageState extends State<AdminChatRoomsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final visibleRooms = _visibleRooms;
     return Scaffold(
       appBar: const AdminAppBar(),
       body: RefreshIndicator(
         onRefresh: _controller.loadAdminRooms,
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          children: [
-            Text(
-              'Hỗ trợ trực tuyến',
-              style: AppTextStyles.display.copyWith(fontSize: 34),
+        child: AbsolutePersistentLayout(
+          title: 'Hỗ trợ trực tuyến',
+          subtitle: 'Theo dõi và phản hồi các cuộc trò chuyện của khách hàng.',
+          icon: Icons.support_agent_outlined,
+          filterAndSearchZone: AppTextField(
+            label: 'Tìm kiếm',
+            controller: _searchController,
+            prefixIcon: Icons.search,
+            hintText: 'Tìm phòng chat, khách hàng...',
+            onChanged: (value) => setState(() => _searchQuery = value),
+          ),
+          dynamicContent: ListView(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              0,
+              AppSpacing.lg,
+              0,
             ),
-            const SizedBox(height: AppSpacing.md),
-            const AppTextField(
-              label: 'Tìm kiếm',
-              prefixIcon: Icons.search,
-              hintText: 'Tìm phòng chat, khách hàng...',
-            ),
-            const SizedBox(height: AppSpacing.xl),
-            if (_controller.isLoading)
-              const AppLoadingState(message: 'Đang tải phòng chat...')
-            else if (_controller.errorMessage != null &&
-                _controller.rooms.isEmpty)
-              AppErrorState(
-                message: 'Chưa tải được phòng chat từ backend.',
-                onAction: _controller.loadAdminRooms,
-              )
-            else ...[
-              if (_controller.errorMessage != null) ...[
-                _ChatErrorBanner(message: _controller.errorMessage!),
-                const SizedBox(height: AppSpacing.lg),
-              ],
-              if (_controller.rooms.isEmpty)
-                const AppEmptyState(
-                  title: 'Chưa có phòng chat',
-                  message:
-                      'Khi khách hàng tạo yêu cầu hỗ trợ, phòng chat sẽ xuất hiện ở đây.',
+            children: [
+              if (_controller.isLoading)
+                const AppLoadingState(message: 'Đang tải phòng chat...')
+              else if (_controller.errorMessage != null &&
+                  _controller.rooms.isEmpty)
+                AppErrorState(
+                  message: 'Chưa tải được phòng chat từ backend.',
+                  onAction: _controller.loadAdminRooms,
                 )
-              else
-                ..._controller.rooms.map(
-                  (room) => _ChatRoomTile(
-                    room: room,
-                    onTap: () => context.go('/admin/chats/${room.id}'),
+              else ...[
+                if (_controller.errorMessage != null) ...[
+                  AdminInlineBanner(
+                    message: _controller.errorMessage!,
+                    isError: true,
                   ),
-                ),
+                  const SizedBox(height: AppSpacing.lg),
+                ],
+                if (visibleRooms.isEmpty)
+                  PremiumEmptyState(
+                    icon: _controller.rooms.isEmpty
+                        ? Icons.forum_outlined
+                        : Icons.search_off_rounded,
+                    title: _controller.rooms.isEmpty
+                        ? 'Chưa có phòng chat'
+                        : 'Không tìm thấy phòng chat',
+                    message: _controller.rooms.isEmpty
+                        ? 'Khi khách hàng tạo yêu cầu hỗ trợ, phòng chat sẽ xuất hiện ở đây.'
+                        : 'Hãy thử thay đổi từ khóa tìm kiếm hiện tại.',
+                    actionLabel: _controller.rooms.isEmpty
+                        ? 'Tải lại dữ liệu'
+                        : 'Xóa tìm kiếm',
+                    onAction: _controller.rooms.isEmpty
+                        ? _controller.loadAdminRooms
+                        : () {
+                            _searchController.clear();
+                            setState(() => _searchQuery = '');
+                          },
+                  )
+                else
+                  ...visibleRooms.map(
+                    (room) => _ChatRoomTile(
+                      room: room,
+                      onTap: () => context.go('/admin/chats/${room.id}'),
+                    ),
+                  ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
       bottomNavigationBar: const AdminBottomNav(selectedIndex: 4),
     );
   }
-}
 
-class _ChatErrorBanner extends StatelessWidget {
-  const _ChatErrorBanner({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.info.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Row(
-          children: [
-            const Icon(Icons.info_outline, color: AppColors.info),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                message,
-                style: AppTextStyles.caption.copyWith(color: AppColors.info),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  List<ChatRoomModel> get _visibleRooms {
+    final query = _searchQuery.trim().toLowerCase();
+    if (query.isEmpty) {
+      return _controller.rooms;
+    }
+    return _controller.rooms.where((room) {
+      return room.id.toLowerCase().contains(query) ||
+          room.customerName.toLowerCase().contains(query) ||
+          room.adminName.toLowerCase().contains(query);
+    }).toList();
   }
 }
 
@@ -140,26 +149,56 @@ class _ChatRoomTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-      leading: const CircleAvatar(radius: 30, child: Icon(Icons.person)),
-      title: Text(room.customerName, style: AppTextStyles.subtitle),
-      subtitle: Text(
-        room.adminName.isEmpty
-            ? 'Chưa có nhân viên phụ trách'
-            : 'Admin: ${room.adminName}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: AdminOutlinedSurface(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        onTap: onTap,
+        child: Row(
+          children: [
+            const AdminIconBadge(icon: Icons.person_outline),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    room.customerName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.subtitle.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    room.adminName.isEmpty
+                        ? 'Chưa có nhân viên phụ trách'
+                        : 'Admin: ${room.adminName}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.caption.copyWith(
+                      color: AdminColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            if (room.hasUnread)
+              const CircleAvatar(
+                radius: 14,
+                backgroundColor: AdminColors.accent,
+                child: Text('!', style: TextStyle(color: Colors.white)),
+              )
+            else
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AdminColors.textSecondary,
+              ),
+          ],
+        ),
       ),
-      trailing: room.hasUnread
-          ? const CircleAvatar(
-              radius: 14,
-              backgroundColor: AppColors.secondary,
-              child: Text('!', style: TextStyle(color: Colors.white)),
-            )
-          : const Icon(Icons.chevron_right),
     );
   }
 }
-

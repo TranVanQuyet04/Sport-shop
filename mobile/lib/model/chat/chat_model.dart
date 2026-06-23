@@ -54,7 +54,7 @@ class ChatRoomModel {
   factory ChatRoomModel.fromJson(Map<String, dynamic> json) {
     return ChatRoomModel(
       id: (json['id'] ?? '').toString(),
-      customerName: (json['customerName'] ?? 'Khách hàng').toString(),
+      customerName: (json['customerName'] ?? '').toString(),
       adminName: (json['adminName'] ?? '').toString(),
       hasUnread: json['hasUnread'] == true,
       lastMessageAt: DateTime.tryParse(

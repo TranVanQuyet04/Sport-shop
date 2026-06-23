@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Apex Velocity Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#848484",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-surface-variant": "#4c4546",
+                        "primary": "#000000",
+                        "surface-container-low": "#f3f3f3",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#c6c6c6",
+                        "surface-bright": "#f9f9f9",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#838484",
+                        "tertiary-container": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "on-primary-fixed-variant": "#474747",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "on-background": "#1a1c1c",
+                        "secondary-container": "#e51a38",
+                        "secondary": "#bb0027",
+                        "secondary-fixed": "#ffdad8",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "primary-container": "#1b1b1b",
+                        "on-secondary-fixed": "#410007",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#1b1b1b",
+                        "surface-dim": "#dadada",
+                        "surface-container": "#eeeeee",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "tertiary": "#000000",
+                        "background": "#f9f9f9",
+                        "outline": "#7e7576",
+                        "primary-fixed": "#e2e2e2",
+                        "outline-variant": "#cfc4c5",
+                        "on-secondary-fixed-variant": "#92001d",
+                        "on-secondary-container": "#fffbff",
+                        "surface-tint": "#5e5e5e",
+                        "surface": "#f9f9f9",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-surface": "#1a1c1c",
+                        "inverse-surface": "#2f3131"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "44px",
+                        "section-gap": "32px",
+                        "margin-mobile": "16px",
+                        "base": "4px",
+                        "gutter-mobile": "12px"
+                    },
+                    "fontFamily": {
+                        "button": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f9f9f9;
+            color: #1a1c1c;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .active-scale:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-lg text-body-lg antialiased">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-surface border-b border-outline-variant flex items-center justify-between px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active-scale" data-icon="menu">menu</button>
+<h1 class="font-display-lg text-title-md font-extrabold tracking-tighter text-primary">APEX VELOCITY</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active-scale" data-icon="notifications">notifications</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Admin" data-alt="A professional close-up portrait of a sportswear retail manager in a bright, modern office setting. The person is dressed in sleek, high-performance athletic apparel in black and white. The background is softly blurred with clean glass partitions and minimalist red decorative accents. Lighting is crisp and high-key, reflecting a high-performance corporate atmosphere." src="https://lh3.googleusercontent.com/aida/AP1WRLtxIgvTqrT1_GhBlUE2xdm5Uj_Z7McH9b8HcDLmaW5csyfSwkt8eQ5slbYwZiUY4QZFZs1uxuPPosPcFOBNccBcvROZ2wvJlYAzFJWQAnqumjoVXoOkj6AW8x3SDky5cpAADHhwlc9CBE8n3d6j_bItPQTtFP2W8Drhxgky3yTMIfAJyt13hHy_6ctzbs82KsdAKGIownJKlOXwQRNDV-McVIgjJo_0n1W9is-Xz6FYeHhRBr1RWZEHL04"/>
+</div>
+</div>
+</header>
+<main class="pb-24 px-margin-mobile pt-6 max-w-5xl mx-auto">
+<!-- Welcome Section -->
+<section class="mb-8">
+<p class="font-label-bold text-label-bold text-secondary uppercase tracking-widest mb-1">Hệ thống quản trị</p>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Chào buổi sáng, Admin</h2>
+</section>
+<!-- Overview Cards: Bento Grid Style -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-section-gap">
+<div class="col-span-2 md:col-span-1 bg-primary text-on-primary p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<span class="font-label-bold text-label-bold text-surface-variant opacity-80">Doanh thu hôm nay</span>
+<span class="material-symbols-outlined text-secondary-container" data-icon="payments">payments</span>
+</div>
+<div>
+<div class="font-headline-lg-mobile text-headline-lg-mobile">24.500.000đ</div>
+<div class="flex items-center gap-1 text-label-bold text-green-400">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span>+12.5%</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between h-40 border border-outline-variant">
+<div class="flex justify-between items-start">
+<span class="font-label-bold text-label-bold text-on-surface-variant">Đơn hàng mới</span>
+<span class="material-symbols-outlined text-primary" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div>
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-primary">48</div>
+<div class="text-label-bold text-on-surface-variant">Cần xử lý ngay</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between h-40 border border-outline-variant">
+<div class="flex justify-between items-start">
+<span class="font-label-bold text-label-bold text-on-surface-variant">Nhân viên</span>
+<span class="material-symbols-outlined text-primary" data-icon="badge">badge</span>
+</div>
+<div>
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-primary">12</div>
+<div class="text-label-bold text-on-surface-variant">Đang hoạt động</div>
+</div>
+</div>
+</div>
+<!-- Quick Action Grid -->
+<section class="mb-section-gap">
+<h3 class="font-title-md text-title-md text-primary mb-4">Thao tác nhanh</h3>
+<div class="grid grid-cols-3 gap-3">
+<button class="flex flex-col items-center justify-center gap-2 p-4 bg-white rounded-xl border border-outline-variant hover:border-primary transition-colors active-scale group">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="add_box">add_box</span>
+</div>
+<span class="font-label-bold text-label-bold text-on-surface text-center">Thêm sản phẩm</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 p-4 bg-white rounded-xl border border-outline-variant hover:border-primary transition-colors active-scale group">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</div>
+<span class="font-label-bold text-label-bold text-on-surface text-center">Duyệt đơn</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 p-4 bg-white rounded-xl border border-outline-variant hover:border-primary transition-colors active-scale group">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</div>
+<span class="font-label-bold text-label-bold text-on-surface text-center">Lịch trực</span>
+</button>
+</div>
+</section>
+<!-- Recent Activity: Asymmetric Layout -->
+<section>
+<div class="flex justify-between items-end mb-4">
+<h3 class="font-title-md text-title-md text-primary">Hoạt động gần đây</h3>
+<button class="text-secondary font-label-bold text-label-bold border-b border-secondary">Xem tất cả</button>
+</div>
+<div class="space-y-4">
+<!-- Activity Item 1 -->
+<div class="bg-white p-4 rounded-xl border-l-4 border-secondary flex items-start gap-4 shadow-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary" data-icon="local_shipping">local_shipping</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<span class="font-label-bold text-primary">Đơn hàng #AV-9021 đã được giao</span>
+<span class="text-[10px] text-outline">2 phút trước</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Sản phẩm: Giày Chạy Apex Velocity Pro v1. Khách hàng: Trần Nam.</p>
+</div>
+</div>
+<!-- Activity Item 2 -->
+<div class="bg-white p-4 rounded-xl border-l-4 border-primary flex items-start gap-4 shadow-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary" data-icon="person_add">person_add</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<span class="font-label-bold text-primary">Nhân viên mới đăng ký</span>
+<span class="text-[10px] text-outline">1 giờ trước</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Lê Minh đã được thêm vào nhóm "Staff - Ca sáng".</p>
+</div>
+</div>
+<!-- Activity Item 3 -->
+<div class="bg-white p-4 rounded-xl border-l-4 border-outline flex items-start gap-4 shadow-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="inventory_2">inventory_2</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<span class="font-label-bold text-primary">Cập nhật kho hàng</span>
+<span class="text-[10px] text-outline">3 giờ trước</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Hết hàng: Áo tập Compression Elite (Size XL - Màu Đen).</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Product Insight (Visual Element) -->
+<section class="mt-section-gap relative overflow-hidden rounded-2xl bg-primary text-white p-8">
+<div class="relative z-10 max-w-[60%]">
+<span class="font-label-bold text-label-bold text-secondary-fixed uppercase tracking-widest">Sản phẩm tiêu biểu</span>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile my-2">Apex Velocity Pro v1</h4>
+<p class="text-body-sm font-body-sm opacity-80 mb-6">Tăng trưởng doanh thu 45% trong tuần này. Cần nhập thêm kho sớm.</p>
+<button class="bg-secondary text-white font-button text-button px-6 py-2 rounded-lg active-scale">Xem chi tiết</button>
+</div>
+<div class="absolute right-[-20px] bottom-[-20px] w-64 h-64 opacity-40">
+<img alt="Running Shoe" data-alt="A highly dynamic studio shot of a sleek, high-performance red running shoe suspended in mid-air. The background is a clean, minimalist deep black with dramatic white rim lighting that accentuates the aerodynamic curves and tech-mesh texture of the shoe. The aesthetic is modern, high-contrast, and energetic, perfectly matching a premium sports brand's visual identity." src="https://lh3.googleusercontent.com/aida/AP1WRLtuw0rebqzg1C6WJpfoypZZJqWjZKUUZCBU1iSzEeNfva9O3NGW2oRzvOevmM-JIBbqwf0z7e_R-o-tCJlZbu1vjAnCzAazLZWq53ZTA0PFzRxT5WsuLdxHYbiXe5hAP6yVfM4PRehi3LgiAdDH4lXnc9HH6FTd4XVg7PiQyZLSs536fPTbBJQnj3_I72bvceuovta4NzrizFBPMLsK61YcvtGO7wwx_HrkQw4OBW0pqozsMW3MAiPo9i8"/>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-gutter-mobile py-2 bg-surface shadow-[0_-4px_12px_rgba(0,0,0,0.04)] z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-secondary bg-surface-container-high rounded-lg p-2 active-scale" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors active-scale" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-bold text-label-bold">Catalog</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors active-scale" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-label-bold text-label-bold">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors active-scale" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-bold text-label-bold">Staff</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors active-scale" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions and atmospheric effects
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('click', function(e) {
+                // Prevent default for demo links
+                if(this.tagName === 'A' && this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                }
+                
+                // Add a small ripple or click feedback if needed (already handled by active-scale class in CSS)
+            });
+        });
+
+        // Dynamic greeting based on time of day in Vietnamese
+        const updateGreeting = () => {
+            const hour = new Date().getHours();
+            const greetingEl = document.querySelector('h2');
+            if (hour < 12) {
+                greetingEl.innerText = 'Chào buổi sáng, Admin';
+            } else if (hour < 18) {
+                greetingEl.innerText = 'Chào buổi chiều, Admin';
+            } else {
+                greetingEl.innerText = 'Chào buổi tối, Admin';
+            }
+        };
+        updateGreeting();
+    </script>
+</body></html>

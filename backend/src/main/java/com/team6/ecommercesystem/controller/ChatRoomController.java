@@ -3,6 +3,7 @@ package com.team6.ecommercesystem.controller;
 import com.team6.ecommercesystem.model.ChatRoom;
 import com.team6.ecommercesystem.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class ChatRoomController {
     }
 
     @GetMapping("/admin/me")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ChatRoom> getAdminRooms() {
         return chatRoomService.getAllRooms();
     }

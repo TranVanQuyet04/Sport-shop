@@ -1,7 +1,10 @@
 import 'package:go_router/go_router.dart';
 
+import '../core/auth/role_mapper.dart';
 import '../core/di/app_dependencies.dart';
+import '../model/customer/order_model.dart';
 import '../view/auth/login_page.dart';
+import '../view/auth/change_password_page.dart';
 import '../view/auth/forgot_password_page.dart';
 import '../view/auth/register_page.dart';
 import '../view/auth/reset_password_page.dart';
@@ -9,22 +12,20 @@ import '../view/admin/admin_dashboard_page.dart';
 import '../view/admin/admin_add_product_page.dart';
 import '../view/admin/admin_brand_management_page.dart';
 import '../view/admin/admin_category_management_page.dart';
+import '../view/admin/admin_collections_page.dart';
 import '../view/admin/admin_chat_detail_page.dart';
 import '../view/admin/admin_chat_rooms_page.dart';
 import '../view/admin/admin_delivery_monitoring_page.dart';
 import '../view/admin/admin_inventory_variants_page.dart';
-import '../view/admin/admin_leave_management_page.dart';
 import '../view/admin/admin_orders_page.dart';
-import '../view/admin/admin_order_assignment_page.dart';
 import '../view/admin/admin_products_page.dart';
 import '../view/admin/admin_revenue_page.dart';
-import '../view/admin/admin_shift_planning_page.dart';
 import '../view/admin/admin_staff_page.dart';
 import '../view/admin/admin_staff_detail_page.dart';
-import '../view/admin/admin_staff_performance_page.dart';
-import '../view/admin/admin_role_management_page.dart';
+import '../view/admin/admin_sports_page.dart';
 import '../view/admin/admin_system_settings_page.dart';
 import '../view/admin/admin_user_management_page.dart';
+import '../view/admin/widgets/admin_design_system.dart';
 import '../view/customer/add_address_page.dart';
 import '../view/customer/address_book_page.dart';
 import '../view/customer/cart_page.dart';
@@ -45,17 +46,11 @@ import '../view/customer/tracking_page.dart';
 import '../view/delivery_staff/assigned_orders_page.dart';
 import '../view/delivery_staff/delivery_home_page.dart';
 import '../view/delivery_staff/delivery_status_update_page.dart';
-import '../view/delivery_staff/failed_delivery_report_page.dart';
 import '../view/delivery_staff/shipper_account_page.dart';
 import '../view/public/guest_chat_page.dart';
 import '../view/public/not_found_page.dart';
 import '../view/public/unauthorized_page.dart';
 import '../view/splash/splash_page.dart';
-import '../view/shop_staff/shop_staff_confirm_orders_page.dart';
-import '../view/shop_staff/shop_staff_handover_page.dart';
-import '../view/shop_staff/shop_staff_home_page.dart';
-import '../view/shop_staff/shop_staff_order_timeline_page.dart';
-import '../view/shop_staff/shop_staff_packing_page.dart';
 
 abstract final class AppRoutes {
   static const splash = '/';
@@ -63,6 +58,7 @@ abstract final class AppRoutes {
   static const register = '/register';
   static const forgotPassword = '/forgot-password';
   static const resetPassword = '/reset-password';
+  static const changePassword = '/change-password';
   static const guestChat = '/guest-chat';
   static const unauthorized = '/unauthorized';
   static const onboarding = '/onboarding';
@@ -88,30 +84,20 @@ abstract final class AppRoutes {
   static const adminProducts = '/admin/products';
   static const adminStaff = '/admin/staff';
   static const adminStaffDetail = '/admin/staff/:id';
-  static const adminShiftPlanning = '/admin/staff/shifts';
-  static const adminOrderAssignment = '/admin/staff/assign-orders';
-  static const adminLeaveManagement = '/admin/staff/leaves';
-  static const adminStaffPerformance = '/admin/staff/performance';
   static const adminAddProduct = '/admin/products/new';
   static const adminInventoryVariants = '/admin/products/:id/variants';
   static const adminCategories = '/admin/categories';
   static const adminBrands = '/admin/brands';
+  static const adminSports = '/admin/sports';
+  static const adminCollections = '/admin/collections';
   static const adminDeliveryMonitoring = '/admin/deliveries';
   static const adminChatRooms = '/admin/chats';
   static const adminChatDetail = '/admin/chats/:id';
   static const adminUsers = '/admin/users';
-  static const adminRoles = '/admin/roles';
   static const adminSettings = '/admin/settings';
-  static const shopStaffHome = '/shop-staff/home';
-  static const shopStaffConfirmOrders = '/shop-staff/orders/confirm';
-  static const shopStaffPacking = '/shop-staff/orders/:id/packing';
-  static const shopStaffHandover = '/shop-staff/handover';
-  static const shopStaffOrderTimeline = '/shop-staff/orders/:id/timeline';
   static const deliveryHome = '/delivery-staff/home';
   static const deliveryAssignedOrders = '/delivery-staff/orders';
   static const deliveryStatusUpdate = '/delivery-staff/orders/:id/status';
-  static const deliveryFailedReport =
-      '/delivery-staff/orders/:id/failed-report';
   static const deliveryAccount = '/delivery-staff/account';
 }
 
@@ -151,15 +137,8 @@ final sportshopRouter = GoRouter(
     if (path.startsWith('/admin') && role != 'ADMIN') {
       return _homeForRole(role);
     }
-    if (path.startsWith('/shop-staff') &&
-        role != 'SHOP_STAFF' &&
-        role != 'STAFF' &&
-        role != 'ADMIN') {
-      return _homeForRole(role);
-    }
     if (path.startsWith('/delivery-staff') &&
         role != 'SHIPPER' &&
-        role != 'DELIVERY_STAFF' &&
         role != 'ADMIN') {
       return _homeForRole(role);
     }
@@ -190,6 +169,11 @@ final sportshopRouter = GoRouter(
       path: AppRoutes.resetPassword,
       name: 'resetPassword',
       builder: (context, state) => const ResetPasswordPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.changePassword,
+      name: 'changePassword',
+      builder: (context, state) => const ChangePasswordPage(),
     ),
     GoRoute(
       path: AppRoutes.guestChat,
@@ -251,7 +235,15 @@ final sportshopRouter = GoRouter(
     GoRoute(
       path: AppRoutes.orderSuccess,
       name: 'orderSuccess',
-      builder: (context, state) => const OrderSuccessPage(),
+      builder: (context, state) {
+        final extra = state.extra;
+        final data = extra is Map ? extra : const {};
+        final order = data['order'];
+        return OrderSuccessPage(
+          order: order is OrderModel ? order : null,
+          paymentUrl: data['paymentUrl']?.toString(),
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.orders,
@@ -294,133 +286,112 @@ final sportshopRouter = GoRouter(
     GoRoute(
       path: AppRoutes.adminDashboard,
       name: 'adminDashboard',
-      builder: (context, state) => const AdminDashboardPage(),
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminDashboardPage()),
     ),
     GoRoute(
       path: AppRoutes.adminRevenue,
       name: 'adminRevenue',
-      builder: (context, state) => const AdminRevenuePage(),
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminRevenuePage()),
     ),
     GoRoute(
       path: AppRoutes.adminOrders,
       name: 'adminOrders',
-      builder: (context, state) => const AdminOrdersPage(),
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminOrdersPage()),
     ),
     GoRoute(
       path: AppRoutes.adminProducts,
       name: 'adminProducts',
-      builder: (context, state) => const AdminProductsPage(),
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminProductsPage()),
     ),
     GoRoute(
       path: AppRoutes.adminStaff,
       name: 'adminStaff',
-      builder: (context, state) => const AdminStaffPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.adminShiftPlanning,
-      name: 'adminShiftPlanning',
-      builder: (context, state) => const AdminShiftPlanningPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.adminOrderAssignment,
-      name: 'adminOrderAssignment',
-      builder: (context, state) => const AdminOrderAssignmentPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.adminLeaveManagement,
-      name: 'adminLeaveManagement',
-      builder: (context, state) => const AdminLeaveManagementPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.adminStaffPerformance,
-      name: 'adminStaffPerformance',
-      builder: (context, state) => const AdminStaffPerformancePage(),
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminStaffPage()),
     ),
     GoRoute(
       path: AppRoutes.adminStaffDetail,
       name: 'adminStaffDetail',
-      builder: (context, state) =>
-          AdminStaffDetailPage(staffId: state.pathParameters['id'] ?? ''),
+      builder: (context, state) => AdminThemeScope(
+        child: AdminStaffDetailPage(staffId: state.pathParameters['id'] ?? ''),
+      ),
     ),
     GoRoute(
       path: AppRoutes.adminAddProduct,
       name: 'adminAddProduct',
-      builder: (context, state) => const AdminAddProductPage(),
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminAddProductPage()),
     ),
     GoRoute(
       path: AppRoutes.adminInventoryVariants,
       name: 'adminInventoryVariants',
-      builder: (context, state) => AdminInventoryVariantsPage(
-        productId: state.pathParameters['id'] ?? '',
+      builder: (context, state) => AdminThemeScope(
+        child: AdminInventoryVariantsPage(
+          productId: state.pathParameters['id'] ?? '',
+        ),
       ),
     ),
     GoRoute(
       path: AppRoutes.adminCategories,
       name: 'adminCategories',
-      builder: (context, state) => const AdminCategoryManagementPage(),
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminCategoryManagementPage()),
     ),
     GoRoute(
       path: AppRoutes.adminBrands,
       name: 'adminBrands',
-      builder: (context, state) => const AdminBrandManagementPage(),
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminBrandManagementPage()),
+    ),
+    GoRoute(
+      path: AppRoutes.adminSports,
+      name: 'adminSports',
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminSportsPage()),
+    ),
+    GoRoute(
+      path: AppRoutes.adminCollections,
+      name: 'adminCollections',
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminCollectionsPage()),
     ),
     GoRoute(
       path: AppRoutes.adminDeliveryMonitoring,
       name: 'adminDeliveryMonitoring',
-      builder: (context, state) => const AdminDeliveryMonitoringPage(),
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminDeliveryMonitoringPage()),
     ),
     GoRoute(
       path: AppRoutes.adminChatRooms,
       name: 'adminChatRooms',
-      builder: (context, state) => const AdminChatRoomsPage(),
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminChatRoomsPage()),
     ),
     GoRoute(
       path: AppRoutes.adminChatDetail,
       name: 'adminChatDetail',
-      builder: (context, state) =>
-          AdminChatDetailPage(chatId: state.pathParameters['id'] ?? ''),
+      builder: (context, state) => AdminThemeScope(
+        child: AdminChatDetailPage(chatId: state.pathParameters['id'] ?? ''),
+      ),
     ),
     GoRoute(
       path: AppRoutes.adminUsers,
       name: 'adminUsers',
-      builder: (context, state) => const AdminUserManagementPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.adminRoles,
-      name: 'adminRoles',
-      builder: (context, state) => const AdminRoleManagementPage(),
+      builder: (context, state) => AdminThemeScope(
+        child: AdminUserManagementPage(
+          initialRole: state.uri.queryParameters['role'],
+        ),
+      ),
     ),
     GoRoute(
       path: AppRoutes.adminSettings,
       name: 'adminSettings',
-      builder: (context, state) => const AdminSystemSettingsPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.shopStaffHome,
-      name: 'shopStaffHome',
-      builder: (context, state) => const ShopStaffHomePage(),
-    ),
-    GoRoute(
-      path: AppRoutes.shopStaffConfirmOrders,
-      name: 'shopStaffConfirmOrders',
-      builder: (context, state) => const ShopStaffConfirmOrdersPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.shopStaffPacking,
-      name: 'shopStaffPacking',
       builder: (context, state) =>
-          ShopStaffPackingPage(orderId: state.pathParameters['id'] ?? ''),
-    ),
-    GoRoute(
-      path: AppRoutes.shopStaffHandover,
-      name: 'shopStaffHandover',
-      builder: (context, state) => const ShopStaffHandoverPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.shopStaffOrderTimeline,
-      name: 'shopStaffOrderTimeline',
-      builder: (context, state) =>
-          ShopStaffOrderTimelinePage(orderId: state.pathParameters['id'] ?? ''),
+          const AdminThemeScope(child: AdminSystemSettingsPage()),
     ),
     GoRoute(
       path: AppRoutes.deliveryHome,
@@ -439,12 +410,6 @@ final sportshopRouter = GoRouter(
           DeliveryStatusUpdatePage(orderId: state.pathParameters['id'] ?? ''),
     ),
     GoRoute(
-      path: AppRoutes.deliveryFailedReport,
-      name: 'deliveryFailedReport',
-      builder: (context, state) =>
-          FailedDeliveryReportPage(orderId: state.pathParameters['id'] ?? ''),
-    ),
-    GoRoute(
       path: AppRoutes.deliveryAccount,
       name: 'deliveryAccount',
       builder: (context, state) => const ShipperAccountPage(),
@@ -454,15 +419,14 @@ final sportshopRouter = GoRouter(
 );
 
 String _normalizeRole(String? role) {
-  return (role ?? '').toUpperCase().replaceFirst('ROLE_', '').trim();
+  return RoleMapper.normalize(role);
 }
 
 String _homeForRole(String role) {
   return switch (role) {
     'ADMIN' => AppRoutes.adminDashboard,
-    'SHOP_STAFF' || 'STAFF' => AppRoutes.shopStaffHome,
-    'SHIPPER' || 'DELIVERY_STAFF' => AppRoutes.deliveryHome,
-    'MEMBER' || 'CUSTOMER' => AppRoutes.customerHome,
+    'SHIPPER' => AppRoutes.deliveryHome,
+    'MEMBER' => AppRoutes.customerHome,
     _ => AppRoutes.login,
   };
 }

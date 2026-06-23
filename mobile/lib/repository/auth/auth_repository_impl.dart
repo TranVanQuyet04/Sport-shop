@@ -69,7 +69,42 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<AuthSessionModel> refreshToken() async {
+    final refreshToken = await tokenStorage.readRefreshToken();
+    if (refreshToken == null || refreshToken.isEmpty) {
+      throw StateError('Missing refresh token');
+    }
+    final session = await authService.refreshToken(refreshToken);
+    await tokenStorage.saveTokens(
+      accessToken: session.accessToken,
+      refreshToken: session.refreshToken ?? refreshToken,
+      role: session.role,
+      email: session.email,
+    );
+    apiClient.setBearerToken(session.accessToken);
+    return session;
+  }
+
+  @override
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) {
+    return authService.changePassword(
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword,
+    );
+  }
+
+  @override
   Future<void> logout() async {
+    try {
+      await authService.logout();
+    } catch (_) {
+      // Local logout must still succeed when the server token is already invalid.
+    }
     await tokenStorage.clear();
     apiClient.setBearerToken(null);
   }

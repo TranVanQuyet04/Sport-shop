@@ -24,5 +24,13 @@ abstract interface class AuthRepository {
     required String confirmPassword,
   });
 
+  Future<AuthSessionModel> refreshToken();
+
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String confirmPassword,
+  });
+
   Future<void> logout();
 }
