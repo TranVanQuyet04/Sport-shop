@@ -1,3 +1,5 @@
+import '../../core/auth/role_mapper.dart';
+
 class AuthSessionModel {
   const AuthSessionModel({
     required this.accessToken,
@@ -21,10 +23,12 @@ class AuthSessionModel {
       accessToken: (source['accessToken'] ?? source['token'] ?? '').toString(),
       refreshToken: source['refreshToken']?.toString(),
       email: source['email']?.toString() ?? userSource['email']?.toString(),
-      role: source['role']?.toString() ??
-          source['roleName']?.toString() ??
-          userSource['role']?.toString() ??
-          userSource['roleName']?.toString(),
+      role: RoleMapper.normalize(
+        source['role']?.toString() ??
+            source['roleName']?.toString() ??
+            userSource['role']?.toString() ??
+            userSource['roleName']?.toString(),
+      ),
     );
   }
 }

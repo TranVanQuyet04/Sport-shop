@@ -13,6 +13,17 @@ abstract interface class AddressRepository {
     required bool isDefault,
   });
 
+  Future<AddressModel> updateAddress({
+    required String id,
+    required String recipientName,
+    required String phoneNumber,
+    required String city,
+    required String district,
+    required String ward,
+    required String street,
+    required bool isDefault,
+  });
+
   Future<void> deleteAddress(String id);
 
   Future<void> setDefault(String id);

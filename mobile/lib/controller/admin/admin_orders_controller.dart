@@ -15,6 +15,8 @@ class AdminOrdersController extends ChangeNotifier {
   bool isUpdating = false;
   String? errorMessage;
 
+  List<OrderModel> get allOrders => _orders;
+
   List<OrderModel> get orders {
     if (selectedStatus == null) {
       return _orders;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../controller/customer/order_detail_controller.dart';
 import '../../controller/delivery_staff/delivery_orders_controller.dart';
@@ -9,7 +8,6 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_state.dart';
-import '../../core/widgets/app_text_field.dart';
 import '../../model/common/order_status.dart';
 import '../../model/customer/order_model.dart';
 import '../admin/widgets/admin_app_bar.dart';
@@ -63,6 +61,12 @@ class _DeliveryStatusUpdatePageState extends State<DeliveryStatusUpdatePage> {
 
   @override
   Widget build(BuildContext context) {
+    final order = _orderController.order;
+    final rawStatus = (order?.status ?? '').toUpperCase();
+    final isShipping = rawStatus == 'SHIPPING';
+    final canUpdate = rawStatus == 'PENDING' ||
+        rawStatus == 'PAID' ||
+        rawStatus == 'SHIPPING';
     return Scaffold(
       appBar: const AdminAppBar(),
       body: RefreshIndicator(
@@ -76,19 +80,14 @@ class _DeliveryStatusUpdatePageState extends State<DeliveryStatusUpdatePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               AppButton(
-                label: 'Cập nhật: Đã giao thành công',
-                icon: Icons.check_circle_outline,
+                label: isShipping ? 'Mark as delivered' : 'Start delivery',
+                icon: isShipping
+                    ? Icons.check_circle_outline
+                    : Icons.local_shipping_outlined,
                 isLoading: _deliveryController.isUpdating,
-                onPressed: _completeDelivery,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              AppButton(
-                label: 'Báo cáo giao thất bại',
-                icon: Icons.report_problem_outlined,
-                variant: AppButtonVariant.outline,
-                onPressed: () => context.go(
-                  '/delivery-staff/orders/${widget.orderId}/failed-report',
-                ),
+                onPressed: canUpdate
+                    ? () => _updateDelivery(isShipping: isShipping)
+                    : null,
               ),
               const SizedBox(height: AppSpacing.md),
               const DeliveryBottomNav(selectedIndex: 2),
@@ -101,29 +100,30 @@ class _DeliveryStatusUpdatePageState extends State<DeliveryStatusUpdatePage> {
 
   Widget _buildBody(OrderModel? order) {
     if (_orderController.isLoading && order == null) {
-      return const AppLoadingState(title: 'Đang tải đơn giao hàng');
+      return const AppLoadingState(title: 'Loading delivery order');
     }
     if (_orderController.errorMessage != null && order == null) {
       return AppErrorState(
-        title: 'Không tải được đơn',
+        title: 'Could not load order',
         message: _orderController.errorMessage!,
         onAction: _orderController.loadOrder,
       );
     }
     if (order == null) {
-      return const AppEmptyState(title: 'Không có dữ liệu đơn hàng');
+      return const AppEmptyState(title: 'No order data');
     }
+
     final status = OrderStatus.fromApi(order.status);
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
         Text(
-          'Cập nhật vận chuyển',
+          'Delivery update',
           style: AppTextStyles.display.copyWith(fontSize: 30),
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          'Đơn #${order.id}',
+          'Order #${order.id}',
           style: AppTextStyles.subtitle.copyWith(color: AppColors.secondary),
         ),
         const SizedBox(height: AppSpacing.xl),
@@ -147,7 +147,7 @@ class _DeliveryStatusUpdatePageState extends State<DeliveryStatusUpdatePage> {
                 right: AppSpacing.lg,
                 bottom: AppSpacing.lg,
                 child: Text(
-                  'Lộ trình: Cửa hàng -> ${order.shippingAddress}',
+                  'Route: store -> ${order.shippingAddress}',
                   style: AppTextStyles.body.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w800,
@@ -158,36 +158,29 @@ class _DeliveryStatusUpdatePageState extends State<DeliveryStatusUpdatePage> {
           ),
         ),
         const SizedBox(height: AppSpacing.xl),
-        Text('Trạng thái đơn hàng', style: AppTextStyles.title),
+        Text('Order status', style: AppTextStyles.title),
         const SizedBox(height: AppSpacing.md),
         _DeliveryStep(
-          title: 'SHIPPED',
-          subtitle: 'Đơn đã được bàn giao cho nhân viên giao hàng',
+          title: 'SHIPPING',
+          subtitle: 'The order is being delivered.',
           done:
               status == OrderStatus.shipped || status == OrderStatus.completed,
           active: status == OrderStatus.shipped,
         ),
         _DeliveryStep(
           title: 'COMPLETED',
-          subtitle: 'Giao thành công cho khách',
+          subtitle: 'The customer received the order.',
           done: status == OrderStatus.completed,
           active: status == OrderStatus.completed,
-        ),
-        const SizedBox(height: AppSpacing.xl),
-        Text('Ghi chú nhanh', style: AppTextStyles.subtitle),
-        const SizedBox(height: AppSpacing.sm),
-        const AppTextField(
-          label: 'Ghi chú',
-          maxLines: 3,
-          prefixIcon: Icons.edit_note_outlined,
-          hintText: 'Ví dụ: Khách hẹn nhận sau 15 phút...',
         ),
       ],
     );
   }
 
-  Future<void> _completeDelivery() async {
-    final success = await _deliveryController.completeDelivery(widget.orderId);
+  Future<void> _updateDelivery({required bool isShipping}) async {
+    final success = isShipping
+        ? await _deliveryController.completeDelivery(widget.orderId)
+        : await _deliveryController.startDelivery(widget.orderId);
     if (!mounted) {
       return;
     }
@@ -195,8 +188,8 @@ class _DeliveryStatusUpdatePageState extends State<DeliveryStatusUpdatePage> {
       SnackBar(
         content: Text(
           success
-              ? 'Đã cập nhật giao hàng thành công.'
-              : _deliveryController.errorMessage ?? 'Không thể cập nhật.',
+              ? 'Delivery status updated.'
+              : _deliveryController.errorMessage ?? 'Could not update order.',
         ),
       ),
     );

@@ -29,7 +29,7 @@ class OrderDetailController extends ChangeNotifier {
           ? await orderRepository.getAdminOrderById(orderId)
           : await orderRepository.getMyOrderById(orderId);
       if (order == null) {
-        errorMessage = 'Khong tim thay don hang #$orderId.';
+        errorMessage = 'Không tìm thấy đơn hàng #$orderId.';
       }
     } catch (error) {
       order = null;

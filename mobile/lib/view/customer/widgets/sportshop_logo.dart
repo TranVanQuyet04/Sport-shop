@@ -4,9 +4,10 @@ import '../../../core/constants/app_spacing.dart';
 import '../../../core/theme/app_colors.dart';
 
 class SportshopLogo extends StatelessWidget {
-  const SportshopLogo({super.key, this.compact = false});
+  const SportshopLogo({super.key, this.compact = false, this.inverse = false});
 
   final bool compact;
+  final bool inverse;
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +23,13 @@ class SportshopLogo extends StatelessWidget {
         ),
         if (!compact) ...[
           const SizedBox(width: AppSpacing.sm),
-          const Text(
-            'SPORTSWEAR',
+          Text(
+            'SPORTSHOP',
             style: TextStyle(
-              color: AppColors.primary,
+              color: inverse ? Colors.white : AppColors.primary,
               fontSize: 28,
               fontWeight: FontWeight.w900,
+              fontStyle: FontStyle.italic,
             ),
           ),
         ],

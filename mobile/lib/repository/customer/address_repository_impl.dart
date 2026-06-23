@@ -34,6 +34,29 @@ class AddressRepositoryImpl implements AddressRepository {
   }
 
   @override
+  Future<AddressModel> updateAddress({
+    required String id,
+    required String recipientName,
+    required String phoneNumber,
+    required String city,
+    required String district,
+    required String ward,
+    required String street,
+    required bool isDefault,
+  }) {
+    return _addressService.updateAddress(
+      id: id,
+      recipientName: recipientName,
+      phoneNumber: phoneNumber,
+      city: city,
+      district: district,
+      ward: ward,
+      street: street,
+      isDefault: isDefault,
+    );
+  }
+
+  @override
   Future<void> deleteAddress(String id) {
     return _addressService.deleteAddress(id);
   }

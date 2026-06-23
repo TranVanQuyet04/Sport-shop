@@ -12,6 +12,8 @@ abstract interface class ChatRepository {
 
   Future<List<ChatRoomModel>> getMyRooms(String customerName);
 
+  Future<List<ChatMessageModel>> getRoomMessages(String roomId);
+
   Future<List<ChatMessageModel>> sendRoomMessage({
     required String roomId,
     required String content,

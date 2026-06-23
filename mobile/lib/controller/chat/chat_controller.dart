@@ -8,14 +8,7 @@ class ChatController extends ChangeNotifier {
 
   final ChatRepository chatRepository;
 
-  List<ChatMessageModel> messages = const [
-    ChatMessageModel(
-      id: 'welcome',
-      content: 'Xin chao, Sportshop co the ho tro gi cho ban?',
-      sender: 'ADMIN',
-      sentAt: null,
-    ),
-  ];
+  List<ChatMessageModel> messages = const [];
   List<ChatRoomModel> rooms = const [];
   bool isLoading = false;
   bool isSending = false;
@@ -77,6 +70,22 @@ class ChatController extends ChangeNotifier {
       rooms = await chatRepository.getAdminRooms();
     } catch (error) {
       rooms = const [];
+      errorMessage = error.toString();
+    } finally {
+      isLoading = false;
+      _safeNotifyListeners();
+    }
+  }
+
+  Future<void> loadRoomMessages(String roomId) async {
+    isLoading = true;
+    errorMessage = null;
+    _safeNotifyListeners();
+
+    try {
+      messages = await chatRepository.getRoomMessages(roomId);
+    } catch (error) {
+      messages = const [];
       errorMessage = error.toString();
     } finally {
       isLoading = false;

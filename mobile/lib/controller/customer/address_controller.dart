@@ -61,6 +61,42 @@ class AddressController extends ChangeNotifier {
     }
   }
 
+  Future<bool> updateAddress({
+    required String id,
+    required String recipientName,
+    required String phoneNumber,
+    required String city,
+    required String district,
+    required String ward,
+    required String street,
+    required bool isDefault,
+  }) async {
+    isSubmitting = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      await addressRepository.updateAddress(
+        id: id,
+        recipientName: recipientName,
+        phoneNumber: phoneNumber,
+        city: city,
+        district: district,
+        ward: ward,
+        street: street,
+        isDefault: isDefault,
+      );
+      addresses = await addressRepository.getAddresses();
+      return true;
+    } catch (error) {
+      errorMessage = error.toString();
+      return false;
+    } finally {
+      isSubmitting = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> deleteAddress(String id) async {
     await _mutate(() => addressRepository.deleteAddress(id));
   }

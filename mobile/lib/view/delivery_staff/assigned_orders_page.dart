@@ -193,9 +193,11 @@ class _AssignedOrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final orderStatus = OrderStatus.fromApi(order.status);
-    final deliveryStatus = orderStatus == OrderStatus.completed
-        ? DeliveryStatus.delivered
-        : DeliveryStatus.outForDelivery;
+    final deliveryStatus = order.deliveryStatus.isNotEmpty
+        ? DeliveryStatus.fromApi(order.deliveryStatus)
+        : orderStatus == OrderStatus.completed
+            ? DeliveryStatus.delivered
+            : DeliveryStatus.outForDelivery;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
@@ -227,7 +229,7 @@ class _AssignedOrderCard extends StatelessWidget {
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: onTap,
                   icon: const Icon(Icons.call),
                   label: Text(
                     order.phoneNumber.isEmpty ? 'Gọi khách' : order.phoneNumber,

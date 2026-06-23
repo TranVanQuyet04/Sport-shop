@@ -1,3 +1,30 @@
+import '../../core/auth/role_mapper.dart';
+
+class AdminRoleModel {
+  const AdminRoleModel({
+    required this.id,
+    required this.code,
+    required this.name,
+    required this.description,
+  });
+
+  final String id;
+  final String code;
+  final String name;
+  final String description;
+
+  factory AdminRoleModel.fromJson(Map<String, dynamic> json) {
+    final code = (json['roleCode'] ?? json['code'] ?? '').toString();
+    return AdminRoleModel(
+      id: (json['roleId'] ?? json['id'] ?? '').toString(),
+      code: RoleMapper.normalize(code),
+      name: (json['roleName'] ?? json['name'] ?? code).toString(),
+      description: (json['roleDescription'] ?? json['description'] ?? '')
+          .toString(),
+    );
+  }
+}
+
 class AdminCategoryModel {
   const AdminCategoryModel({
     required this.id,
@@ -14,7 +41,7 @@ class AdminCategoryModel {
   factory AdminCategoryModel.fromJson(Map<String, dynamic> json) {
     return AdminCategoryModel(
       id: (json['id'] ?? '').toString(),
-      name: (json['categoryName'] ?? json['name'] ?? 'Danh mục').toString(),
+      name: (json['categoryName'] ?? json['name'] ?? '').toString(),
       description: (json['description'] ?? '').toString(),
       parentId: (json['parentId'] ?? '').toString(),
     );
@@ -39,7 +66,7 @@ class AdminBrandModel {
   factory AdminBrandModel.fromJson(Map<String, dynamic> json) {
     return AdminBrandModel(
       id: (json['id'] ?? '').toString(),
-      name: (json['brandName'] ?? json['name'] ?? 'Thương hiệu').toString(),
+      name: (json['brandName'] ?? json['name'] ?? '').toString(),
       description: (json['description'] ?? '').toString(),
       logo: (json['logo'] ?? '').toString(),
       isActive: json['isActive'] != false,
@@ -68,10 +95,10 @@ class AdminUserModel {
     return AdminUserModel(
       id: (json['id'] ?? '').toString(),
       email: (json['email'] ?? '').toString(),
-      fullName: (json['fullName'] ?? 'Người dùng').toString(),
+      fullName: (json['fullName'] ?? '').toString(),
       phoneNumber: (json['phoneNumber'] ?? '').toString(),
       status: json['status'] != false,
-      roleName: (json['roleName'] ?? '').toString(),
+      roleName: RoleMapper.normalize((json['roleName'] ?? '').toString()),
     );
   }
 }

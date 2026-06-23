@@ -14,6 +14,10 @@ import '../../repository/customer/checkout_repository.dart';
 import '../../repository/customer/checkout_repository_impl.dart';
 import '../../repository/customer/order_repository.dart';
 import '../../repository/customer/order_repository_impl.dart';
+import '../../repository/customer/navigation_repository.dart';
+import '../../repository/customer/navigation_repository_impl.dart';
+import '../../repository/customer/payment_repository.dart';
+import '../../repository/customer/payment_repository_impl.dart';
 import '../../repository/customer/product_repository.dart';
 import '../../repository/customer/product_repository_impl.dart';
 import '../../repository/customer/profile_repository.dart';
@@ -26,6 +30,8 @@ import '../../service/customer/address_service.dart';
 import '../../service/customer/cart_service.dart';
 import '../../service/customer/checkout_service.dart';
 import '../../service/customer/order_service.dart';
+import '../../service/customer/navigation_service.dart';
+import '../../service/customer/payment_service.dart';
 import '../../service/customer/product_service.dart';
 import '../../service/customer/profile_service.dart';
 import '../network/api_client.dart';
@@ -66,6 +72,12 @@ class AppDependencies {
     productService,
   );
 
+  late final NavigationService navigationService = NavigationApiService(
+    apiClient,
+  );
+  late final NavigationRepository navigationRepository =
+      NavigationRepositoryImpl(navigationService);
+
   late final AddressService addressService = AddressApiService(apiClient);
   late final AddressRepository addressRepository = AddressRepositoryImpl(
     addressService,
@@ -82,6 +94,11 @@ class AppDependencies {
   late final OrderService orderService = OrderApiService(apiClient);
   late final OrderRepository orderRepository = OrderRepositoryImpl(
     orderService,
+  );
+
+  late final PaymentService paymentService = PaymentApiService(apiClient);
+  late final PaymentRepository paymentRepository = PaymentRepositoryImpl(
+    paymentService,
   );
 
   late final ProfileService profileService = ProfileApiService(apiClient);

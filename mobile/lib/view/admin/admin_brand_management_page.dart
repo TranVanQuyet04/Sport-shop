@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import '../../controller/admin/admin_catalog_controller.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
-import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_state.dart';
 import '../../model/admin/admin_lookup_model.dart';
+import '../../widgets/shared/absolute_persistent_layout.dart';
 import 'widgets/admin_app_bar.dart';
 import 'widgets/admin_bottom_nav.dart';
+import 'widgets/admin_design_system.dart';
 
 class AdminBrandManagementPage extends StatefulWidget {
   const AdminBrandManagementPage({super.key});
@@ -22,6 +23,19 @@ class _AdminBrandManagementPageState extends State<AdminBrandManagementPage> {
   late final AdminCatalogController _controller = AdminCatalogController(
     adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
   );
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  List<AdminBrandModel> get _filteredBrands {
+    final query = _searchQuery.trim().toLowerCase();
+    if (query.isEmpty) {
+      return _controller.brands;
+    }
+    return _controller.brands.where((brand) {
+      return brand.name.toLowerCase().contains(query) ||
+          brand.description.toLowerCase().contains(query);
+    }).toList();
+  }
 
   @override
   void initState() {
@@ -32,6 +46,7 @@ class _AdminBrandManagementPageState extends State<AdminBrandManagementPage> {
 
   @override
   void dispose() {
+    _searchController.dispose();
     _controller
       ..removeListener(_onControllerChanged)
       ..dispose();
@@ -72,19 +87,9 @@ class _AdminBrandManagementPageState extends State<AdminBrandManagementPage> {
   Future<void> _deleteBrand(AdminBrandModel brand) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Xóa thương hiệu?'),
-        content: Text('Bạn có chắc muốn xóa "${brand.name}" không?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Hủy'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Xóa'),
-          ),
-        ],
+      builder: (context) => _DeleteConfirmationDialog(
+        title: 'Xóa thương hiệu?',
+        message: 'Bạn có chắc muốn xóa "${brand.name}" không?',
       ),
     );
     if (confirmed != true) {
@@ -119,16 +124,21 @@ class _AdminBrandManagementPageState extends State<AdminBrandManagementPage> {
         child: _buildBody(),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.secondary,
+        tooltip: 'Thêm thương hiệu',
+        backgroundColor: AdminColors.primary,
         foregroundColor: Colors.white,
+        elevation: 4,
+        shape: const CircleBorder(),
         onPressed: _controller.isSubmitting ? null : () => _openBrandForm(),
         child: _controller.isSubmitting
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
+            ? const SizedBox.square(
+                dimension: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
               )
-            : const Icon(Icons.add),
+            : const Icon(Icons.add_rounded),
       ),
       bottomNavigationBar: const AdminBottomNav(selectedIndex: 1),
     );
@@ -145,32 +155,60 @@ class _AdminBrandManagementPageState extends State<AdminBrandManagementPage> {
         onAction: _controller.loadBrands,
       );
     }
-    if (_controller.brands.isEmpty) {
-      return const AppEmptyState(title: 'Chưa có thương hiệu');
-    }
-    return ListView.separated(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      itemCount: _controller.brands.length + 2,
-      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
-      itemBuilder: (context, index) {
-        if (index == 0) {
-          return const _Header();
-        }
-        if (index == 1) {
-          return const TextField(
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: 'Tìm kiếm thương hiệu...',
+
+    final brands = _filteredBrands;
+    return AbsolutePersistentLayout(
+      title: 'Quản lý thương hiệu',
+      subtitle: 'Quản lý nhận diện và trạng thái thương hiệu sản phẩm.',
+      icon: Icons.verified_outlined,
+      trailing: _CountBadge(count: _controller.brands.length),
+      filterAndSearchZone: TextField(
+        controller: _searchController,
+        onChanged: (value) => setState(() => _searchQuery = value),
+        decoration: const InputDecoration(
+          prefixIcon: Icon(Icons.search_rounded),
+          hintText: 'Tìm kiếm thương hiệu...',
+        ),
+      ),
+      dynamicContent: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, 0),
+        children: [
+          if (brands.isEmpty)
+            PremiumEmptyState(
+              icon: Icons.verified_outlined,
+              title: _controller.brands.isEmpty
+                  ? 'Chưa có thương hiệu'
+                  : 'Không tìm thấy thương hiệu',
+              message: _controller.brands.isEmpty
+                  ? 'Nhấn nút + để tạo thương hiệu đầu tiên.'
+                  : 'Hãy thử một từ khóa tìm kiếm khác.',
+              actionLabel: _controller.brands.isEmpty
+                  ? 'Thêm mới ngay'
+                  : 'Xóa tìm kiếm',
+              actionIcon: _controller.brands.isEmpty
+                  ? Icons.add_rounded
+                  : Icons.filter_alt_off_outlined,
+              onAction: _controller.brands.isEmpty
+                  ? () => _openBrandForm()
+                  : () {
+                      _searchController.clear();
+                      setState(() => _searchQuery = '');
+                    },
+            )
+          else
+            ...brands.map(
+              (brand) => Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                child: _BrandTile(
+                  brand: brand,
+                  onEdit: () => _openBrandForm(brand),
+                  onDelete: () => _deleteBrand(brand),
+                ),
+              ),
             ),
-          );
-        }
-        final brand = _controller.brands[index - 2];
-        return _BrandTile(
-          brand: brand,
-          onEdit: () => _openBrandForm(brand),
-          onDelete: () => _deleteBrand(brand),
-        );
-      },
+        ],
+      ),
     );
   }
 }
@@ -237,80 +275,122 @@ class _BrandFormDialogState extends State<_BrandFormDialog> {
   Widget build(BuildContext context) {
     final isEditing = widget.brand != null;
     return AlertDialog(
-      title: Text(isEditing ? 'Sửa thương hiệu' : 'Thêm thương hiệu'),
-      content: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Tên thương hiệu'),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Vui lòng nhập tên thương hiệu.';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: AppSpacing.md),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(labelText: 'Mô tả'),
-                minLines: 2,
-                maxLines: 4,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              TextFormField(
-                controller: _logoController,
-                decoration: const InputDecoration(
-                  labelText: 'Logo URL',
-                  hintText: 'Có thể để trống',
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+      actionsPadding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
+      actionsAlignment: MainAxisAlignment.end,
+      title: _DialogTitle(
+        title: isEditing ? 'Sửa thương hiệu' : 'Thêm thương hiệu',
+        subtitle: 'Cập nhật thông tin nhận diện thương hiệu.',
+        icon: Icons.verified_outlined,
+      ),
+      content: SizedBox(
+        width: 440,
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AdminFormField(
+                  controller: _nameController,
+                  label: 'Tên thương hiệu',
+                  hintText: 'Ví dụ: Nike',
+                  prefixIcon: Icons.verified_outlined,
+                  required: true,
+                  textInputAction: TextInputAction.next,
                 ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                value: _isActive,
-                title: const Text('Đang hoạt động'),
-                onChanged: (value) => setState(() => _isActive = value),
-              ),
-            ],
+                const SizedBox(height: AppSpacing.lg),
+                AdminFormField(
+                  controller: _descriptionController,
+                  label: 'Mô tả',
+                  hintText: 'Mô tả ngắn về thương hiệu',
+                  prefixIcon: Icons.notes_rounded,
+                  minLines: 2,
+                  maxLines: 4,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                AdminFormField(
+                  controller: _logoController,
+                  label: 'URL logo',
+                  hintText: 'https://...',
+                  prefixIcon: Icons.image_outlined,
+                  keyboardType: TextInputType.url,
+                  textInputAction: TextInputAction.done,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Container(
+                  decoration: BoxDecoration(
+                    color: AdminColors.surfaceMuted,
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
+                  ),
+                  child: SwitchListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                    ),
+                    value: _isActive,
+                    activeTrackColor: AdminColors.primary,
+                    title: Text(
+                      'Đang hoạt động',
+                      style: AppTextStyles.body.copyWith(
+                        color: AdminColors.textPrimary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Cho phép thương hiệu xuất hiện trong danh mục.',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AdminColors.textSecondary,
+                      ),
+                    ),
+                    onChanged: (value) => setState(() => _isActive = value),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
       actions: [
         TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor: AdminColors.textSecondary,
+          ),
           onPressed: () => Navigator.pop(context),
           child: const Text('Hủy'),
         ),
-        FilledButton(onPressed: _submit, child: const Text('Lưu')),
+        _DialogSaveButton(onPressed: _submit),
       ],
     );
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header();
+class _CountBadge extends StatelessWidget {
+  const _CountBadge({required this.count});
+
+  final int count;
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Quản lý thương hiệu',
-        style: AppTextStyles.display.copyWith(fontSize: 36),
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
       ),
-      Text(
-        'Thêm, sửa hoặc xóa thương hiệu sản phẩm.',
-        style: AppTextStyles.body.copyWith(
-          color: AppColors.textSecondary,
-          fontSize: 18,
+      decoration: BoxDecoration(
+        color: AdminColors.primarySoft,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+      ),
+      child: Text(
+        '$count hãng',
+        style: AppTextStyles.caption.copyWith(
+          color: AdminColors.primary,
+          fontWeight: FontWeight.w800,
         ),
       ),
-    ],
-  );
+    );
+  }
 }
 
 class _BrandTile extends StatelessWidget {
@@ -325,49 +405,244 @@ class _BrandTile extends StatelessWidget {
   final VoidCallback onDelete;
 
   @override
-  Widget build(BuildContext context) => Material(
-    color: AppColors.surface,
-    borderRadius: BorderRadius.circular(AppRadius.xl),
-    clipBehavior: Clip.antiAlias,
-    child: ListTile(
-      minVerticalPadding: AppSpacing.lg,
-      leading: Container(
-        width: 72,
-        height: 72,
-        decoration: BoxDecoration(
-          color: AppColors.surfaceMuted,
-          borderRadius: BorderRadius.circular(AppRadius.md),
-        ),
-        child: Center(
-          child: Text(
-            brand.name.isEmpty ? '?' : brand.name.characters.first,
-            style: AppTextStyles.title,
+  Widget build(BuildContext context) {
+    return AdminOutlinedSurface(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Row(
+        children: [
+          _BrandLogo(logoUrl: brand.logo),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        brand.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.subtitle.copyWith(
+                          color: AdminColors.textPrimary,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    _StatusPill(isActive: brand.isActive),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  brand.description.isEmpty
+                      ? 'Không có mô tả'
+                      : brand.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.caption.copyWith(
+                    color: AdminColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
-      title: Text(
-        brand.name,
-        style: AppTextStyles.display.copyWith(fontSize: 28),
-      ),
-      subtitle: Text(
-        brand.description.isEmpty
-            ? (brand.isActive ? 'Đang hoạt động' : 'Đã tắt')
-            : brand.description,
-        style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
-      ),
-      trailing: PopupMenuButton<String>(
-        onSelected: (value) {
-          if (value == 'edit') {
-            onEdit();
-          } else if (value == 'delete') {
-            onDelete();
-          }
-        },
-        itemBuilder: (context) => const [
-          PopupMenuItem(value: 'edit', child: Text('Sửa')),
-          PopupMenuItem(value: 'delete', child: Text('Xóa')),
+          const SizedBox(width: AppSpacing.sm),
+          AdminEntityMenu(onEdit: onEdit, onDelete: onDelete),
         ],
       ),
-    ),
-  );
+    );
+  }
+}
+
+class _BrandLogo extends StatelessWidget {
+  const _BrandLogo({required this.logoUrl});
+
+  final String logoUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: AdminColors.surfaceMuted,
+        border: Border.all(color: AdminColors.inputBorder),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: logoUrl.trim().isEmpty
+          ? const _LogoFallback()
+          : Image.network(
+              logoUrl,
+              fit: BoxFit.contain,
+              webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+              errorBuilder: (_, _, _) => const _LogoFallback(),
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return const Center(
+                  child: SizedBox.square(
+                    dimension: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                );
+              },
+            ),
+    );
+  }
+}
+
+class _LogoFallback extends StatelessWidget {
+  const _LogoFallback();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Icon(
+        Icons.broken_image_outlined,
+        color: AdminColors.textSecondary,
+        size: 23,
+      ),
+    );
+  }
+}
+
+class _StatusPill extends StatelessWidget {
+  const _StatusPill({required this.isActive});
+
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isActive ? AdminColors.success : AdminColors.textSecondary;
+    final background = isActive
+        ? AdminColors.successSoft
+        : AdminColors.surfaceMuted;
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        isActive ? 'Hoạt động' : 'Đã tắt',
+        style: AppTextStyles.caption.copyWith(
+          color: color,
+          fontSize: 10,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+}
+
+class _DialogTitle extends StatelessWidget {
+  const _DialogTitle({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  });
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        AdminIconBadge(icon: icon, size: 42),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: AppTextStyles.title.copyWith(
+                  color: AdminColors.textPrimary,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                subtitle,
+                style: AppTextStyles.caption.copyWith(
+                  color: AdminColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DialogSaveButton extends StatelessWidget {
+  const _DialogSaveButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AdminColors.primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      onPressed: onPressed,
+      icon: const Icon(Icons.save_outlined, size: 18),
+      label: const Text('Lưu'),
+    );
+  }
+}
+
+class _DeleteConfirmationDialog extends StatelessWidget {
+  const _DeleteConfirmationDialog({required this.title, required this.message});
+
+  final String title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(title),
+      content: Text(message),
+      actionsAlignment: MainAxisAlignment.end,
+      actions: [
+        TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor: AdminColors.textSecondary,
+          ),
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Hủy'),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AdminColors.danger,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          onPressed: () => Navigator.pop(context, true),
+          child: const Text('Xóa'),
+        ),
+      ],
+    );
+  }
 }

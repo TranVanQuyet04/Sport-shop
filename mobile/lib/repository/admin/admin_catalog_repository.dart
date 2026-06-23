@@ -1,4 +1,6 @@
+import '../../model/admin/collection_model.dart';
 import '../../model/admin/admin_lookup_model.dart';
+import '../../model/common/backend_models.dart';
 import '../../model/customer/product_detail_model.dart';
 import '../../model/customer/product_summary_model.dart';
 
@@ -47,6 +49,8 @@ abstract interface class AdminCatalogRepository {
 
   Future<List<AdminCategoryModel>> getCategories();
 
+  Future<AdminCategoryModel> getCategoryDetail(String id);
+
   Future<AdminCategoryModel> createCategory({
     required String name,
     required String description,
@@ -83,6 +87,8 @@ abstract interface class AdminCatalogRepository {
 
   Future<List<AdminUserModel>> getUsers();
 
+  Future<List<AdminRoleModel>> getRoles();
+
   Future<AdminUserModel> getUserDetail(String id);
 
   Future<AdminUserModel> createUser({
@@ -103,4 +109,51 @@ abstract interface class AdminCatalogRepository {
   });
 
   Future<void> deleteUser(String id);
+
+  Future<List<SportModel>> getSports();
+
+  Future<SportModel> getSportDetail(String id);
+
+  Future<SportModel> createSport({
+    required String name,
+    required String description,
+  });
+
+  Future<SportModel> updateSport({
+    required String id,
+    required String name,
+    required String description,
+  });
+
+  Future<void> deleteSport(String id);
+
+  Future<List<CollectionModel>> getCollections();
+
+  Future<CollectionModel> createCollection({
+    required String name,
+    required String slug,
+    required String description,
+    required String imageUrl,
+    required String type,
+    required bool isActive,
+    String? startDate,
+    String? endDate,
+    required List<String> variantIds,
+  });
+
+  Future<void> deleteCollection(String id);
+
+  Future<Map<String, dynamic>> suggestProduct({
+    required String productName,
+    required String description,
+  });
+
+  Future<ProductDetailModel> confirmProduct({
+    required String name,
+    required String description,
+    required String categoryName,
+    required String brandName,
+    required String sportName,
+    required List<Map<String, dynamic>> variants,
+  });
 }

@@ -60,13 +60,13 @@ class _LoginPageState extends State<LoginPage> {
             Text('Chào mừng trở lại', style: AppTextStyles.title),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              'Đăng nhập để tiếp tục mua sắm tại Sportshop.',
+              'Đăng nhập bằng tài khoản backend để tiếp tục.',
               style: AppTextStyles.body,
             ),
             const SizedBox(height: AppSpacing.xl),
             AppTextField(
               label: 'Email',
-              hintText: 'example@sportshop.vn',
+              hintText: 'email@example.com',
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
               prefixIcon: Icons.mail_outline,
@@ -97,40 +97,11 @@ class _LoginPageState extends State<LoginPage> {
               isLoading: _controller.isLoading,
               onPressed: _submit,
             ),
-            const SizedBox(height: AppSpacing.xl),
-            Text('Xem nhanh UI theo vai trò', style: AppTextStyles.subtitle),
-            const SizedBox(height: AppSpacing.sm),
-            Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              children: [
-                _RolePreviewChip(
-                  label: 'Customer',
-                  icon: Icons.storefront_outlined,
-                  onTap: () => context.go(AppRoutes.customerHome),
-                ),
-                _RolePreviewChip(
-                  label: 'Admin',
-                  icon: Icons.dashboard_outlined,
-                  onTap: () => context.go(AppRoutes.adminDashboard),
-                ),
-                _RolePreviewChip(
-                  label: 'Shop Staff',
-                  icon: Icons.inventory_2_outlined,
-                  onTap: () => context.go(AppRoutes.shopStaffHome),
-                ),
-                _RolePreviewChip(
-                  label: 'Delivery',
-                  icon: Icons.local_shipping_outlined,
-                  onTap: () => context.go(AppRoutes.deliveryHome),
-                ),
-              ],
-            ),
             const SizedBox(height: AppSpacing.xxl),
             Center(
               child: TextButton(
                 onPressed: () => context.go(AppRoutes.register),
-                child: const Text('Chưa có tài khoản? Đăng ký ngay'),
+                child: const Text('Tạo tài khoản'),
               ),
             ),
             Center(
@@ -143,38 +114,11 @@ class _LoginPageState extends State<LoginPage> {
               child: TextButton.icon(
                 onPressed: () => context.go(AppRoutes.guestChat),
                 icon: const Icon(Icons.support_agent_outlined),
-                label: const Text('Chat hỗ trợ khách vãng lai'),
+                label: const Text('Chat hỗ trợ khách'),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _RolePreviewChip extends StatelessWidget {
-  const _RolePreviewChip({
-    required this.label,
-    required this.icon,
-    required this.onTap,
-  });
-
-  final String label;
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ActionChip(
-      avatar: Icon(icon, size: 18, color: AppColors.primary),
-      label: Text(label),
-      onPressed: onTap,
-      side: const BorderSide(color: AppColors.border),
-      backgroundColor: AppColors.surface,
-      labelStyle: AppTextStyles.caption.copyWith(
-        color: AppColors.textPrimary,
-        fontWeight: FontWeight.w700,
       ),
     );
   }

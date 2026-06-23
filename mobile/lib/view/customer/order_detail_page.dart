@@ -229,6 +229,7 @@ class _OrderItemTile extends StatelessWidget {
                 : Image.network(
                     item.variantImage,
                     fit: BoxFit.cover,
+                    webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                     errorBuilder: (context, error, stackTrace) => const Icon(
                       Icons.directions_run,
                       color: AppColors.secondary,

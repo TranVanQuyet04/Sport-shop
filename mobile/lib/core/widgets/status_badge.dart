@@ -18,17 +18,38 @@ class StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = switch (tone) {
-      StatusTone.neutral => (AppColors.surfaceMuted, AppColors.textSecondary),
-      StatusTone.info => (const Color(0xFFEFF6FF), AppColors.info),
-      StatusTone.warning => (const Color(0xFFFFF7ED), AppColors.warning),
-      StatusTone.success => (const Color(0xFFF0FDF4), AppColors.success),
-      StatusTone.error => (const Color(0xFFFEF2F2), AppColors.error),
+      StatusTone.neutral => (
+        AppColors.surfaceMuted,
+        AppColors.textSecondary,
+        AppColors.border,
+      ),
+      StatusTone.info => (
+        const Color(0xFFEFF6FF),
+        AppColors.info,
+        const Color(0xFFBFDBFE),
+      ),
+      StatusTone.warning => (
+        const Color(0xFFFFF7ED),
+        AppColors.warning,
+        const Color(0xFFFED7AA),
+      ),
+      StatusTone.success => (
+        const Color(0xFFF0FDF4),
+        AppColors.success,
+        const Color(0xFFBBF7D0),
+      ),
+      StatusTone.error => (
+        const Color(0xFFFEF2F2),
+        AppColors.error,
+        const Color(0xFFFECACA),
+      ),
     };
 
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colors.$1,
         borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: colors.$3),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(

@@ -7,7 +7,8 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../model/chat/chat_model.dart';
+import '../../core/widgets/hover_effect.dart';
+import 'widgets/admin_design_system.dart';
 
 class AdminChatDetailPage extends StatefulWidget {
   const AdminChatDetailPage({super.key, required this.chatId});
@@ -29,16 +30,8 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
     _controller = app_chat.ChatController(
       chatRepository: AppDependencies.instance.chatRepository,
     );
-    _controller.messages = const [
-      ChatMessageModel(
-        id: 'admin-hint',
-        content:
-            'Backend hiện chưa có API lấy lịch sử tin nhắn theo phòng. Tin nhắn mới sẽ hiển thị sau khi gửi.',
-        sender: 'SYSTEM',
-        sentAt: null,
-      ),
-    ];
     _controller.addListener(_onControllerChanged);
+    _controller.loadRoomMessages(widget.chatId);
   }
 
   @override
@@ -104,16 +97,12 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Text(
-                'Phòng #${widget.chatId}\nĐang hỗ trợ',
+                'Room #${widget.chatId}\nSupport chat',
                 style: AppTextStyles.subtitle,
               ),
             ),
           ],
         ),
-        actions: const [
-          IconButton(onPressed: null, icon: Icon(Icons.call_outlined)),
-          IconButton(onPressed: null, icon: Icon(Icons.videocam_outlined)),
-        ],
       ),
       body: Column(
         children: [
@@ -126,32 +115,40 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
                 0,
               ),
               child: Text(
-                'Chưa gửi được tin nhắn vào phòng chat.',
+                'Could not load or send chat messages.',
                 style: AppTextStyles.caption.copyWith(color: AppColors.error),
               ),
             ),
+          if (_controller.isLoading)
+            const LinearProgressIndicator(minHeight: 2),
           Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              itemCount: _controller.messages.length,
-              itemBuilder: (context, index) {
-                final message = _controller.messages[index];
-                return _Bubble(
-                  text: message.content,
-                  fromMe: message.sender.toUpperCase() == 'ADMIN',
-                  isSystem: message.sender.toUpperCase() == 'SYSTEM',
-                );
-              },
-            ),
+            child: _controller.messages.isEmpty && !_controller.isLoading
+                ? Center(
+                    child: Text(
+                      'Chưa có tin nhắn.',
+                      style: AppTextStyles.body.copyWith(
+                        color: AdminColors.textSecondary,
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(AppSpacing.lg),
+                    itemCount: _controller.messages.length,
+                    itemBuilder: (context, index) {
+                      final message = _controller.messages[index];
+                      return _Bubble(
+                        text: message.content,
+                        fromMe: message.sender.toUpperCase() == 'ADMIN',
+                      );
+                    },
+                  ),
           ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: Row(
                 children: [
-                  const Icon(Icons.add_circle_outline),
-                  const SizedBox(width: AppSpacing.md),
                   Expanded(
                     child: TextField(
                       controller: _messageController,
@@ -160,7 +157,7 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
                       textInputAction: TextInputAction.send,
                       onSubmitted: (_) => _sendMessage(),
                       decoration: InputDecoration(
-                        hintText: 'Nhập tin nhắn...',
+                        hintText: 'Type a message...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(999),
                         ),
@@ -168,18 +165,26 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
                     ),
                   ),
                   const SizedBox(width: AppSpacing.md),
-                  CircleAvatar(
-                    backgroundColor: AppColors.secondary,
-                    foregroundColor: Colors.white,
-                    child: IconButton(
-                      onPressed: _controller.isSending ? null : _sendMessage,
-                      icon: _controller.isSending
-                          ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Icon(Icons.send),
+                  HoverLift(
+                    interactive: !_controller.isSending,
+                    scale: 1.06,
+                    dy: -1,
+                    borderRadius: BorderRadius.circular(999),
+                    child: CircleAvatar(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                      child: IconButton(
+                        onPressed: _controller.isSending ? null : _sendMessage,
+                        icon: _controller.isSending
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.send),
+                      ),
                     ),
                   ),
                 ],
@@ -193,50 +198,34 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
 }
 
 class _Bubble extends StatelessWidget {
-  const _Bubble({
-    required this.text,
-    required this.fromMe,
-    required this.isSystem,
-  });
+  const _Bubble({required this.text, required this.fromMe});
 
   final String text;
   final bool fromMe;
-  final bool isSystem;
 
   @override
   Widget build(BuildContext context) {
-    if (isSystem) {
-      return Container(
-        margin: const EdgeInsets.only(bottom: AppSpacing.lg),
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: AppColors.warning.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
-        ),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
-        ),
-      );
-    }
-
     return Align(
       alignment: fromMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 330),
-        margin: const EdgeInsets.only(bottom: AppSpacing.lg),
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        decoration: BoxDecoration(
-          color: fromMe ? AppColors.primary : AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadius.xl),
-        ),
-        child: Text(
-          text,
-          style: AppTextStyles.body.copyWith(
-            color: fromMe ? Colors.white : AppColors.primary,
-            fontSize: 17,
+      child: HoverLift(
+        scale: 1.008,
+        dy: -1,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 330),
+          margin: const EdgeInsets.only(bottom: AppSpacing.lg),
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          decoration: BoxDecoration(
+            color: fromMe ? AdminColors.primary : AdminColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.xl),
+            boxShadow: fromMe ? null : AdminDesign.cardShadow,
+          ),
+          child: Text(
+            text,
+            style: AppTextStyles.body.copyWith(
+              color: fromMe ? Colors.white : AdminColors.primary,
+              fontSize: 17,
+            ),
           ),
         ),
       ),

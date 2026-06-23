@@ -77,7 +77,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               const SizedBox(height: AppSpacing.xxl),
               AppTextField(
                 label: 'Email của bạn',
-                hintText: 'example@email.com',
+                hintText: 'email@example.com',
                 prefixIcon: Icons.mail_outline,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.done,
@@ -100,7 +100,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 onPressed: _submit,
               ),
               const Spacer(),
-              TextButton(onPressed: () {}, child: const Text('Bạn cần trợ giúp thêm? Liên hệ hỗ trợ')),
+              TextButton(
+                onPressed: () => context.go(AppRoutes.guestChat),
+                child: const Text('Bạn cần trợ giúp thêm? Liên hệ hỗ trợ'),
+              ),
             ],
           ),
         ),

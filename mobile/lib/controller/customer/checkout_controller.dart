@@ -5,15 +5,18 @@ import '../../model/customer/cart_model.dart';
 import '../../model/customer/order_model.dart';
 import '../../repository/customer/cart_repository.dart';
 import '../../repository/customer/checkout_repository.dart';
+import '../../repository/customer/payment_repository.dart';
 
 class CheckoutController extends ChangeNotifier {
   CheckoutController({
     required this.cartRepository,
     required this.checkoutRepository,
+    required this.paymentRepository,
   });
 
   final CartRepository cartRepository;
   final CheckoutRepository checkoutRepository;
+  final PaymentRepository paymentRepository;
 
   CartModel cart = CartModel.empty();
   List<AddressModel> addresses = const [];
@@ -23,6 +26,7 @@ class CheckoutController extends ChangeNotifier {
   bool isSubmitting = false;
   String? errorMessage;
   OrderModel? createdOrder;
+  String? paymentUrl;
 
   Future<void> loadCheckout() async {
     isLoading = true;
@@ -56,12 +60,12 @@ class CheckoutController extends ChangeNotifier {
   Future<bool> submitOrder(String note) async {
     final address = selectedAddress;
     if (address == null) {
-      errorMessage = 'Vui long them dia chi giao hang truoc khi dat hang.';
+      errorMessage = 'Vui lòng thêm địa chỉ giao hàng trước khi đặt hàng.';
       notifyListeners();
       return false;
     }
     if (cart.isEmpty) {
-      errorMessage = 'Gio hang dang trong, khong the dat hang.';
+      errorMessage = 'Giỏ hàng đang trống, không thể đặt hàng.';
       notifyListeners();
       return false;
     }
@@ -76,6 +80,14 @@ class CheckoutController extends ChangeNotifier {
         paymentMethod: paymentMethod,
         note: note,
       );
+      if (paymentMethod == 'VNPAY') {
+        final payment = await paymentRepository.createVnPayPayment(
+          createdOrder!.id,
+        );
+        paymentUrl = payment.paymentUrl;
+      } else {
+        paymentUrl = null;
+      }
       return true;
     } catch (error) {
       errorMessage = error.toString();

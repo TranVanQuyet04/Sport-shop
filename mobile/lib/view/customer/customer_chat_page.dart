@@ -75,9 +75,6 @@ class _CustomerChatPageState extends State<CustomerChatPage> {
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('Hỗ trợ khách hàng'),
-        actions: const [
-          IconButton(onPressed: null, icon: Icon(Icons.more_vert)),
-        ],
       ),
       body: Column(
         children: [

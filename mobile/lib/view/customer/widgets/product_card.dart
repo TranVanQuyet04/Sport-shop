@@ -7,101 +7,231 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../model/customer/product_summary_model.dart';
 
-class ProductCard extends StatelessWidget {
-  const ProductCard({
-    super.key,
-    required this.product,
-    required this.index,
-  });
+class ProductCard extends StatefulWidget {
+  const ProductCard({super.key, required this.product, required this.index});
 
   final ProductSummaryModel product;
   final int index;
 
   @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
+    final product = widget.product;
     final price = NumberFormat.decimalPattern('vi_VN').format(product.price);
-    final swatch = switch (index % 4) {
+    final swatch = switch (widget.index % 4) {
       0 => AppColors.secondary,
-      1 => AppColors.primary,
-      2 => const Color(0xFFE7E4FF),
-      _ => const Color(0xFFECEFF1),
+      1 => const Color(0xFF0F172A),
+      2 => const Color(0xFF2563EB),
+      _ => const Color(0xFF16A34A),
     };
 
-    return InkWell(
-      borderRadius: BorderRadius.circular(AppRadius.lg),
-      onTap: () => context.go('/customer/products/${product.id}'),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AspectRatio(
-            aspectRatio: 1,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: swatch.withValues(alpha: 0.16),
-                borderRadius: BorderRadius.circular(AppRadius.lg),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedScale(
+        scale: _hovered ? 1.025 : 1,
+        duration: const Duration(milliseconds: 160),
+        curve: Curves.easeOut,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppRadius.xl),
+          onTap: () => context.go('/customer/products/${product.id}'),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceElevated,
+              borderRadius: BorderRadius.circular(AppRadius.xl),
+              border: Border.all(
+                color: _hovered ? AppColors.secondary : AppColors.border,
+                width: _hovered ? 1.2 : 1,
               ),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Icon(
-                      index.isEven ? Icons.directions_run : Icons.checkroom,
-                      size: 76,
-                      color: swatch,
-                    ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withValues(
+                    alpha: _hovered ? 0.13 : 0.06,
                   ),
-                  if (product.isNew)
-                    Positioned(
-                      top: AppSpacing.sm,
-                      left: AppSpacing.sm,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: AppColors.secondary,
-                          borderRadius: BorderRadius.circular(AppRadius.sm),
+                  blurRadius: _hovered ? 22 : 16,
+                  offset: Offset(0, _hovered ? 12 : 8),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(AppRadius.xl),
+                    ),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        ColoredBox(color: swatch.withValues(alpha: 0.12)),
+                        if (product.imageUrl.isNotEmpty)
+                          Image.network(
+                            product.imageUrl,
+                            fit: BoxFit.cover,
+                            webHtmlElementStrategy:
+                                WebHtmlElementStrategy.prefer,
+                            errorBuilder: (_, _, _) => _ProductFallbackImage(
+                              index: widget.index,
+                              color: swatch,
+                            ),
+                          )
+                        else
+                          _ProductFallbackImage(
+                            index: widget.index,
+                            color: swatch,
+                          ),
+                        Positioned(
+                          top: AppSpacing.sm,
+                          left: AppSpacing.sm,
+                          child: _SaleBadge(index: widget.index),
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          child: Text(
-                            'MỚI',
-                            style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800),
+                        Positioned(
+                          top: AppSpacing.sm,
+                          right: AppSpacing.sm,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 160),
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: _hovered
+                                  ? AppColors.secondary
+                                  : AppColors.surfaceElevated,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.primary.withValues(
+                                    alpha: 0.10,
+                                  ),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.favorite_border,
+                              color: _hovered
+                                  ? Colors.white
+                                  : AppColors.primary,
+                              size: 18,
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  Positioned(
-                    top: AppSpacing.sm,
-                    right: AppSpacing.sm,
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: AppColors.surface,
-                      child: Icon(Icons.favorite_border, color: AppColors.primary, size: 18),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.brand.isEmpty ? 'SPORTSHOP' : product.brand,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.secondary,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        product.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.body.copyWith(
+                          fontWeight: FontWeight.w800,
+                          height: 1.25,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '$priceđ',
+                              style: AppTextStyles.subtitle.copyWith(
+                                color: AppColors.primary,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          if (product.hasRating) ...[
+                            const Icon(
+                              Icons.star_rounded,
+                              color: AppColors.warning,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              product.rating.toStringAsFixed(1),
+                              style: AppTextStyles.caption.copyWith(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            product.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.body.copyWith(fontSize: 15),
+        ),
+      ),
+    );
+  }
+}
+
+class _SaleBadge extends StatelessWidget {
+  const _SaleBadge({required this.index});
+
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: index.isEven ? AppColors.secondary : AppColors.primary,
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Text(
+          index.isEven ? 'Ưu đãi' : 'Mới',
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 11,
+            fontWeight: FontWeight.w900,
           ),
-          const SizedBox(height: AppSpacing.xs),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  '$priceđ',
-                  style: AppTextStyles.subtitle.copyWith(fontSize: 16),
-                ),
-              ),
-              const Icon(Icons.star_border, color: AppColors.secondary, size: 16),
-              const SizedBox(width: 2),
-              Text(product.rating.toStringAsFixed(1), style: AppTextStyles.caption.copyWith(color: AppColors.primary)),
-            ],
-          ),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProductFallbackImage extends StatelessWidget {
+  const _ProductFallbackImage({required this.index, required this.color});
+
+  final int index;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Icon(
+        index.isEven ? Icons.directions_run : Icons.checkroom,
+        size: 76,
+        color: color,
       ),
     );
   }

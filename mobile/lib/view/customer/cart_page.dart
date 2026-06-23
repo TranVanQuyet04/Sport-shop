@@ -57,7 +57,10 @@ class _CartPageState extends State<CartPage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+        leading: IconButton(
+          onPressed: () => context.go(AppRoutes.customerHome),
+          icon: const Icon(Icons.home_outlined),
+        ),
         title: const SportshopLogo(),
         actions: [
           IconButton(
@@ -366,6 +369,7 @@ class _ProductImage extends StatelessWidget {
           : Image.network(
               imageUrl,
               fit: BoxFit.cover,
+              webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
               errorBuilder: (context, error, stackTrace) {
                 return const Icon(
                   Icons.directions_run,

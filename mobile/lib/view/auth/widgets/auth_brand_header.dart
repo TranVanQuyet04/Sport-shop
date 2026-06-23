@@ -23,7 +23,7 @@ class AuthBrandHeader extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.arrow_back),
       ),
       title: Text(
-        'APEX VELOCITY',
+        'SPORTSHOP',
         style: AppTextStyles.display.copyWith(
           fontSize: 28,
           fontStyle: FontStyle.italic,

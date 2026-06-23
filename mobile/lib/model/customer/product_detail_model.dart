@@ -33,9 +33,9 @@ class ProductDetailModel {
 
     return ProductDetailModel(
       id: (json['id'] ?? json['productId'] ?? '').toString(),
-      name: (json['productName'] ?? json['name'] ?? 'Sản phẩm').toString(),
+      name: (json['productName'] ?? json['name'] ?? '').toString(),
       description: (json['description'] ?? '').toString(),
-      category: (json['categoryName'] ?? json['category'] ?? 'Thể thao').toString(),
+      category: (json['categoryName'] ?? json['category'] ?? '').toString(),
       brand: (json['brandName'] ?? json['brand'] ?? '').toString(),
       sport: (json['sportName'] ?? json['sport'] ?? '').toString(),
       variants: variants,

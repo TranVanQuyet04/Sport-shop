@@ -14,7 +14,7 @@ class UnauthorizedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AuthBrandHeader(trailing: IconButton(onPressed: null, icon: Icon(Icons.shopping_cart_outlined))),
+      appBar: const AuthBrandHeader(),
       body: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
         child: Column(
@@ -50,7 +50,10 @@ class UnauthorizedPage extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             AppButton(label: 'QUAY LẠI TRANG CHỦ', variant: AppButtonVariant.outline, onPressed: () => context.go(AppRoutes.customerHome)),
             const SizedBox(height: AppSpacing.xl),
-            TextButton(onPressed: () {}, child: const Text('Liên hệ hỗ trợ kỹ thuật')),
+            TextButton(
+              onPressed: () => context.go(AppRoutes.guestChat),
+              child: const Text('Liên hệ hỗ trợ kỹ thuật'),
+            ),
           ],
         ),
       ),
