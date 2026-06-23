@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "tertiary-fixed": "#e2e2e2",
+                    "secondary": "#bb0027",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-secondary-container": "#fffbff",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-surface": "#1a1c1c",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#ffdad8",
+                    "error": "#ba1a1a",
+                    "on-primary-container": "#848484",
+                    "outline-variant": "#cfc4c5",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#eeeeee",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#e2e2e2",
+                    "on-background": "#1a1c1c",
+                    "surface-bright": "#f9f9f9",
+                    "secondary-container": "#e51a38",
+                    "on-primary-fixed-variant": "#474747",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#7e7576",
+                    "on-primary-fixed": "#1b1b1b",
+                    "on-surface-variant": "#4c4546",
+                    "surface": "#f9f9f9",
+                    "inverse-on-surface": "#f1f1f1",
+                    "surface-dim": "#dadada",
+                    "tertiary-container": "#1a1c1c",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-highest": "#e2e2e2",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "tertiary": "#000000",
+                    "on-secondary-fixed-variant": "#92001d",
+                    "on-secondary-fixed": "#410007",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-container-low": "#f3f3f3",
+                    "on-tertiary-container": "#838484",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#5e5e5e",
+                    "background": "#f9f9f9",
+                    "primary-container": "#1b1b1b",
+                    "inverse-surface": "#2f3131",
+                    "inverse-primary": "#c6c6c6",
+                    "primary": "#000000"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter-mobile": "12px",
+                    "base": "4px",
+                    "section-gap": "32px",
+                    "touch-target-min": "44px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "button": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "title-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .perspective-text {
+            transform: perspective(500px) rotateX(10deg);
+        }
+        .active-scale:active {
+            transform: scale(0.96);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased overflow-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-touch-target-min bg-surface shadow-sm">
+<div class="flex items-center active:bg-surface-container-low transition-colors rounded-full p-2 active-scale cursor-pointer">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black italic tracking-tighter text-primary">APEX VELOCITY</h1>
+<div class="flex items-center active:bg-surface-container-low transition-colors rounded-full p-2 active-scale cursor-pointer">
+<span class="material-symbols-outlined text-primary" data-icon="shopping_cart">shopping_cart</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="min-h-screen flex flex-col items-center justify-center px-margin-mobile pt-16 pb-20">
+<!-- 404 Illustration Area -->
+<div class="relative w-full max-w-xs aspect-square mb-8 flex items-center justify-center">
+<!-- Background Decorative Element -->
+<div class="absolute inset-0 bg-surface-container rounded-full scale-90 blur-3xl opacity-50"></div>
+<!-- Sporty 404 Visual -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="text-[120px] font-black leading-none italic text-surface-container-highest tracking-tighter flex items-center">
+                    4
+                    <div class="relative mx-2">
+<span class="material-symbols-outlined text-[100px] text-secondary" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+<!-- Motion Lines for "missing ball" effect -->
+<div class="absolute -right-4 top-0 h-1 w-8 bg-secondary opacity-20 rounded-full rotate-12"></div>
+<div class="absolute -right-6 top-6 h-1 w-10 bg-secondary opacity-10 rounded-full"></div>
+</div>
+                    4
+                </div>
+<!-- Graphic Image Placeholder -->
+<div class="w-64 h-64 mt-[-40px] relative">
+<img alt="Empty Stadium" class="w-full h-full object-cover rounded-xl shadow-lg grayscale" data-alt="A cinematic wide shot of an empty, high-tech modern sports stadium at twilight. The massive arena features sleek architectural lines in dark gray and black, with powerful stadium floodlights creating long, dramatic shadows across the perfectly manicured green grass. A single red sports cone sits isolated in the center of the pitch. The atmosphere is quiet, professional, and slightly melancholic, rendered in a crisp, high-contrast photographic style." src="https://lh3.googleusercontent.com/aida/AP1WRLv3Lf_hvcUqjsmdDKvppNbwu7zcXNqW5SqNXBeqsS4yHP0JUI4FJ4K_IT1KHJJMgCrH-VOah3STU5GhHUcouUxqnMedY7OMIsBI43-5xcCWJRBQWf6ObDtEdd4Jegh4aU6NCb89ZY911l1VJ6eN68ZqMIul8e5J-HhZSMK0LvDmaqt7Omtzyoxmz8GXXtL2pUc7QUpvWNd9V9xyRO3qY4ditwkbqMOs2hLiyiocqtplSlfoORHlpLvp14U"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent"></div>
+</div>
+</div>
+</div>
+<!-- Text Content -->
+<div class="text-center space-y-4 max-w-sm">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-extrabold uppercase tracking-tight">
+                Trang không tìm thấy
+            </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                Rất tiếc, trang bạn đang tìm kiếm không tồn tại hoặc đã bị dời đi. Có lẽ nó đã rời sân cỏ rồi!
+            </p>
+</div>
+<!-- Action Area -->
+<div class="w-full max-w-xs mt-10 space-y-4">
+<button class="w-full h-touch-target-min bg-secondary text-on-secondary rounded-lg font-button active-scale transition-transform shadow-md flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="home">home</span>
+                VỀ TRANG CHỦ
+            </button>
+<button class="w-full h-touch-target-min border-[1.5px] border-primary text-primary rounded-lg font-button active-scale transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
+                TÌM SẢN PHẨM KHÁC
+            </button>
+</div>
+</main>
+<!-- BottomNavBar (Suppressed for 404 as per Destination Rule, but included as a shell structure for context if user navigates back) -->
+<!-- The prompt says 404 usually suppresses nav, but I'll provide a subtle back trigger instead of a full nav to keep the focus -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 text-on-surface-variant/60">
+<span class="font-label-bold text-label-bold tracking-widest uppercase">Apex Velocity • Performance Gear</span>
+</div>
+<script>
+        // Simple touch feedback for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('touchstart', function() {
+                this.classList.add('opacity-80');
+            });
+            button.addEventListener('touchend', function() {
+                this.classList.remove('opacity-80');
+            });
+        });
+
+        // Small parallax effect for the "404" graphic on device tilt (if supported)
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', (event) => {
+                const tiltX = event.gamma / 10;
+                const tiltY = event.beta / 10;
+                const graphic = document.querySelector('.relative.z-10');
+                if(graphic) {
+                    graphic.style.transform = `translate(${tiltX}px, ${tiltY}px)`;
+                }
+            });
+        }
+    </script>
+</body></html>

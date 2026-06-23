@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Apex Velocity - Đăng nhập</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "secondary-fixed-dim": "#ffb3b1",
+                "tertiary-fixed": "#e2e2e2",
+                "secondary": "#bb0027",
+                "tertiary-fixed-dim": "#c6c6c7",
+                "on-tertiary-fixed-variant": "#454747",
+                "on-secondary-container": "#fffbff",
+                "on-tertiary-fixed": "#1a1c1c",
+                "on-surface": "#1a1c1c",
+                "on-error-container": "#93000a",
+                "secondary-fixed": "#ffdad8",
+                "error": "#ba1a1a",
+                "on-primary-container": "#848484",
+                "outline-variant": "#cfc4c5",
+                "error-container": "#ffdad6",
+                "surface-container": "#eeeeee",
+                "on-secondary": "#ffffff",
+                "on-error": "#ffffff",
+                "primary-fixed": "#e2e2e2",
+                "on-background": "#1a1c1c",
+                "surface-bright": "#f9f9f9",
+                "secondary-container": "#e51a38",
+                "on-primary-fixed-variant": "#474747",
+                "surface-container-lowest": "#ffffff",
+                "outline": "#7e7576",
+                "on-primary-fixed": "#1b1b1b",
+                "on-surface-variant": "#4c4546",
+                "surface": "#f9f9f9",
+                "inverse-on-surface": "#f1f1f1",
+                "surface-dim": "#dadada",
+                "tertiary-container": "#1a1c1c",
+                "surface-variant": "#e2e2e2",
+                "surface-container-highest": "#e2e2e2",
+                "primary-fixed-dim": "#c6c6c6",
+                "tertiary": "#000000",
+                "on-secondary-fixed-variant": "#92001d",
+                "on-secondary-fixed": "#410007",
+                "on-primary": "#ffffff",
+                "surface-container-high": "#e8e8e8",
+                "surface-container-low": "#f3f3f3",
+                "on-tertiary-container": "#838484",
+                "on-tertiary": "#ffffff",
+                "surface-tint": "#5e5e5e",
+                "background": "#f9f9f9",
+                "primary-container": "#1b1b1b",
+                "inverse-surface": "#2f3131",
+                "inverse-primary": "#c6c6c6",
+                "primary": "#000000"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "gutter-mobile": "12px",
+                "base": "4px",
+                "section-gap": "32px",
+                "touch-target-min": "44px",
+                "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                "headline-lg": ["Inter"],
+                "display-lg": ["Inter"],
+                "body-lg": ["Inter"],
+                "label-bold": ["Inter"],
+                "headline-lg-mobile": ["Inter"],
+                "button": ["Inter"],
+                "body-sm": ["Inter"],
+                "title-md": ["Inter"]
+            },
+            "fontSize": {
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9; /* surface */
+        }
+        .input-focus-effect:focus-within {
+            border-color: #000000;
+            box-shadow: 0 0 0 1px #000000;
+        }
+        .error-shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Top Bar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-touch-target-min bg-surface shadow-sm">
+<div class="flex items-center gap-2 active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black italic tracking-tighter text-primary">Đăng nhập</h1>
+<div class="w-11"></div> <!-- Spacer for symmetry -->
+</header>
+<main class="min-h-screen pt-20 pb-10 px-margin-mobile flex flex-col items-center">
+<!-- Logo Section -->
+<div class="mt-8 mb-12 flex flex-col items-center animate-fade-in">
+<img alt="SPORTSHOP Logo" class="w-32 h-32 object-contain" src="https://lh3.googleusercontent.com/aida/AP1WRLtE5oDY2lq01mgtoamTCbOLJVvMqsS7nkF7S-QzkcENmulnwDoFCyf-WxAAW_DqyjbPd6N71T4m0BnTyB3moQXNjQT-GqdRhFnTWzadTLIGbc2OBIv-B1wvCVB2weetVKRFKpJoyPoKTinL1OE_dp3w18UlZaIpfy7NsDFXkbjVRZ1st6LLBonzfFBpj8Ul2WeRIefPtL4so7JeU3xq8UYzo8WBW8IxuVtxouccYBFcg3uJJj9Et4JtMQU"/>
+<p class="mt-4 font-label-bold text-label-bold text-outline uppercase tracking-widest">Performance Gear</p>
+</div>
+<!-- Error Message (Visible State) -->
+<div class="w-full max-w-md mb-6 p-4 bg-error-container text-on-error-container rounded-lg border border-error/20 flex items-center gap-3 error-shake" id="errorMessage">
+<span class="material-symbols-outlined text-error" data-icon="error">error</span>
+<p class="font-body-sm text-body-sm">Email hoặc mật khẩu không đúng. Vui lòng kiểm tra lại.</p>
+</div>
+<!-- Login Form -->
+<form class="w-full max-w-md flex flex-col gap-6" id="loginForm">
+<!-- Email Field -->
+<div class="flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1 uppercase" for="email">Email</label>
+<div class="relative flex items-center bg-white border border-outline-variant rounded-xl overflow-hidden h-14 px-4 input-focus-effect transition-all">
+<span class="material-symbols-outlined text-outline mr-3" data-icon="mail">mail</span>
+<input class="bg-transparent border-none focus:ring-0 w-full font-body-lg text-body-lg placeholder:text-outline/50" id="email" placeholder="example@apex.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1 uppercase" for="password">Mật khẩu</label>
+<div class="relative flex items-center bg-white border border-outline-variant rounded-xl overflow-hidden h-14 px-4 input-focus-effect transition-all">
+<span class="material-symbols-outlined text-outline mr-3" data-icon="lock">lock</span>
+<input class="bg-transparent border-none focus:ring-0 w-full font-body-lg text-body-lg placeholder:text-outline/50" id="password" placeholder="••••••••" required="" type="password"/>
+<button class="ml-2 text-outline hover:text-primary active:scale-90 transition-transform" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined" data-icon="visibility" id="passwordIcon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Options Row -->
+<div class="flex items-center justify-between mt-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-6 bg-outline-variant rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant select-none">Ghi nhớ đăng nhập</span>
+</label>
+<a class="font-label-bold text-label-bold text-secondary hover:underline decoration-2 underline-offset-4" href="#">Quên mật khẩu?</a>
+</div>
+<!-- CTA Button -->
+<button class="mt-8 h-14 w-full bg-secondary text-on-secondary font-button text-button rounded-xl shadow-lg shadow-secondary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
+                ĐĂNG NHẬP
+                <span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+</button>
+</form>
+<!-- Social Login Separator -->
+<div class="w-full max-w-md flex items-center gap-4 my-10">
+<div class="h-[1px] flex-1 bg-outline-variant"></div>
+<span class="font-label-bold text-label-bold text-outline uppercase tracking-tighter">Hoặc đăng nhập với</span>
+<div class="h-[1px] flex-1 bg-outline-variant"></div>
+</div>
+<!-- Social Buttons -->
+<div class="w-full max-w-md grid grid-cols-2 gap-4">
+<button class="h-12 border border-outline-variant rounded-xl flex items-center justify-center gap-2 font-label-bold text-label-bold text-on-surface-variant active:bg-surface-container-low transition-colors">
+<img alt="Google" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida/AP1WRLtQ2Q0lnulIx3cCw9_DSlh-I_Bfcl9_lPdhoA3C25xCd3y7FK7NYQX5O6C1hY1iuFU-z3rhJq_r6jxxe98vFcM_Hh_XD3d-BxoVtlROeFk89sQUZRtuNNllKiuyI_boIfPhSwpK4G9VzoZH9sdWNFrwARCD51pOiugPiKz5tgAAEu_eY1SbsHwMSpQy4_Jq6ZycLWwnuIe-dAl1YWa18ZQj4uJbM7G0zlY8wPKXLC373gHQC8JZXzSgnnA"/>
+                 Google
+            </button>
+<button class="h-12 border border-outline-variant rounded-xl flex items-center justify-center gap-2 font-label-bold text-label-bold text-on-surface-variant active:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[#1877F2]" data-icon="facebook" style="font-variation-settings: 'FILL' 1;">face_nod</span>
+                Facebook
+            </button>
+</div>
+<!-- Footer -->
+<footer class="mt-auto pt-12 pb-4 text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Chưa có tài khoản? 
+                <a class="ml-1 font-label-bold text-label-bold text-primary hover:underline decoration-2 underline-offset-4" href="#">Đăng ký ngay</a>
+</p>
+</footer>
+</main>
+<!-- JavaScript for interactions -->
+<script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordIcon = document.getElementById('passwordIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.innerText = 'visibility_off';
+                passwordIcon.setAttribute('data-icon', 'visibility_off');
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.innerText = 'visibility';
+                passwordIcon.setAttribute('data-icon', 'visibility');
+            }
+        }
+
+        // Simple form interaction simulation
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span>';
+            
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+                // Show error message again for demo purposes
+                const errorMsg = document.getElementById('errorMessage');
+                errorMsg.classList.remove('hidden');
+                errorMsg.classList.add('error-shake');
+                setTimeout(() => errorMsg.classList.remove('error-shake'), 400);
+            }, 1500);
+        });
+    </script>
+</body></html>

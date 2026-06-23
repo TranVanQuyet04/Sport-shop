@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hiệu suất nhân viên</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-secondary-container": "#fffbff",
+                    "surface-dim": "#dadada",
+                    "secondary-fixed": "#ffdad8",
+                    "on-error-container": "#93000a",
+                    "primary-fixed": "#e2e2e2",
+                    "inverse-surface": "#2f3131",
+                    "surface-bright": "#f9f9f9",
+                    "inverse-primary": "#c6c6c6",
+                    "background": "#f9f9f9",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "surface-container-low": "#f3f3f3",
+                    "primary-container": "#1b1b1b",
+                    "on-surface": "#1a1c1c",
+                    "tertiary-container": "#1a1c1c",
+                    "surface-container-high": "#e8e8e8",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "secondary-container": "#e51a38",
+                    "tertiary": "#000000",
+                    "surface-tint": "#5e5e5e",
+                    "outline-variant": "#cfc4c5",
+                    "surface-variant": "#e2e2e2",
+                    "outline": "#7e7576",
+                    "on-secondary-fixed": "#410007",
+                    "surface-container-highest": "#e2e2e2",
+                    "secondary": "#bb0027",
+                    "on-secondary-fixed-variant": "#92001d",
+                    "surface-container": "#eeeeee",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#1b1b1b",
+                    "on-primary-container": "#848484",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1a1c1c",
+                    "on-tertiary-container": "#838484",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#4c4546",
+                    "on-primary": "#ffffff",
+                    "surface": "#f9f9f9",
+                    "primary": "#000000",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-primary-fixed-variant": "#474747",
+                    "tertiary-fixed": "#e2e2e2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "32px",
+                    "gutter-mobile": "12px",
+                    "touch-target-min": "44px",
+                    "base": "4px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "button": ["Inter"],
+                    "title-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-bold": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .active-tab-indicator { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .chart-bar { transition: height 1s ease-out; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface dark:bg-surface-dim flex justify-between items-center px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a confident male executive in his late 30s wearing a modern tailored charcoal suit. The background is a blurred, high-end corporate office with soft natural lighting. The visual style is crisp and professional, using a monochrome palette with high contrast, fitting an elite sportswear brand aesthetic." src="https://lh3.googleusercontent.com/aida/AP1WRLsIeYvJt5L0zIhD1T2KsFNc44wLfFcUvCsI8muKbGsfSXOHtLIfNI1-6eMf5fdFd2GOVZmIJmmeog9opm5F9zglEJkqhAZ4g4vLrRRWTXJdebf83fg5uHOZa5WxHqf_myH6DOPQbfvkcSSs265YwpLl3fNxthAEJgQAqbxggMFC1catsh510T6ijgIy0Bxeu8J8RYDGRK8x9nw-lxo-r8PIAUm9F7ECeePje136Rsz16vw88qfh2CBgXBI"/>
+</div>
+<h1 class="text-title-md font-title-md font-bold text-primary dark:text-primary-fixed">Staff</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed hover:opacity-80 active:scale-95 transition-transform duration-150">notifications</button>
+</div>
+</header>
+<main class="pt-16 pb-24 px-margin-mobile max-w-md mx-auto">
+<!-- Headline -->
+<section class="mt-4 mb-6">
+<h2 class="text-headline-lg-mobile font-headline-lg-mobile text-primary">Hiệu suất nhân viên</h2>
+<p class="text-body-sm text-on-surface-variant">Phân tích dữ liệu vận hành thời gian thực</p>
+</section>
+<!-- Segmented Control Filter -->
+<nav class="relative flex bg-surface-container rounded-xl p-1 mb-8">
+<div class="absolute top-1 bottom-1 left-1 w-[calc(33.33%-4px)] bg-white shadow-sm rounded-lg active-tab-indicator" id="segment-indicator"></div>
+<button class="relative z-10 flex-1 py-2 text-label-bold font-label-bold text-center text-primary" onclick="switchTab(0)">Ngày</button>
+<button class="relative z-10 flex-1 py-2 text-label-bold font-label-bold text-center text-on-surface-variant" onclick="switchTab(1)">Tuần</button>
+<button class="relative z-10 flex-1 py-2 text-label-bold font-label-bold text-center text-on-surface-variant" onclick="switchTab(2)">Tháng</button>
+</nav>
+<!-- Performance Metrics Grid -->
+<div class="grid grid-cols-2 gap-4 mb-section-gap">
+<!-- Total Orders -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+<span class="material-symbols-outlined text-secondary mb-2">shopping_cart</span>
+<p class="text-body-sm text-on-surface-variant">Tổng đơn hàng</p>
+<h3 class="text-title-md font-title-md font-bold text-primary mt-1">1,284</h3>
+<div class="flex items-center text-green-600 text-xs font-bold mt-2">
+<span class="material-symbols-outlined text-xs mr-1">trending_up</span> +12%
+                </div>
+</div>
+<!-- Success Rate -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+<span class="material-symbols-outlined text-secondary mb-2" style="font-variation-settings: 'FILL' 1;">verified</span>
+<p class="text-body-sm text-on-surface-variant">Tỷ lệ thành công</p>
+<h3 class="text-title-md font-title-md font-bold text-primary mt-1">98.2%</h3>
+<div class="flex items-center text-green-600 text-xs font-bold mt-2">
+<span class="material-symbols-outlined text-xs mr-1">trending_up</span> +0.5%
+                </div>
+</div>
+<!-- Avg Time -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] col-span-2 flex items-center justify-between">
+<div>
+<span class="material-symbols-outlined text-secondary mb-1">timer</span>
+<p class="text-body-sm text-on-surface-variant">Thời gian xử lý TB</p>
+<h3 class="text-title-md font-title-md font-bold text-primary mt-1">4m 32s</h3>
+</div>
+<div class="text-right">
+<p class="text-[10px] uppercase tracking-wider font-bold text-on-surface-variant mb-1">Mục tiêu: &lt; 5m</p>
+<div class="w-24 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 85%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Performance Trends Chart -->
+<section class="mb-section-gap">
+<div class="flex justify-between items-end mb-4">
+<h3 class="text-body-lg font-bold text-primary">Xu hướng hiệu suất</h3>
+<span class="text-xs font-bold text-secondary">CHI TIẾT</span>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+<div class="flex items-end justify-between h-32 gap-2">
+<div class="flex flex-col items-center flex-1">
+<div class="w-full bg-surface-container-high rounded-t-sm chart-bar" style="height: 60%"></div>
+<span class="text-[10px] mt-2 font-bold text-on-surface-variant">T2</span>
+</div>
+<div class="flex flex-col items-center flex-1">
+<div class="w-full bg-surface-container-high rounded-t-sm chart-bar" style="height: 45%"></div>
+<span class="text-[10px] mt-2 font-bold text-on-surface-variant">T3</span>
+</div>
+<div class="flex flex-col items-center flex-1">
+<div class="w-full bg-secondary rounded-t-sm chart-bar" style="height: 85%"></div>
+<span class="text-[10px] mt-2 font-bold text-secondary">T4</span>
+</div>
+<div class="flex flex-col items-center flex-1">
+<div class="w-full bg-surface-container-high rounded-t-sm chart-bar" style="height: 70%"></div>
+<span class="text-[10px] mt-2 font-bold text-on-surface-variant">T5</span>
+</div>
+<div class="flex flex-col items-center flex-1">
+<div class="w-full bg-surface-container-high rounded-t-sm chart-bar" style="height: 55%"></div>
+<span class="text-[10px] mt-2 font-bold text-on-surface-variant">T6</span>
+</div>
+<div class="flex flex-col items-center flex-1">
+<div class="w-full bg-surface-container-high rounded-t-sm chart-bar" style="height: 30%"></div>
+<span class="text-[10px] mt-2 font-bold text-on-surface-variant">T7</span>
+</div>
+<div class="flex flex-col items-center flex-1">
+<div class="w-full bg-surface-container-high rounded-t-sm chart-bar" style="height: 40%"></div>
+<span class="text-[10px] mt-2 font-bold text-on-surface-variant">CN</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Staff Ranking -->
+<section class="mb-8">
+<h3 class="text-body-lg font-bold text-primary mb-4">Xếp hạng nhân viên</h3>
+<div class="space-y-3">
+<!-- Rank 1 -->
+<div class="flex items-center justify-between p-3 bg-white rounded-lg border border-outline-variant shadow-sm transition-transform active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="User" class="w-10 h-10 rounded-full object-cover" data-alt="A detailed close-up of a diverse professional athletic coach with an intense and focused expression. The setting is a brightly lit, high-contrast athletic training center with a minimalist interior design. The color palette features sharp blacks and whites with vibrant red highlights, exuding power and discipline. Soft atmospheric lighting enhances the modern, high-performance sportswear brand feel." src="https://lh3.googleusercontent.com/aida/AP1WRLsRs0UP-AJad5mb1EBSfxQgdoDOALMhuVrOOwF7kgalogQcKXuHv1Nf0c3rXhQCdEouXsY48L-x5zT7eTiJLkq2zxet7Ynwa4jAIfSw3J5H1RvLTD_r0PBELe-3sB3gI7Qem9ylLFLQejcjggzbzDgJfsdmIR_v2q5fb1W4mZRxbN6Mn9QjfHqzgAa2S7Jnqzsw55NIGBotZjIGTZi16xsPADJwFUgBuv725TdiTwk84FNnMoPLsz8CAHI"/>
+<div class="absolute -top-1 -left-1 w-5 h-5 bg-yellow-500 text-white flex items-center justify-center text-[10px] font-bold rounded-full border-2 border-white">1</div>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">Minh Trần</p>
+<p class="text-[11px] text-on-surface-variant">248 đơn • 99.5%</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-green-600">Tuyệt vời</p>
+<div class="flex gap-0.5 mt-1">
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+</div>
+</div>
+</div>
+<!-- Rank 2 -->
+<div class="flex items-center justify-between p-3 bg-white rounded-lg border border-outline-variant shadow-sm transition-transform active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="User" class="w-10 h-10 rounded-full object-cover" data-alt="A portrait of a sharp, professional female manager in her late 20s with a confident and disciplined look. The scene is a modern, high-contrast office with sleek architectural lines and soft, diffused natural light. The palette is stark monochromatic black and white with a few strategic pops of deep red. The image feels modern, clean, and perfectly aligned with a professional, elite athletic aesthetic." src="https://lh3.googleusercontent.com/aida/AP1WRLsoSfRrfch0SbsFWw1hS1vx3wY-D-sZqtwn0pYf7CgyNDFIeXAF4ntQqOIW08yGAf_fTb9NiJ3XPueBkzPHBEMjGD6gDs2qhrPdd0EVSjolcE35rC_Mf-R6OX3SW-yW3LK-B-OcEiRqyH2K_4hEngboaDg17OqOKUcErhumohTqUkUSTbso3efMgyNZHUsDJLlvA127h001qTI9eIG5N7p65NsjUkOls6otnndTKRQF4td-_7wu96XBOZk"/>
+<div class="absolute -top-1 -left-1 w-5 h-5 bg-slate-300 text-white flex items-center justify-center text-[10px] font-bold rounded-full border-2 border-white">2</div>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">Linh Nguyễn</p>
+<p class="text-[11px] text-on-surface-variant">215 đơn • 98.1%</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-primary">Tốt</p>
+<div class="flex gap-0.5 mt-1">
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+<span class="w-1 h-3 bg-surface-container-high rounded-full"></span>
+</div>
+</div>
+</div>
+<!-- Rank 3 -->
+<div class="flex items-center justify-between p-3 bg-white rounded-lg border border-outline-variant shadow-sm transition-transform active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="User" class="w-10 h-10 rounded-full object-cover" data-alt="An energetic male staff member in premium athletic apparel, looking focused while working in a high-tech logistics hub. The environment is minimalist and high-contrast, featuring deep shadows and bright spotlights that create a dramatic, professional atmosphere. The visual style is rooted in a monochromatic palette of blacks and whites, highlighted by a subtle but energetic red glow from digital equipment." src="https://lh3.googleusercontent.com/aida/AP1WRLsfy_WqZJmC-Uh8o3ECduG4rMa-hwDWzDwSYwN6Sy1S-p1xE2Nti_fAFsmIdSIG4CYlZFLzBb_lVriYtvvVjWkABgIBUDnjWUIq-f_RTnzPPIhjsDYhI87gQhklcRPKycdTuyLwGZiari05LgGpQ92iuBNWs2cccwBTZXrRNO-4gsguHF55rbBleFbhpFuKo4JKnvgrrR_hG2HEkgjoXWKQJ7OMcjqk_5wA5STttzO_RaLStH6Wx3msDeM"/>
+<div class="absolute -top-1 -left-1 w-5 h-5 bg-amber-600 text-white flex items-center justify-center text-[10px] font-bold rounded-full border-2 border-white">3</div>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">Hoàng Phan</p>
+<p class="text-[11px] text-on-surface-variant">198 đơn • 97.4%</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-primary">Ổn định</p>
+<div class="flex gap-0.5 mt-1">
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+<span class="w-1 h-3 bg-secondary rounded-full"></span>
+<span class="w-1 h-3 bg-surface-container-high rounded-full"></span>
+<span class="w-1 h-3 bg-surface-container-high rounded-full"></span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-lowest dark:bg-surface-container-low flex justify-around items-center px-gutter-mobile pb-safe h-16 shadow-sm rounded-t-xl border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-bold font-label-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-label-bold font-label-bold">Catalog</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-label-bold font-label-bold">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed font-bold scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="text-label-bold font-label-bold">Staff</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-bold font-label-bold">Settings</span>
+</a>
+</nav>
+<script>
+        function switchTab(index) {
+            const indicator = document.getElementById('segment-indicator');
+            const buttons = indicator.parentElement.querySelectorAll('button');
+            const offset = (index * 100) + '%';
+            
+            indicator.style.transform = `translateX(${index * 100}%)`;
+            
+            buttons.forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.add('text-primary');
+                    btn.classList.remove('text-on-surface-variant');
+                } else {
+                    btn.classList.remove('text-primary');
+                    btn.classList.add('text-on-surface-variant');
+                }
+            });
+
+            // Subtle interaction effect on chart
+            const bars = document.querySelectorAll('.chart-bar');
+            bars.forEach(bar => {
+                const currentH = bar.style.height;
+                bar.style.height = '0%';
+                setTimeout(() => {
+                    bar.style.height = currentH;
+                }, 50);
+            });
+        }
+
+        // Initialize view
+        window.onload = () => {
+            switchTab(0);
+        };
+    </script>
+</body></html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Báo cáo giao thất bại | APEX VELOCITY</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#7e7576",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "background": "#f9f9f9",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-fixed-variant": "#474747",
+                        "outline-variant": "#cfc4c5",
+                        "tertiary": "#000000",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-container-highest": "#e2e2e2",
+                        "secondary": "#bb0027",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f3f3f3",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#410007",
+                        "inverse-primary": "#c6c6c6",
+                        "tertiary-container": "#1a1c1c",
+                        "on-surface": "#1a1c1c",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "secondary-container": "#e51a38",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "on-secondary-container": "#fffbff",
+                        "surface-bright": "#f9f9f9",
+                        "primary-container": "#1b1b1b",
+                        "primary": "#000000",
+                        "on-background": "#1a1c1c",
+                        "on-tertiary-container": "#838484",
+                        "secondary-fixed": "#ffdad8",
+                        "on-primary-fixed": "#1b1b1b",
+                        "surface": "#f9f9f9",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#848484",
+                        "surface-tint": "#5e5e5e",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-secondary-fixed-variant": "#92001d",
+                        "primary-fixed": "#e2e2e2",
+                        "on-surface-variant": "#4c4546",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dadada",
+                        "surface-container": "#eeeeee",
+                        "inverse-surface": "#2f3131"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "margin-mobile": "16px",
+                        "touch-target-min": "44px",
+                        "gutter-mobile": "12px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "title-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "button": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f9f9f9;
+            color: #1a1c1c;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .reason-chip:checked + label {
+            background-color: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+        .active-scale:active {
+            transform: scale(0.96);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-lg text-body-lg min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-surface dark:bg-surface-container-low border-b border-outline-variant dark:border-outline flex items-center justify-between px-margin-mobile h-touch-target-min">
+<button class="hover:opacity-80 transition-opacity active:scale-95 duration-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">arrow_back</span>
+</button>
+<h1 class="font-title-md text-title-md text-primary dark:text-primary-fixed">Báo cáo giao thất bại</h1>
+<button class="hover:opacity-80 transition-opacity active:scale-95 duration-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">help_outline</span>
+</button>
+</header>
+<main class="flex-grow px-margin-mobile pt-8 pb-32 max-w-md mx-auto w-full">
+<!-- Delivery Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] mb-8">
+<div class="flex items-center gap-4">
+<div class="h-16 w-16 bg-surface-variant rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional studio product shot of a high-performance red running shoe against a clean white background. The lighting is sharp and high-contrast, highlighting the sleek textures and athletic design. The overall aesthetic is modern and energetic, aligning with the powerful sportswear brand identity of Apex Velocity." src="https://lh3.googleusercontent.com/aida/AP1WRLsLONG2bWcbI_JHp0IrYt-ts43zn3W9yl_qQI0u2Ej6H4RNB3GBM4UQlnN_rDwNkDoNjMM4Y4_gCQCv0vY52YSCSytk8cHh7BFTbdlin07iIrnUtkFtLVXkGhRuAlltKsw9yX0KABbaJoWvkpv0QZpy0-5AS8tIc2JIJddOED2RZg1PI7rBdt4ScSjzrC0PxF0TqWT9BptqpFta5_Pm69Nc5rGptsO4wwcnRMzE-LxhYTCQ75GUKlIn5A"/>
+</div>
+<div class="flex-grow">
+<p class="font-label-bold text-label-bold text-outline uppercase tracking-wider">Đơn hàng #AV-9921</p>
+<h2 class="font-title-md text-title-md leading-tight">Velo Runner Pro X</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Khách hàng: Nguyễn Văn A</p>
+</div>
+</div>
+</div>
+<!-- Reasons Section -->
+<section class="mb-8">
+<h3 class="font-label-bold text-label-bold text-outline uppercase mb-4 tracking-widest">Lý do giao thất bại</h3>
+<div class="grid grid-cols-1 gap-3">
+<div class="relative">
+<input checked="" class="reason-chip hidden" id="reason1" name="fail_reason" type="radio"/>
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-xl cursor-pointer transition-all active-scale" for="reason1">
+<span class="font-body-lg text-body-lg">Khách không nghe máy</span>
+<span class="material-symbols-outlined text-primary text-xl">phone_disabled</span>
+</label>
+</div>
+<div class="relative">
+<input class="reason-chip hidden" id="reason2" name="fail_reason" type="radio"/>
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-xl cursor-pointer transition-all active-scale" for="reason2">
+<span class="font-body-lg text-body-lg">Sai địa chỉ</span>
+<span class="material-symbols-outlined text-primary text-xl">location_off</span>
+</label>
+</div>
+<div class="relative">
+<input class="reason-chip hidden" id="reason3" name="fail_reason" type="radio"/>
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-xl cursor-pointer transition-all active-scale" for="reason3">
+<span class="font-body-lg text-body-lg">Khách hẹn lại ngày</span>
+<span class="material-symbols-outlined text-primary text-xl">event_repeat</span>
+</label>
+</div>
+<div class="relative">
+<input class="reason-chip hidden" id="reason4" name="fail_reason" type="radio"/>
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-xl cursor-pointer transition-all active-scale" for="reason4">
+<span class="font-body-lg text-body-lg">Khách từ chối nhận</span>
+<span class="material-symbols-outlined text-primary text-xl">block</span>
+</label>
+</div>
+</div>
+</section>
+<!-- Proof Capture Section -->
+<section class="mb-8">
+<h3 class="font-label-bold text-label-bold text-outline uppercase mb-4 tracking-widest">Bằng chứng hình ảnh</h3>
+<div class="hidden mb-4 rounded-xl overflow-hidden aspect-video bg-surface-variant relative" id="photo-preview">
+<img class="w-full h-full object-cover" data-alt="A high-quality mobile photograph documenting a delivery attempt. The scene shows a modern residential doorway with a package placed nearby, captured in natural daylight. The image serves as professional proof of delivery within a high-performance logistics app, maintaining a clean and sharp visual style." id="captured-img" src=""/>
+<button class="absolute top-2 right-2 bg-primary text-on-primary p-1 rounded-full shadow-lg" onclick="removePhoto()">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+<button class="w-full h-32 border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-surface-container-low transition-colors active-scale" onclick="simulatePhoto()">
+<span class="material-symbols-outlined text-4xl text-outline">photo_camera</span>
+<span class="font-button text-button text-on-surface-variant">Chụp ảnh minh chứng</span>
+</button>
+</section>
+<!-- Notes Field -->
+<section class="mb-8">
+<h3 class="font-label-bold text-label-bold text-outline uppercase mb-4 tracking-widest">Ghi chú thêm</h3>
+<textarea class="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded-xl focus:border-primary focus:ring-0 transition-all font-body-lg text-body-lg h-32" placeholder="Nhập chi tiết cụ thể nếu có..."></textarea>
+</section>
+</main>
+<!-- Bottom Action Bar -->
+<footer class="fixed bottom-0 left-0 w-full flex justify-around items-center px-margin-mobile py-6 bg-surface dark:bg-surface-container-lowest shadow-[0_-4px_12px_rgba(0,0,0,0.04)] z-50">
+<button class="w-full bg-secondary text-on-secondary font-button text-button py-4 rounded-xl shadow-lg active-scale transition-transform duration-150 ease-out flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">report_gmailerrorred</span>
+            Xác nhận thất bại
+        </button>
+</footer>
+<!-- Bottom Navigation (Shared Component Logic - Suppressed because task-focused) -->
+<!-- Navigation shell is excluded as per the "Destination" rule for Task-Focused screens -->
+<script>
+        function simulatePhoto() {
+            const preview = document.getElementById('photo-preview');
+            const img = document.getElementById('captured-img');
+            // Simulating a photo being taken
+            img.src = "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&q=80&w=800";
+            preview.classList.remove('hidden');
+        }
+
+        function removePhoto() {
+            const preview = document.getElementById('photo-preview');
+            preview.classList.add('hidden');
+        }
+
+        // Ripple/Scale effect for buttons handled via Tailwind "active-scale" class
+        document.querySelectorAll('.active-scale').forEach(button => {
+            button.addEventListener('touchstart', () => {}, {passive: true});
+        });
+    </script>
+</body></html>

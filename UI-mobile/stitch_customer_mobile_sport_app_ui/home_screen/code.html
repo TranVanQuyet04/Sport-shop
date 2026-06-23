@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed": "#410007",
+                      "primary-container": "#1b1b1b",
+                      "outline-variant": "#cfc4c5",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-secondary-fixed-variant": "#92001d",
+                      "surface-container-highest": "#e2e2e2",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "inverse-on-surface": "#f1f1f1",
+                      "surface-dim": "#dadada",
+                      "tertiary": "#000000",
+                      "surface-container-high": "#e8e8e8",
+                      "surface-variant": "#e2e2e2",
+                      "secondary-fixed": "#ffdad8",
+                      "on-primary-fixed": "#1b1b1b",
+                      "primary-fixed": "#e2e2e2",
+                      "on-error": "#ffffff",
+                      "surface-bright": "#f9f9f9",
+                      "error": "#ba1a1a",
+                      "secondary-container": "#e51a38",
+                      "outline": "#7e7576",
+                      "inverse-primary": "#c6c6c6",
+                      "error-container": "#ffdad6",
+                      "on-surface-variant": "#4c4546",
+                      "inverse-surface": "#2f3131",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "surface": "#f9f9f9",
+                      "on-primary-fixed-variant": "#474747",
+                      "secondary": "#bb0027",
+                      "surface-tint": "#5e5e5e",
+                      "secondary-fixed-dim": "#ffb3b1",
+                      "on-secondary-container": "#fffbff",
+                      "primary-fixed-dim": "#c6c6c6",
+                      "tertiary-fixed": "#e2e2e2",
+                      "tertiary-container": "#1a1c1c",
+                      "primary": "#000000",
+                      "surface-container-low": "#f3f3f3",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-container": "#838484",
+                      "background": "#f9f9f9",
+                      "on-primary-container": "#848484",
+                      "surface-container": "#eeeeee",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#1a1c1c",
+                      "on-error-container": "#93000a",
+                      "on-background": "#1a1c1c"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter-mobile": "12px",
+                      "section-gap": "32px",
+                      "margin-mobile": "16px",
+                      "base": "4px",
+                      "touch-target-min": "44px"
+              },
+              "fontFamily": {
+                      "title-md": ["Inter"],
+                      "label-bold": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "button": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "body-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                      "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center px-margin-mobile h-14 w-full">
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-primary Active: scale-95 transition-transform duration-150" data-icon="menu">menu</button>
+<img alt="Logo" class="h-8 w-auto" src="https://lh3.googleusercontent.com/aida/AP1WRLuYrUHUrCOcm_bwS1gch8UTf4za8SO45smYdHjduq1BBuFLsuRAvtwv0l_JT1HxvjgsxIaM4NaE8wcJOu2yFykbmYMcVV3HXkGQyMpis2eZTbVyblNMuMg1l72TI7vVn2mosYKNABTpQdR0O1LAFEqYHwidZMMQimUq_SyHQccY6H7IS4x4hXKJcZGbtEDn_CMAvvLb8ytclj-IzZVpqvcEQRE0-zflN17B23ba7PnBJCIShQPWPffdfjU"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary Active: scale-95 transition-transform duration-150" data-icon="notifications">notifications</button>
+</div>
+</header>
+<!-- Fixed Search Bar below header -->
+<div class="px-margin-mobile py-4 sticky top-14 bg-background z-40">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-outline" data-icon="search">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-xl pl-12 pr-4 h-11 text-body-sm focus:ring-2 focus:ring-primary" placeholder="Tìm kiếm trang phục thể thao..." type="text"/>
+</div>
+</div>
+<!-- Main Content Canvas -->
+<main class="space-y-section-gap pb-8">
+<!-- Promo Carousel (Single Active Slide for MVP) -->
+<section class="px-margin-mobile">
+<div class="relative w-full aspect-[21/9] rounded-xl overflow-hidden shadow-sm group">
+<div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent z-10"></div>
+<img alt="Promo Sale" class="absolute inset-0 w-full h-full object-cover" data-alt="A professional action shot of a high-performance athlete running at dusk. The lighting is dramatic and cinematic, highlighting the silhouette of the sportswear. The aesthetic is modern and intense, using a high-contrast palette of deep blacks and sharp reds. The image conveys speed, power, and the urgency of elite sports training in a minimalist urban setting." src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<div class="absolute inset-0 z-20 flex flex-col justify-center px-6">
+<span class="bg-secondary text-on-secondary px-2 py-1 text-[10px] font-bold w-fit rounded-sm mb-2">LIMITED TIME</span>
+<h2 class="text-white font-headline-lg-mobile text-headline-lg-mobile leading-none">SALE OFF 50%</h2>
+<p class="text-white/80 text-body-sm mt-1">Nâng tầm hiệu suất của bạn ngay hôm nay.</p>
+<button class="mt-4 bg-white text-primary w-fit px-6 py-2 rounded-full font-button text-sm Active: scale-95 transition-all">Mua Ngay</button>
+</div>
+</div>
+</section>
+<!-- Categories Section -->
+<section>
+<div class="flex justify-between items-center px-margin-mobile mb-4">
+<h3 class="font-title-md text-title-md">Danh mục</h3>
+<button class="text-secondary font-label-bold text-label-bold uppercase">Tất cả</button>
+</div>
+<div class="flex gap-6 overflow-x-auto no-scrollbar px-margin-mobile">
+<!-- Category Item -->
+<div class="flex flex-col items-center gap-2 flex-shrink-0">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent Active:border-secondary transition-all">
+<span class="material-symbols-outlined text-primary scale-125" data-icon="footprint">footprint</span>
+</div>
+<span class="font-label-bold text-label-bold">Giày</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-shrink-0">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent Active:border-secondary transition-all">
+<span class="material-symbols-outlined text-primary scale-125" data-icon="apparel">apparel</span>
+</div>
+<span class="font-label-bold text-label-bold">Áo</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-shrink-0">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent Active:border-secondary transition-all">
+<span class="material-symbols-outlined text-primary scale-125" data-icon="checkroom">checkroom</span>
+</div>
+<span class="font-label-bold text-label-bold">Quần</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-shrink-0">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center border-2 border-transparent Active:border-secondary transition-all">
+<span class="material-symbols-outlined text-primary scale-125" data-icon="watch">watch</span>
+</div>
+<span class="font-label-bold text-label-bold">Phụ kiện</span>
+</div>
+</div>
+</section>
+<!-- Featured Brands -->
+<section class="bg-surface-container-low py-6">
+<div class="px-margin-mobile mb-4">
+<h3 class="font-title-md text-title-md">Thương hiệu nổi bật</h3>
+</div>
+<div class="flex justify-around items-center opacity-60 grayscale hover:grayscale-0 transition-all">
+<span class="font-black text-2xl tracking-tighter">NIKE</span>
+<span class="font-black text-2xl tracking-tighter italic">adidas</span>
+<span class="font-black text-2xl tracking-tighter uppercase">PUMA</span>
+</div>
+</section>
+<!-- Recommended Products Grid -->
+<section class="px-margin-mobile">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-title-md text-title-md">Sản phẩm gợi ý</h3>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-outline" data-icon="tune">tune</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Product Card 1 -->
+<div class="group">
+<div class="relative aspect-square bg-surface-container-high rounded-xl overflow-hidden mb-3">
+<span class="absolute top-2 left-2 z-10 bg-secondary text-white font-label-bold text-[10px] px-2 py-0.5 rounded-sm">MỚI</span>
+<button class="absolute top-2 right-2 z-10 bg-white/80 p-1.5 rounded-full backdrop-blur-sm">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="favorite">favorite</span>
+</button>
+<img alt="Nike Shoe" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A premium high-performance red athletic sneaker presented in a minimalist studio setting. The lighting is sharp and professional, casting subtle shadows on a light gray background. The product's textures and professional craftsmanship are clearly visible, aligned with a modern sportswear brand aesthetic. The color palette is dominated by vibrant accent red and clean whites." src="https://lh3.googleusercontent.com/aida/AP1WRLvD3SsY4IVGDomBbd0YdZFCObyuyyTbaeEzo4hQKx0F6b0Y420RqFA191FYveAFdZ8GUc95rbCWLray-oI97A4S2LIjbKWXwelKVx1MYeByj9151qYLzAlZAJ33hvwDVfHl4Qrt4-6nT6sO8ns8HAxkkRVUEOu-GHPzY8wb_iOQavVQ_C9K3IXc1NELO7AMSju5tHiAwqVNXiG_baxoiC9NfTfSwGE1sGTg2Bm_Zarr-ej91lY2M0r6kg"/>
+</div>
+<h4 class="font-body-sm text-on-surface truncate">Nike Air Zoom Alphafly</h4>
+<div class="flex justify-between items-center mt-1">
+<span class="font-title-md text-primary">2.450.000đ</span>
+<div class="flex items-center gap-0.5">
+<span class="material-symbols-outlined text-secondary text-[14px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[10px] font-bold">4.9</span>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group">
+<div class="relative aspect-square bg-surface-container-high rounded-xl overflow-hidden mb-3">
+<button class="absolute top-2 right-2 z-10 bg-white/80 p-1.5 rounded-full backdrop-blur-sm">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="favorite">favorite</span>
+</button>
+<img alt="Adidas Jacket" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A professional sportswear jacket in a deep charcoal gray, displayed on a minimalist background. The lighting highlights the technical fabric and streamlined design of the performance gear. The atmosphere is professional and sleek, using a monochromatic palette with subtle depth. The overall visual style is high-end, modern, and performance-oriented." src="https://lh3.googleusercontent.com/aida/AP1WRLu3Ml0VpnDp5WeFfv0AvZXDdyldbNRaLJVQW2aoikPwKIZo4C7OUukb_C8ICp8ERT7YrfRJTqIeDUa2q3yZqxEdXt2c-YMmQrJzDtUysbp78HVgkwt2YYWqOPYFrAyDFDNb2jq8-FJmEmM5w-gx8i-u17fU8HKlANNfS2WzndMrvqXeO4VmbvAeRPUN7-t6RvxXVXqj4fF8GPojnHfWM7kQzoX2J1wlj5uw7V0DnfHCcKbsGw9ERPEGoeQ"/>
+</div>
+<h4 class="font-body-sm text-on-surface truncate">Adidas Terrex Windbreaker</h4>
+<div class="flex justify-between items-center mt-1">
+<span class="font-title-md text-primary">1.890.000đ</span>
+<div class="flex items-center gap-0.5">
+<span class="material-symbols-outlined text-secondary text-[14px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[10px] font-bold">4.8</span>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group">
+<div class="relative aspect-square bg-surface-container-high rounded-xl overflow-hidden mb-3">
+<span class="absolute top-2 left-2 z-10 bg-secondary text-white font-label-bold text-[10px] px-2 py-0.5 rounded-sm">HOT</span>
+<button class="absolute top-2 right-2 z-10 bg-white/80 p-1.5 rounded-full backdrop-blur-sm">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="favorite">favorite</span>
+</button>
+<img alt="Training Pants" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A pair of sleek black compression leggings for professional sports, displayed in a clean, high-contrast studio setup. The fabric's stretch and compression features are visible under soft, top-down lighting. The mood is powerful and reliable, emphasizing technical performance. The palette is strictly monochromatic, embodying the brand's disciplined and professional personality." src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+</div>
+<h4 class="font-body-sm text-on-surface truncate">Puma Pro Training Tight</h4>
+<div class="flex justify-between items-center mt-1">
+<span class="font-title-md text-primary">950.000đ</span>
+<div class="flex items-center gap-0.5">
+<span class="material-symbols-outlined text-secondary text-[14px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[10px] font-bold">4.7</span>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group">
+<div class="relative aspect-square bg-surface-container-high rounded-xl overflow-hidden mb-3">
+<button class="absolute top-2 right-2 z-10 bg-white/80 p-1.5 rounded-full backdrop-blur-sm">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="favorite">favorite</span>
+</button>
+<img alt="Sports Tee" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A high-performance white moisture-wicking sports t-shirt hanging in a bright, modern studio. The minimalist composition focuses on the clean lines and advanced material of the garment. The lighting is bright and high-key, creating a crisp, professional look. The aesthetic is clean and modern, highlighting the brand's commitment to quality and athletic excellence." src="https://lh3.googleusercontent.com/aida/AP1WRLvI7F-fu2qPsKOTRpy3s2WWlCxaueNk0GBTqUPBJtRECJ8NUprqujKCbMxe3ph4C1WvgZkiUuh_c1PTP8dR2w3u6nSN-TkDEMh3Ibhh0ucoTTpEYc5b5g-vjZw0VGXD49Q3ZtB_dJO3ZLX_NQhIk5NzypVXepDRUilalMmE261w-GplIetZiXMDm7A8bWwJMqEY4HTp_hd7fz3fKEDLjAIdRQh2OVZFn4jFGmZm-xZw4GzMnYjmV2Scig"/>
+</div>
+<h4 class="font-body-sm text-on-surface truncate">Dry-Fit Performance Tee</h4>
+<div class="flex justify-between items-center mt-1">
+<span class="font-title-md text-primary">450.000đ</span>
+<div class="flex items-center gap-0.5">
+<span class="material-symbols-outlined text-secondary text-[14px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[10px] font-bold">4.5</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center pt-2 pb-safe px-gutter-mobile bg-surface-container-lowest border-t border-outline-variant rounded-t-xl shadow-sm h-16">
+<a class="flex flex-col items-center justify-center text-secondary font-bold Active: scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-bold text-label-bold">Trang chủ</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low Active: scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-bold text-label-bold">Tìm kiếm</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low Active: scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-label-bold text-label-bold">Giỏ hàng</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low Active: scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-bold text-label-bold">Đơn hàng</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low Active: scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-bold text-label-bold">Cá nhân</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for touch feedback on product cards
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+                card.style.transition = 'transform 0.1s ease';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+
+        // Search bar focus behavior
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary');
+        });
+    </script>
+</body></html>

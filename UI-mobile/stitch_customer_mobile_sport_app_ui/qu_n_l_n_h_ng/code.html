@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>APEX VELOCITY | Quản lý Đơn hàng</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#848484",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-surface-variant": "#4c4546",
+                        "primary": "#000000",
+                        "surface-container-low": "#f3f3f3",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#c6c6c6",
+                        "surface-bright": "#f9f9f9",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#838484",
+                        "tertiary-container": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "on-primary-fixed-variant": "#474747",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "on-background": "#1a1c1c",
+                        "secondary-container": "#e31837",
+                        "secondary": "#bb0027",
+                        "secondary-fixed": "#ffdad8",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "primary-container": "#1b1b1b",
+                        "on-secondary-fixed": "#410007",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#1b1b1b",
+                        "surface-dim": "#dadada",
+                        "surface-container": "#eeeeee",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "tertiary": "#000000",
+                        "background": "#f9f9f9",
+                        "outline": "#7e7576",
+                        "primary-fixed": "#e2e2e2",
+                        "outline-variant": "#cfc4c5",
+                        "on-secondary-fixed-variant": "#92001d",
+                        "on-secondary-container": "#fffbff",
+                        "surface-tint": "#5e5e5e",
+                        "surface": "#f9f9f9",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-surface": "#1a1c1c",
+                        "inverse-surface": "#2f3131"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "44px",
+                        "section-gap": "32px",
+                        "margin-mobile": "16px",
+                        "base": "4px",
+                        "gutter-mobile": "12px"
+                    },
+                    "fontFamily": {
+                        "button": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .status-badge { @apply px-3 py-1 rounded-full font-label-bold text-label-bold uppercase tracking-wider; }
+        .active-tab { position: relative; }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #000000;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-lg min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-container-low border-b border-outline-variant dark:border-outline w-full top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-4">
+<button class="text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity active:scale-95 duration-100">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-display-lg text-display-lg font-extrabold tracking-tighter text-primary dark:text-primary-fixed leading-none">APEX VELOCITY</h1>
+</div>
+<button class="text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity active:scale-95 duration-100">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="flex-grow pb-24">
+<!-- Search and Filter Section -->
+<section class="px-margin-mobile pt-6 space-y-4">
+<div class="flex items-center gap-3">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Quản lý đơn hàng</h2>
+<span class="bg-primary text-on-primary font-label-bold text-label-bold px-2 py-0.5 rounded">128</span>
+</div>
+<!-- Search Bar -->
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary font-body-sm text-body-sm transition-all shadow-sm" placeholder="Tìm kiếm mã đơn, tên khách hàng..." type="text"/>
+</div>
+<!-- Status Tabs -->
+<div class="overflow-x-auto hide-scrollbar -mx-margin-mobile px-margin-mobile border-b border-outline-variant">
+<div class="flex gap-6 py-2 min-w-max">
+<button class="font-label-bold text-label-bold text-primary active-tab whitespace-nowrap">Tất cả</button>
+<button class="font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap hover:text-primary transition-colors">Chờ xác nhận</button>
+<button class="font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap hover:text-primary transition-colors">Đang đóng gói</button>
+<button class="font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap hover:text-primary transition-colors">Đang giao</button>
+<button class="font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap hover:text-primary transition-colors">Hoàn thành</button>
+<button class="font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap hover:text-primary transition-colors">Đã hủy</button>
+</div>
+</div>
+</section>
+<!-- Order List -->
+<section class="px-margin-mobile mt-6 space-y-4">
+<!-- Order Card 1: Pending -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-bold text-label-bold text-on-surface-variant">#AV-98421</p>
+<h3 class="font-title-md text-title-md text-primary">Nguyễn Minh Hoàng</h3>
+</div>
+<span class="status-badge bg-surface-container-high text-primary">CHỜ XÁC NHẬN</span>
+</div>
+<div class="flex gap-3">
+<img class="w-20 h-20 rounded-lg object-cover bg-surface-container" data-alt="A professional close-up shot of a sleek crimson red performance running shoe with black accents, displayed against a minimalist high-contrast studio background. The lighting is sharp and dynamic, emphasizing the aerodynamic textures and high-tech materials. This modern athletic visual adheres to a sophisticated red and black color scheme, evoking speed and professional excellence." src="https://lh3.googleusercontent.com/aida/AP1WRLuYjuYkaMVS6McMVZ4UdSUKRt90s0Km5GTDGVJjpRSBcfejRYAVzb2T0khbOyeRJYN1h6CIyxTYsPVzvgsjceiBNx3rwVhhNnPqAQu2vMfqwTFZVYK89O9tef7v-9r8hVuGua3HZv6c0V-xsdB6NXRVjq8SP3wo3_7f_KT-3cVU3aMyD5DPOg5K-c-bwz1krw4356pkAU3qq1aKsAc13SfaXtBd_oszf5Zfj0X_8Aov9X5QDu7AVBJm1Hw"/>
+<div class="flex-grow">
+<p class="font-button text-button text-primary">Velocity Pro Run 2.0</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Size: 42 | Màu: Đỏ/Đen</p>
+<p class="font-label-bold text-label-bold mt-1">SL: 01</p>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant flex justify-between items-center">
+<div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Tổng thanh toán</p>
+<p class="font-title-md text-title-md text-secondary-container">2.450.000đ</p>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-button text-button hover:opacity-90 active:scale-95 transition-all">
+                        Xác nhận
+                    </button>
+</div>
+</div>
+<!-- Order Card 2: In Transit -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-bold text-label-bold text-on-surface-variant">#AV-98415</p>
+<h3 class="font-title-md text-title-md text-primary">Trần Thị Thu Hà</h3>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="status-badge bg-secondary-container text-on-secondary">ĐANG GIAO</span>
+<p class="font-label-bold text-[10px] text-secondary">Giao bởi: J&amp;T Express</p>
+</div>
+</div>
+<div class="flex gap-3">
+<img class="w-20 h-20 rounded-lg object-cover bg-surface-container" data-alt="A high-end studio photograph of professional black basketball sneakers with aggressive traction soles, placed on a matte grey reflective surface. The atmosphere is intense and focused, featuring high-contrast directional lighting that highlights the premium leather and knit details. The overall aesthetic is monochromatic and powerful, perfectly aligning with a high-performance sportswear brand identity." src="https://lh3.googleusercontent.com/aida/AP1WRLs1M7sbmUmovQx5gFm6TcF9SXtMzWGlpcfEencyDpwuBXq8jL9f6WAoXXbsGACxvoiUIePgCVpVqRAyRdREAwCqPa5GTr5ZnSCjzqUDpzHn0YJxsNSVD6DYpSSTygBQn7r2Rr6f1ejmIW5znLPEBmSsF47vXm4w1DJG8jY4gMbWqL04ghFRyZPVI-X0YEsAmxApw9L60HOAVv07Xmb7QgzlDU2U6RIeYObSWBIcf7q6BLTWZHPwsx66joM"/>
+<div class="flex-grow">
+<p class="font-button text-button text-primary">Apex Court Master</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Size: 38 | Màu: Đen Tuyền</p>
+<p class="font-label-bold text-label-bold mt-1">SL: 01</p>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant flex justify-between items-center">
+<div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Tổng thanh toán</p>
+<p class="font-title-md text-title-md text-secondary-container">3.100.000đ</p>
+</div>
+<button class="border-2 border-primary text-primary px-6 py-2 rounded-lg font-button text-button hover:bg-primary/5 active:scale-95 transition-all">
+                        Theo dõi
+                    </button>
+</div>
+</div>
+<!-- Order Card 3: Completed -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex flex-col gap-4 opacity-80">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-bold text-label-bold text-on-surface-variant">#AV-98399</p>
+<h3 class="font-title-md text-title-md text-primary">Lê Quốc Khánh</h3>
+</div>
+<span class="status-badge bg-surface-container text-on-surface-variant">HOÀN THÀNH</span>
+</div>
+<div class="flex gap-3">
+<div class="relative">
+<img class="w-20 h-20 rounded-lg object-cover bg-surface-container grayscale-[50%]" data-alt="A premium commercial shot of neon-accented running shoes on a dark metallic platform. The lighting is moody and cinematic, with soft glows reflecting off the technical fabric. The image captures a sense of elite performance and advanced sports technology, using a color palette of deep charcoal and vibrant electric highlights. The minimalist setting ensures the product remains the focal point." src="https://lh3.googleusercontent.com/aida/AP1WRLv7NhF051BwgG8IRmS_P0pTfCSHcpakgXX0TcMFQutKoPYtv61-0lYrksO6cx0l8gjo2iRkp3-kAHprdePViZAg03qcfaWTxsZ25CRN_JgKEHLTIGd4rlY_KErsLIDSN5j239Tnrge7mj3tIcdhfLtEXU1dXkpnf2ZkswagiaujpXoDELRu0i0G2qmklGFRp-zM6DoopK7OZfNJ3n9jqo9jHPd8-j2XbkUafnsjnZlyUbLmGhpMxxHxiVY"/>
+</div>
+<div class="flex-grow">
+<p class="font-button text-button text-primary">Air Max Performance</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Size: 41 | Màu: Xanh Neon</p>
+<p class="font-label-bold text-label-bold mt-1">SL: 01</p>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant flex justify-between items-center">
+<div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Tổng thanh toán</p>
+<p class="font-title-md text-title-md text-on-surface-variant">1.890.000đ</p>
+</div>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2 rounded-lg font-button text-button hover:bg-surface-container transition-all">
+                        Xem chi tiết
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-gutter-mobile py-2 bg-surface dark:bg-surface-container-lowest shadow-[0_-4px_12px_rgba(0,0,0,0.04)] rounded-t-xl z-50">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:scale-90 duration-150 ease-out">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold mt-1">Dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:scale-90 duration-150 ease-out">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-bold text-label-bold mt-1">Catalog</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-container bg-surface-container-high dark:bg-surface-container rounded-lg p-2 active:scale-90 duration-150 ease-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+<span class="font-label-bold text-label-bold mt-1">Orders</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:scale-90 duration-150 ease-out">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-bold text-label-bold mt-1">Staff</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-all active:scale-90 duration-150 ease-out">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold mt-1">Settings</span>
+</button>
+</nav>
+<script>
+        // Simple micro-interaction for tabs
+        const tabs = document.querySelectorAll('.overflow-x-auto button');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('active-tab', 'text-primary');
+                    t.classList.add('text-on-surface-variant');
+                });
+                tab.classList.add('active-tab', 'text-primary');
+                tab.classList.remove('text-on-surface-variant');
+            });
+        });
+
+        // Add to Cart / Confirm buttons ripple effect simulation
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', function() {
+                this.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', function() {
+                this.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', function() {
+                this.classList.remove('scale-95');
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-secondary-container": "#fffbff",
+                        "surface-dim": "#dadada",
+                        "secondary-fixed": "#ffdad8",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e2e2e2",
+                        "inverse-surface": "#2f3131",
+                        "surface-bright": "#f9f9f9",
+                        "inverse-primary": "#c6c6c6",
+                        "background": "#f9f9f9",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-container-low": "#f3f3f3",
+                        "primary-container": "#1b1b1b",
+                        "on-surface": "#1a1c1c",
+                        "tertiary-container": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "secondary-container": "#e51a38",
+                        "tertiary": "#000000",
+                        "surface-tint": "#5e5e5e",
+                        "outline-variant": "#cfc4c5",
+                        "surface-variant": "#e2e2e2",
+                        "outline": "#7e7576",
+                        "on-secondary-fixed": "#410007",
+                        "surface-container-highest": "#e2e2e2",
+                        "secondary": "#bb0027",
+                        "on-secondary-fixed-variant": "#92001d",
+                        "surface-container": "#eeeeee",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#1b1b1b",
+                        "on-primary-container": "#848484",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "on-tertiary-container": "#838484",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#4c4546",
+                        "on-primary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "primary": "#000000",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-fixed-variant": "#474747",
+                        "tertiary-fixed": "#e2e2e2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "gutter-mobile": "12px",
+                        "touch-target-min": "44px",
+                        "base": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "button": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-bold": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .staff-sheet { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .active-tap:active { transform: scale(0.96); transition: transform 0.1s; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased overflow-x-hidden">
+<!-- Top App Bar (Shared Component) -->
+<header class="w-full top-0 sticky z-40 bg-surface dark:bg-surface-container-low border-b border-outline-variant dark:border-outline flex items-center justify-between px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity cursor-pointer">menu</span>
+<h1 class="font-display-lg text-title-md font-extrabold tracking-tighter text-primary dark:text-primary-fixed">APEX VELOCITY</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed hover:opacity-80 transition-opacity cursor-pointer">notifications</span>
+</div>
+</header>
+<main class="pb-24 px-margin-mobile pt-6 max-w-md mx-auto">
+<!-- Screen Title Section -->
+<div class="mb-8">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-2">Phân công đơn hàng</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Có <span class="font-bold text-secondary">08</span> đơn hàng đang chờ xử lý.</p>
+</div>
+<!-- Orders List (Pending) -->
+<div class="space-y-4">
+<!-- Order Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 active-tap">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Mã đơn #AV-2904</span>
+<h3 class="font-title-md text-body-lg font-bold mt-1">Giày Chạy Bộ Alphafly 3</h3>
+</div>
+<span class="bg-secondary/10 text-secondary font-label-bold text-[10px] px-2 py-1 rounded-full uppercase">Gấp</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-outline text-sm">location_on</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Quận 1, TP. Hồ Chí Minh</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/20">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a professional female shop staff member in a clean, modern high-performance sports retail environment. She wears a minimalist black uniform. The lighting is soft and high-key, emphasizing a modern and reliable atmosphere with a monochromatic color palette." src="https://lh3.googleusercontent.com/aida/AP1WRLtHRVjzuAsqxqvkR58BcsPMPtTJ-NNb0s0-GCMUhWQRLktu1fxvUgFqHjvHkGu-KaiXDy9Am9L7d7zNu71GbuLUEwUIRqkwpL0qFSFVcLoROz88bTntM2gK3VXTxwQCLmyqMIfoADglEzAdjLlA229q9LIc7-JCcINrNQOfgNmPrJ1kO852QjWJkiwuhdZOiTgkPKbVbERJQ3neK-ypIOVq3I35brrEmj7gxST5S2INNXSpDu7AvAV5KUs"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-surface-container-high flex items-center justify-center">
+<span class="text-[10px] font-bold text-on-surface-variant">+3</span>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-button text-body-sm active-tap transition-all hover:opacity-90" onclick="openStaffSheet()">
+                        Gán người xử lý
+                    </button>
+</div>
+</div>
+<!-- Order Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 active-tap">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Mã đơn #AV-2905</span>
+<h3 class="font-title-md text-body-lg font-bold mt-1">Áo Khoác Gió Pro Shield</h3>
+</div>
+<span class="bg-surface-container-high text-on-surface-variant font-label-bold text-[10px] px-2 py-1 rounded-full uppercase">Tiêu chuẩn</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-outline text-sm">location_on</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Quận 7, TP. Hồ Chí Minh</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/20">
+<span class="font-body-sm text-body-sm text-on-surface-variant italic italic">Chưa có người xử lý</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-button text-body-sm active-tap transition-all hover:opacity-90" onclick="openStaffSheet()">
+                        Gán người xử lý
+                    </button>
+</div>
+</div>
+<!-- Order Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 active-tap">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Mã đơn #AV-2906</span>
+<h3 class="font-title-md text-body-lg font-bold mt-1">Túi Đựng Đồ Thể Thao Apex</h3>
+</div>
+<span class="bg-secondary/10 text-secondary font-label-bold text-[10px] px-2 py-1 rounded-full uppercase">Gấp</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-outline text-sm">location_on</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Thủ Đức, TP. Hồ Chí Minh</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/20">
+<span class="font-body-sm text-body-sm text-on-surface-variant italic">Ưu tiên xử lý nhanh</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-button text-body-sm active-tap transition-all hover:opacity-90" onclick="openStaffSheet()">
+                        Gán người xử lý
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Selection Sheet (Staff) -->
+<div class="fixed inset-0 bg-black/40 z-50 hidden transition-opacity duration-300 opacity-0" id="staffOverlay" onclick="closeStaffSheet()">
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-lowest rounded-t-3xl p-margin-mobile staff-sheet translate-y-full max-h-[751px] overflow-y-auto" id="staffSheet" onclick="event.stopPropagation()">
+<!-- Sheet Header -->
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-title-md text-title-md text-primary">Chọn nhân viên</h3>
+<button class="p-2" onclick="closeStaffSheet()"><span class="material-symbols-outlined">close</span></button>
+</div>
+<!-- Tabs (Simplified) -->
+<div class="flex gap-4 mb-6">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-full font-label-bold text-label-bold">Tất cả</button>
+<button class="bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-bold text-label-bold">Cửa hàng</button>
+<button class="bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-bold text-label-bold">Giao hàng</button>
+</div>
+<!-- Staff List -->
+<div class="space-y-4">
+<!-- Staff Member 1: High Load -->
+<div class="flex items-center justify-between p-3 rounded-xl border border-secondary/20 bg-secondary/[0.02]">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A portrait of a male delivery staff member in a professional sporty uniform. He is smiling warmly in a bright, modern studio setting with high-key lighting. The style is clean, modern, and trustworthy, dominated by white and gray tones with subtle red accents." src="https://lh3.googleusercontent.com/aida/AP1WRLvwC48TSt1rWcB-chuABF9YOsc1ULgtiQr4JDMu1E06COBP7W7hDryhAtx8saZ5-RcJKt3AjSJH6u-LTx4acP8JmN87gSgZ3lu0Tk751IC0khhfQCEWa_lqUkZos_ZnXUjrKHiBVJaP0VW-73uSRXayjl65DNgEHqW_yODMIV_bVZGGXMjl0wdpSi-uPnne4mmKJcl5DR-iCpGmtJXmND_Fh8jWO0yzf6m4vcSZkZPlVZb-7-xLhanZmGU"/>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-secondary rounded-full border-2 border-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+</div>
+<div>
+<p class="font-body-lg font-bold text-primary">Nguyễn Văn An</p>
+<p class="font-body-sm text-body-sm text-secondary">Khối lượng: 12 đơn (Cao)</p>
+</div>
+</div>
+<button class="bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-lg font-button text-body-sm opacity-50 cursor-not-allowed">Gán</button>
+</div>
+<!-- Staff Member 2: Normal Load -->
+<div class="flex items-center justify-between p-3 rounded-xl border border-outline-variant/30 hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A professional portrait of a female shop assistant in a contemporary sports apparel store. The lighting is crisp and modern, emphasizing the monochromatic white and gray interior. She has a confident, helpful expression. The atmosphere is professional and high-performance." src="https://lh3.googleusercontent.com/aida/AP1WRLu_TbzRRvxjqrrma8WZ9xJjdoOCOjHc0rK94qPQSPAahoZiGR-0uGuNG-m0v3Uyk9NwcRUdRBnHhmx3VM70WWrj2xwsgTj0tYhwsdG3xHCu0DuVFd5RleqXjrQSWnHtWoRDwwcRKSCPMrTLCN7v8M_XYQUoMWWWbiF15sawLC-pr7moDaZkDbm_oAGgqpHgmDV5Tv_tVMqRl283MLbjiZmDcRMSC6EKYVLbT8O2kPMujU6gxqH_Ny3KAVk"/>
+<div>
+<p class="font-body-lg font-bold text-primary">Lê Thị Bình</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Khối lượng: 04 đơn</p>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-button text-body-sm active-tap" onclick="confirmAssignment('Lê Thị Bình')">Gán</button>
+</div>
+<!-- Staff Member 3: Low Load -->
+<div class="flex items-center justify-between p-3 rounded-xl border border-outline-variant/30 hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A portrait of a male retail staff member wearing a performance-branded black polo shirt. The background is a minimalist, modern athletic gear display. Lighting is neutral and clean, maintaining a high-contrast monochromatic aesthetic. He looks focused and ready for work." src="https://lh3.googleusercontent.com/aida/AP1WRLvxtE3Qydt8KWmUd3C3ot3us6V0A4E4sDwJr3HyUmhEx_KOHhDAQnEeOaytL3M78tHTDHm-6JwmvcnqEtlHtmUC2W0EH4HLLoIRZmP5E_VDrRTUiCwqb2B3nIw-Lr-SivnRdIyiO6FjYF-6LxyWb6NwWUVksD36jijyjjt0EtGZzollUtyv-pZ-_oPZWoB-mL1fu-CaGEsHaTn1EXycopvQpCUuQkeBo2UccLCGjBMra8AhYmCawUPf5-4"/>
+<div>
+<p class="font-body-lg font-bold text-primary">Trần Minh Công</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Khối lượng: 02 đơn</p>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-button text-body-sm active-tap" onclick="confirmAssignment('Trần Minh Công')">Gán</button>
+</div>
+<!-- Staff Member 4: Normal Load -->
+<div class="flex items-center justify-between p-3 rounded-xl border border-outline-variant/30 hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A portrait of a professional woman working as a delivery coordinator. She is set against a clean, architectural background with linear shadows. The lighting is bright and clear, reflecting a high-performance, modern business identity. Color palette is restricted to black, white, and cool grays." src="https://lh3.googleusercontent.com/aida/AP1WRLukUzgdIHYXKfSDxiL-0O37BWGn1mLHlkfthcgaIMVkOL4UXalMM4mUpO8s-cwHcsnTvZ6NmFzXt8lO-THjvOs8sxDiQrlQoOytReUdVSIk-C4kx64OtQyyff-xU_fRxEvG-UGdGdd6OzE5UdQX8oPkUE7SnkBvsiymof7Q5ZsnKeDf8xSHZqH1gZzyO1zF6taV9bGbvDuIL8i35ImJjzHsqIXOa6pr5VXlY1sE1ycppFZvbYncwkyHKA"/>
+<div>
+<p class="font-body-lg font-bold text-primary">Hoàng Diệu</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Khối lượng: 05 đơn</p>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-button text-body-sm active-tap" onclick="confirmAssignment('Hoàng Diệu')">Gán</button>
+</div>
+</div>
+<!-- Floating Action Button for Filter (Internal Action) -->
+<div class="mt-8">
+<button class="w-full border-2 border-primary text-primary py-3 rounded-xl font-button active-tap hover:bg-primary/5 transition-all">
+                    Tìm kiếm theo tên
+                </button>
+</div>
+</div>
+</div>
+<!-- Bottom Nav Bar (Shared Component) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-gutter-mobile py-2 bg-surface dark:bg-surface-container-lowest shadow-[0_-4px_12px_rgba(0,0,0,0.04)] z-50 rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 active-tap transition-all">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 active-tap transition-all">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-bold text-label-bold">Catalog</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 active-tap transition-all">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-label-bold text-label-bold">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary dark:text-secondary-container bg-surface-container-high dark:bg-surface-container rounded-lg p-2 active-tap transition-all">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-bold text-label-bold">Staff</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 active-tap transition-all">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</div>
+</nav>
+<script>
+        function openStaffSheet() {
+            const overlay = document.getElementById('staffOverlay');
+            const sheet = document.getElementById('staffSheet');
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                overlay.classList.add('opacity-100');
+                sheet.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeStaffSheet() {
+            const overlay = document.getElementById('staffOverlay');
+            const sheet = document.getElementById('staffSheet');
+            overlay.classList.remove('opacity-100');
+            sheet.classList.add('translate-y-full');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+
+        function confirmAssignment(name) {
+            alert(`Đã gán đơn hàng cho ${name} thành công!`);
+            closeStaffSheet();
+        }
+    </script>
+</body></html>

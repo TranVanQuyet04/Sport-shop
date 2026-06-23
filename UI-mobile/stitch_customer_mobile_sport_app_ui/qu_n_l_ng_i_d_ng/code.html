@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container": "#eeeeee",
+                        "on-surface-variant": "#4c4546",
+                        "outline-variant": "#cfc4c5",
+                        "tertiary-fixed": "#e2e2e2",
+                        "secondary-container": "#e51a38",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1c1c",
+                        "inverse-surface": "#2f3131",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "on-secondary-fixed": "#410007",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "background": "#f9f9f9",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "tertiary": "#000000",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-secondary-fixed-variant": "#92001d",
+                        "surface-bright": "#f9f9f9",
+                        "on-primary-fixed": "#1b1b1b",
+                        "outline": "#7e7576",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "surface": "#f9f9f9",
+                        "on-secondary-container": "#fffbff",
+                        "primary": "#000000",
+                        "on-tertiary-container": "#838484",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary-container": "#1b1b1b",
+                        "inverse-primary": "#c6c6c6",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e2e2e2",
+                        "secondary-fixed": "#ffdad8",
+                        "surface-tint": "#5e5e5e",
+                        "on-primary-fixed-variant": "#474747",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-container": "#848484",
+                        "surface-dim": "#dadada",
+                        "secondary": "#bb0027",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e8e8e8",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#1a1c1c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "gutter-mobile": "12px",
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "touch-target-min": "44px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "button": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-tab-indicator {
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background-color: currentColor;
+            border-radius: 2px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest border border-outline-variant">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged male executive with a confident expression. He is wearing a minimalist black performance polo shirt. The lighting is bright and clean with a soft grey background, fitting a high-end sportswear brand's professional administrative aesthetic. The image is crisp, high-resolution, and perfectly centered." src="https://lh3.googleusercontent.com/aida/AP1WRLulXcSHn_PdtQ5IlVwa7ZR53OKQm-vQQJNrENOeEj4VUMzGp9O2kbASvaVm1Z5EBz0DJgImxpzxF8xMLG_saWq2bKyome8r-FztxP7nDR7Fzr4-0EE2TAs9ALT6SJ1fGZApxOcpq8dq1uU29UrjealpuW_kBDw4u6Z46BvqRGtHDmVIMvZ10mwPFirAQ7e3J1wIulPWwJNx2Mbvlhhma59Lw2OqccijDZ9vovYTI0fE3LlqyexdN4Dr6w"/>
+</div>
+<h1 class="text-title-md font-title-md font-bold text-primary">Admin Dashboard</h1>
+</div>
+<button class="hover:opacity-80 active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</header>
+<main class="px-margin-mobile mt-6">
+<!-- Header Section & Search -->
+<div class="flex flex-col gap-4 mb-section-gap">
+<h2 class="text-headline-lg-mobile font-headline-lg-mobile text-primary">Quản lý người dùng</h2>
+<div class="flex flex-col gap-3">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container border-none rounded-xl focus:ring-2 focus:ring-primary text-body-lg placeholder:text-on-surface-variant/60" placeholder="Tìm tên, email..." type="text"/>
+</div>
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="px-4 py-2 rounded-full bg-primary text-on-primary text-label-bold font-label-bold whitespace-nowrap">Tất cả</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant text-label-bold font-label-bold whitespace-nowrap">Admin</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant text-label-bold font-label-bold whitespace-nowrap">Staff</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant text-label-bold font-label-bold whitespace-nowrap">Customer</button>
+</div>
+</div>
+</div>
+<!-- User Cards Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- User Card 1 -->
+<div class="glass-card p-5 rounded-xl shadow-sm flex flex-col gap-4 relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full border-2 border-secondary overflow-hidden">
+<img alt="User" class="w-full h-full object-cover" data-alt="Close-up portrait of a young athletic woman with focused eyes and a ponytail, wearing high-performance red sportswear. The environment is a modern, high-contrast training facility with subtle architectural shadows. The lighting is sharp and dramatic, highlighting the professional and powerful personality of the brand." src="https://lh3.googleusercontent.com/aida/AP1WRLu3ww3rgbbUQAPggWyokskfkDuWgHHrrWVCK4UJpp8V7oMNFVrSqLwkqNMSTLlSCDVbtN4PqqP0FX2H9JdYwM2APyOusv_7JSr3ChIORr3CeA80MMwEPj1yo45H4BOecE-Iwaay29IydjVDX6WLMhMvO4w0ByLlKKo_1XsybrAn-xADA6WgChE8Tnscvlar1kODba1o2R2sSw5YegZbDqLpjPr7K9t0cM0PYYkdAaPds3Yd_mfqfUm2rlk"/>
+</div>
+<div>
+<p class="text-body-lg font-bold text-primary">Nguyễn Văn A</p>
+<p class="text-body-sm text-on-surface-variant">anguyen@sportswear.com</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">more_vert</span>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="flex flex-col">
+<span class="text-label-bold font-label-bold text-on-surface-variant/60 uppercase text-[10px] tracking-wider">Vai trò</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span class="font-bold text-body-sm">Admin</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-label-bold font-label-bold text-on-surface-variant/60 uppercase text-[10px] tracking-wider">Trạng thái</span>
+<span class="flex items-center gap-1 text-green-600 font-bold text-body-sm">
+<span class="w-2 h-2 rounded-full bg-green-600"></span>
+                            Hoạt động
+                        </span>
+</div>
+</div>
+<div class="absolute top-0 right-0 w-16 h-16 bg-secondary/5 -mr-8 -mt-8 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+</div>
+<!-- User Card 2 -->
+<div class="glass-card p-5 rounded-xl shadow-sm flex flex-col gap-4 relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full border-2 border-outline overflow-hidden">
+<img alt="User" class="w-full h-full object-cover" data-alt="Portrait of a male professional athlete in his 30s, wearing a sleek black technical hoodie. He has a determined look and a clean-shaven face. The background is a minimalist gym interior with high-key lighting. The overall aesthetic is sharp, monochromatic, and energetic, echoing the high-performance sportswear brand's identity." src="https://lh3.googleusercontent.com/aida/AP1WRLtocTuyn0jizRVytp0tO9pncC4KZzG6XqktRURFg3D3_XVblL4vo8U-8TFWPxepbOzv5fHW4H4cUz7d8ub0P2MS-fF7oWHuDcBMoTZoV-XJxlSWRDbiGYaIGORuOapf1O0IxtkGNZbwnofQtN8qNvw-ofvz31y7ZWXhrJbzlnFmhsGmY_13X83S1S0x8WcMA5ncs1k7L1iOTfM0sN_jNRFX2pFKO0nquW_X7YH-aF8Sl0DIm4HAKD7Q7d4"/>
+</div>
+<div>
+<p class="text-body-lg font-bold text-primary">Trần Thị B</p>
+<p class="text-body-sm text-on-surface-variant">btran@outlook.com</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">more_vert</span>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="flex flex-col">
+<span class="text-label-bold font-label-bold text-on-surface-variant/60 uppercase text-[10px] tracking-wider">Vai trò</span>
+<div class="flex items-center gap-1 text-on-surface">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+<span class="font-bold text-body-sm">Customer</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-label-bold font-label-bold text-on-surface-variant/60 uppercase text-[10px] tracking-wider">Trạng thái</span>
+<span class="flex items-center gap-1 text-green-600 font-bold text-body-sm">
+<span class="w-2 h-2 rounded-full bg-green-600"></span>
+                            Hoạt động
+                        </span>
+</div>
+</div>
+</div>
+<!-- User Card 3 -->
+<div class="glass-card p-5 rounded-xl shadow-sm flex flex-col gap-4 relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full border-2 border-outline overflow-hidden opacity-60 grayscale">
+<img alt="User" class="w-full h-full object-cover" data-alt="A portrait of a senior staff member with grey hair, wearing a professional uniform in a well-lit office setting. The style is consistent with a high-end corporate athletic department. The image conveys experience and authority through soft ambient lighting and a clean, minimalist background of white and grey tones." src="https://lh3.googleusercontent.com/aida/AP1WRLv7joU2M0sj0q9jkEmZ3DvnC1OstgxkN_igQT9lM1Weoxit7LxOuaUKcagkVtoVA-DJ_PGc11CBN-kQUweT9CN8Q03VmY5c2MCbTSW9ih8Dj1wH9BFXUEPbVcAd3iP-387bFP6KkIpSYpW34FYbHJANmOd_RrByBb999djepxHsBqU1Bg_Mwpb0xLeCBK02BM8XscoPlsbHIattSohBOCb2hd-ZPm2trovU1xibfChKzO6YnpzSx0nREw"/>
+</div>
+<div>
+<p class="text-body-lg font-bold text-primary/60">Lê Văn C</p>
+<p class="text-body-sm text-on-surface-variant/60">clevan@internal.vn</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">more_vert</span>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="flex flex-col">
+<span class="text-label-bold font-label-bold text-on-surface-variant/60 uppercase text-[10px] tracking-wider">Vai trò</span>
+<div class="flex items-center gap-1 text-on-surface/60">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+<span class="font-bold text-body-sm">Staff</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-label-bold font-label-bold text-on-surface-variant/60 uppercase text-[10px] tracking-wider">Trạng thái</span>
+<span class="flex items-center gap-1 text-error font-bold text-body-sm">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+                            Vô hiệu
+                        </span>
+</div>
+</div>
+</div>
+<!-- User Card 4 -->
+<div class="glass-card p-5 rounded-xl shadow-sm flex flex-col gap-4 relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full border-2 border-outline overflow-hidden">
+<img alt="User" class="w-full h-full object-cover" data-alt="A portrait of a cheerful young woman wearing a bright red athletic headband and a white performance jersey. She is set against a brightly lit, high-contrast studio background. The visual style is modern, urgent, and powerful, perfectly aligning with the aggressive red and monochromatic palette of an elite sports gear brand." src="https://lh3.googleusercontent.com/aida/AP1WRLs4Uqq6gWNrzO3fz8_HyOyNRGoHimkvCSaCdQlBSLHNIzS6zzEzezdUfQ0vb6Kshi2-fMayTchsq2N6fkaHMOcXI63pKdPqvs2Kozw_5_zh6PsbEV6OwWufRIaS-uPm6o4OM1T4B2EiFWVetzlh_UOteH0YBFWF0iw83RyZviud0HyZKWGRs3nTtLwJH5yAFoS7Rh-yE9aW85DXZ8vae5p6Zkkgg3eWWUjHPKlPNoLigWHL5xLROUTTvrA"/>
+</div>
+<div>
+<p class="text-body-lg font-bold text-primary">Phạm Minh D</p>
+<p class="text-body-sm text-on-surface-variant">dpham@gmail.com</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">more_vert</span>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="flex flex-col">
+<span class="text-label-bold font-label-bold text-on-surface-variant/60 uppercase text-[10px] tracking-wider">Vai trò</span>
+<div class="flex items-center gap-1 text-on-surface">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+<span class="font-bold text-body-sm">Customer</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-label-bold font-label-bold text-on-surface-variant/60 uppercase text-[10px] tracking-wider">Trạng thái</span>
+<span class="flex items-center gap-1 text-green-600 font-bold text-body-sm">
+<span class="w-2 h-2 rounded-full bg-green-600"></span>
+                            Hoạt động
+                        </span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB -->
+<button class="fixed right-6 bottom-24 w-14 h-14 bg-secondary text-on-secondary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform duration-200 z-50">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person_add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter-mobile pb-safe h-16 bg-surface-container-lowest shadow-sm border-t border-outline-variant rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors px-4 h-full rounded-lg">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-bold font-label-bold">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors px-4 h-full rounded-lg">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-label-bold font-label-bold">Catalog</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors px-4 h-full rounded-lg">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-label-bold font-label-bold">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary font-bold relative px-4 h-full">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="text-label-bold font-label-bold">Staff</span>
+<div class="active-tab-indicator"></div>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors px-4 h-full rounded-lg">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-bold font-label-bold">Settings</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction for clicking on cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'scale(0.98)';
+                card.style.transition = 'transform 0.1s ease';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'scale(1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+
+        // Filter button toggle logic
+        const filterButtons = document.querySelectorAll('.flex.gap-2 button');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-on-primary');
+                    b.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                });
+                btn.classList.add('bg-primary', 'text-on-primary');
+                btn.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

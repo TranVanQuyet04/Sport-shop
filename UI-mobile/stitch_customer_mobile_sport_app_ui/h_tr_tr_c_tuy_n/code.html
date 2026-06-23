@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#92001d",
+                    "primary-container": "#1b1b1b",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-container": "#eeeeee",
+                    "error-container": "#ffdad6",
+                    "on-background": "#1a1c1c",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#e51a38",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-surface": "#1a1c1c",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f3f3f3",
+                    "surface-tint": "#5e5e5e",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "surface-variant": "#e2e2e2",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#e2e2e2",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "secondary": "#bb0027",
+                    "surface-dim": "#dadada",
+                    "primary": "#000000",
+                    "on-primary-fixed": "#1b1b1b",
+                    "tertiary-container": "#1a1c1c",
+                    "surface": "#f9f9f9",
+                    "outline": "#7e7576",
+                    "inverse-primary": "#c6c6c6",
+                    "secondary-fixed": "#ffdad8",
+                    "primary-fixed": "#e2e2e2",
+                    "on-secondary-container": "#fffbff",
+                    "on-tertiary-container": "#838484",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "inverse-surface": "#2f3131",
+                    "on-surface-variant": "#4c4546",
+                    "surface-bright": "#f9f9f9",
+                    "background": "#f9f9f9",
+                    "on-primary-fixed-variant": "#474747",
+                    "outline-variant": "#cfc4c5",
+                    "on-primary-container": "#848484",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#410007",
+                    "tertiary": "#000000"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "32px",
+                    "gutter-mobile": "12px",
+                    "margin-mobile": "16px",
+                    "base": "4px",
+                    "touch-target-min": "44px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "button": ["Inter"],
+                    "title-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-bold": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .chat-bubble-left {
+            border-radius: 2px 16px 16px 16px;
+        }
+        .chat-bubble-right {
+            border-radius: 16px 16px 2px 16px;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-lg overflow-hidden flex flex-col h-screen">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center px-margin-mobile h-14 w-full z-50 bg-surface shrink-0">
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-transform active:scale-95" onclick="history.back()">arrow_back</button>
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A professional close-up of a high-performance sportswear brand logo featured on a sleek, matte black surface. The lighting is dramatic and high-contrast, emphasizing sharp edges and clean lines consistent with an elite athletic aesthetic. The overall mood is powerful and reliable, utilizing a monochromatic palette with subtle depth and modern textures." src="https://lh3.googleusercontent.com/aida/AP1WRLtcCivAmikY2YauL4Ur2b17M_jatTzUi5adwxALlSEHyZ-pKIKIuJejP3t8nkavVHNbBHk95RKWbfWLwDyHYDYAlQvuVwIfGoL_Lsg2l3I5Cg3h9FRZuvjfV-qRPAGhhb7sY_bzUI0mkwYL99a0bG93vkQqXs5fS2Hme3wemIQeGqtMqVwFZYWqiO2JLJBSJdVfiF3PlbfHBj1mE0cQstISTCx7xLCaB14d6Uh4L2ozIp9gDZuOVo3GJw"/>
+</div>
+<div>
+<h1 class="font-headline-lg-mobile text-[16px] leading-tight font-black tracking-tight text-primary">SPORTSWEAR CS</h1>
+<div class="flex items-center gap-1">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span class="font-label-bold text-label-bold text-on-surface-variant">Trực tuyến</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 active:scale-95">call</button>
+<button class="material-symbols-outlined text-primary hover:opacity-80 active:scale-95">more_vert</button>
+</div>
+</header>
+<!-- Chat Canvas -->
+<main class="flex-1 overflow-y-auto px-margin-mobile py-4 space-y-4 hide-scrollbar bg-surface-container-low" id="chat-container">
+<!-- Date Stamp -->
+<div class="flex justify-center">
+<span class="bg-surface-container-highest px-3 py-1 rounded-full font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Hôm nay</span>
+</div>
+<!-- Shop Message -->
+<div class="flex flex-col items-start max-w-[85%]">
+<div class="chat-bubble-left bg-surface-container-lowest text-on-surface p-4 shadow-sm">
+<p class="font-body-lg text-body-sm">Chào bạn! Cảm ơn bạn đã quan tâm đến sản phẩm của Sportswear. Chúng tôi có thể hỗ trợ gì cho bạn về đơn hàng hay tư vấn size không ạ?</p>
+</div>
+<span class="mt-1 font-label-bold text-[10px] text-on-surface-variant uppercase ml-1">09:41</span>
+</div>
+<!-- User Message -->
+<div class="flex flex-col items-end self-end max-w-[85%]">
+<div class="chat-bubble-right bg-secondary text-on-secondary p-4 shadow-sm">
+<p class="font-body-lg text-body-sm">Chào shop, mình muốn hỏi về mẫu áo khoác chạy bộ Pro-Performance. Mình cao 1m75 nặng 70kg thì mặc size nào vừa nhỉ?</p>
+</div>
+<span class="mt-1 font-label-bold text-[10px] text-on-surface-variant uppercase mr-1">09:42</span>
+</div>
+<!-- Shop Message with Product -->
+<div class="flex flex-col items-start max-w-[85%]">
+<div class="chat-bubble-left bg-surface-container-lowest text-on-surface p-3 shadow-sm">
+<div class="flex gap-3 mb-3 border-b border-outline-variant pb-2">
+<img class="w-16 h-16 rounded-lg object-cover" data-alt="High-quality studio product photography of a premium black performance running jacket with reflective details. The lighting is professional and sharp, showcasing the technical fabric textures. Set against a minimalist gray background, the image evokes a sense of high-performance and elite athletic gear, perfectly aligned with the monochromatic and urgent brand personality." src="https://lh3.googleusercontent.com/aida/AP1WRLsHAC-jDNjxw93up_wzgSTImNeHh3cx9y2eU8JpBS8tXjhQNuChAIPY688QDkBHpZeOZXrZ08_JtD9frKVLffHWD58CvZAnVDRDF9A3ovFR6D-LTS3rPeexv7_O8q6xDIXn9Ed11eDWuU6AuQSTgRHZuwR662RjWmPanvVW7kytIXzswb3AWf-DeBqKft72ev4uVQUrsPK8UchYZjF-Vv4KL3L8uVoYm4bHJusTDTkYu_FUKHaoHXF7jBQ"/>
+<div class="flex flex-col justify-center">
+<p class="font-label-bold text-label-bold">Pro-Performance Jacket</p>
+<p class="font-label-bold text-secondary">1.250.000₫</p>
+</div>
+</div>
+<p class="font-body-lg text-body-sm">Với chiều cao và cân nặng của bạn, size L sẽ là lựa chọn phù hợp nhất để vận động thoải mái. Mẫu này hiện đang còn hàng tại kho ạ.</p>
+</div>
+<span class="mt-1 font-label-bold text-[10px] text-on-surface-variant uppercase ml-1">09:43</span>
+</div>
+<!-- User Message -->
+<div class="flex flex-col items-end self-end max-w-[85%]">
+<div class="chat-bubble-right bg-secondary text-on-secondary p-4 shadow-sm">
+<p class="font-body-lg text-body-sm">Cảm ơn shop nhé. Có được kiểm tra hàng trước khi thanh toán không shop?</p>
+</div>
+<div class="flex items-center gap-1 mt-1 mr-1">
+<span class="font-label-bold text-[10px] text-on-surface-variant uppercase">09:45</span>
+<span class="material-symbols-outlined text-[12px] text-secondary">done_all</span>
+</div>
+</div>
+<!-- Typing Indicator (Simulated) -->
+<div class="hidden flex items-center gap-2 ml-1" id="typing-indicator">
+<div class="flex gap-1">
+<div class="w-1.5 h-1.5 bg-outline rounded-full animate-bounce" style="animation-delay: 0s"></div>
+<div class="w-1.5 h-1.5 bg-outline rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+<div class="w-1.5 h-1.5 bg-outline rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+</div>
+<span class="font-label-bold text-[10px] text-on-surface-variant italic">Shop đang nhập...</span>
+</div>
+</main>
+<!-- Contextual Actions -->
+<div class="px-margin-mobile py-2 bg-surface flex gap-2 overflow-x-auto hide-scrollbar shrink-0">
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant font-label-bold text-label-bold text-on-surface-variant hover:bg-surface-container-low active:scale-95 transition-all">
+            Xem đơn hàng của tôi
+        </button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant font-label-bold text-label-bold text-on-surface-variant hover:bg-surface-container-low active:scale-95 transition-all">
+            Tình trạng vận chuyển
+        </button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant font-label-bold text-label-bold text-on-surface-variant hover:bg-surface-container-low active:scale-95 transition-all">
+            Đổi trả sản phẩm
+        </button>
+</div>
+<!-- Input Bar -->
+<footer class="bg-surface-container-lowest p-margin-mobile border-t border-outline-variant pb-safe shrink-0">
+<div class="flex items-end gap-3">
+<div class="flex items-center h-11">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary active:scale-90 transition-all p-1">add_circle</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary active:scale-90 transition-all p-1">image</button>
+</div>
+<div class="flex-1 relative">
+<textarea class="w-full bg-surface-container-low border-none rounded-xl py-2.5 px-4 pr-10 focus:ring-2 focus:ring-primary max-h-32 font-body-lg text-body-sm resize-none transition-all duration-200" id="chat-input" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'; toggleSendButton(this.value)" placeholder="Nhập tin nhắn..." rows="1"></textarea>
+<button class="material-symbols-outlined absolute right-3 bottom-2.5 text-on-surface-variant hover:text-primary transition-all">mood</button>
+</div>
+<button class="w-11 h-11 flex items-center justify-center bg-secondary text-on-secondary rounded-xl active:scale-90 transition-all shadow-sm opacity-50 cursor-not-allowed" disabled="" id="send-button" onclick="sendMessage()">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</footer>
+<script>
+        function toggleSendButton(val) {
+            const btn = document.getElementById('send-button');
+            if (val.trim().length > 0) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.classList.add('opacity-100');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.classList.remove('opacity-100');
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const container = document.getElementById('chat-container');
+            const typing = document.getElementById('typing-indicator');
+            const text = input.value.trim();
+            
+            if (text === "") return;
+
+            const time = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+
+            const messageHtml = `
+                <div class="flex flex-col items-end self-end max-w-[85%] animate-fade-in-up">
+                    <div class="chat-bubble-right bg-secondary text-on-secondary p-4 shadow-sm">
+                        <p class="font-body-lg text-body-sm">${text}</p>
+                    </div>
+                    <div class="flex items-center gap-1 mt-1 mr-1">
+                        <span class="font-label-bold text-[10px] text-on-surface-variant uppercase">${time}</span>
+                        <span class="material-symbols-outlined text-[12px] text-outline">done</span>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', messageHtml);
+            input.value = "";
+            input.style.height = 'auto';
+            toggleSendButton("");
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+
+            // Simulate Shop Response
+            setTimeout(() => {
+                typing.classList.remove('hidden');
+                container.scrollTop = container.scrollHeight;
+                
+                setTimeout(() => {
+                    typing.classList.add('hidden');
+                    const shopReply = `
+                        <div class="flex flex-col items-start max-w-[85%] animate-fade-in-up">
+                            <div class="chat-bubble-left bg-surface-container-lowest text-on-surface p-4 shadow-sm">
+                                <p class="font-body-lg text-body-sm">Chúng tôi đã nhận được tin nhắn của bạn. Nhân viên tư vấn sẽ phản hồi ngay lập tức!</p>
+                            </div>
+                            <span class="mt-1 font-label-bold text-[10px] text-on-surface-variant uppercase ml-1">${time}</span>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', shopReply);
+                    container.scrollTop = container.scrollHeight;
+                }, 2000);
+            }, 1000);
+        }
+
+        // Handle Enter key
+        document.getElementById('chat-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+<style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.3s ease-out forwards;
+        }
+    </style>
+</body></html>

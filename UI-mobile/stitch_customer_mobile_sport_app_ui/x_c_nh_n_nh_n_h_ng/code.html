@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#92001d",
+                        "primary-container": "#1b1b1b",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-container": "#eeeeee",
+                        "error-container": "#ffdad6",
+                        "on-background": "#1a1c1c",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#e51a38",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-surface": "#1a1c1c",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-tint": "#5e5e5e",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e2e2e2",
+                        "surface-variant": "#e2e2e2",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#e2e2e2",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "secondary": "#bb0027",
+                        "surface-dim": "#dadada",
+                        "primary": "#000000",
+                        "on-primary-fixed": "#1b1b1b",
+                        "tertiary-container": "#1a1c1c",
+                        "surface": "#f9f9f9",
+                        "outline": "#7e7576",
+                        "inverse-primary": "#c6c6c6",
+                        "secondary-fixed": "#ffdad8",
+                        "primary-fixed": "#e2e2e2",
+                        "on-secondary-container": "#fffbff",
+                        "on-tertiary-container": "#838484",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "inverse-surface": "#2f3131",
+                        "on-surface-variant": "#4c4546",
+                        "surface-bright": "#f9f9f9",
+                        "background": "#f9f9f9",
+                        "on-primary-fixed-variant": "#474747",
+                        "outline-variant": "#cfc4c5",
+                        "on-primary-container": "#848484",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#410007",
+                        "tertiary": "#000000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "gutter-mobile": "12px",
+                        "margin-mobile": "16px",
+                        "base": "4px",
+                        "touch-target-min": "44px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "button": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "label-bold": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .sheet-overlay { transition: opacity 0.3s ease-out; }
+        .sheet-content { transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); }
+        .sheet-hidden { transform: translateY(100%); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased overflow-x-hidden">
+<!-- Header Section (TopAppBar Anchor) -->
+<header class="bg-surface dark:bg-on-surface flex justify-between items-center px-margin-mobile h-14 w-full z-50 fixed top-0">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary cursor-pointer active:scale-95 transition-transform duration-150">menu</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black tracking-tighter text-primary dark:text-on-primary-fixed">SPORTSWEAR</h1>
+</div>
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary cursor-pointer active:scale-95 transition-transform duration-150">notifications</span>
+</header>
+<!-- Main Content Area -->
+<main class="pt-20 pb-24 px-margin-mobile min-h-screen">
+<!-- Order Detail Shell -->
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+<p class="font-label-bold text-label-bold text-secondary uppercase tracking-widest">Trạng thái: Đã giao hàng</p>
+</div>
+<!-- Product Card Visualization -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-surface-container flex gap-4 items-center">
+<div class="w-24 h-24 bg-surface-container-low rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Nike Air Max" class="w-full h-full object-cover" data-alt="A professional high-performance red Nike running shoe positioned against a clean, minimalist light gray background. The lighting is crisp and bright, highlighting the sleek athletic textures and technical design of the footwear. This high-contrast studio shot reflects a powerful, urgent sportswear brand identity with a modern monochromatic aesthetic." src="https://lh3.googleusercontent.com/aida/AP1WRLuqMUW7S36tbtHbOrJ854kxYB4LJPRf17PgBSUdTCkSTVwuqMPZd-abqwyAMm-MGAxHsJ-BElb5J6MMTPbH90sJxqgXQZGEwSb40GkV4Fc_iY4bCXyQLYSXzXcQ0wX3Bs8dPH_gY6aRtTZEOOOuvtcrcI0B6oDPKZ8jVnJHfw-JiifeigM31cXCSWPkAEbHpwXcDNhvSaTpgOYxUfxl4M7NpedVkqJ1IczS-kw8qDH-Mtd3yeQDYMl6Iow"/>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-title-md text-title-md font-bold">Nike Air Max Pro 2024</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Kích cỡ: 42 | Màu: Đỏ/Đen</p>
+<p class="font-body-lg text-body-lg font-bold text-primary">2.450.000₫</p>
+</div>
+</div>
+<!-- Order Info List -->
+<div class="flex flex-col divide-y divide-surface-container-highest">
+<div class="py-4 flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Mã đơn hàng</span>
+<span class="font-label-bold text-label-bold font-bold">#SW-982341</span>
+</div>
+<div class="py-4 flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ngày nhận hàng</span>
+<span class="font-label-bold text-label-bold font-bold">14/05/2024, 10:25</span>
+</div>
+<div class="py-4 flex flex-col gap-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Địa chỉ nhận hàng</span>
+<p class="font-body-sm text-body-sm font-medium">123 Đường Thể Thao, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh</p>
+</div>
+</div>
+<!-- Main CTA to Trigger Sheet -->
+<button class="mt-8 bg-secondary text-on-secondary-container h-14 rounded-lg font-button text-button w-full active:scale-95 transition-all duration-150 shadow-md" onclick="toggleBottomSheet(true)">
+                Xác nhận đã nhận hàng
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Anchor) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center pt-2 pb-6 px-gutter-mobile bg-surface-container-lowest border-t border-outline-variant shadow-sm">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-bold text-label-bold">Trang chủ</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-bold text-label-bold">Tìm kiếm</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label-bold text-label-bold">Giỏ hàng</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary font-bold">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-label-bold text-label-bold">Đơn hàng</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-bold text-label-bold">Cá nhân</span>
+</div>
+</nav>
+<!-- Bottom Sheet UI -->
+<div class="fixed inset-0 bg-black/40 z-[60] opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-sm" id="sheetOverlay" onclick="toggleBottomSheet(false)"></div>
+<div class="fixed bottom-0 left-0 right-0 bg-surface-container-lowest z-[70] rounded-t-[24px] shadow-2xl p-margin-mobile flex flex-col gap-6 sheet-content sheet-hidden" id="bottomSheet">
+<!-- Handle -->
+<div class="w-12 h-1 bg-surface-container-highest rounded-full self-center mb-2"></div>
+<!-- Content -->
+<div class="flex flex-col gap-2">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Xác nhận đơn hàng</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                Bạn xác nhận đã nhận được đầy đủ sản phẩm và hài lòng với chất lượng? 
+                <span class="font-bold text-primary">Hành động này không thể hoàn tác.</span>
+</p>
+</div>
+<!-- Asymmetric Layout Summary Box -->
+<div class="bg-surface-container-low rounded-xl p-4 flex items-center justify-between border-l-4 border-secondary">
+<div class="flex flex-col">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase">Mã vận đơn</span>
+<span class="font-title-md text-title-md font-bold tracking-tight">VTP83749201</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase">Đơn vị</span>
+<span class="font-title-md text-title-md font-bold">Viettel Post</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-3 pb-8">
+<button class="bg-secondary text-white h-[56px] rounded-xl font-button text-button flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg" onclick="confirmAction()">
+<span class="material-symbols-outlined">check</span>
+                Xác nhận đã nhận hàng
+            </button>
+<button class="bg-surface-container-highest text-primary h-[56px] rounded-xl font-button text-button active:scale-95 transition-all border border-outline-variant" onclick="toggleBottomSheet(false)">
+                Hủy
+            </button>
+</div>
+</div>
+<!-- Success Toast (Interaction) -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-6 py-3 rounded-full shadow-lg z-[100] flex items-center gap-2 opacity-0 transition-opacity pointer-events-none" id="toast">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span class="font-label-bold text-label-bold">Đã xác nhận thành công!</span>
+</div>
+<script>
+        function toggleBottomSheet(show) {
+            const overlay = document.getElementById('sheetOverlay');
+            const sheet = document.getElementById('bottomSheet');
+            
+            if (show) {
+                overlay.classList.remove('pointer-events-none', 'opacity-0');
+                overlay.classList.add('opacity-100');
+                sheet.classList.remove('sheet-hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                overlay.classList.add('pointer-events-none', 'opacity-0');
+                overlay.classList.remove('opacity-100');
+                sheet.classList.add('sheet-hidden');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function confirmAction() {
+            toggleBottomSheet(false);
+            const toast = document.getElementById('toast');
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                toast.classList.remove('opacity-100');
+            }, 3000);
+        }
+
+        // Initialize with sheet open for visual presentation if desired
+        window.onload = () => {
+            setTimeout(() => toggleBottomSheet(true), 500);
+        };
+    </script>
+</body></html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "tertiary-fixed": "#e2e2e2",
+                    "secondary": "#bb0027",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-secondary-container": "#fffbff",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-surface": "#1a1c1c",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#ffdad8",
+                    "error": "#ba1a1a",
+                    "on-primary-container": "#848484",
+                    "outline-variant": "#cfc4c5",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#eeeeee",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#e2e2e2",
+                    "on-background": "#1a1c1c",
+                    "surface-bright": "#f9f9f9",
+                    "secondary-container": "#e51a38",
+                    "on-primary-fixed-variant": "#474747",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#7e7576",
+                    "on-primary-fixed": "#1b1b1b",
+                    "on-surface-variant": "#4c4546",
+                    "surface": "#f9f9f9",
+                    "inverse-on-surface": "#f1f1f1",
+                    "surface-dim": "#dadada",
+                    "tertiary-container": "#1a1c1c",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-highest": "#e2e2e2",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "tertiary": "#000000",
+                    "on-secondary-fixed-variant": "#92001d",
+                    "on-secondary-fixed": "#410007",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-container-low": "#f3f3f3",
+                    "on-tertiary-container": "#838484",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#5e5e5e",
+                    "background": "#f9f9f9",
+                    "primary-container": "#1b1b1b",
+                    "inverse-surface": "#2f3131",
+                    "inverse-primary": "#c6c6c6",
+                    "primary": "#000000"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter-mobile": "12px",
+                    "base": "4px",
+                    "section-gap": "32px",
+                    "touch-target-min": "44px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "button": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "title-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F5F5F5; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chat-container {
+            height: calc(100vh - 120px);
+            scrollbar-width: none;
+        }
+        .chat-container::-webkit-scrollbar { display: none; }
+        .message-in { animation: slideUp 0.3s ease-out forwards; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex items-center px-margin-mobile h-touch-target-min bg-surface shadow-sm gap-4">
+<button class="active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex items-center gap-3 flex-1">
+<div class="relative">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-on-primary" data-icon="support_agent" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+</div>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-surface rounded-full"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-body-sm font-bold leading-tight">Hỗ trợ khách hàng</span>
+<span class="text-[10px] text-secondary font-bold uppercase tracking-wider">Trực tuyến</span>
+</div>
+</div>
+<button class="active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="more_vert">more_vert</span>
+</button>
+</nav>
+<!-- Main Chat Canvas -->
+<main class="pt-[60px] pb-[80px] px-margin-mobile chat-container overflow-y-auto flex flex-col gap-6">
+<!-- Date Separator -->
+<div class="flex justify-center mt-4">
+<span class="px-3 py-1 bg-surface-container rounded-full font-label-bold text-on-surface-variant text-[10px]">HÔM NAY</span>
+</div>
+<!-- System Welcome Message -->
+<div class="flex flex-col gap-2 max-w-[85%] message-in">
+<div class="p-4 bg-surface-container-low rounded-xl rounded-tl-none border border-outline-variant">
+<p class="font-body-sm text-on-surface">Chào mừng bạn đến với <span class="font-bold italic">APEX VELOCITY</span>. Chúng tôi có thể giúp gì cho quá trình luyện tập của bạn hôm nay?</p>
+</div>
+<span class="text-[10px] text-outline px-1">10:05</span>
+</div>
+<!-- Support Message -->
+<div class="flex flex-col gap-2 max-w-[85%] message-in">
+<div class="flex items-end gap-2">
+<div class="flex flex-col gap-1">
+<div class="p-4 bg-primary text-on-primary rounded-xl rounded-tl-none shadow-sm">
+<p class="font-body-sm">Xin chào! Tôi là chuyên viên tư vấn trang phục chạy bộ. Bạn đang quan tâm đến dòng giày hay quần áo nén?</p>
+</div>
+</div>
+</div>
+<span class="text-[10px] text-outline px-1">10:06</span>
+</div>
+<!-- User Message (Guest) -->
+<div class="flex flex-col gap-2 max-w-[85%] self-end items-end message-in">
+<div class="p-4 bg-secondary text-on-secondary rounded-xl rounded-tr-none shadow-md">
+<p class="font-body-sm">Chào bạn, mình đang tìm mẫu giày chạy marathon cự ly 42km, cần loại có đệm carbon phản hồi lực tốt.</p>
+</div>
+<span class="text-[10px] text-outline px-1">10:07</span>
+</div>
+<!-- Support Product Suggestion -->
+<div class="flex flex-col gap-2 max-w-[85%] message-in">
+<div class="p-4 bg-surface-container-low rounded-xl rounded-tl-none border border-outline-variant flex flex-col gap-3">
+<p class="font-body-sm text-on-surface">Dạ, đây là mẫu <span class="font-bold">VELOCITY ELITE PRO</span> mới nhất chuyên dụng cho 42km với tấm Carbon PowerPlate:</p>
+<div class="rounded-lg overflow-hidden bg-surface-variant h-40 relative">
+<img class="w-full h-full object-cover" data-alt="A high-performance neon red carbon-plated running shoe professionally photographed in a minimalist studio setting. The lighting is sharp and dramatic, emphasizing the aerodynamic curves and technical mesh texture of the footwear. The aesthetic is clean, modern, and elite, reflecting the APEX VELOCITY brand identity with high contrast blacks and whites in the background." src="https://lh3.googleusercontent.com/aida/AP1WRLvfXxXbFf202rx65OUEGTAbgS_pclpPAIMJTEpun61PVE3mRNrXMo3JAZ2fonenY312vYeG91BVbFApLdKlByyniHl_cCRgOW-THrxOHeHgfd8XpR6iugTGhhvN5kGev2ODx9NyVtdyHzcA4hT6BeEWZCkbXR5J4G8hXDGqcaESuIu5SsByzxETFA9X2-k__MlejOGFRmqsHagT65DRTPHJ0mx0mUd01x6gVbuvoaCxA92x48_A035XlIc"/>
+<div class="absolute top-2 right-2 bg-secondary text-white px-2 py-1 rounded-sm font-label-bold text-[10px]">MỚI NHẤT</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-bold text-primary">3.450.000đ</span>
+<button class="px-4 py-2 bg-primary text-on-primary text-xs font-bold rounded-lg uppercase tracking-tight active:scale-95 transition-transform">Xem ngay</button>
+</div>
+</div>
+<span class="text-[10px] text-outline px-1">10:08</span>
+</div>
+<!-- User Message (Guest) - Image Upload -->
+<div class="flex flex-col gap-2 max-w-[70%] self-end items-end message-in">
+<div class="rounded-xl overflow-hidden border-4 border-secondary shadow-lg">
+<img class="w-full object-cover h-48" data-alt="A smartphone screen showing a close-up photo of a worn-out running shoe sole, being shared in a chat interface. The photography style is realistic and task-focused, maintaining the high-contrast professional look of the app with clear details on the tread wear. The overall mood is helpful and service-oriented." src="https://lh3.googleusercontent.com/aida/AP1WRLuciAVPffG-C3O7uChK5Gp7iNqY8Zl8KxGrVIuuAEe1ATr-1ITVJOW34IfFyFUp_W9Mhps8p5J792zhnYNnXVi8GmQ77EKFBtmryQ4kS5MjTQC7IQ-FjxQyVXKngspfWsOXGqy6wfOUamMOB3VeZ8isWeNKk70O73jeClBRmnGYY17EDJIb8rzaFu8qRELydJizBksp66R1XLljNHHMtcpWmjN3au4Yj0xUSP8EHeAB6z11GcG-1aAPxw"/>
+</div>
+<div class="p-4 bg-secondary text-on-secondary rounded-xl rounded-tr-none -mt-2 z-10">
+<p class="font-body-sm">Đế giày hiện tại của mình đã mòn như vầy, liệu mẫu trên có bền hơn không?</p>
+</div>
+<span class="text-[10px] text-outline px-1">10:09</span>
+</div>
+</main>
+<!-- Input Area -->
+<footer class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant px-margin-mobile py-3 z-50">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high text-on-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+</button>
+<div class="flex-1 flex items-center bg-surface-container rounded-full px-4 h-touch-target-min border border-outline-variant focus-within:border-primary transition-colors">
+<input class="bg-transparent border-none outline-none ring-0 w-full text-body-sm text-on-surface placeholder:text-outline-variant focus:ring-0" placeholder="Nhập nội dung..." type="text"/>
+<button class="ml-2 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="image">image</span>
+</button>
+</div>
+<button class="w-11 h-11 flex items-center justify-center rounded-full bg-secondary text-on-secondary shadow-md active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="send" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+<div class="h-safe"></div>
+</footer>
+<script>
+        // Simple micro-interaction for sending message simulation
+        const input = document.querySelector('input');
+        const sendBtn = document.querySelector('[data-icon="send"]').parentElement;
+        const chatContainer = document.querySelector('main');
+
+        sendBtn.addEventListener('click', () => {
+            if (input.value.trim() !== "") {
+                const msg = document.createElement('div');
+                msg.className = "flex flex-col gap-2 max-w-[85%] self-end items-end message-in";
+                msg.innerHTML = `
+                    <div class="p-4 bg-secondary text-on-secondary rounded-xl rounded-tr-none shadow-md">
+                        <p class="font-body-sm">${input.value}</p>
+                    </div>
+                    <span class="text-[10px] text-outline px-1">Vừa xong</span>
+                `;
+                chatContainer.appendChild(msg);
+                input.value = "";
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // Mock reply
+                setTimeout(() => {
+                    const reply = document.createElement('div');
+                    reply.className = "flex flex-col gap-2 max-w-[85%] message-in";
+                    reply.innerHTML = `
+                        <div class="p-4 bg-primary text-on-primary rounded-xl rounded-tl-none shadow-sm">
+                            <p class="font-body-sm text-white">Chúng tôi đã nhận được thông tin. Chuyên viên sẽ phản hồi bạn trong giây lát!</p>
+                        </div>
+                        <span class="text-[10px] text-outline px-1">Đang soạn...</span>
+                    `;
+                    chatContainer.appendChild(reply);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 1000);
+            }
+        });
+
+        // Enter key to send
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendBtn.click();
+        });
+    </script>
+</body></html>

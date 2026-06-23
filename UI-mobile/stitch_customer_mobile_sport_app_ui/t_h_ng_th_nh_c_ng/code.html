@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kết quả thanh toán - SPORTSWEAR</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#92001d",
+                    "primary-container": "#1b1b1b",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-container": "#eeeeee",
+                    "error-container": "#ffdad6",
+                    "on-background": "#1a1c1c",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#e51a38",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-surface": "#1a1c1c",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f3f3f3",
+                    "surface-tint": "#5e5e5e",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "surface-variant": "#e2e2e2",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#e2e2e2",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "secondary": "#bb0027",
+                    "surface-dim": "#dadada",
+                    "primary": "#000000",
+                    "on-primary-fixed": "#1b1b1b",
+                    "tertiary-container": "#1a1c1c",
+                    "surface": "#f9f9f9",
+                    "outline": "#7e7576",
+                    "inverse-primary": "#c6c6c6",
+                    "secondary-fixed": "#ffdad8",
+                    "primary-fixed": "#e2e2e2",
+                    "on-secondary-container": "#fffbff",
+                    "on-tertiary-container": "#838484",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "inverse-surface": "#2f3131",
+                    "on-surface-variant": "#4c4546",
+                    "surface-bright": "#f9f9f9",
+                    "background": "#f9f9f9",
+                    "on-primary-fixed-variant": "#474747",
+                    "outline-variant": "#cfc4c5",
+                    "on-primary-container": "#848484",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#410007",
+                    "tertiary": "#000000"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "32px",
+                    "gutter-mobile": "12px",
+                    "margin-mobile": "16px",
+                    "base": "4px",
+                    "touch-target-min": "44px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "button": ["Inter"],
+                    "title-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-bold": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .success-bg-pulse {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.2; }
+            50% { transform: scale(1.05); opacity: 0.1; }
+            100% { transform: scale(0.95); opacity: 0.2; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-lg min-h-screen flex flex-col items-center">
+<!-- TopAppBar (Transactional State: Back suppressed as per UX Goal) -->
+<header class="bg-surface flex justify-between items-center px-margin-mobile h-14 w-full z-50 docked full-width top-0">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black tracking-tighter text-primary">SPORTSWEAR</h1>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:opacity-80 active:scale-95 transition-transform" data-icon="notifications">notifications</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-md px-margin-mobile py-section-gap flex flex-col items-center justify-center">
+<!-- Success Animation Container -->
+<div class="relative flex items-center justify-center mb-8">
+<div class="absolute w-40 h-40 bg-secondary-fixed rounded-full success-bg-pulse"></div>
+<div class="relative z-10 w-24 h-24 bg-secondary rounded-full flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-white text-[48px]" data-icon="check" style="font-variation-settings: 'FILL' 0, 'wght' 700;">check</span>
+</div>
+</div>
+<!-- Confirmation Text -->
+<div class="text-center mb-section-gap">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-2">Thanh toán thành công!</h2>
+<p class="font-body-lg text-on-surface-variant">Cảm ơn bạn đã tin tưởng lựa chọn sản phẩm hiệu suất cao của chúng tôi.</p>
+</div>
+<!-- Order Detail Card (Asymmetric Layout/Bento Element) -->
+<div class="w-full bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant mb-section-gap">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Mã đơn hàng</p>
+<p class="font-title-md text-title-md text-primary">#SW-99201-VN</p>
+</div>
+<div class="bg-secondary-container px-3 py-1 rounded-full">
+<span class="font-label-bold text-label-bold text-on-secondary-container">ĐÃ XÁC NHẬN</span>
+</div>
+</div>
+<div class="space-y-3 pt-4 border-t border-outline-variant">
+<div class="flex justify-between">
+<span class="font-body-sm text-on-surface-variant">Phương thức</span>
+<span class="font-body-sm font-semibold">Thẻ tín dụng (**** 4242)</span>
+</div>
+<div class="flex justify-between">
+<span class="font-body-sm text-on-surface-variant">Tổng thanh toán</span>
+<span class="font-body-sm font-bold text-secondary">2.450.000₫</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons (Thumb Zone Optimized) -->
+<div class="w-full space-y-4 mt-auto">
+<button class="w-full bg-secondary text-white py-4 rounded-lg font-button text-button shadow-md hover:opacity-90 active:scale-[0.98] transition-all" onclick="window.location.reload()">
+                Xem đơn hàng
+            </button>
+<button class="w-full bg-transparent border-2 border-primary text-primary py-4 rounded-lg font-button text-button hover:bg-surface-container-low active:scale-[0.98] transition-all">
+                Tiếp tục mua sắm
+            </button>
+</div>
+<!-- Delivery Hint -->
+<div class="mt-8 flex items-center gap-3 p-4 bg-surface-container-low rounded-lg w-full">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="local_shipping">local_shipping</span>
+<p class="font-body-sm text-on-surface-variant">Đơn hàng sẽ được giao trong vòng 2-3 ngày làm việc.</p>
+</div>
+</main>
+<!-- Visual Polish: Background Graphic -->
+<div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-5">
+<div class="absolute top-1/4 -right-20 w-80 h-80 rounded-full border-[40px] border-secondary"></div>
+<div class="absolute bottom-1/4 -left-20 w-60 h-60 rounded-full border-[20px] border-primary"></div>
+</div>
+<!-- No BottomNavBar or FAB as per "Transactional / Success Screen" suppression rule -->
+<script>
+        // Micro-interaction for feedback
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Simplified ripple or interaction logic could go here
+                console.log('Action triggered');
+            });
+        });
+
+        // Atmospheric entry animation
+        window.addEventListener('DOMContentLoaded', () => {
+            const main = document.querySelector('main');
+            main.style.opacity = '0';
+            main.style.transform = 'translateY(20px)';
+            main.style.transition = 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+            
+            setTimeout(() => {
+                main.style.opacity = '1';
+                main.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body></html>

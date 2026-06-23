@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "tertiary-fixed": "#e2e2e2",
+                    "secondary": "#bb0027",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-secondary-container": "#fffbff",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-surface": "#1a1c1c",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#ffdad8",
+                    "error": "#ba1a1a",
+                    "on-primary-container": "#848484",
+                    "outline-variant": "#cfc4c5",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#eeeeee",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#e2e2e2",
+                    "on-background": "#1a1c1c",
+                    "surface-bright": "#f9f9f9",
+                    "secondary-container": "#e51a38",
+                    "on-primary-fixed-variant": "#474747",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#7e7576",
+                    "on-primary-fixed": "#1b1b1b",
+                    "on-surface-variant": "#4c4546",
+                    "surface": "#f9f9f9",
+                    "inverse-on-surface": "#f1f1f1",
+                    "surface-dim": "#dadada",
+                    "tertiary-container": "#1a1c1c",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-highest": "#e2e2e2",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "tertiary": "#000000",
+                    "on-secondary-fixed-variant": "#92001d",
+                    "on-secondary-fixed": "#410007",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-container-low": "#f3f3f3",
+                    "on-tertiary-container": "#838484",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#5e5e5e",
+                    "background": "#f9f9f9",
+                    "primary-container": "#1b1b1b",
+                    "inverse-surface": "#2f3131",
+                    "inverse-primary": "#c6c6c6",
+                    "primary": "#000000"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter-mobile": "12px",
+                    "base": "4px",
+                    "section-gap": "32px",
+                    "touch-target-min": "44px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "button": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "title-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5; /* As per Style Guidance */
+        }
+        .bg-gradient-mesh {
+            background-color: #f9f9f9;
+            background-image: radial-gradient(at 100% 0%, rgba(227, 24, 55, 0.05) 0px, transparent 50%),
+                              radial-gradient(at 0% 100%, rgba(0, 0, 0, 0.03) 0px, transparent 50%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- TopAppBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-touch-target-min bg-surface dark:bg-background shadow-sm">
+<button aria-label="Quay lại" class="flex items-center active:bg-surface-container-low dark:active:bg-surface-container-highest transition-colors rounded-full p-2 active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-primary dark:text-on-background">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black italic tracking-tighter text-primary dark:text-on-background">APEX VELOCITY</h1>
+<div class="w-10"></div> <!-- Spacer to center title -->
+</nav>
+<!-- Main Content Canvas -->
+<main class="min-h-screen pt-[64px] pb-safe flex flex-col bg-gradient-mesh">
+<div class="px-margin-mobile mt-section-gap flex-1 flex flex-col">
+<!-- Header Section -->
+<header class="mb-section-gap">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Đặt lại mật khẩu</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    Vui lòng nhập mật khẩu mới cho tài khoản của bạn để tiếp tục trải nghiệm hiệu năng đỉnh cao cùng Apex Velocity.
+                </p>
+</header>
+<!-- Reset Password Form Section -->
+<section class="bg-surface-container-lowest rounded-xl shadow-lg p-6 border border-outline-variant/30">
+<div class="space-y-6">
+<!-- New Password Field -->
+<div class="relative group">
+<label class="block font-label-bold text-label-bold text-on-surface-variant mb-2 ml-1" for="new_password">Mật khẩu mới</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline">lock</span>
+<input class="w-full h-touch-target-min pl-10 pr-12 bg-surface-container-lowest border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-body-sm" id="new_password" placeholder="Nhập mật khẩu mới" type="password"/>
+<button class="absolute right-3 flex items-center justify-center w-8 h-8 text-outline hover:text-primary transition-colors" onclick="togglePassword('new_password', this)" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Confirm Password Field -->
+<div class="relative group">
+<label class="block font-label-bold text-label-bold text-on-surface-variant mb-2 ml-1" for="confirm_password">Xác nhận mật khẩu mới</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline">lock_reset</span>
+<input class="w-full h-touch-target-min pl-10 pr-12 bg-surface-container-lowest border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-body-sm" id="confirm_password" placeholder="Xác nhận mật khẩu mới" type="password"/>
+<button class="absolute right-3 flex items-center justify-center w-8 h-8 text-outline hover:text-primary transition-colors" onclick="togglePassword('confirm_password', this)" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Security Indicator -->
+<div class="bg-surface-container-low p-3 rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">info</span>
+<div class="space-y-1">
+<p class="font-label-bold text-[10px] text-on-surface-variant">YÊU CẦU BẢO MẬT</p>
+<p class="font-body-sm text-[11px] text-on-surface-variant italic">Mật khẩu phải bao gồm ít nhất 8 ký tự, 1 chữ hoa và 1 số.</p>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<div class="mt-8">
+<button class="w-full h-touch-target-min bg-secondary text-on-secondary font-button text-button rounded-lg shadow-md active:scale-95 transition-transform duration-200 uppercase tracking-wider flex items-center justify-center gap-2">
+<span>XÁC NHẬN</span>
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Atmospheric Visual (Bento-style background hint) -->
+<div class="mt-12 opacity-40">
+<div class="grid grid-cols-2 gap-4 h-32">
+<div class="bg-tertiary-fixed-dim rounded-2xl relative overflow-hidden">
+<img class="absolute inset-0 w-full h-full object-cover grayscale opacity-20" data-alt="A macro close-up of a high-performance red running shoe's carbon fiber sole, showcasing intricate textures and elite engineering details. The lighting is dramatic, high-contrast, casting deep shadows against a clean, professional studio background. The overall aesthetic is urgent and powerful, reflecting the Apex Velocity brand identity with sharp focus and professional sports photography style." src="https://lh3.googleusercontent.com/aida/AP1WRLvsy8V2itQlyth2zJh7PSs0E7XmCTGndE3YPUwWh2pqa01Ud_D9eJj7IPV_gCtZ24VSGU8dctHOPsMSDVuKPsC43LCW7mY4DNZh2THjJH6En5neZ3aDlZxCupAyn5I5FC6uBWTwxuvQMPsuElifzmXsk9ob-cQGl22V_V5l9F97qb0jIYx0Os20nyyZkZG2z6bUZDAVyXntzvQVAzGfhMo7S6vAIUa90nkKBDgTDFNtMejVYMaTT55ZwZg"/>
+</div>
+<div class="bg-secondary/10 rounded-2xl flex flex-col items-center justify-center text-secondary/40">
+<span class="material-symbols-outlined scale-[2]" style="font-variation-settings: 'wght' 200;">speed</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation suppressed as per "The Destination Rule" for Transactional Screens -->
+<script>
+        function togglePassword(id, btn) {
+            const input = document.getElementById(id);
+            const icon = btn.querySelector('.material-symbols-outlined');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+
+        // Haptic feedback simulation
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('touchstart', function() {
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(10);
+                }
+            });
+        });
+    </script>
+</body></html>

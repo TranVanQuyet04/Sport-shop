@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#7e7576",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "background": "#f9f9f9",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-fixed-variant": "#474747",
+                        "outline-variant": "#cfc4c5",
+                        "tertiary": "#000000",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-container-highest": "#e2e2e2",
+                        "secondary": "#bb0027",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f3f3f3",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#410007",
+                        "inverse-primary": "#c6c6c6",
+                        "tertiary-container": "#1a1c1c",
+                        "on-surface": "#1a1c1c",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "secondary-container": "#e51a38",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "on-secondary-container": "#fffbff",
+                        "surface-bright": "#f9f9f9",
+                        "primary-container": "#1b1b1b",
+                        "primary": "#000000",
+                        "on-background": "#1a1c1c",
+                        "on-tertiary-container": "#838484",
+                        "secondary-fixed": "#ffdad8",
+                        "on-primary-fixed": "#1b1b1b",
+                        "surface": "#f9f9f9",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#848484",
+                        "surface-tint": "#5e5e5e",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-secondary-fixed-variant": "#92001d",
+                        "primary-fixed": "#e2e2e2",
+                        "on-surface-variant": "#4c4546",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dadada",
+                        "surface-container": "#eeeeee",
+                        "inverse-surface": "#2f3131"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "margin-mobile": "16px",
+                        "touch-target-min": "44px",
+                        "gutter-mobile": "12px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "title-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "button": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .stepper-line {
+            background-color: #e2e2e2;
+            transition: background-color 0.3s ease;
+        }
+        .stepper-line.active {
+            background-color: #000000;
+        }
+        .active-scale:active {
+            transform: scale(0.96);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-surface border-b border-outline-variant flex items-center justify-between px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95 duration-100" data-icon="arrow_back">arrow_back</button>
+<h1 class="font-title-md text-title-md text-primary">Cập nhật trạng thái</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95 duration-100" data-icon="notifications">notifications</button>
+</div>
+</header>
+<main class="pb-32">
+<!-- Order Identification -->
+<section class="px-margin-mobile pt-6 pb-4">
+<div class="flex justify-between items-end mb-2">
+<div>
+<span class="font-label-bold text-label-bold text-outline uppercase tracking-wider">Mã đơn hàng</span>
+<h2 class="font-title-md text-title-md text-primary">#AV-882910</h2>
+</div>
+<div class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-full font-label-bold text-label-bold">
+                    KHẨN CẤP
+                </div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">Đặt lúc: 14:30, 24/10/2023</p>
+</section>
+<!-- Delivery Status Stepper -->
+<section class="px-margin-mobile py-section-gap">
+<div class="relative flex justify-between items-start">
+<!-- Lines -->
+<div class="absolute top-5 left-0 w-full h-0.5 flex px-8">
+<div class="h-full w-1/3 stepper-line active" id="line-1"></div>
+<div class="h-full w-1/3 stepper-line" id="line-2"></div>
+<div class="h-full w-1/3 stepper-line" id="line-3"></div>
+</div>
+<!-- Steps -->
+<div class="relative flex flex-col items-center z-10 w-1/4">
+<div class="w-10 h-10 rounded-full flex items-center justify-center bg-primary text-on-primary mb-2 shadow-sm transition-all duration-300" id="step-circle-1">
+<span class="material-symbols-outlined text-[20px]" data-icon="package">package</span>
+</div>
+<span class="font-label-bold text-label-bold text-center text-primary">Lấy hàng</span>
+</div>
+<div class="relative flex flex-col items-center z-10 w-1/4">
+<div class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-outline mb-2 transition-all duration-300 border-2 border-transparent" id="step-circle-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="local_shipping">local_shipping</span>
+</div>
+<span class="font-label-bold text-label-bold text-center text-outline" id="step-text-2">Vận chuyển</span>
+</div>
+<div class="relative flex flex-col items-center z-10 w-1/4">
+<div class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-outline mb-2 transition-all duration-300 border-2 border-transparent" id="step-circle-3">
+<span class="material-symbols-outlined text-[20px]" data-icon="delivery_dining">delivery_dining</span>
+</div>
+<span class="font-label-bold text-label-bold text-center text-outline" id="step-text-3">Đang giao</span>
+</div>
+<div class="relative flex flex-col items-center z-10 w-1/4">
+<div class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-outline mb-2 transition-all duration-300 border-2 border-transparent" id="step-circle-4">
+<span class="material-symbols-outlined text-[20px]" data-icon="check_circle">check_circle</span>
+</div>
+<span class="font-label-bold text-label-bold text-center text-outline" id="step-text-4">Đã giao</span>
+</div>
+</div>
+</section>
+<!-- Customer Card -->
+<section class="px-margin-mobile">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-14 h-14 rounded-full overflow-hidden bg-surface-container border border-outline-variant">
+<img alt="Customer Avatar" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a customer for a sportswear brand delivery app. The man has a friendly expression and is set against a clean, softly lit studio background. The lighting is bright and modern, conforming to a high-end minimalist UI aesthetic with deep blacks and neutral tones. The overall mood is reliable and professional." src="https://lh3.googleusercontent.com/aida/AP1WRLv2VZ7rytM4MxKloI20gb4WDEGGkHlpHq_H7N7hafPh0RGYP20kl06FiQWzWaRa-biXw5dKZILZq4-13qbGYbddqQKxkLVuCMGZlJeWq4N4SW9Tedm4z83PoRuYEceDQ3Xqd3i04D5yY-XiH6QoeotAA41P_WC1Wsa75TKupDn9_MU2lMSTg7JpEMnuQ-ta_Qs7FcB5y0saB1yymsFl6PQml1lnUmKa0C2Upl0gbTVOg4EiUqF7vjYbp-U"/>
+</div>
+<div class="flex-1">
+<h3 class="font-title-md text-title-md text-primary">Trần Anh Tuấn</h3>
+<p class="font-body-sm text-body-sm text-outline">Khách hàng Vàng (Gold Member)</p>
+</div>
+<a class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center active-scale transition-transform" href="tel:0901234567">
+<span class="material-symbols-outlined" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</a>
+</div>
+<div class="space-y-4">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div>
+<span class="font-label-bold text-label-bold text-outline block">Địa chỉ giao hàng</span>
+<p class="font-body-lg text-body-lg text-on-surface mt-1 leading-snug">
+                                123 Đường Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh
+                            </p>
+</div>
+</div>
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-outline" data-icon="description">description</span>
+<div>
+<span class="font-label-bold text-label-bold text-outline block">Ghi chú từ khách</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                                Giao sau 5 giờ chiều, gọi trước 15 phút. Vui lòng kiểm tra kỹ size giày trước khi giao.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Order Summary -->
+<section class="px-margin-mobile mt-section-gap">
+<h3 class="font-label-bold text-label-bold text-outline uppercase mb-4 tracking-wider">Chi tiết gói hàng</h3>
+<div class="bg-surface-container-low rounded-xl overflow-hidden">
+<div class="p-4 flex gap-4 border-b border-outline-variant/30">
+<div class="w-20 h-20 rounded bg-white overflow-hidden flex-shrink-0">
+<img alt="Product" class="w-full h-full object-cover" data-alt="A high-performance red running shoe shown in a clean studio setting with professional lighting. The product is the center of focus on a minimalist light gray background, highlighting the aggressive accent red and structural integrity. The shot reflects a modern high-contrast aesthetic suitable for an elite sportswear brand like Apex Velocity." src="https://lh3.googleusercontent.com/aida/AP1WRLvkc0M6evJ6evKX5RDmk2AOaLt_cy_wovdh3G7WTgm8GmxvLUKemfrbcIcTrN4kXWXgoqZewz_DEPQLVHQ5Lx_iJYdfkAhAwAiVI8-XvHXiKAAX1dgm8urGCrivv55ZyHAARMeMLCFFtbxMC0F_Rz2463CA_T_dHEcK_6Xsc6r45seysnIiGQN8DCVh9xE1dPtI9IBXOqG6QTWuKdWVOcgwNJnohJGhjsPljjDcVhe5QTE569oNQ0Xo-fc"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<p class="font-label-bold text-label-bold text-primary">Apex Velocity Pro-Run X</p>
+<p class="font-body-sm text-body-sm text-outline">Size: 42 | Màu: Đỏ Đen</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm font-bold">x1</span>
+<span class="font-label-bold text-label-bold text-primary">3.250.000đ</span>
+</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-highest flex justify-between items-center">
+<span class="font-body-sm text-body-sm font-bold">Tổng tiền thu hộ (COD)</span>
+<span class="font-title-md text-title-md text-secondary">3.250.000đ</span>
+</div>
+</div>
+</section>
+<!-- Route Preview -->
+<section class="px-margin-mobile mt-section-gap">
+<h3 class="font-label-bold text-label-bold text-outline uppercase mb-4 tracking-wider">Lộ trình dự kiến</h3>
+<div class="h-48 w-full rounded-xl overflow-hidden bg-surface-container border border-outline-variant/30 relative">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A modern, high-contrast digital map interface showing a delivery route through a metropolitan city like Ho Chi Minh City. The map is minimalist with a clean gray and white palette, punctuated by a bold red line representing the navigation path and a black icon for the current delivery location. The lighting is bright, reflecting a professional high-performance brand identity." data-location="Ho Chi Minh City" style="background-image: url('https://lh3.googleusercontent.com/aida/AP1WRLvoGAFIuljsBqkUML3PQRhOGCIquk2Dl908IejMvonbR1b4kepUUqS9moPzfJDcU3Da4JTqUVAXj-x2KsT3dyFYGFKotSw6NGwlEJlAgBgDKScPsZgu4wKhHNXxHvleEHZOEoUr3IelFbCkV3Rw8SbuBFCqpn7sTc-pDkoQDVkIU4hch685fQN_ra6mJgk-h_vxb5bA9o8dq5yCVMPaWkDdlr2kbPKDJpHJb0pYIri4gSCbgt9200vVyrc')"></div>
+<div class="absolute bottom-4 left-4 right-4 bg-white p-3 rounded-lg shadow-lg flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="directions_bike">directions_bike</span>
+</div>
+<span class="font-body-sm text-body-sm font-bold">Cách điểm giao 2.4 km</span>
+</div>
+<span class="text-secondary font-label-bold text-label-bold">Dự kiến: 15 phút</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Fixed Confirmation Bottom Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-surface dark:bg-surface-container-lowest shadow-[0_-8px_20px_rgba(0,0,0,0.06)] p-margin-mobile z-50 flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<span class="font-label-bold text-label-bold text-outline uppercase">Trạng thái tiếp theo</span>
+<span class="font-body-lg text-body-lg font-bold text-primary" id="next-status-label">Đang vận chuyển</span>
+</div>
+<button class="w-full h-14 bg-secondary active:bg-secondary-container text-on-secondary rounded-lg font-title-md text-title-md flex items-center justify-center gap-2 active-scale transition-all shadow-lg" id="confirm-btn">
+<span>Xác nhận trạng thái</span>
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Micro-interaction JS -->
+<script>
+        let currentStep = 1;
+        const totalStepsCount = 4;
+        const statusLabels = [
+            "Lấy hàng",
+            "Đang vận chuyển",
+            "Đang giao",
+            "Đã giao"
+        ];
+
+        const confirmBtn = document.getElementById('confirm-btn');
+        const nextStatusLabel = document.getElementById('next-status-label');
+
+        confirmBtn.addEventListener('click', () => {
+            if (currentStep < totalStepsCount) {
+                currentStep++;
+                updateStepper(currentStep);
+                
+                if (currentStep === totalStepsCount) {
+                    nextStatusLabel.innerText = "Hoàn tất đơn hàng";
+                    confirmBtn.classList.replace('bg-secondary', 'bg-primary');
+                    confirmBtn.innerHTML = '<span>Hoàn tất giao hàng</span><span class="material-symbols-outlined" data-icon="task_alt">task_alt</span>';
+                } else {
+                    nextStatusLabel.innerText = statusLabels[currentStep];
+                }
+            } else {
+                alert("Đơn hàng đã được cập nhật thành công!");
+                // Here we could redirect or refresh
+            }
+        });
+
+        function updateStepper(step) {
+            // Update circles
+            for (let i = 1; i <= totalStepsCount; i++) {
+                const circle = document.getElementById(`step-circle-${i}`);
+                const label = document.getElementById(`step-text-${i}`);
+                const line = document.getElementById(`line-${i - 1}`);
+
+                if (i <= step) {
+                    circle.classList.remove('bg-surface-container-highest', 'text-outline');
+                    circle.classList.add('bg-primary', 'text-on-primary');
+                    if (label) label.classList.replace('text-outline', 'text-primary');
+                    if (line) line.classList.add('active');
+                }
+                
+                // Active state (current)
+                if (i === step && i < totalStepsCount) {
+                    circle.classList.add('ring-4', 'ring-secondary/20');
+                } else {
+                    circle.classList.remove('ring-4', 'ring-secondary/20');
+                }
+            }
+        }
+    </script>
+</body></html>

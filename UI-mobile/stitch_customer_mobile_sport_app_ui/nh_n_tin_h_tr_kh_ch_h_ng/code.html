@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container": "#eeeeee",
+                        "on-surface-variant": "#4c4546",
+                        "outline-variant": "#cfc4c5",
+                        "tertiary-fixed": "#e2e2e2",
+                        "secondary-container": "#e51a38",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1c1c",
+                        "inverse-surface": "#2f3131",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "on-secondary-fixed": "#410007",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "background": "#f9f9f9",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "tertiary": "#000000",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-secondary-fixed-variant": "#92001d",
+                        "surface-bright": "#f9f9f9",
+                        "on-primary-fixed": "#1b1b1b",
+                        "outline": "#7e7576",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "surface": "#f9f9f9",
+                        "on-secondary-container": "#fffbff",
+                        "primary": "#000000",
+                        "on-tertiary-container": "#838484",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary-container": "#1b1b1b",
+                        "inverse-primary": "#c6c6c6",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e2e2e2",
+                        "secondary-fixed": "#ffdad8",
+                        "surface-tint": "#5e5e5e",
+                        "on-primary-fixed-variant": "#474747",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-container": "#848484",
+                        "surface-dim": "#dadada",
+                        "secondary": "#bb0027",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e8e8e8",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#1a1c1c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "gutter-mobile": "12px",
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "touch-target-min": "44px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "button": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; display: inline-block; }
+        .chat-container { height: calc(100vh - 120px); overflow-y: auto; scroll-behavior: smooth; }
+        .chat-bubble-left { border-radius: 16px 16px 16px 4px; }
+        .chat-bubble-right { border-radius: 16px 16px 4px 16px; }
+        .typing-dot { animation: typing 1.4s infinite ease-in-out; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 bg-surface shadow-sm">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex items-center gap-2">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-surface-container" data-alt="A professional customer support representative portrait with a friendly expression. The lighting is soft and high-key, reflecting a modern corporate aesthetic. The background is a clean, minimal office environment in light grays and whites, maintaining a professional high-performance feel. She wears subtle professional attire that fits the high-end sportswear brand identity." src="https://lh3.googleusercontent.com/aida/AP1WRLsFo6jLBwik_gFFJcrdWoNo6XrDJit49Sbc-GMYuCDY5qjv2IWZ8eNcYAZCLOwVV58xgimYHGCoqA3z6vYTHIvmuZMBlGOdXNkM5jkfS_cdkp3Fho-YniRw5gJ738WEpTzbDX0hqSfsac6HcLc-jRSSSfCJ5cnDN7AWk00Y7QdfE949kYnw7mEy_WmKcFQg5Yr5m5eOKhOriLf1whQNL-Wz4ASyby7wnqw8KZJejYZhmfmNHmLBc1tE_Ys"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-surface rounded-full"></div>
+</div>
+<div>
+<h1 class="font-title-md text-title-md leading-none text-primary">Alex Nguyen</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Chuyên viên hỗ trợ</p>
+</div>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary" data-icon="call">call</span>
+</button>
+</header>
+<!-- Main Chat Canvas -->
+<main class="chat-container pt-20 pb-24 px-margin-mobile space-y-6">
+<!-- Date Separator -->
+<div class="flex justify-center">
+<span class="bg-surface-container px-3 py-1 rounded-full font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Hôm nay</span>
+</div>
+<!-- Support Message -->
+<div class="flex gap-2 max-w-[85%]">
+<div class="flex-shrink-0 mt-auto">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A small thumbnail profile of a friendly professional support agent in a modern studio setting." src="https://lh3.googleusercontent.com/aida/AP1WRLt5YBndrsvQ1WX_muqkIY2Eh_MBt3YsGo-Zo71M1CoH09N-AtzqXD4mactvgRCaVlJ3EPvw8nzYEpjnjA31fLvb8Hjx9K2dN5JEocDX8DuHb5iWFsKN3aInvPhTlP5GuFaTQygAZYTHIbr_rnWdYDrlqRXzZox3zxGl4ptyd8jre_MzFyNy8l-lmBrqT5CDUc2BtqkXP-Fjj-O1ROwRxKVP0GDZZbWwdfdN0dbGRJZngk21kTMERNzTA7s"/>
+</div>
+<div class="space-y-1">
+<div class="bg-surface-container-highest text-on-background px-4 py-3 chat-bubble-left shadow-sm">
+<p class="font-body-lg text-body-lg">Chào bạn! APEX VELOCITY xin chào. Tôi có thể giúp gì cho buổi tập hôm nay của bạn không?</p>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-1">09:30</span>
+</div>
+</div>
+<!-- Customer Message -->
+<div class="flex flex-col items-end space-y-1 ml-auto max-w-[85%]">
+<div class="bg-primary text-on-primary px-4 py-3 chat-bubble-right shadow-md">
+<p class="font-body-lg text-body-lg">Mình muốn hỏi về đôi giày chạy bộ Apex Nitro 2. Size 42 còn hàng không shop?</p>
+</div>
+<div class="flex items-center gap-1 mr-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">09:32</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" data-icon="done_all">done_all</span>
+</div>
+</div>
+<!-- Support Message with Image -->
+<div class="flex gap-2 max-w-[85%]">
+<div class="flex-shrink-0 mt-auto">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="Small avatar of support agent." src="https://lh3.googleusercontent.com/aida/AP1WRLuA79o0yMQ2ipE6zhJN2qObP4etAOqrOHoJ8zvTrPYQ4Y7K1TUz-LhUFq2PZRKISLtqYE-H9-PZ_Mbj1_wf2OWzVH4iJHRzhQIs-H7Tn0-sGE-laDlocufkCSA2EyC6TBhgkeU1aoamNlMwyh6srYxMi_Wfpy0LiNpmWGqlbFS0wxCDwmDIZsLt1TrUl1VrRsdWUhWJxQo0k9A5niiHeZZiJY1xV8KoMIipHlbcQ1-CfhdwUOKyIr7LEAk"/>
+</div>
+<div class="space-y-2">
+<div class="bg-surface-container-highest text-on-background px-4 py-3 chat-bubble-left shadow-sm">
+<p class="font-body-lg text-body-lg">Dạ còn hàng ạ! Đây là phối màu mới nhất vừa về kho sáng nay, cực kỳ chuyên nghiệp cho marathon.</p>
+</div>
+<div class="rounded-xl overflow-hidden shadow-md w-full max-w-[240px] aspect-square bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A pair of high-performance red running shoes presented in a dynamic, high-contrast studio setting. The lighting is aggressive and professional, highlighting the mesh texture and sleek carbon fiber sole. The overall mood is urgent and powerful, using a stark black and white background with the vibrant red shoe as the focal point." src="https://lh3.googleusercontent.com/aida/AP1WRLvGKqOGKwGbHZsTz-JiSCRqkxOWO0tF5zEFIl-8KDk-o23XTyu2rhGz9SSVaRsS7iiYOqeDcv1ijCVo2vXVfLUKkQP53bL1NqR5QKoFUZUF_sevgbh004h7o9FFG3f1pgVY0aR2nS8k7Xn3fMtU0eAW-T1FphrdECxk7ZehSSjQnDvn1Yr4KunyIxqkiUDhp-cjdJJTxJ44lTewxsIesF1t7lLbgkaTK3j_NSNGXeNUxDWBvTObUzf5Zgk"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-1">09:33</span>
+</div>
+</div>
+<!-- Customer Typing State -->
+<div class="flex gap-2 items-center">
+<div class="flex-shrink-0">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="Avatar of support agent." src="https://lh3.googleusercontent.com/aida/AP1WRLtGsvjRNvhooX_fmw49bME5C1YcNgcWxNtMDHBJk2E_KkGRzMgXKL18u9SgNkfZ3Gpxgh8j9JXk4WtfHmWMysmpF3izhe_ebxLsUPzBvnxKMaAyuaavrWkx5KjeZpjEg9m-Zd68_NQdu32_aESuNUvqO6r0IXij_nT8HeR95LUW0sWhNa0yNo8v811B2OXDPyta7SB-56yVO5w1JVY-NYQOCMZKGw0VGRg3MmYgsv5xNkDOGAWvYb_SrQ"/>
+</div>
+<div class="bg-surface-container-low px-4 py-3 rounded-full flex gap-1 items-center">
+<div class="w-1.5 h-1.5 bg-outline rounded-full typing-dot"></div>
+<div class="w-1.5 h-1.5 bg-outline rounded-full typing-dot"></div>
+<div class="w-1.5 h-1.5 bg-outline rounded-full typing-dot"></div>
+</div>
+</div>
+</main>
+<!-- Bottom Input Bar -->
+<footer class="fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant p-3 pb-safe z-50">
+<div class="flex items-end gap-2 max-w-screen-md mx-auto">
+<div class="flex gap-1">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="image">image</span>
+</button>
+</div>
+<div class="flex-1 bg-surface-container rounded-2xl flex items-center px-4 py-2 min-h-[44px]">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-body-lg font-body-lg p-0 resize-none max-h-32" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" placeholder="Nhắn tin cho APEX..." rows="1"></textarea>
+<button class="ml-2 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="mood">mood</span>
+</button>
+</div>
+<button class="w-11 h-11 bg-secondary text-on-secondary rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all transform hover:rotate-12">
+<span class="material-symbols-outlined" data-icon="send" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</footer>
+<!-- Micro-interactions Script -->
+<script>
+        document.querySelector('button[data-icon="send"]').parentElement.addEventListener('click', function() {
+            const textarea = document.querySelector('textarea');
+            if(textarea.value.trim() !== "") {
+                const message = textarea.value;
+                const container = document.querySelector('.chat-container');
+                
+                const messageEl = document.createElement('div');
+                messageEl.className = "flex flex-col items-end space-y-1 ml-auto max-w-[85%] opacity-0 translate-y-4 transition-all duration-300";
+                messageEl.innerHTML = `
+                    <div class="bg-primary text-on-primary px-4 py-3 chat-bubble-right shadow-md">
+                        <p class="font-body-lg text-body-lg">${message}</p>
+                    </div>
+                    <div class="flex items-center gap-1 mr-1">
+                        <span class="font-body-sm text-body-sm text-on-surface-variant">Vừa xong</span>
+                        <span class="material-symbols-outlined text-outline text-[16px]" data-icon="done">done</span>
+                    </div>
+                `;
+                
+                container.appendChild(messageEl);
+                textarea.value = "";
+                textarea.style.height = '44px';
+                
+                setTimeout(() => {
+                    messageEl.classList.remove('opacity-0', 'translate-y-4');
+                    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+                }, 10);
+            }
+        });
+
+        // Trigger send on Enter (but allow Shift+Enter for newline)
+        document.querySelector('textarea').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.querySelector('button[data-icon="send"]').parentElement.click();
+            }
+        });
+    </script>
+</body></html>

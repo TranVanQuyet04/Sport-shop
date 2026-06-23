@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "surface-container": "#eeeeee",
+                    "outline": "#7e7576",
+                    "on-primary": "#ffffff",
+                    "tertiary": "#000000",
+                    "on-tertiary-container": "#838484",
+                    "on-primary-container": "#848484",
+                    "background": "#f9f9f9",
+                    "surface-container-high": "#e8e8e8",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "inverse-surface": "#2f3131",
+                    "primary": "#000000",
+                    "outline-variant": "#cfc4c5",
+                    "on-primary-fixed": "#1b1b1b",
+                    "on-secondary-container": "#fffbff",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "on-secondary-fixed-variant": "#92001d",
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed": "#ffdad8",
+                    "inverse-on-surface": "#f1f1f1",
+                    "tertiary-container": "#1a1c1c",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#f9f9f9",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "surface-dim": "#dadada",
+                    "primary-fixed": "#e2e2e2",
+                    "on-surface": "#1a1c1c",
+                    "on-error-container": "#93000a",
+                    "secondary-container": "#e51a38",
+                    "on-secondary-fixed": "#410007",
+                    "surface-variant": "#e2e2e2",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#1b1b1b",
+                    "on-primary-fixed-variant": "#474747",
+                    "surface-bright": "#f9f9f9",
+                    "secondary": "#bb0027",
+                    "surface-container-low": "#f3f3f3",
+                    "error-container": "#ffdad6",
+                    "on-background": "#1a1c1c",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-error": "#ffffff",
+                    "inverse-primary": "#c6c6c6",
+                    "surface-tint": "#5e5e5e",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "tertiary-fixed": "#e2e2e2",
+                    "on-surface-variant": "#4c4546"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "32px",
+                    "gutter-mobile": "12px",
+                    "margin-mobile": "16px",
+                    "touch-target-min": "44px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "button": ["Inter"],
+                    "title-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .active-scale:active {
+            transform: scale(0.95);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="pb-24">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky z-50 bg-surface border-b border-outline-variant flex items-center justify-between px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">menu</span>
+<h1 class="font-display-lg text-[24px] font-extrabold tracking-tighter text-primary">APEX VELOCITY</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95 duration-100">notifications</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young male store manager with a confident expression, set against a clean and minimalist architectural background. The lighting is soft and bright, emphasizing a modern corporate aesthetic. The overall color palette is composed of neutrals, blacks, and subtle grays, maintaining the high-performance brand identity of Apex Velocity." src="https://lh3.googleusercontent.com/aida/AP1WRLtlXUD18PvOeTC3nf951vxRNuGHFCF70dqfFMEU39vIBoFXf3bXoBpm2qdWqCEeVUpU9-vWZhE3uA1s8LyFpWea_X7qhEsbaoqg3x8Vsf9Nz59zSgRevck2jCXVxa17n_58hFK_kCZzr4YAxdnEyipNWDauB_-KG24hxy57p2Be6rnFKzsecDfUHtWFQD-4KeIqadjh5yl38bnsm9gv0OF7ARECAAxolkZZ3OORLmAmY4hBcWen3FZ080g"/>
+</div>
+</div>
+</header>
+<main class="px-margin-mobile pt-6 max-w-xl mx-auto">
+<!-- Staff Greeting -->
+<section class="mb-8">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Chào buổi sáng, Nam</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-1">Hôm nay có 24 đơn hàng cần xử lý.</p>
+</section>
+<!-- Summary Cards: Bento Grid Layout -->
+<section class="grid grid-cols-2 gap-3 mb-section-gap">
+<div class="col-span-2 bg-surface-container-lowest p-5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex justify-between items-center active-scale transition-transform">
+<div>
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider mb-1">Chờ xác nhận</p>
+<p class="font-headline-lg-mobile text-[32px] text-primary">12</p>
+</div>
+<div class="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[28px]">pending_actions</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 active-scale transition-transform">
+<span class="material-symbols-outlined text-primary mb-3">inventory_2</span>
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase mb-1">Đang đóng gói</p>
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-primary">08</p>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 active-scale transition-transform">
+<span class="material-symbols-outlined text-primary mb-3">local_shipping</span>
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase mb-1">Đã bàn giao</p>
+<p class="font-headline-lg-mobile text-headline-lg-mobile text-primary">04</p>
+</div>
+</section>
+<!-- Quick Actions -->
+<section class="mb-section-gap">
+<h3 class="font-title-md text-title-md text-on-surface mb-4">Thao tác nhanh</h3>
+<div class="flex flex-col gap-3">
+<button class="w-full bg-primary text-on-primary py-4 rounded-lg flex items-center justify-center gap-3 active-scale duration-150 shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+<span class="font-button text-button">Quét mã đơn hàng</span>
+</button>
+<button class="w-full bg-secondary text-on-secondary py-4 rounded-lg flex items-center justify-center gap-3 active-scale duration-150 shadow-lg shadow-secondary/20">
+<span class="material-symbols-outlined">priority_high</span>
+<span class="font-button text-button">Xử lý đơn gấp (03)</span>
+</button>
+</div>
+</section>
+<!-- Upcoming Tasks / List View -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-title-md text-title-md text-on-surface">Công việc sắp tới</h3>
+<button class="font-label-bold text-label-bold text-secondary uppercase tracking-widest">Xem tất cả</button>
+</div>
+<div class="space-y-4">
+<!-- Task Item 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4 border border-outline-variant/30">
+<div class="w-12 h-12 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A pair of high-performance red running sneakers captured in a professional studio setting with clean, sharp lighting. The shoes are positioned dynamically to imply speed and momentum. The background is a minimalist light gray, keeping the focus entirely on the product's sleek design and vibrant red accent color." src="https://lh3.googleusercontent.com/aida/AP1WRLtyk22K7e165Py231NnBlYgl-OKHLlXYHaYi8JwAVvY0tGgcA3StiY4d-TtWES4RYW_4AU48fi-3EET4eIjA4nlFFtgbObkj5jPvXZp8HJ99q-uvL6crsxpkeYVKew4ZSg30yOQ0-4WotV1RNTSegZy4WPLU5NVWG0MUiu0HIJrcGLrFFHklAUJuZcJMMJ5H946n85bUauemLKKgUK29hTblS_Ha-5Sn7EqMMcYR1AqxRebLkRvC5XouW8"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-bold text-body-lg text-primary">#AV-8842 - Đóng gói</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Apex Swift Runner • Size 42</p>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<!-- Task Item 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4 border border-outline-variant/30">
+<div class="w-12 h-12 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Modern athletic apparel, specifically a minimalist black compression shirt, presented on a light gray background. The lighting is high-contrast, highlighting the texture and technical fabric of the sportswear. The aesthetic is clean, professional, and urgent, reflecting the high-performance nature of the Apex Velocity brand." src="https://lh3.googleusercontent.com/aida/AP1WRLtBdTFxqeU2C-OETtIIudzpZSYXbz3Q175D1mSDD9IGpkZsSf_ilFAeM_tAdX4Ehsa4b83NIW0Z-yrLXJaPoi6M6GZ8l1-JI8BiuDAm7S9bqoTOqhBSSIRycfRJso2px91BgqGF2qCacubtNz9hqj0gg9oDjIgaKty5-FK00qj_4XCckODBiAAOYBSKb-TofrbkwO7eammz1jRmmn6-3_UGe9Cr7RgSZUjhEpz4PZnx8IZTN_3UpWz17rg"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-bold text-body-lg text-primary">#AV-8843 - Xác nhận</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Elite Pro Tee • Size L</p>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<!-- Task Item 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4 border border-outline-variant/30">
+<div class="w-12 h-12 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A pair of premium white athletic socks with a subtle black logo, showcased on a clean, bright white background. The image is captured with professional studio lighting that emphasizes cleanliness and quality. The overall mood is high-performance and reliable, adhering to the monochromatic and high-contrast UI design system." src="https://lh3.googleusercontent.com/aida/AP1WRLuXdl35PT5GnR8Ge-YBnMDWkeARwifIKWE9z5v14zHPMi19CJBwKku0McnifpBzq4ylqM_uA4cA7ez9x30IyM8FqRT2XY3lItRO95Bv2a8l2EvGf9bS91Y0qVUsQCtrOU3IkkVkK3M2iVD4EUVaHZKsf7kJ9DeHFmpDBRJ3gTteuUlofJOSQFg9dKyhxnXQysiqWBq644pLB3S6aAXkNfcZ6Jqz954_LHuU1vS_fWj7N4O-ZZj1eo9gtso"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-bold text-body-lg text-primary">#AV-8844 - Bàn giao</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Performance Crew • Pack of 3</p>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-gutter-mobile py-2 bg-surface shadow-[0_-4px_12px_rgba(0,0,0,0.04)] z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-bold text-label-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-bold text-label-bold">Catalog</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label-bold text-label-bold">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary bg-surface-container-high rounded-lg p-2 transition-transform active:scale-90 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-bold text-label-bold">Staff</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.active-scale').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+                card.style.transition = 'transform 0.1s ease-out';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

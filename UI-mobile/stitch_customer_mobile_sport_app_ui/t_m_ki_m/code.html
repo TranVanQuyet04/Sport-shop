@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#92001d",
+                    "primary-container": "#1b1b1b",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-container": "#eeeeee",
+                    "error-container": "#ffdad6",
+                    "on-background": "#1a1c1c",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#e51a38",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-surface": "#1a1c1c",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f3f3f3",
+                    "surface-tint": "#5e5e5e",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "surface-variant": "#e2e2e2",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#e2e2e2",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "secondary": "#bb0027",
+                    "surface-dim": "#dadada",
+                    "primary": "#000000",
+                    "on-primary-fixed": "#1b1b1b",
+                    "tertiary-container": "#1a1c1c",
+                    "surface": "#f9f9f9",
+                    "outline": "#7e7576",
+                    "inverse-primary": "#c6c6c6",
+                    "secondary-fixed": "#ffdad8",
+                    "primary-fixed": "#e2e2e2",
+                    "on-secondary-container": "#fffbff",
+                    "on-tertiary-container": "#838484",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "inverse-surface": "#2f3131",
+                    "on-surface-variant": "#4c4546",
+                    "surface-bright": "#f9f9f9",
+                    "background": "#f9f9f9",
+                    "on-primary-fixed-variant": "#474747",
+                    "outline-variant": "#cfc4c5",
+                    "on-primary-container": "#848484",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#410007",
+                    "tertiary": "#000000"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "32px",
+                    "gutter-mobile": "12px",
+                    "margin-mobile": "16px",
+                    "base": "4px",
+                    "touch-target-min": "44px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "button": ["Inter"],
+                    "title-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-bold": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-24">
+<!-- Top Navigation Anchor -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center px-margin-mobile h-14 w-full">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-black tracking-tighter text-primary">SPORTSWEAR</h1>
+<div class="flex gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-transform active:scale-95" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-transform active:scale-95" data-icon="menu">menu</button>
+</div>
+</header>
+<main class="px-margin-mobile pt-4 space-y-section-gap">
+<!-- Search Input Bar -->
+<section class="relative">
+<div class="flex items-center bg-surface-container-low rounded-xl px-4 py-3 gap-3 border border-transparent focus-within:border-primary transition-all">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="search">search</span>
+<input autofocus="" class="bg-transparent border-none focus:ring-0 w-full font-body-lg text-on-surface placeholder:text-outline" placeholder="Tìm kiếm sản phẩm..." type="text"/>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer" data-icon="mic">mic</span>
+</div>
+</section>
+<!-- Recent Searches Section -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h2 class="font-title-md text-title-md">Tìm kiếm gần đây</h2>
+<button class="font-label-bold text-label-bold text-secondary uppercase tracking-wider">Xóa tất cả</button>
+</div>
+<div class="flex flex-wrap gap-2">
+<button class="bg-surface-container-high px-4 py-2 rounded-lg font-body-sm text-on-surface flex items-center gap-2 hover:bg-surface-variant transition-colors active:scale-95">
+                    Giày chạy bộ
+                    <span class="material-symbols-outlined text-sm" data-icon="close" style="font-size: 14px;">close</span>
+</button>
+<button class="bg-surface-container-high px-4 py-2 rounded-lg font-body-sm text-on-surface flex items-center gap-2 hover:bg-surface-variant transition-colors active:scale-95">
+                    Áo khoác Nike
+                    <span class="material-symbols-outlined text-sm" data-icon="close" style="font-size: 14px;">close</span>
+</button>
+<button class="bg-surface-container-high px-4 py-2 rounded-lg font-body-sm text-on-surface flex items-center gap-2 hover:bg-surface-variant transition-colors active:scale-95">
+                    Túi gym
+                    <span class="material-symbols-outlined text-sm" data-icon="close" style="font-size: 14px;">close</span>
+</button>
+</div>
+</section>
+<!-- Product Results Grid -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h2 class="font-title-md text-title-md">Kết quả tìm kiếm</h2>
+<div class="flex gap-2">
+<button class="material-symbols-outlined text-on-surface-variant p-2" data-icon="filter_list">filter_list</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-x-4 gap-y-6">
+<!-- Product Card 1 -->
+<div class="group space-y-2 cursor-pointer transition-transform active:scale-95">
+<div class="relative aspect-square bg-surface-container rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-110" data-alt="A professional close-up shot of a vibrant red Nike running shoe displayed against a minimalist, high-contrast light grey background. The lighting is crisp and sharp, highlighting the fabric's texture and the sleek athletic design. The overall mood is high-performance and modern, consistent with a premium sportswear aesthetic." src="https://lh3.googleusercontent.com/aida/AP1WRLsmDfBDEFus3D3J18tnqHOizhYEEMOsUoruH3rJNOtGwmcz1JvoIxnO3RJztrzuWno6GYbL4c8qavQ4Qr5S7ktxpgfR5CjAQQc1p5_VBJXr-KHrghb1WveOvTR9WP8HAZREwZuqsjJWk8_fdkVNODqCa1Nmxbs04p-MbIkuRxNagt9jP6Gj-by-WD-63mrNt9NQkqbV6n50zMld2Ap3rXJnLrgupafA-HjRNiPJ7jf4jPCjfj1OTzRZ_w"/>
+<span class="absolute top-2 left-2 bg-secondary text-white font-label-bold text-label-bold px-2 py-1 rounded">MỚI</span>
+<button class="absolute bottom-2 right-2 bg-white/90 p-2 rounded-full shadow-sm hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div>
+<p class="font-body-sm text-on-surface-variant truncate">Nike Air Zoom Pegasus</p>
+<p class="font-title-md text-title-md">3.250.000đ</p>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group space-y-2 cursor-pointer transition-transform active:scale-95">
+<div class="relative aspect-square bg-surface-container rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-110" data-alt="Modern lime green athletic footwear presented on a neutral grey studio setting. The lighting creates subtle ambient shadows that emphasize the shoe's aerodynamic curves and professional build. The visual style is clean, technical, and urgent, evoking a sense of athletic speed and elite performance." src="https://lh3.googleusercontent.com/aida/AP1WRLsv6Cddy9YvtJcppgVmWJz0csJW9GdGzHbfXxjUEGFbEY-WvkfwJji8yWdsbm7gIF5YCkT2IDBJBriY942U8-obSaqeg21qMuG5y-GtLOEk_DEJjnXwKCF5_I6bKqBuaox9agI-drgbRWsJqgfbQAa9ilh3wcz7gU5MQLMrW4i3zA6lAGtK0A6L9mgz5lTK_5-c5efrrWHzk0elXZT4tPY2PUk1oKyRzZIufNAwvkeceFME5GRFqBs6Ypw"/>
+<span class="absolute top-2 left-2 bg-primary text-white font-label-bold text-label-bold px-2 py-1 rounded">-20%</span>
+<button class="absolute bottom-2 right-2 bg-white/90 p-2 rounded-full shadow-sm hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div>
+<p class="font-body-sm text-on-surface-variant truncate">Adidas Ultraboost Light</p>
+<div class="flex items-center gap-2">
+<p class="font-title-md text-title-md">2.800.000đ</p>
+<p class="font-body-sm text-outline line-through">3.500.000đ</p>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group space-y-2 cursor-pointer transition-transform active:scale-95">
+<div class="relative aspect-square bg-surface-container rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-110" data-alt="A minimalist overhead view of a premium sportswear training top in deep black, featuring subtle texture and a high-performance fit. The garment is laid out on a light monochromatic surface with professional studio lighting that emphasizes the quality of the fabric. The aesthetic is sophisticated and disciplined, focusing on structural integrity." src="https://lh3.googleusercontent.com/aida/AP1WRLumBVhmNUHlKyopSu8CBUUdegGfXpJuM4P21MivWzjeKGhVKo6KiJ3ZDAQW6bV0bGg7DBQALc6ikRmCkqw1-66LnuOGNUxYjHJs1XtiNZQEanEZRbCEvzwu_660GOZMG7L2bT3vR46xptqSAmk5Qqw2O6BWgcJALV8NihIAWipS1b4j2EaarWI2mBXIf5xwxREbARsTBWGrs4EP_oL6G8S_QAwZDOC0A_gpm096zJpLxdksEkhTugv-Eqk"/>
+<button class="absolute bottom-2 right-2 bg-white/90 p-2 rounded-full shadow-sm hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div>
+<p class="font-body-sm text-on-surface-variant truncate">Áo Training Nike Pro</p>
+<p class="font-title-md text-title-md">850.000đ</p>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group space-y-2 cursor-pointer transition-transform active:scale-95">
+<div class="relative aspect-square bg-surface-container rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-110" data-alt="A sleek, professional gym bag in charcoal grey shown in a bright, modern studio space. The bag's high-performance materials and clean lines are highlighted by soft white directional lighting. The image captures a sense of readiness and momentum, fitting for a elite athlete's daily gear. The color palette is strictly neutral with deep blacks and soft greys." src="https://lh3.googleusercontent.com/aida/AP1WRLtKuuDhbSS4kTmLrtRdVG8xqx5QetmplaBf_hC-B5kSwPwWIxSE1ANRd2mwp5qL4DT3K3MWhaEn6ii9IYaehgsIkwFBav1etF7s-SK5f5O0izBhTc_SmNSg8cGdOH28GFYgPny6EsxfaffA-aNytmjjk9yg7JI30N5F-BsXB5rI6OkZeoqNi7JSG5QNOgEtcV_uSboznqMP5I5vVo6Hyibu03lP605oZsiGd2wMwq_behWCqHuSrsUVBw"/>
+<button class="absolute bottom-2 right-2 bg-white/90 p-2 rounded-full shadow-sm hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div>
+<p class="font-body-sm text-on-surface-variant truncate">Túi Gym Duffel XS</p>
+<p class="font-title-md text-title-md">1.200.000đ</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Empty State Prompt (Hidden by default, shown when no results) -->
+<div class="hidden flex flex-col items-center justify-center py-20 text-center space-y-4" id="empty-state">
+<span class="material-symbols-outlined text-outline text-6xl" data-icon="search_off">search_off</span>
+<div class="space-y-2">
+<p class="font-title-md text-title-md text-on-surface">Không tìm thấy kết quả</p>
+<p class="font-body-sm text-on-surface-variant px-12">Rất tiếc, chúng tôi không tìm thấy sản phẩm nào khớp với tìm kiếm của bạn.</p>
+</div>
+<button class="bg-primary text-on-primary px-8 py-3 rounded-full font-button">Thử từ khóa khác</button>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center pt-2 pb-safe px-gutter-mobile bg-surface-container-lowest border-t border-outline-variant shadow-sm rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 p-2 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-bold text-label-bold">Trang chủ</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-surface-container-low transition-all duration-200 p-2 rounded-lg cursor-pointer scale-110">
+<span class="material-symbols-outlined" data-icon="search" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-label-bold text-label-bold">Tìm kiếm</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 p-2 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-label-bold text-label-bold">Giỏ hàng</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 p-2 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-bold text-label-bold">Đơn hàng</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all duration-200 p-2 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-bold text-label-bold">Cá nhân</span>
+</div>
+</nav>
+<script>
+        // Micro-interactions for search suggestions
+        const searchItems = document.querySelectorAll('.bg-surface-container-high');
+        searchItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const text = item.innerText.replace('close', '').trim();
+                document.querySelector('input').value = text;
+            });
+        });
+
+        // Simple active state feedback for product cards
+        const productCards = document.querySelectorAll('.group.cursor-pointer');
+        productCards.forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'scale(0.96)';
+                card.style.transition = 'transform 0.1s ease';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'scale(1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

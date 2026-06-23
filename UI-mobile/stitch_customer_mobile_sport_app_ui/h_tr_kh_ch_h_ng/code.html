@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-secondary-container": "#fffbff",
+                        "surface-dim": "#dadada",
+                        "secondary-fixed": "#ffdad8",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e2e2e2",
+                        "inverse-surface": "#2f3131",
+                        "surface-bright": "#f9f9f9",
+                        "inverse-primary": "#c6c6c6",
+                        "background": "#f9f9f9",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-container-low": "#f3f3f3",
+                        "primary-container": "#1b1b1b",
+                        "on-surface": "#1a1c1c",
+                        "tertiary-container": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "secondary-container": "#e51a38",
+                        "tertiary": "#000000",
+                        "surface-tint": "#5e5e5e",
+                        "outline-variant": "#cfc4c5",
+                        "surface-variant": "#e2e2e2",
+                        "outline": "#7e7576",
+                        "on-secondary-fixed": "#410007",
+                        "surface-container-highest": "#e2e2e2",
+                        "secondary": "#bb0027",
+                        "on-secondary-fixed-variant": "#92001d",
+                        "surface-container": "#eeeeee",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#1b1b1b",
+                        "on-primary-container": "#848484",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "on-tertiary-container": "#838484",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#4c4546",
+                        "on-primary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "primary": "#000000",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-fixed-variant": "#474747",
+                        "tertiary-fixed": "#e2e2e2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "gutter-mobile": "12px",
+                        "touch-target-min": "44px",
+                        "base": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "button": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-bold": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .chat-active-state:active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-lg overflow-x-hidden">
+<!-- Top Navigation Anchor -->
+<header class="bg-surface dark:bg-surface-container-low w-full top-0 sticky border-b border-outline-variant dark:border-outline z-40 flex items-center justify-between px-margin-mobile h-touch-target-min">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed cursor-pointer" data-icon="menu">menu</span>
+<h1 class="font-display-lg text-display-lg font-extrabold tracking-tighter text-primary dark:text-primary-fixed text-[24px] leading-tight">APEX VELOCITY</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed cursor-pointer" data-icon="notifications">notifications</span>
+</div>
+</header>
+<main class="min-h-screen pb-24">
+<!-- Search & Filter Area -->
+<section class="px-margin-mobile pt-6 pb-4">
+<div class="flex flex-col gap-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Tin nhắn khách hàng</h2>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" data-icon="search">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-primary text-body-sm transition-all placeholder:text-outline" placeholder="Tìm kiếm tên khách hàng..." type="text"/>
+</div>
+</div>
+</section>
+<!-- Stats Overview (Asymmetric Layout) -->
+<section class="px-margin-mobile grid grid-cols-2 gap-3 mb-6">
+<div class="bg-primary text-on-primary p-4 rounded-xl flex flex-col justify-between h-24">
+<span class="text-label-bold font-label-bold opacity-80">Đang chờ</span>
+<span class="text-display-lg font-display-lg text-[28px] leading-none">12</span>
+</div>
+<div class="bg-surface-container-lowest shadow-sm p-4 rounded-xl flex flex-col justify-between h-24 border border-outline-variant">
+<span class="text-label-bold font-label-bold text-outline">Phản hồi (24h)</span>
+<span class="text-display-lg font-display-lg text-[28px] leading-none text-secondary">98%</span>
+</div>
+</section>
+<!-- Conversation List -->
+<section class="flex flex-col">
+<!-- Active Conversation Item -->
+<div class="px-margin-mobile py-4 flex items-center gap-4 bg-surface-container-lowest border-b border-outline-variant hover:bg-surface-container transition-colors cursor-pointer chat-active-state">
+<div class="relative">
+<img class="w-14 h-14 rounded-full object-cover" data-alt="A professional studio portrait of a customer with a neutral background, high-key lighting, and modern high-contrast aesthetic. The individual has an athletic appearance, aligning with the performance sportswear brand. The lighting is crisp, highlighting sharp details and a clean, high-performance visual style." src="https://lh3.googleusercontent.com/aida/AP1WRLt4XDz6JVvYxsj7gZ7pySsTsm09hsJmjVpkQ-JYxZ4JGOwjKvZNB7APbDLW2oP4IltARCFRGxPRD6HxjvMQXgiJt7n7TGmnqnmsAsi5j20KCtDoZOg5elEqjVAEnME-RSWFQlTcZjnSZAkA7LGZTPHWfCL7obbjNVnKNmy_pMv-jj2RnYSCsiYIHJ7hwhwZrso6FM9zkMc9X8qu2CUc9bWI9S3deriO-jQVPgunWZujKRwCgHjIPrAH86o"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-surface-container-lowest rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-title-md text-body-lg text-primary truncate pr-2">Lê Minh Tuấn</h3>
+<span class="font-label-bold text-label-bold text-outline whitespace-nowrap">2 phút trước</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Cửa hàng cho mình hỏi size L của mẫu áo khoác Apex Pro còn không?</p>
+<div class="ml-3 px-2 py-0.5 bg-secondary text-on-secondary rounded-full font-label-bold text-[10px]">3</div>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="px-margin-mobile py-4 flex items-center gap-4 bg-white border-b border-outline-variant hover:bg-surface-container transition-colors cursor-pointer chat-active-state">
+<img class="w-14 h-14 rounded-full object-cover" data-alt="A focused close-up of a person looking directly at the camera with determination. The lighting is dramatic and cinematic, using deep blacks and strong highlights to reflect a high-performance athletic mood. The overall aesthetic is minimalist, modern, and professional with a monochromatic feel." src="https://lh3.googleusercontent.com/aida/AP1WRLuimOlQlmr-f37EQHnn9c7IMKIaxMrOsbG8ALbIJPuwKahPJ-i99QIXGDWMs44xfJdLWPuj7pwDbdQe3Z4wICyHFwFFdJ3Ks_hqt_Jbdu2FvBcGUMDs5nVLjpt-_sExoL2ME2e6sGAT1Z4ISghycVnIfC2FrOl3-9774clr-dqpzfggodfOr--08kh3gsKjfQ48YJw5JnLktxbtiz9Ef6qq5ibLPNG9-dXLsMMxGfQzPtpTXkLkMA_7wpk"/>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-title-md text-body-lg text-primary truncate pr-2">Hoàng Anh</h3>
+<span class="font-label-bold text-label-bold text-outline whitespace-nowrap">15 phút trước</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-body-sm text-body-sm text-outline truncate">Đơn hàng số #8294 của mình đã được giao chưa ạ?</p>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="px-margin-mobile py-4 flex items-center gap-4 bg-white border-b border-outline-variant hover:bg-surface-container transition-colors cursor-pointer chat-active-state">
+<img class="w-14 h-14 rounded-full object-cover" data-alt="A portrait of a woman in minimalist workout gear, set against a sleek white architectural background. The mood is powerful and elite, with a high-contrast monochromatic lighting setup. Accents of vibrant red are present in the environment to emphasize the urgent and professional brand identity." src="https://lh3.googleusercontent.com/aida/AP1WRLuAa2ADuwbIRm3eEuV5uEe4D3F0ecp1GOVgYbXMvv4HL0vg4DXr16iy2qqvmPWDGmgz7VqL80YXhsZ9uYkSvlZnGJ_NzlJPQFdzLloSpP4HXRib68PJ2dFJfYmOJw7_0bedHOwFr6V7efhOzVUv6wUjVwqGisnzZbEpR8pK-uFTsYi12odY1OmTjvRW2vdBkKtDI6M1ppJrqORn6LD0hdyUysbuB_-W2DOFJBpDLy_x7brkL4FBNipNHw4"/>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-title-md text-body-lg text-primary truncate pr-2">Nguyễn Mai Phương</h3>
+<span class="font-label-bold text-label-bold text-outline whitespace-nowrap">40 phút trước</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-body-sm text-body-sm text-outline truncate">Cảm ơn shop nhé, giày đi rất êm và ôm chân!</p>
+</div>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="px-margin-mobile py-4 flex items-center gap-4 bg-white border-b border-outline-variant hover:bg-surface-container transition-colors cursor-pointer chat-active-state">
+<img class="w-14 h-14 rounded-full object-cover" data-alt="A portrait of a male athlete with a focused expression, styled in a modern high-contrast aesthetic. The lighting is hard and direct, creating strong shadows and highlights that emphasize structural integrity and momentum. The background is a flat, professional gray that makes the subject pop." src="https://lh3.googleusercontent.com/aida/AP1WRLvqEdh4ifo8dvAoLx7PBb0k6ROQyiywsTtlZsKwHWUYERnQGrnvxU3ZLfuKmGqm2kL4BgrYyTs4oaL3dEABffZCbV0aPJWg_UfKrO3J7FoDn6Ugh-_ry9oakWaVD8ezYsTwgj3LC-gm4qNN8OIGjv9m7WkHrw-lGs2lwd7x6x-g6p1tDVrLaRIoj8bgWG0QEkRHGejubFhlcjqk7W16t5MjdRZJP70isbYmlI0I_ZVYdQ_MK05THmYz42g"/>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-title-md text-body-lg text-primary truncate pr-2">Trần Quốc Bảo</h3>
+<span class="font-label-bold text-label-bold text-outline whitespace-nowrap">2 giờ trước</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate font-semibold">Gửi ảnh xác nhận thanh toán...</p>
+<div class="ml-3 px-2 py-0.5 bg-secondary text-on-secondary rounded-full font-label-bold text-[10px]">1</div>
+</div>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="px-margin-mobile py-4 flex items-center gap-4 bg-white border-b border-outline-variant hover:bg-surface-container transition-colors cursor-pointer chat-active-state">
+<img class="w-14 h-14 rounded-full object-cover" data-alt="A clean, minimalist portrait of a woman in sportswear, characterized by high-performance aesthetics and powerful lighting. The image uses a stark monochromatic palette of black and white, reflecting a disciplined and professional brand personality. Soft ambient shadows provide a sense of modern depth." src="https://lh3.googleusercontent.com/aida/AP1WRLuIsfHV75vCaqNc6jnLq6ILdP98rq1sfmLnvRdgKPS9zmoHEHWOKdJunMcvXCHRSh_k3EYdp0vPhaxB-FcuQ_dUPpn22LQMvCwkSDebqufHbW_WR2wm_YCiyqiynRN3TqjasCV3Uox9NlK8BvcZ7pCLOWU7FVSmE4oAWx3xLkeLYm5tuXyaWJkmh8W0qDD4e8wVhSObfxe4Cpmwi9kYpVr42XukHbb5Uyy1HP5-nEHzEQQoYGfvroJZ3r4"/>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-title-md text-body-lg text-primary truncate pr-2">Phạm Thúy Vi</h3>
+<span class="font-label-bold text-label-bold text-outline whitespace-nowrap">5 giờ trước</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-body-sm text-body-sm text-outline truncate">Mình muốn đổi trả sản phẩm do không vừa size.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-gutter-mobile py-2 bg-surface dark:bg-surface-container-lowest shadow-[0_-4px_12px_rgba(0,0,0,0.04)] z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-bold text-label-bold mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-bold text-label-bold mt-1">Catalog</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-label-bold text-label-bold mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-container bg-surface-container-high dark:bg-surface-container rounded-lg p-2 active:scale-90 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-bold text-label-bold mt-1">Staff</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-bold text-label-bold mt-1">Settings</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for list items
+        document.querySelectorAll('.chat-active-state').forEach(item => {
+            item.addEventListener('touchstart', () => {
+                item.style.backgroundColor = 'var(--surface-container)';
+            });
+            item.addEventListener('touchend', () => {
+                setTimeout(() => {
+                    item.style.backgroundColor = '';
+                }, 100);
+            });
+        });
+    </script>
+</body></html>
