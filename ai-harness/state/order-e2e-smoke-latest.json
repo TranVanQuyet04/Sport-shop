@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-07-05T05:27:54.837Z",
+  "baseUrl": "http://localhost:8080/api",
+  "runId": "E2E_1783229274769",
+  "status": "fail",
+  "error": "fetch failed",
+  "steps": [
+    {
+      "step": "login admin",
+      "status": "fail",
+      "endpoint": "POST /api/auth/login",
+      "detail": "fetch failed"
+    }
+  ]
+}

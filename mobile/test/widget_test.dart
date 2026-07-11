@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/view/splash/splash_page.dart';
+import 'package:sportswear_shop_mobile/core/widgets/app_button.dart';
+import 'package:sportswear_shop_mobile/view/splash/splash_page.dart';
+
+import 'pixel7_test_view.dart';
 
 void main() {
-  testWidgets('Splash screen renders app brand and start action', (tester) async {
+  testWidgets('Splash screen renders StrideX brand and start action', (
+    tester,
+  ) async {
+    usePixel7TestView(tester);
+
     await tester.pumpWidget(const MaterialApp(home: SplashPage()));
 
-    expect(find.text('SPORTSHOP'), findsOneWidget);
-    expect(find.text('Bắt đầu'), findsOneWidget);
+    expect(find.text('StrideX'), findsOneWidget);
+    expect(find.byType(AppButton), findsOneWidget);
   });
 }

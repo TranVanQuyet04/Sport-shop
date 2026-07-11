@@ -26,7 +26,13 @@ class ProfileModel {
       fullName: (source['fullName'] ?? '').toString(),
       email: (source['email'] ?? '').toString(),
       phoneNumber: (source['phoneNumber'] ?? '').toString(),
-      roleName: RoleMapper.normalize((source['roleName'] ?? '').toString()),
+      roleName: RoleMapper.normalize(
+        (source['roleDisplayName'] ??
+                source['roleName'] ??
+                source['role'] ??
+                '')
+            .toString(),
+      ),
       status: source['status'] != false,
     );
   }

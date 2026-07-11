@@ -26,7 +26,7 @@ class _ConfirmReceivedPageState extends State<ConfirmReceivedPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: context.pop,
+          onPressed: _leavePage,
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('Xác nhận nhận hàng'),
@@ -54,7 +54,9 @@ class _ConfirmReceivedPageState extends State<ConfirmReceivedPage> {
             const SizedBox(height: AppSpacing.md),
             Text(
               'Sau khi xác nhận, đơn hàng sẽ chuyển sang trạng thái hoàn thành.',
-              style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+              style: AppTextStyles.body.copyWith(
+                color: AppColors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
             const Spacer(),
@@ -68,7 +70,7 @@ class _ConfirmReceivedPageState extends State<ConfirmReceivedPage> {
             AppButton(
               label: 'Để sau',
               variant: AppButtonVariant.outline,
-              onPressed: _isSubmitting ? null : context.pop,
+              onPressed: _isSubmitting ? null : _leavePage,
             ),
           ],
         ),
@@ -92,9 +94,9 @@ class _ConfirmReceivedPageState extends State<ConfirmReceivedPage> {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.toString())),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.toString())));
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);
@@ -136,5 +138,13 @@ class _ConfirmReceivedPageState extends State<ConfirmReceivedPage> {
         );
       },
     );
+  }
+
+  void _leavePage() {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+    context.go(AppRoutes.orders);
   }
 }

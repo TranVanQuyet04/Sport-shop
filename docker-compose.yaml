@@ -1,6 +1,4 @@
-
 services:
-  # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
     container_name: sport-swear-shop-postgres
@@ -21,58 +19,42 @@ services:
       timeout: 5s
       retries: 5
 
-  # Redis Cache
   redis:
     image: redis:7-alpine
     container_name: sport-swear-shop-redis
     ports:
       - "${REDIS_PORT:-6379}:6379"
     volumes:
-      # Persist Redis data
       - redis_data:/data
     networks:
       - sport-swear-shop-network
     restart: unless-stopped
     command: redis-server --appendonly yes
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 3s
       retries: 5
 
-  # Spring Boot Application
-  floodcoord-service:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: sport-swear-shop
+    env_file:
+      - .env
     ports:
-      - "${SERVER_PORT:-8083}:8083"
+      - "${SERVER_PORT}:8083"
     environment:
-      # Spring Profile
-      SPRING_PROFILES_ACTIVE: docker
-
-      # Database Configuration
-      DATABASE_HOST: postgres
-      DATABASE_PORT: 5432
-      DATABASE_NAME: ${DATABASE_NAME}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      DATABASE_URL: ${DATABASE_URL}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-
-      # Redis Configuration
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_DATA_REDIS_PORT: 6379
-
-      # JWT Configuration
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-
-      # Application Configuration
-      APP_FRONTEND_URL: ${APP_FRONTEND_URL}
-      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
-
-      # Database DDL (chỉ dùng 'update' cho dev, 'validate' cho prod)
-      DATABASE_DDL_AUTO: ${JPA_DDL_AUTO}
-      DATABASE_SHOW_SQL: ${JPA_SHOW_SQL}
+      SPRING_DATA_REDIS_HOST: ${SPRING_DATA_REDIS_HOST}
+      SPRING_DATA_REDIS_PORT: ${SPRING_DATA_REDIS_PORT}
+      JPA_DDL_AUTO: ${JPA_DDL_AUTO}
+      JPA_SHOW_SQL: ${JPA_SHOW_SQL}
+      JPA_FORMAT_SQL: ${JPA_FORMAT_SQL}
     networks:
       - sport-swear-shop-network
     depends_on:
@@ -82,14 +64,12 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-# Volumes để persist data
 volumes:
   postgres_data:
     driver: local
   redis_data:
     driver: local
 
-# Network để các services có thể communicate với nhau
 networks:
   sport-swear-shop-network:
     driver: bridge

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../controller/customer/order_detail_controller.dart';
+import '../../app/sportshop_router.dart';
+import '../../presenter/customer/order_detail_presenter.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
@@ -23,7 +24,7 @@ class OrderDetailPage extends StatefulWidget {
 }
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
-  late final OrderDetailController _controller = OrderDetailController(
+  late final OrderDetailPresenter _presenter = OrderDetailPresenter(
     orderRepository: AppDependencies.instance.orderRepository,
     orderId: widget.orderId,
   );
@@ -31,13 +32,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
-    _controller.loadOrder();
+    _presenter.addListener(_onControllerChanged);
+    _presenter.loadOrder();
+    _presenter.startAutoRefresh();
   }
 
   @override
   void dispose() {
-    _controller
+    _presenter
       ..removeListener(_onControllerChanged)
       ..dispose();
     super.dispose();
@@ -51,32 +53,32 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final order = _controller.order;
+    final order = _presenter.order;
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: context.pop,
+          onPressed: _leavePage,
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('Chi tiết đơn hàng'),
       ),
       body: RefreshIndicator(
-        onRefresh: _controller.loadOrder,
+        onRefresh: _presenter.loadOrder,
         child: _buildBody(order),
       ),
     );
   }
 
   Widget _buildBody(OrderModel? order) {
-    if (_controller.isLoading && order == null) {
+    if (_presenter.isLoading && order == null) {
       return const AppLoadingState(title: 'Đang tải đơn hàng');
     }
-    if (_controller.errorMessage != null && order == null) {
+    if (_presenter.errorMessage != null && order == null) {
       return AppErrorState(
         title: 'Không tải được đơn hàng',
-        message: _controller.errorMessage!,
-        onAction: _controller.loadOrder,
+        message: _presenter.errorMessage!,
+        onAction: _presenter.loadOrder,
       );
     }
     if (order == null) {
@@ -147,20 +149,28 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           onPressed: () => context.go('/customer/orders/${order.id}/tracking'),
         ),
         const SizedBox(height: AppSpacing.md),
-        if (status == OrderStatus.shipped || status == OrderStatus.completed)
+        if (status == OrderStatus.shipped ||
+            status == OrderStatus.delivered ||
+            status == OrderStatus.completed)
           AppButton(
             label: status == OrderStatus.completed
                 ? 'Đã hoàn thành'
+                : status == OrderStatus.delivered
+                ? 'Đã giao - chờ hoàn tất'
                 : 'Xác nhận đã nhận hàng',
             variant: AppButtonVariant.outline,
-            isLoading: _controller.isUpdating,
-            onPressed: status == OrderStatus.completed ? null : _completeOrder,
+            isLoading: _presenter.isUpdating,
+            onPressed:
+                status == OrderStatus.completed ||
+                    status == OrderStatus.delivered
+                ? null
+                : _completeOrder,
           )
         else if (status == OrderStatus.pending)
           AppButton(
             label: 'Hủy đơn hàng',
             variant: AppButtonVariant.outline,
-            isLoading: _controller.isUpdating,
+            isLoading: _presenter.isUpdating,
             onPressed: _cancelOrder,
           ),
       ],
@@ -168,7 +178,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   }
 
   Future<void> _cancelOrder() async {
-    final success = await _controller.cancelOrder();
+    final success = await _presenter.cancelOrder();
     if (!mounted) {
       return;
     }
@@ -177,14 +187,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         content: Text(
           success
               ? 'Đã hủy đơn hàng.'
-              : _controller.errorMessage ?? 'Không thể hủy đơn.',
+              : _presenter.errorMessage ?? 'Không thể hủy đơn.',
         ),
       ),
     );
   }
 
   Future<void> _completeOrder() async {
-    final success = await _controller.completeOrder();
+    final success = await _presenter.completeOrder();
     if (!mounted) {
       return;
     }
@@ -193,10 +203,18 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         content: Text(
           success
               ? 'Đã xác nhận nhận hàng.'
-              : _controller.errorMessage ?? 'Không thể cập nhật đơn.',
+              : _presenter.errorMessage ?? 'Không thể cập nhật đơn.',
         ),
       ),
     );
+  }
+
+  void _leavePage() {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+    context.go(AppRoutes.orders);
   }
 }
 

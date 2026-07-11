@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
-import '../../controller/auth/login_controller.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
+import '../../presenter/auth/login_presenter.dart';
+import 'widgets/auth_brand_header.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,19 +19,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late final LoginController _controller = LoginController(
+  late final LoginPresenter _presenter = LoginPresenter(
     authRepository: AppDependencies.instance.authRepository,
   );
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
+    _presenter.addListener(_onControllerChanged);
   }
 
   @override
   void dispose() {
-    _controller
+    _presenter
       ..removeListener(_onControllerChanged)
       ..dispose();
     super.dispose();
@@ -43,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _submit() async {
-    final targetRoute = await _controller.submit();
+    final targetRoute = await _presenter.submit();
     if (targetRoute != null && mounted) {
       context.go(targetRoute);
     }
@@ -52,26 +53,33 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Đăng nhập')),
+      appBar: const AuthBrandHeader(),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.xl),
           children: [
-            Text('Chào mừng trở lại', style: AppTextStyles.title),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              'Chào mừng trở lại',
+              style: AppTextStyles.display.copyWith(fontSize: 34),
+            ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              'Đăng nhập bằng tài khoản backend để tiếp tục.',
-              style: AppTextStyles.body,
+              'Đăng nhập bằng tài khoản để bắt đầu mua sắm và theo dõi đơn hàng.',
+              style: AppTextStyles.body.copyWith(
+                fontSize: 18,
+                color: AppColors.textSecondary,
+              ),
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: AppSpacing.xxl),
             AppTextField(
               label: 'Email',
               hintText: 'email@example.com',
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
               prefixIcon: Icons.mail_outline,
-              errorText: _controller.emailError,
-              onChanged: _controller.changeEmail,
+              errorText: _presenter.emailError,
+              onChanged: _presenter.changeEmail,
             ),
             const SizedBox(height: AppSpacing.lg),
             AppTextField(
@@ -80,28 +88,30 @@ class _LoginPageState extends State<LoginPage> {
               prefixIcon: Icons.lock_outline,
               obscureText: true,
               textInputAction: TextInputAction.done,
-              errorText: _controller.passwordError,
-              onChanged: _controller.changePassword,
+              errorText: _presenter.passwordError,
+              onChanged: _presenter.changePassword,
               onSubmitted: (_) => _submit(),
             ),
-            if (_controller.errorMessage != null) ...[
+            if (_presenter.errorMessage != null) ...[
               const SizedBox(height: AppSpacing.md),
               Text(
-                _controller.errorMessage!,
+                _presenter.errorMessage!,
                 style: AppTextStyles.caption.copyWith(color: AppColors.error),
               ),
             ],
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: AppSpacing.xxl),
             AppButton(
               label: 'Đăng nhập',
-              isLoading: _controller.isLoading,
+              isLoading: _presenter.isLoading,
               onPressed: _submit,
             ),
-            const SizedBox(height: AppSpacing.xxl),
+            const SizedBox(height: AppSpacing.xl),
+            const Divider(),
+            const SizedBox(height: AppSpacing.lg),
             Center(
               child: TextButton(
                 onPressed: () => context.go(AppRoutes.register),
-                child: const Text('Tạo tài khoản'),
+                child: const Text('Tập luyện ngay? Tạo tài khoản mới'),
               ),
             ),
             Center(
@@ -117,6 +127,9 @@ class _LoginPageState extends State<LoginPage> {
                 label: const Text('Chat hỗ trợ khách'),
               ),
             ),
+            const SizedBox(height: AppSpacing.lg),
+            const AuthTrustStrip(),
+            const SizedBox(height: AppSpacing.xl),
           ],
         ),
       ),

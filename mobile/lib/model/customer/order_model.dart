@@ -1,3 +1,5 @@
+import '../../core/utils/image_url_utils.dart';
+
 class OrderModel {
   const OrderModel({
     required this.id,
@@ -111,7 +113,7 @@ class OrderItemModel {
       price: price,
       quantity: quantity,
       subTotal: subTotal == 0 ? price * quantity : subTotal,
-      variantImage: (json['variantImage'] ?? '').toString(),
+      variantImage: ImageUrlUtils.sanitize(json['variantImage']),
     );
   }
 }

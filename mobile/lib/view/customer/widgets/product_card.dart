@@ -3,8 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/device_profiles.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../core/widgets/hover_effect.dart';
 import '../../../model/customer/product_summary_model.dart';
 
 class ProductCard extends StatefulWidget {
@@ -25,48 +27,51 @@ class _ProductCardState extends State<ProductCard> {
     final product = widget.product;
     final price = NumberFormat.decimalPattern('vi_VN').format(product.price);
     final swatch = switch (widget.index % 4) {
-      0 => AppColors.secondary,
-      1 => const Color(0xFF0F172A),
-      2 => const Color(0xFF2563EB),
-      _ => const Color(0xFF16A34A),
+      0 => SuperSportsTheme.colorPrimary,
+      1 => SuperSportsTheme.colorAccent,
+      2 => SuperSportsTheme.colorEnergy,
+      _ => SuperSportsTheme.colorAction,
     };
 
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: AnimatedScale(
-        scale: _hovered ? 1.025 : 1,
-        duration: const Duration(milliseconds: 160),
-        curve: Curves.easeOut,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(AppRadius.xl),
-          onTap: () => context.go('/customer/products/${product.id}'),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceElevated,
-              borderRadius: BorderRadius.circular(AppRadius.xl),
-              border: Border.all(
-                color: _hovered ? AppColors.secondary : AppColors.border,
-                width: _hovered ? 1.2 : 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withValues(
-                    alpha: _hovered ? 0.13 : 0.06,
-                  ),
-                  blurRadius: _hovered ? 22 : 16,
-                  offset: Offset(0, _hovered ? 12 : 8),
-                ),
+    final enableHover = !AppDeviceProfiles.isPixel7WidthOrNarrower(context);
+    final card = HoverLift(
+      interactive: true,
+      scale: 1.014,
+      dy: -2,
+      borderRadius: BorderRadius.circular(AppRadius.lg),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        clipBehavior: Clip.antiAlias,
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.surfaceElevated,
+                swatch.withValues(alpha: _hovered ? 0.10 : 0.045),
               ],
             ),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            border: Border.all(
+              color: _hovered ? SuperSportsTheme.colorAction : AppColors.border,
+              width: _hovered ? 1.2 : 0.6,
+            ),
+            boxShadow: _hovered ? AppElevation.role(swatch) : AppElevation.soft,
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            splashColor: swatch.withValues(alpha: 0.12),
+            highlightColor: swatch.withValues(alpha: 0.05),
+            onTap: () => context.go('/customer/products/${product.id}'),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: ClipRRect(
                     borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(AppRadius.xl),
+                      top: Radius.circular(AppRadius.lg),
                     ),
                     child: Stack(
                       fit: StackFit.expand,
@@ -96,31 +101,54 @@ class _ProductCardState extends State<ProductCard> {
                         Positioned(
                           top: AppSpacing.sm,
                           right: AppSpacing.sm,
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 160),
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              color: _hovered
-                                  ? AppColors.secondary
-                                  : AppColors.surfaceElevated,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.primary.withValues(
-                                    alpha: 0.10,
-                                  ),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 5),
+                          child: Material(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                            clipBehavior: Clip.antiAlias,
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                color: _hovered
+                                    ? SuperSportsTheme.colorAction
+                                    : AppColors.surfaceElevated,
+                                borderRadius: SuperSportsTheme.borderRadius,
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.45),
                                 ),
-                              ],
+                                boxShadow: AppElevation.glow(swatch),
+                              ),
+                              child: InkWell(
+                                onTap: () => context.go(
+                                  '/customer/products/${product.id}',
+                                ),
+                                child: SizedBox(
+                                  width: 36,
+                                  height: 36,
+                                  child: Icon(
+                                    Icons.favorite_border,
+                                    color: _hovered
+                                        ? Colors.white
+                                        : SuperSportsTheme.colorPrimary,
+                                    size: 18,
+                                  ),
+                                ),
+                              ),
                             ),
-                            child: Icon(
-                              Icons.favorite_border,
-                              color: _hovered
-                                  ? Colors.white
-                                  : AppColors.primary,
-                              size: 18,
+                          ),
+                        ),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: Container(
+                            height: 5,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  AppColors.secondary,
+                                  swatch,
+                                  AppColors.accent,
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -134,12 +162,13 @@ class _ProductCardState extends State<ProductCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        product.brand.isEmpty ? 'SPORTSHOP' : product.brand,
+                        product.brand.isEmpty ? 'StrideX' : product.brand,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.caption.copyWith(
-                          color: AppColors.secondary,
+                          color: SuperSportsTheme.colorAction,
                           fontWeight: FontWeight.w900,
+                          letterSpacing: 0,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.xs),
@@ -150,6 +179,7 @@ class _ProductCardState extends State<ProductCard> {
                         style: AppTextStyles.body.copyWith(
                           fontWeight: FontWeight.w800,
                           height: 1.25,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
@@ -159,8 +189,10 @@ class _ProductCardState extends State<ProductCard> {
                             child: Text(
                               '$priceđ',
                               style: AppTextStyles.subtitle.copyWith(
-                                color: AppColors.primary,
+                                color: SuperSportsTheme.colorPrimary,
                                 fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0,
                               ),
                             ),
                           ),
@@ -174,7 +206,7 @@ class _ProductCardState extends State<ProductCard> {
                             Text(
                               product.rating.toStringAsFixed(1),
                               style: AppTextStyles.caption.copyWith(
-                                color: AppColors.primary,
+                                color: SuperSportsTheme.colorPrimary,
                               ),
                             ),
                           ],
@@ -189,6 +221,16 @@ class _ProductCardState extends State<ProductCard> {
         ),
       ),
     );
+
+    if (!enableHover) {
+      return card;
+    }
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: card,
+    );
   }
 }
 
@@ -201,15 +243,22 @@ class _SaleBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: index.isEven ? AppColors.secondary : AppColors.primary,
+        color: index.isEven ? AppColors.accentSoft : AppColors.secondarySoft,
         borderRadius: BorderRadius.circular(AppRadius.sm),
+        border: Border.all(
+          color: index.isEven
+              ? AppColors.warningBorder
+              : AppColors.successBorder,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Text(
-          index.isEven ? 'Ưu đãi' : 'Mới',
-          style: const TextStyle(
-            color: Colors.white,
+          index.isEven ? 'ƯU ĐÃI' : 'MỚI',
+          style: TextStyle(
+            color: index.isEven
+                ? SuperSportsTheme.colorEnergy
+                : SuperSportsTheme.colorAccent,
             fontSize: 11,
             fontWeight: FontWeight.w900,
           ),
@@ -227,12 +276,41 @@ class _ProductFallbackImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Icon(
-        index.isEven ? Icons.directions_run : Icons.checkroom,
-        size: 76,
-        color: color,
-      ),
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        CustomPaint(painter: _SportLinesPainter(color: color)),
+        Center(
+          child: Icon(
+            index.isEven ? Icons.directions_run : Icons.checkroom,
+            size: 76,
+            color: color,
+          ),
+        ),
+      ],
     );
+  }
+}
+
+class _SportLinesPainter extends CustomPainter {
+  const _SportLinesPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color.withValues(alpha: 0.18)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
+    for (var i = 0; i < 4; i++) {
+      final y = size.height * (0.24 + i * 0.17);
+      canvas.drawLine(Offset(-12, y), Offset(size.width + 24, y - 34), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _SportLinesPainter oldDelegate) {
+    return oldDelegate.color != color;
   }
 }

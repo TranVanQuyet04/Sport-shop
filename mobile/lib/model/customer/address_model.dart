@@ -36,16 +36,19 @@ class AddressModel {
   }
 
   factory AddressModel.fromJson(Map<String, dynamic> json) {
+    final source = json['result'] is Map
+        ? Map<String, dynamic>.from(json['result'] as Map)
+        : json;
     return AddressModel(
-      id: (json['id'] ?? '').toString(),
-      recipientName: (json['recipientName'] ?? '').toString(),
-      phoneNumber: (json['phoneNumber'] ?? '').toString(),
-      city: (json['city'] ?? '').toString(),
-      district: (json['district'] ?? '').toString(),
-      ward: (json['ward'] ?? '').toString(),
-      street: (json['street'] ?? '').toString(),
-      isDefault: json['isDefault'] == true,
-      fullAddress: (json['fullAddress'] ?? '').toString(),
+      id: (source['id'] ?? '').toString(),
+      recipientName: (source['recipientName'] ?? '').toString(),
+      phoneNumber: (source['phoneNumber'] ?? '').toString(),
+      city: (source['city'] ?? '').toString(),
+      district: (source['district'] ?? '').toString(),
+      ward: (source['ward'] ?? '').toString(),
+      street: (source['street'] ?? '').toString(),
+      isDefault: source['isDefault'] == true,
+      fullAddress: (source['fullAddress'] ?? '').toString(),
     );
   }
 }

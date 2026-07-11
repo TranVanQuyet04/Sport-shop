@@ -3,6 +3,7 @@ enum OrderStatus {
   confirmed,
   packing,
   shipped,
+  delivered,
   completed,
   cancelled;
 
@@ -14,7 +15,7 @@ enum OrderStatus {
       'PACKING' => OrderStatus.packing,
       'SHIPPING' => OrderStatus.shipped,
       'SHIPPED' => OrderStatus.shipped,
-      'DELIVERED' => OrderStatus.completed,
+      'DELIVERED' => OrderStatus.delivered,
       'COMPLETED' => OrderStatus.completed,
       'CANCELLED' => OrderStatus.cancelled,
       _ => OrderStatus.pending,
@@ -24,9 +25,10 @@ enum OrderStatus {
   String get apiValue {
     return switch (this) {
       OrderStatus.pending => 'PENDING',
-      OrderStatus.confirmed => 'PAID',
-      OrderStatus.packing => 'PAID',
-      OrderStatus.shipped => 'SHIPPING',
+      OrderStatus.confirmed => 'CONFIRMED',
+      OrderStatus.packing => 'PACKING',
+      OrderStatus.shipped => 'SHIPPED',
+      OrderStatus.delivered => 'DELIVERED',
       OrderStatus.completed => 'COMPLETED',
       OrderStatus.cancelled => 'CANCELLED',
     };

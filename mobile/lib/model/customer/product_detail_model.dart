@@ -1,3 +1,5 @@
+import '../../core/utils/image_url_utils.dart';
+
 class ProductDetailModel {
   const ProductDetailModel({
     required this.id,
@@ -18,17 +20,30 @@ class ProductDetailModel {
   final List<ProductVariantModel> variants;
 
   int get displayPrice => variants.isEmpty ? 0 : variants.first.price;
-  List<String> get colors => variants.map((variant) => variant.color).where((value) => value.isNotEmpty).toSet().toList();
-  List<String> get sizes => variants.map((variant) => variant.size).where((value) => value.isNotEmpty).toSet().toList();
-  List<String> get imageUrls => variants.expand((variant) => variant.imageUrls).toSet().toList();
+  List<String> get colors => variants
+      .map((variant) => variant.color)
+      .where((value) => value.isNotEmpty)
+      .toSet()
+      .toList();
+  List<String> get sizes => variants
+      .map((variant) => variant.size)
+      .where((value) => value.isNotEmpty)
+      .toSet()
+      .toList();
+  List<String> get imageUrls =>
+      variants.expand((variant) => variant.imageUrls).toSet().toList();
 
   factory ProductDetailModel.fromJson(Map<String, dynamic> json) {
     final rawVariants = json['variants'];
     final variants = rawVariants is List
         ? rawVariants
-            .whereType<Map>()
-            .map((item) => ProductVariantModel.fromJson(Map<String, dynamic>.from(item)))
-            .toList()
+              .whereType<Map>()
+              .map(
+                (item) => ProductVariantModel.fromJson(
+                  Map<String, dynamic>.from(item),
+                ),
+              )
+              .toList()
         : <ProductVariantModel>[];
 
     return ProductDetailModel(
@@ -64,7 +79,9 @@ class ProductVariantModel {
 
   factory ProductVariantModel.fromJson(Map<String, dynamic> json) {
     final rawImages = json['imageUrls'] ?? json['images'] ?? [];
-    final images = rawImages is List ? rawImages.map((item) => item.toString()).toList() : <String>[];
+    final images = rawImages is List
+        ? ImageUrlUtils.sanitizeList(rawImages)
+        : <String>[];
     final priceValue = json['price'] ?? 0;
 
     return ProductVariantModel(
@@ -72,8 +89,12 @@ class ProductVariantModel {
       sku: (json['sku'] ?? '').toString(),
       size: (json['size'] ?? '').toString(),
       color: (json['color'] ?? '').toString(),
-      price: priceValue is num ? priceValue.toInt() : int.tryParse(priceValue.toString()) ?? 0,
-      stockQuantity: (json['stockQuantity'] is num) ? (json['stockQuantity'] as num).toInt() : int.tryParse((json['stockQuantity'] ?? '0').toString()) ?? 0,
+      price: priceValue is num
+          ? priceValue.toInt()
+          : int.tryParse(priceValue.toString()) ?? 0,
+      stockQuantity: (json['stockQuantity'] is num)
+          ? (json['stockQuantity'] as num).toInt()
+          : int.tryParse((json['stockQuantity'] ?? '0').toString()) ?? 0,
       imageUrls: images,
     );
   }

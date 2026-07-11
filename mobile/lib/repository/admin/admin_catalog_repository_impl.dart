@@ -266,6 +266,17 @@ class AdminCatalogRepositoryImpl implements AdminCatalogRepository {
       _adminCatalogService.getCollections();
 
   @override
+  Future<CollectionModel> addVariantsToCollection({
+    required CollectionModel collection,
+    required List<String> variantIds,
+  }) {
+    return _adminCatalogService.addVariantsToCollection(
+      collection: collection,
+      variantIds: variantIds,
+    );
+  }
+
+  @override
   Future<CollectionModel> createCollection({
     required String name,
     required String slug,
@@ -278,6 +289,33 @@ class AdminCatalogRepositoryImpl implements AdminCatalogRepository {
     required List<String> variantIds,
   }) {
     return _adminCatalogService.createCollection(
+      name: name,
+      slug: slug,
+      description: description,
+      imageUrl: imageUrl,
+      type: type,
+      isActive: isActive,
+      startDate: startDate,
+      endDate: endDate,
+      variantIds: variantIds,
+    );
+  }
+
+  @override
+  Future<CollectionModel> updateCollection({
+    required String id,
+    required String name,
+    required String slug,
+    required String description,
+    required String imageUrl,
+    required String type,
+    required bool isActive,
+    String? startDate,
+    String? endDate,
+    required List<String> variantIds,
+  }) {
+    return _adminCatalogService.updateCollection(
+      id: id,
       name: name,
       slug: slug,
       description: description,

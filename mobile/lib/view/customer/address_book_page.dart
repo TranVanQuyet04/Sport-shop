@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
-import '../../controller/customer/address_controller.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
@@ -11,6 +10,9 @@ import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_state.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../model/customer/address_model.dart';
+import '../../presenter/customer/address_presenter.dart';
+
+part 'address_book_page_parts/address_card_widgets.dart';
 
 class AddressBookPage extends StatefulWidget {
   const AddressBookPage({super.key});
@@ -20,20 +22,20 @@ class AddressBookPage extends StatefulWidget {
 }
 
 class _AddressBookPageState extends State<AddressBookPage> {
-  late final AddressController _controller = AddressController(
+  late final AddressPresenter _presenter = AddressPresenter(
     addressRepository: AppDependencies.instance.addressRepository,
   );
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
-    _controller.loadAddresses();
+    _presenter.addListener(_onControllerChanged);
+    _presenter.loadAddresses();
   }
 
   @override
   void dispose() {
-    _controller
+    _presenter
       ..removeListener(_onControllerChanged)
       ..dispose();
     super.dispose();
@@ -50,68 +52,82 @@ class _AddressBookPageState extends State<AddressBookPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: context.pop,
+          onPressed: _leavePage,
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text('Address book'),
+        title: const Text('Sổ địa chỉ'),
         actions: [
           IconButton(
-            tooltip: 'Refresh',
-            onPressed: _controller.isLoading ? null : _controller.loadAddresses,
+            tooltip: 'Tải lại',
+            onPressed: _presenter.isLoading ? null : _presenter.loadAddresses,
             icon: const Icon(Icons.refresh),
           ),
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: _controller.loadAddresses,
+        onRefresh: _presenter.loadAddresses,
         child: _buildBody(),
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: AppButton(
-            label: 'Add new address',
-            variant: AppButtonVariant.secondary,
-            onPressed: () => context.go(AppRoutes.addAddress),
-          ),
-        ),
-      ),
+      bottomNavigationBar: _presenter.addresses.isEmpty
+          ? null
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  AppSpacing.md,
+                  AppSpacing.lg,
+                  AppSpacing.lg,
+                ),
+                child: AppButton(
+                  label: 'Thêm địa chỉ mới',
+                  icon: Icons.add_location_alt_outlined,
+                  variant: AppButtonVariant.secondary,
+                  onPressed: () => context.go(AppRoutes.addAddress),
+                ),
+              ),
+            ),
     );
   }
 
   Widget _buildBody() {
-    if (_controller.isLoading && _controller.addresses.isEmpty) {
-      return const AppLoadingState(title: 'Loading addresses');
+    if (_presenter.isLoading && _presenter.addresses.isEmpty) {
+      return const AppLoadingState(title: 'Đang tải địa chỉ');
     }
 
-    if (_controller.errorMessage != null && _controller.addresses.isEmpty) {
+    if (_presenter.errorMessage != null && _presenter.addresses.isEmpty) {
       return AppErrorState(
-        title: 'Could not load addresses',
-        message: _controller.errorMessage!,
-        onAction: _controller.loadAddresses,
+        title: 'Không tải được địa chỉ',
+        message: _presenter.errorMessage!,
+        actionLabel: _presenter.isUnauthorized ? 'Đăng nhập lại' : 'Thử lại',
+        onAction: _presenter.isUnauthorized
+            ? () => context.go(AppRoutes.login)
+            : _presenter.loadAddresses,
       );
     }
 
-    if (_controller.addresses.isEmpty) {
-      return AppEmptyState(
-        title: 'No addresses yet',
-        message: 'Add a shipping address before checkout.',
-        actionLabel: 'Add address',
-        onAction: () => context.go(AppRoutes.addAddress),
+    if (_presenter.addresses.isEmpty) {
+      return _AddressEmptyState(
+        onAdd: () => context.go(AppRoutes.addAddress),
+        onRefresh: _presenter.loadAddresses,
       );
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      itemCount: _controller.addresses.length,
-      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.lg,
+        AppSpacing.lg,
+        AppSpacing.xl,
+      ),
+      itemCount: _presenter.addresses.length,
+      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
       itemBuilder: (context, index) {
-        final address = _controller.addresses[index];
+        final address = _presenter.addresses[index];
         return _AddressCard(
           address: address,
-          isBusy: _controller.isSubmitting,
+          isBusy: _presenter.isSubmitting,
           onEdit: () => _showEditAddressSheet(address),
-          onSetDefault: () => _controller.setDefault(address.id),
+          onSetDefault: () => _presenter.setDefault(address.id),
           onDelete: () => _confirmDeleteAddress(address),
         );
       },
@@ -123,16 +139,16 @@ class _AddressBookPageState extends State<AddressBookPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Delete address?'),
+          title: const Text('Xóa địa chỉ?'),
           content: Text(address.displayAddress),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: const Text('Hủy'),
             ),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Delete'),
+              child: const Text('Xóa'),
             ),
           ],
         );
@@ -140,7 +156,7 @@ class _AddressBookPageState extends State<AddressBookPage> {
     );
 
     if (confirmed == true) {
-      await _controller.deleteAddress(address.id);
+      await _presenter.deleteAddress(address.id);
     }
   }
 
@@ -163,21 +179,25 @@ class _AddressBookPageState extends State<AddressBookPage> {
         builder: (context) {
           return StatefulBuilder(
             builder: (context, setSheetState) {
-              String? requiredError(TextEditingController controller, String label) {
+              String? requiredError(
+                TextEditingController controller,
+                String label,
+              ) {
                 if (!hasSubmitted || controller.text.trim().isNotEmpty) {
                   return null;
                 }
-                return '$label is required.';
+                return '$label là bắt buộc.';
               }
 
               final phoneText = phoneController.text.trim();
               final phoneError = !hasSubmitted || phoneText.isEmpty
-                  ? requiredError(phoneController, 'Phone number')
-                  : RegExp(r'^(0|\+84)[0-9\s.]{8,13}$').hasMatch(phoneText)
-                      ? null
-                      : 'Phone number is invalid.';
+                  ? requiredError(phoneController, 'Số điện thoại')
+                  : _isVietnamesePhone(phoneText)
+                  ? null
+                  : 'Số điện thoại không hợp lệ.';
 
-              final canSubmit = nameController.text.trim().isNotEmpty &&
+              final canSubmit =
+                  nameController.text.trim().isNotEmpty &&
                   phoneText.isNotEmpty &&
                   phoneError == null &&
                   cityController.text.trim().isNotEmpty &&
@@ -191,7 +211,7 @@ class _AddressBookPageState extends State<AddressBookPage> {
                   return;
                 }
                 setSheetState(() => isSaving = true);
-                final success = await _controller.updateAddress(
+                final success = await _presenter.updateAddress(
                   id: address.id,
                   recipientName: nameController.text.trim(),
                   phoneNumber: phoneText,
@@ -211,7 +231,9 @@ class _AddressBookPageState extends State<AddressBookPage> {
                 }
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(_controller.errorMessage ?? 'Could not update address.'),
+                    content: Text(
+                      _presenter.errorMessage ?? 'Không thể cập nhật địa chỉ.',
+                    ),
                   ),
                 );
               }
@@ -221,7 +243,8 @@ class _AddressBookPageState extends State<AddressBookPage> {
                   left: AppSpacing.lg,
                   right: AppSpacing.lg,
                   top: AppSpacing.lg,
-                  bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
+                  bottom:
+                      MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
                 ),
                 child: ListView(
                   shrinkWrap: true,
@@ -229,26 +252,31 @@ class _AddressBookPageState extends State<AddressBookPage> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text('Edit address', style: AppTextStyles.title),
+                          child: Text(
+                            'Chỉnh sửa địa chỉ',
+                            style: AppTextStyles.title,
+                          ),
                         ),
                         IconButton(
-                          tooltip: 'Close',
-                          onPressed: isSaving ? null : () => Navigator.of(context).pop(),
+                          tooltip: 'Đóng',
+                          onPressed: isSaving
+                              ? null
+                              : () => Navigator.of(context).pop(),
                           icon: const Icon(Icons.close),
                         ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppTextField(
-                      label: 'Recipient name',
+                      label: 'Người nhận',
                       controller: nameController,
                       prefixIcon: Icons.person_outline,
-                      errorText: requiredError(nameController, 'Recipient name'),
+                      errorText: requiredError(nameController, 'Người nhận'),
                       onChanged: (_) => setSheetState(() {}),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppTextField(
-                      label: 'Phone number',
+                      label: 'Số điện thoại',
                       controller: phoneController,
                       prefixIcon: Icons.phone_outlined,
                       keyboardType: TextInputType.phone,
@@ -257,43 +285,54 @@ class _AddressBookPageState extends State<AddressBookPage> {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppTextField(
-                      label: 'City',
+                      label: 'Tỉnh/Thành phố',
                       controller: cityController,
                       prefixIcon: Icons.location_city_outlined,
-                      errorText: requiredError(cityController, 'City'),
+                      errorText: requiredError(
+                        cityController,
+                        'Tỉnh/Thành phố',
+                      ),
                       onChanged: (_) => setSheetState(() {}),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppTextField(
-                      label: 'District',
+                      label: 'Quận/Huyện',
                       controller: districtController,
                       prefixIcon: Icons.map_outlined,
-                      errorText: requiredError(districtController, 'District'),
+                      errorText: requiredError(
+                        districtController,
+                        'Quận/Huyện',
+                      ),
                       onChanged: (_) => setSheetState(() {}),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppTextField(
-                      label: 'Ward',
+                      label: 'Phường/Xã',
                       controller: wardController,
                       prefixIcon: Icons.place_outlined,
-                      errorText: requiredError(wardController, 'Ward'),
+                      errorText: requiredError(wardController, 'Phường/Xã'),
                       onChanged: (_) => setSheetState(() {}),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppTextField(
-                      label: 'Street',
+                      label: 'Địa chỉ cụ thể',
                       controller: streetController,
                       prefixIcon: Icons.home_outlined,
                       maxLines: 3,
-                      errorText: requiredError(streetController, 'Street'),
+                      errorText: requiredError(
+                        streetController,
+                        'Địa chỉ cụ thể',
+                      ),
                       onChanged: (_) => setSheetState(() {}),
                       onSubmitted: (_) => save(),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     SwitchListTile(
                       value: isDefault,
-                      onChanged: isSaving ? null : (value) => setSheetState(() => isDefault = value),
-                      title: const Text('Set as default address'),
+                      onChanged: isSaving
+                          ? null
+                          : (value) => setSheetState(() => isDefault = value),
+                      title: const Text('Đặt làm địa chỉ mặc định'),
                       secondary: const Icon(Icons.star_border_outlined),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -302,7 +341,7 @@ class _AddressBookPageState extends State<AddressBookPage> {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppButton(
-                      label: 'Save address',
+                      label: 'Lưu địa chỉ',
                       variant: AppButtonVariant.secondary,
                       isLoading: isSaving,
                       onPressed: save,
@@ -323,94 +362,83 @@ class _AddressBookPageState extends State<AddressBookPage> {
       streetController.dispose();
     }
   }
+
+  bool _isVietnamesePhone(String value) {
+    return RegExp(
+      r'^(0|\+84)(\s|\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\d)(\s|\.)?(\d{3})(\s|\.)?(\d{3})$',
+    ).hasMatch(value);
+  }
+
+  void _leavePage() {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+    context.go(AppRoutes.customerHome);
+  }
 }
 
-class _AddressCard extends StatelessWidget {
-  const _AddressCard({
-    required this.address,
-    required this.isBusy,
-    required this.onEdit,
-    required this.onSetDefault,
-    required this.onDelete,
-  });
+class _AddressEmptyState extends StatelessWidget {
+  const _AddressEmptyState({required this.onAdd, required this.onRefresh});
 
-  final AddressModel address;
-  final bool isBusy;
-  final VoidCallback onEdit;
-  final VoidCallback onSetDefault;
-  final VoidCallback onDelete;
+  final VoidCallback onAdd;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        border: Border.all(
-          color: address.isDefault ? AppColors.primary : AppColors.border,
-        ),
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.xxl,
+        AppSpacing.lg,
+        AppSpacing.xxl,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    address.displayName,
-                    style: AppTextStyles.subtitle,
-                  ),
-                ),
-                if (address.isDefault)
-                  Text(
-                    'Default',
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.secondary,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-              ],
+      children: [
+        SizedBox(height: MediaQuery.sizeOf(context).height * 0.12),
+        Center(
+          child: Container(
+            width: 72,
+            height: 72,
+            decoration: const BoxDecoration(
+              color: AppColors.surfaceMuted,
+              shape: BoxShape.circle,
             ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              address.displayAddress,
-              style: AppTextStyles.body.copyWith(
-                color: AppColors.textSecondary,
-              ),
+            child: const Icon(
+              Icons.inventory_2_outlined,
+              color: AppColors.textSecondary,
+              size: 34,
             ),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              children: [
-                IconButton(
-                  tooltip: 'Edit',
-                  onPressed: isBusy ? null : onEdit,
-                  icon: const Icon(Icons.edit_outlined),
-                ),
-                IconButton(
-                  tooltip: 'Delete',
-                  onPressed: isBusy ? null : onDelete,
-                  icon: const Icon(Icons.delete_outline),
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: isBusy || address.isDefault ? null : onSetDefault,
-                  child: const Text('Set default'),
-                ),
-                Icon(
-                  address.isDefault
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                  color: address.isDefault
-                      ? AppColors.secondary
-                      : AppColors.textSecondary,
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
-      ),
+        const SizedBox(height: AppSpacing.xl),
+        Text(
+          'Chưa có địa chỉ',
+          textAlign: TextAlign.center,
+          style: AppTextStyles.subtitle.copyWith(fontWeight: FontWeight.w900),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          'Thêm địa chỉ giao hàng để đặt hàng nhanh hơn và chọn làm mặc định khi thanh toán.',
+          textAlign: TextAlign.center,
+          style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        AppButton(
+          label: 'Thêm địa chỉ',
+          icon: Icons.add_location_alt_outlined,
+          variant: AppButtonVariant.secondary,
+          onPressed: onAdd,
+        ),
+        const SizedBox(height: AppSpacing.md),
+        SizedBox(
+          height: 48,
+          child: TextButton.icon(
+            onPressed: onRefresh,
+            icon: const Icon(Icons.refresh, size: 18),
+            label: const Text('Tải lại danh sách'),
+          ),
+        ),
+      ],
     );
   }
 }

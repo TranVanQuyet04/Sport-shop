@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
-import '../../controller/chat/chat_controller.dart' as app_chat;
+import '../../presenter/chat/chat_presenter.dart' as app_chat;
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
@@ -17,23 +17,23 @@ class GuestChatPage extends StatefulWidget {
 }
 
 class _GuestChatPageState extends State<GuestChatPage> {
-  late final app_chat.ChatController _controller;
+  late final app_chat.ChatPresenter _presenter;
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _controller = app_chat.ChatController(
+    _presenter = app_chat.ChatPresenter(
       chatRepository: AppDependencies.instance.chatRepository,
     );
-    _controller.addListener(_onControllerChanged);
+    _presenter.addListener(_onControllerChanged);
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_onControllerChanged);
-    _controller.dispose();
+    _presenter.removeListener(_onControllerChanged);
+    _presenter.dispose();
     _messageController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -60,11 +60,11 @@ class _GuestChatPageState extends State<GuestChatPage> {
 
   Future<void> _sendMessage() async {
     final text = _messageController.text.trim();
-    if (text.isEmpty || _controller.isSending) {
+    if (text.isEmpty || _presenter.isSending) {
       return;
     }
     _messageController.clear();
-    await _controller.sendBotMessage(text);
+    await _presenter.sendBotMessage(text);
   }
 
   @override
@@ -105,7 +105,7 @@ class _GuestChatPageState extends State<GuestChatPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Sportshop Support',
+                        'StrideX Support',
                         style: AppTextStyles.subtitle.copyWith(
                           color: Colors.white,
                         ),
@@ -123,15 +123,15 @@ class _GuestChatPageState extends State<GuestChatPage> {
               ],
             ),
           ),
-          if (_controller.errorMessage != null)
-            _GuestErrorBanner(message: _controller.errorMessage!),
+          if (_presenter.errorMessage != null)
+            _GuestErrorBanner(message: _presenter.errorMessage!),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.all(AppSpacing.lg),
-              itemCount: _controller.messages.length,
+              itemCount: _presenter.messages.length,
               itemBuilder: (context, index) {
-                final message = _controller.messages[index];
+                final message = _presenter.messages[index];
                 return _GuestMessageBubble(
                   message: message,
                   fromMe: message.fromMe,
@@ -168,8 +168,8 @@ class _GuestChatPageState extends State<GuestChatPage> {
                     backgroundColor: AppColors.secondary,
                     foregroundColor: AppColors.textInverse,
                     child: IconButton(
-                      onPressed: _controller.isSending ? null : _sendMessage,
-                      icon: _controller.isSending
+                      onPressed: _presenter.isSending ? null : _sendMessage,
+                      icon: _presenter.isSending
                           ? const SizedBox(
                               width: 18,
                               height: 18,

@@ -1,0 +1,160 @@
+{
+  "project_name": "sportswear-shop-system-mobile",
+  "last_updated": "2026-06-25",
+  "features": [
+    {
+      "id": "F01",
+      "name": "Authentication (Login/Register/Forgot/Reset/Change Password)",
+      "module": "Auth",
+      "status": "done",
+      "description": "Full auth flows with role-based storage and automatic token refresh guards."
+    },
+    {
+      "id": "F02",
+      "name": "Product Recommendations & Summaries",
+      "module": "Customer Catalog",
+      "status": "done",
+      "description": "View recommended products and filter by category/brand/sport."
+    },
+    {
+      "id": "F03",
+      "name": "Product Detail & Variant Selection",
+      "module": "Customer Catalog",
+      "status": "done",
+      "description": "Detailed view of products, gallery, and selecting specific variants (size/color)."
+    },
+    {
+      "id": "F04",
+      "name": "Search & Filter Catalog",
+      "module": "Customer Catalog",
+      "status": "done",
+      "description": "Dynamic keyword search for products with advanced filters."
+    },
+    {
+      "id": "F05",
+      "name": "Cart Management",
+      "module": "Customer Cart",
+      "status": "done",
+      "description": "Add variant to cart, update quantity, remove items, and clear cart."
+    },
+    {
+      "id": "F06",
+      "name": "Address Book CRUD",
+      "module": "Customer Address",
+      "status": "done",
+      "description": "Create, read, update, delete delivery addresses, and set default address."
+    },
+    {
+      "id": "F07",
+      "name": "Checkout Order with COD",
+      "module": "Customer Checkout",
+      "status": "done",
+      "description": "Checkout cart items with selected address and Cash on Delivery payment method."
+    },
+    {
+      "id": "F08",
+      "name": "Checkout Order with VNPay Online Payment",
+      "module": "Customer Checkout",
+      "status": "done",
+      "description": "Checkout with VNPay webview integration to execute secure online payments."
+    },
+    {
+      "id": "F09",
+      "name": "Customer Order History & Status Tracking",
+      "module": "Customer Orders",
+      "status": "done",
+      "description": "Track progress of customer orders and trigger receipt confirmation or cancellations."
+    },
+    {
+      "id": "F10",
+      "name": "AI Support Chatbot",
+      "module": "Customer Support",
+      "status": "done",
+      "description": "Instantly chat with an automated AI bot for recommendations and queries."
+    },
+    {
+      "id": "F11",
+      "name": "Live Chat Support Room (Customer side)",
+      "module": "Customer Support",
+      "status": "done",
+      "description": "Create live chat rooms to talk to shop human assistants."
+    },
+    {
+      "id": "F12",
+      "name": "Admin Catalog CRUD (Products/Categories/Brands/Sports)",
+      "module": "Admin Operations",
+      "status": "done",
+      "description": "Full administrative management of shop catalog items."
+    },
+    {
+      "id": "F13",
+      "name": "Admin Variant & Inventory Control",
+      "module": "Admin Operations",
+      "status": "done",
+      "description": "Add, edit, delete product variants, and patch stock quantities."
+    },
+    {
+      "id": "F14",
+      "name": "Admin AI Product Suggestion Generator",
+      "module": "Admin Operations",
+      "status": "done",
+      "description": "Fetch AI-suggested product templates and approve them directly into the catalog database."
+    },
+    {
+      "id": "F15",
+      "name": "Admin Chat Support Room Dashboard",
+      "module": "Admin Operations",
+      "status": "done",
+      "description": "Browse active customer support chat rooms and send live responses."
+    },
+    {
+      "id": "F16",
+      "name": "Admin Financial Reports & Metrics",
+      "module": "Admin Operations",
+      "status": "done",
+      "description": "Track overall revenue, order statistics, and dashboard indicators over date ranges."
+    },
+    {
+      "id": "F17",
+      "name": "Admin User & Staff Management",
+      "module": "Admin Operations",
+      "status": "done",
+      "description": "Register shop staff, edit user details, block/unblock accounts."
+    },
+    {
+      "id": "F18",
+      "name": "Shipper Order Lists & Filter",
+      "module": "Delivery Operations",
+      "status": "done",
+      "description": "Shippers track orders assigned for delivery (COD pending or paid/confirmed)."
+    },
+    {
+      "id": "F19",
+      "name": "Shipper Delivery Status Updates",
+      "module": "Delivery Operations",
+      "status": "done",
+      "description": "Mark orders as shipping, delivered (completed), or delivery cancelled."
+    },
+    {
+      "id": "F20",
+      "name": "Advanced Riverpod State Management Migration",
+      "module": "Architecture",
+      "status": "pending",
+      "description": "Migrate local StatefulWidget controller bindings to global Riverpod providers."
+    },
+    {
+      "id": "F21",
+      "name": "Local Storage & Recommended Products Caching",
+      "module": "Performance",
+      "status": "pending",
+      "description": "Cache recommended products locally on the device to speed up catalog views."
+    },
+    {
+      "id": "F22",
+      "name": "Push Notifications (FCM Integration)",
+      "module": "Integration",
+      "status": "pending",
+      "description": "Real-time notifications for order status changes and direct support messages."
+    }
+  ]
+}

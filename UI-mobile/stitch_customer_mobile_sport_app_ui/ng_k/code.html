@@ -135,16 +135,16 @@
 <main class="flex-grow pt-20 px-margin-mobile pb-section-gap">
 <div class="max-w-md mx-auto">
 <header class="mb-8">
-<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-2">Đăng ký</h2>
-<p class="font-body-sm text-on-surface-variant">Tham gia cộng đồng Apex Velocity để nhận ưu đãi và trải nghiệm mua sắm tốt nhất.</p>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-2">ÄÄƒng kÃ½</h2>
+<p class="font-body-sm text-on-surface-variant">Tham gia cá»™ng Ä‘á»“ng Apex Velocity Ä‘á»ƒ nháº­n Æ°u Ä‘Ã£i vÃ  tráº£i nghiá»‡m mua sáº¯m tá»‘t nháº¥t.</p>
 </header>
 <form class="space-y-5" id="registerForm" onsubmit="return handleRegister(event)">
 <!-- Full Name -->
 <div class="flex flex-col gap-1.5">
-<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Họ và tên</label>
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Há» vÃ  tÃªn</label>
 <div class="relative flex items-center bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-3 input-focus-effect transition-all">
 <span class="material-symbols-outlined text-outline mr-2 text-[20px]" data-icon="person">person</span>
-<input class="w-full bg-transparent border-none p-0 focus:ring-0 text-body-sm text-on-surface placeholder:text-outline-variant" id="fullname" placeholder="Nguyễn Văn A" required="" type="text"/>
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 text-body-sm text-on-surface placeholder:text-outline-variant" id="fullname" placeholder="Nguyá»…n VÄƒn A" required="" type="text"/>
 </div>
 </div>
 <!-- Email -->
@@ -154,11 +154,11 @@
 <span class="material-symbols-outlined text-outline mr-2 text-[20px]" data-icon="mail">mail</span>
 <input class="w-full bg-transparent border-none p-0 focus:ring-0 text-body-sm text-on-surface placeholder:text-outline-variant" id="email" oninput="validateEmail()" placeholder="example@apex.com" required="" type="email"/>
 </div>
-<p class="text-[11px] text-on-surface-variant px-1 hidden italic" id="emailHint">Vui lòng nhập định dạng email hợp lệ (ví dụ: name@domain.com)</p>
+<p class="text-[11px] text-on-surface-variant px-1 hidden italic" id="emailHint">Vui lÃ²ng nháº­p Ä‘á»‹nh dáº¡ng email há»£p lá»‡ (vÃ­ dá»¥: name@domain.com)</p>
 </div>
 <!-- Phone -->
 <div class="flex flex-col gap-1.5">
-<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Số điện thoại</label>
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Sá»‘ Ä‘iá»‡n thoáº¡i</label>
 <div class="relative flex items-center bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-3 input-focus-effect transition-all">
 <span class="material-symbols-outlined text-outline mr-2 text-[20px]" data-icon="call">call</span>
 <input class="w-full bg-transparent border-none p-0 focus:ring-0 text-body-sm text-on-surface placeholder:text-outline-variant" id="phone" placeholder="09xx xxx xxx" required="" type="tel"/>
@@ -167,19 +167,19 @@
 <!-- Password Cluster -->
 <div class="grid grid-cols-1 gap-5">
 <div class="flex flex-col gap-1.5">
-<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Mật khẩu</label>
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Máº­t kháº©u</label>
 <div class="relative flex items-center bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-3 input-focus-effect transition-all">
 <span class="material-symbols-outlined text-outline mr-2 text-[20px]" data-icon="lock">lock</span>
-<input class="w-full bg-transparent border-none p-0 focus:ring-0 text-body-sm text-on-surface placeholder:text-outline-variant" id="password" oninput="validatePasswords()" placeholder="••••••••" required="" type="password"/>
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 text-body-sm text-on-surface placeholder:text-outline-variant" id="password" oninput="validatePasswords()" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required="" type="password"/>
 </div>
 </div>
 <div class="flex flex-col gap-1.5">
-<label class="font-label-bold text-label-bold text-on-surface-variant px-1">Xác nhận mật khẩu</label>
+<label class="font-label-bold text-label-bold text-on-surface-variant px-1">XÃ¡c nháº­n máº­t kháº©u</label>
 <div class="relative flex items-center bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-3 input-focus-effect transition-all">
 <span class="material-symbols-outlined text-outline mr-2 text-[20px]" data-icon="lock_reset">lock_reset</span>
-<input class="w-full bg-transparent border-none p-0 focus:ring-0 text-body-sm text-on-surface placeholder:text-outline-variant" id="confirmPassword" oninput="validatePasswords()" placeholder="••••••••" required="" type="password"/>
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 text-body-sm text-on-surface placeholder:text-outline-variant" id="confirmPassword" oninput="validatePasswords()" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required="" type="password"/>
 </div>
-<p class="text-[11px] text-error px-1 hidden" id="passwordError">Mật khẩu xác nhận không khớp.</p>
+<p class="text-[11px] text-error px-1 hidden" id="passwordError">Máº­t kháº©u xÃ¡c nháº­n khÃ´ng khá»›p.</p>
 </div>
 </div>
 <!-- Terms -->
@@ -188,24 +188,24 @@
 <input class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary cursor-pointer" id="terms" required="" type="checkbox"/>
 </div>
 <label class="text-[13px] leading-tight text-on-surface-variant cursor-pointer" for="terms">
-                        Tôi đồng ý với <a class="text-primary font-bold underline" href="#">Điều khoản</a> và <a class="text-primary font-bold underline" href="#">Chính sách bảo mật</a> của Sportshop.
+                        TÃ´i Ä‘á»“ng Ã½ vá»›i <a class="text-primary font-bold underline" href="#">Äiá»u khoáº£n</a> vÃ  <a class="text-primary font-bold underline" href="#">ChÃ­nh sÃ¡ch báº£o máº­t</a> cá»§a StrideX.
                     </label>
 </div>
 <!-- Submit Action -->
 <button class="w-full h-touch-target-min bg-secondary-container text-on-secondary-container font-button text-button rounded-lg shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2 mt-4" type="submit">
-                    ĐĂNG KÝ
+                    ÄÄ‚NG KÃ
                     <span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
 </button>
 </form>
 <div class="mt-8 pt-8 border-t border-outline-variant flex flex-col items-center gap-6">
 <p class="font-body-sm text-on-surface-variant">
-                    Đã có tài khoản? <a class="text-secondary font-bold hover:underline" href="#">Đăng nhập ngay</a>
+                    ÄÃ£ cÃ³ tÃ i khoáº£n? <a class="text-secondary font-bold hover:underline" href="#">ÄÄƒng nháº­p ngay</a>
 </p>
 <!-- Social Auth Suggestion (Optional High-end UI) -->
 <div class="w-full space-y-4">
 <div class="flex items-center gap-3">
 <div class="h-[1px] flex-grow bg-outline-variant"></div>
-<span class="text-[10px] uppercase tracking-widest text-outline">Hoặc đăng ký bằng</span>
+<span class="text-[10px] uppercase tracking-widest text-outline">Hoáº·c Ä‘Äƒng kÃ½ báº±ng</span>
 <div class="h-[1px] flex-grow bg-outline-variant"></div>
 </div>
 <div class="grid grid-cols-2 gap-4">
@@ -260,18 +260,18 @@
             const confirm = document.getElementById('confirmPassword').value;
 
             if (pass !== confirm) {
-                alert("Mật khẩu xác nhận không khớp. Vui lòng kiểm tra lại.");
+                alert("Máº­t kháº©u xÃ¡c nháº­n khÃ´ng khá»›p. Vui lÃ²ng kiá»ƒm tra láº¡i.");
                 return false;
             }
 
             // Success feedback
             const btn = e.target.querySelector('button[type="submit"]');
             const originalContent = btn.innerHTML;
-            btn.innerHTML = `<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span> Đang xử lý...`;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span> Äang xá»­ lÃ½...`;
             btn.disabled = true;
 
             setTimeout(() => {
-                alert("Đăng ký thành công! Chào mừng bạn đến với Apex Velocity.");
+                alert("ÄÄƒng kÃ½ thÃ nh cÃ´ng! ChÃ o má»«ng báº¡n Ä‘áº¿n vá»›i Apex Velocity.");
                 btn.innerHTML = originalContent;
                 btn.disabled = false;
             }, 1500);

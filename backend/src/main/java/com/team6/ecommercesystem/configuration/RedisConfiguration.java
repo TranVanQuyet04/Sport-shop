@@ -12,10 +12,10 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Configuration
 public class RedisConfiguration {
-    @Value("${data.redis.host}")
+    @Value("${spring.data.redis.host}")
     private String host;
 
-    @Value("${data.redis.port}")
+    @Value("${spring.data.redis.port}")
     private int port;
 
     @PostConstruct

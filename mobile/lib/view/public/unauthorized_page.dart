@@ -31,24 +31,53 @@ class UnauthorizedPage extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   Icon(Icons.inventory_2, color: AppColors.primary, size: 120),
-                  Positioned(bottom: 42, child: Icon(Icons.lock_outline, color: AppColors.secondary, size: 92)),
+                  Positioned(
+                    bottom: 42,
+                    child: Icon(
+                      Icons.lock_outline,
+                      color: AppColors.secondary,
+                      size: 92,
+                    ),
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: AppSpacing.xl),
-            Text('CODE: 403', style: AppTextStyles.display.copyWith(color: AppColors.textInverse, backgroundColor: AppColors.primary, fontStyle: FontStyle.italic)),
+            Text(
+              'CODE: 403',
+              style: AppTextStyles.display.copyWith(
+                color: AppColors.textInverse,
+                backgroundColor: AppColors.primary,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
             const SizedBox(height: AppSpacing.xxl),
-            Text('KHÔNG CÓ QUYỀN TRUY CẬP', style: AppTextStyles.display.copyWith(fontSize: 34), textAlign: TextAlign.center),
+            Text(
+              'KHÔNG CÓ QUYỀN TRUY CẬP',
+              style: AppTextStyles.display.copyWith(fontSize: 34),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.lg),
             Text(
               'Bạn không có quyền xem nội dung này. Vui lòng đăng nhập bằng tài khoản phù hợp để tiếp tục.',
               textAlign: TextAlign.center,
-              style: AppTextStyles.body.copyWith(fontSize: 18, color: AppColors.textSecondary),
+              style: AppTextStyles.body.copyWith(
+                fontSize: 18,
+                color: AppColors.textSecondary,
+              ),
             ),
             const Spacer(),
-            AppButton(label: 'ĐĂNG NHẬP', variant: AppButtonVariant.secondary, onPressed: () => context.go(AppRoutes.login)),
+            AppButton(
+              label: 'ĐĂNG NHẬP',
+              variant: AppButtonVariant.secondary,
+              onPressed: () => context.go(AppRoutes.login),
+            ),
             const SizedBox(height: AppSpacing.md),
-            AppButton(label: 'QUAY LẠI TRANG CHỦ', variant: AppButtonVariant.outline, onPressed: () => context.go(AppRoutes.customerHome)),
+            AppButton(
+              label: 'QUAY LẠI TRANG CHỦ',
+              variant: AppButtonVariant.outline,
+              onPressed: () => context.go(AppRoutes.customerHome),
+            ),
             const SizedBox(height: AppSpacing.xl),
             TextButton(
               onPressed: () => context.go(AppRoutes.guestChat),

@@ -2,12 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
-import '../../controller/admin/admin_catalog_controller.dart';
+import '../../presenter/admin/admin_catalog_presenter.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/utils/brand_logo_url_validator.dart';
 import '../../core/widgets/app_button.dart';
+import '../../model/admin/collection_model.dart';
+import '../../model/admin/admin_lookup_model.dart';
+import '../../model/common/backend_models.dart';
 import 'widgets/admin_design_system.dart';
+
+part 'admin_add_product_page_parts/premium_dropdown.dart';
+part 'admin_add_product_page_parts/product_form_support_widgets.dart';
+part 'admin_add_product_page_parts/add_product_state_helpers.dart';
+part 'admin_add_product_page_parts/quick_add_dialogs.dart';
 
 class AdminAddProductPage extends StatefulWidget {
   const AdminAddProductPage({super.key});
@@ -18,38 +27,43 @@ class AdminAddProductPage extends StatefulWidget {
 
 class _AdminAddProductPageState extends State<AdminAddProductPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late final AdminCatalogController _controller = AdminCatalogController(
+  late final AdminCatalogPresenter _presenter = AdminCatalogPresenter(
     adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
   );
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _categoryController = TextEditingController();
-  final TextEditingController _brandController = TextEditingController();
-  final TextEditingController _sportController = TextEditingController();
   final TextEditingController _skuController = TextEditingController();
   final TextEditingController _sizeController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _stockController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
+  List<SportModel> _sports = const [];
+  List<CollectionModel> _collections = const [];
+  List<AdminCategoryModel> _categories = const [];
+  List<AdminBrandModel> _brands = const [];
+  SportModel? _selectedSport;
+  CollectionModel? _selectedCollection;
+  AdminCategoryModel? _selectedCategory;
+  AdminBrandModel? _selectedBrand;
+  bool _isLoadingLookups = true;
+  String? _lookupError;
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
+    _presenter.addListener(_onControllerChanged);
+    _loadLookups();
   }
 
   @override
   void dispose() {
-    _controller
+    _presenter
       ..removeListener(_onControllerChanged)
       ..dispose();
     _nameController.dispose();
     _descriptionController.dispose();
-    _categoryController.dispose();
-    _brandController.dispose();
-    _sportController.dispose();
     _skuController.dispose();
     _sizeController.dispose();
     _colorController.dispose();
@@ -65,18 +79,82 @@ class _AdminAddProductPageState extends State<AdminAddProductPage> {
     }
   }
 
+  Future<void> _loadLookups() async {
+    setState(() {
+      _isLoadingLookups = true;
+      _lookupError = null;
+    });
+    try {
+      final repository = AppDependencies.instance.adminCatalogRepository;
+      final results = await Future.wait<Object>([
+        repository.getSports(),
+        repository.getCollections(),
+        repository.getCategories(),
+        repository.getBrands(),
+      ]);
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _sports = results[0] as List<SportModel>;
+        _collections = (results[1] as List<CollectionModel>)
+            .where((collection) => collection.isActive)
+            .toList(growable: false);
+        _categories = results[2] as List<AdminCategoryModel>;
+        _brands = results[3] as List<AdminBrandModel>;
+      });
+    } catch (error) {
+      if (mounted) {
+        setState(() => _lookupError = error.toString());
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoadingLookups = false);
+      }
+    }
+  }
+
+  void updateState(VoidCallback fn) {
+    if (mounted) {
+      setState(fn);
+    }
+  }
+
   Future<void> _submit() async {
     if (_formKey.currentState?.validate() != true) {
       return;
     }
-    final success = await _controller.saveProduct(
+    final success = await _presenter.saveProduct(
       name: _nameController.text.trim(),
       description: _descriptionController.text.trim(),
-      categoryName: _categoryController.text.trim(),
-      brandName: _brandController.text.trim(),
-      sportName: _sportController.text.trim(),
+      categoryName: _selectedCategory?.name ?? '',
+      brandName: _selectedBrand?.name ?? '',
+      sportName: _selectedSport?.name ?? '',
       variants: [_variantPayload()],
     );
+    if (!mounted) {
+      return;
+    }
+    var collectionLinked = true;
+    if (success && _selectedCollection != null) {
+      final variantIds =
+          _presenter.selectedProduct?.variants
+              .map((variant) => variant.id)
+              .where((id) => id.isNotEmpty)
+              .toList(growable: false) ??
+          const <String>[];
+      try {
+        if (variantIds.isNotEmpty) {
+          await AppDependencies.instance.adminCatalogRepository
+              .addVariantsToCollection(
+                collection: _selectedCollection!,
+                variantIds: variantIds,
+              );
+        }
+      } catch (_) {
+        collectionLinked = false;
+      }
+    }
     if (!mounted) {
       return;
     }
@@ -85,37 +163,22 @@ class _AdminAddProductPageState extends State<AdminAddProductPage> {
         content: Text(
           success
               ? 'Đã thêm sản phẩm.'
-              : (_controller.errorMessage ?? 'Chưa thêm được sản phẩm.'),
+              : (_presenter.errorMessage ?? 'Chưa thêm được sản phẩm.'),
         ),
       ),
     );
+    if (success && !collectionLinked) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Sản phẩm đã được tạo nhưng chưa liên kết được bộ sưu tập.',
+          ),
+        ),
+      );
+    }
     if (success) {
       context.go(AppRoutes.adminProducts);
     }
-  }
-
-  Map<String, dynamic> _variantPayload() {
-    final images = _imageController.text
-        .split(',')
-        .map((value) => value.trim())
-        .where((value) => value.isNotEmpty)
-        .toList();
-    return {
-      'size': _sizeController.text.trim(),
-      'color': _colorController.text.trim(),
-      'price': int.tryParse(_priceController.text.trim()) ?? 0,
-      'stockQuantity': int.tryParse(_stockController.text.trim()) ?? 0,
-      'sku': _skuController.text.trim(),
-      'imageUrls': images,
-    };
-  }
-
-  void _closePage() {
-    if (context.canPop()) {
-      context.pop();
-      return;
-    }
-    context.go(AppRoutes.adminProducts);
   }
 
   @override
@@ -181,30 +244,92 @@ class _AdminAddProductPageState extends State<AdminAddProductPage> {
                       maxLines: 5,
                     ),
                     const SizedBox(height: AppSpacing.lg),
+                    if (_lookupError != null) ...[
+                      AdminInlineBanner(
+                        message: 'Không tải được môn thể thao hoặc bộ sưu tập.',
+                        isError: true,
+                        onRefresh: _loadLookups,
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                    ],
                     _ResponsiveFieldPair(
-                      first: AdminFormField(
-                        controller: _categoryController,
-                        label: 'Danh mục',
-                        hintText: 'Giày chạy bộ',
-                        prefixIcon: Icons.category_outlined,
-                        required: true,
-                        textInputAction: TextInputAction.next,
+                      first: Column(
+                        children: [
+                          _PremiumDropdown<AdminCategoryModel>(
+                            label: 'Danh mục',
+                            hintText: _isLoadingLookups
+                                ? 'Đang tải danh mục...'
+                                : 'Chọn danh mục',
+                            fieldIcon: Icons.category_outlined,
+                            value: _selectedCategory,
+                            items: _categories,
+                            enabled: !_isLoadingLookups,
+                            required: true,
+                            itemLabel: (cat) => cat.name,
+                            itemIcon: (_) => Icons.category_outlined,
+                            onChanged: (value) {
+                              setState(() => _selectedCategory = value);
+                            },
+                            onQuickAdd: _onQuickAddCategory,
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                          _PremiumDropdown<SportModel>(
+                            label: 'Môn thể thao',
+                            hintText: _isLoadingLookups
+                                ? 'Đang tải môn thể thao...'
+                                : 'Chọn môn thể thao',
+                            fieldIcon: Icons.sports_soccer_outlined,
+                            value: _selectedSport,
+                            items: _sports,
+                            enabled: !_isLoadingLookups,
+                            required: true,
+                            itemLabel: (sport) => sport.name,
+                            itemIcon: (sport) => _sportIcon(sport.name),
+                            onChanged: (value) {
+                              setState(() => _selectedSport = value);
+                            },
+                            onQuickAdd: _onQuickAddSport,
+                          ),
+                        ],
                       ),
-                      second: AdminFormField(
-                        controller: _brandController,
-                        label: 'Thương hiệu',
-                        hintText: 'Nike',
-                        prefixIcon: Icons.verified_outlined,
-                        required: true,
-                        textInputAction: TextInputAction.next,
+                      second: Column(
+                        children: [
+                          _PremiumDropdown<AdminBrandModel>(
+                            label: 'Thương hiệu',
+                            hintText: _isLoadingLookups
+                                ? 'Đang tải thương hiệu...'
+                                : 'Chọn thương hiệu',
+                            fieldIcon: Icons.verified_outlined,
+                            value: _selectedBrand,
+                            items: _brands,
+                            enabled: !_isLoadingLookups,
+                            required: true,
+                            itemLabel: (brand) => brand.name,
+                            itemIcon: (_) => Icons.verified_outlined,
+                            onChanged: (value) {
+                              setState(() => _selectedBrand = value);
+                            },
+                            onQuickAdd: _onQuickAddBrand,
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                          _PremiumDropdown<CollectionModel>(
+                            label: 'Bộ sưu tập',
+                            hintText: _isLoadingLookups
+                                ? 'Đang tải bộ sưu tập...'
+                                : 'Không thuộc bộ sưu tập',
+                            fieldIcon: Icons.collections_bookmark_outlined,
+                            value: _selectedCollection,
+                            items: _collections,
+                            enabled: !_isLoadingLookups,
+                            itemLabel: (collection) => collection.name,
+                            itemIcon: (_) =>
+                                Icons.collections_bookmark_outlined,
+                            onChanged: (value) {
+                              setState(() => _selectedCollection = value);
+                            },
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    AdminFormField(
-                      controller: _sportController,
-                      label: 'Môn thể thao',
-                      hintText: 'Running',
-                      prefixIcon: Icons.sports_soccer_outlined,
                     ),
                   ],
                 ),
@@ -282,167 +407,8 @@ class _AdminAddProductPageState extends State<AdminAddProductPage> {
         ),
       ),
       bottomNavigationBar: _SaveBar(
-        submitting: _controller.isSubmitting,
+        submitting: _presenter.isSubmitting,
         onSubmit: _submit,
-      ),
-    );
-  }
-}
-
-class _FormHeader extends StatelessWidget {
-  const _FormHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const AdminIconBadge(
-          icon: Icons.add_photo_alternate_outlined,
-          size: 52,
-        ),
-        const SizedBox(width: AppSpacing.md),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Tạo sản phẩm mới',
-                style: AppTextStyles.display.copyWith(
-                  color: AdminColors.textPrimary,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                'Hoàn thiện dữ liệu cơ bản và biến thể đầu tiên để đưa sản phẩm vào danh mục.',
-                style: AppTextStyles.body.copyWith(
-                  color: AdminColors.textSecondary,
-                  fontSize: 13,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ResponsiveFieldPair extends StatelessWidget {
-  const _ResponsiveFieldPair({required this.first, required this.second});
-
-  final Widget first;
-  final Widget second;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth < 560) {
-          return Column(
-            children: [
-              first,
-              const SizedBox(height: AppSpacing.lg),
-              second,
-            ],
-          );
-        }
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: first),
-            const SizedBox(width: AppSpacing.lg),
-            Expanded(child: second),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _TipBox extends StatelessWidget {
-  const _TipBox();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: AdminColors.warningSoft,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(color: AdminColors.accent.withValues(alpha: 0.12)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const AdminIconBadge(
-            icon: Icons.lightbulb_outline_rounded,
-            color: AdminColors.accent,
-            backgroundColor: AdminColors.accentSoft,
-            size: 40,
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Mẹo nhập liệu',
-                  style: AppTextStyles.subtitle.copyWith(
-                    color: AdminColors.textPrimary,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  'Tên danh mục, thương hiệu và môn thể thao cần khớp dữ liệu backend để sản phẩm được phân loại chính xác.',
-                  style: AppTextStyles.body.copyWith(
-                    color: AdminColors.label,
-                    height: 1.45,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SaveBar extends StatelessWidget {
-  const _SaveBar({required this.submitting, required this.onSubmit});
-
-  final bool submitting;
-  final VoidCallback onSubmit;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AdminColors.surface,
-        boxShadow: [
-          BoxShadow(
-            color: AdminColors.navy.withValues(alpha: 0.08),
-            blurRadius: 24,
-            offset: const Offset(0, -8),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: AppButton(
-            label: submitting ? 'ĐANG LƯU...' : 'LƯU SẢN PHẨM',
-            icon: Icons.save_outlined,
-            isLoading: submitting,
-            backgroundColor: AdminColors.primary,
-            onPressed: submitting ? null : onSubmit,
-          ),
-        ),
       ),
     );
   }

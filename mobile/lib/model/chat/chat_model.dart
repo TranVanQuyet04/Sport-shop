@@ -4,15 +4,20 @@ class ChatMessageModel {
     required this.content,
     required this.sender,
     required this.sentAt,
+    this.type = 'TEXT',
+    this.fileUrl = '',
   });
 
   final String id;
   final String content;
   final String sender;
   final DateTime? sentAt;
+  final String type;
+  final String fileUrl;
 
   bool get fromMe => sender.toUpperCase() == 'CUSTOMER';
   bool get fromAdmin => sender.toUpperCase() == 'ADMIN';
+  bool get fromBot => sender.toUpperCase() == 'BOT';
 
   factory ChatMessageModel.local({
     required String content,
@@ -32,6 +37,8 @@ class ChatMessageModel {
       content: (json['content'] ?? json['message'] ?? '').toString(),
       sender: (json['sender'] ?? '').toString(),
       sentAt: DateTime.tryParse((json['sentAt'] ?? '').toString()),
+      type: (json['type'] ?? 'TEXT').toString(),
+      fileUrl: (json['fileUrl'] ?? '').toString(),
     );
   }
 }
@@ -43,6 +50,7 @@ class ChatRoomModel {
     required this.adminName,
     required this.hasUnread,
     required this.lastMessageAt,
+    this.type = '',
   });
 
   final String id;
@@ -50,6 +58,7 @@ class ChatRoomModel {
   final String adminName;
   final bool hasUnread;
   final DateTime? lastMessageAt;
+  final String type;
 
   factory ChatRoomModel.fromJson(Map<String, dynamic> json) {
     return ChatRoomModel(
@@ -60,6 +69,7 @@ class ChatRoomModel {
       lastMessageAt: DateTime.tryParse(
         (json['lastMessageAt'] ?? '').toString(),
       ),
+      type: (json['type'] ?? '').toString(),
     );
   }
 }

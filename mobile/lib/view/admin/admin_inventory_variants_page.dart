@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../controller/admin/admin_catalog_controller.dart';
+import '../../presenter/admin/admin_catalog_presenter.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_text_styles.dart';
@@ -9,6 +9,9 @@ import '../../core/widgets/hover_effect.dart';
 import '../../model/customer/product_detail_model.dart';
 import 'widgets/admin_bottom_nav.dart';
 import 'widgets/admin_design_system.dart';
+
+part 'admin_inventory_variants_page_parts/variant_form_dialog.dart';
+part 'admin_inventory_variants_page_parts/inventory_summary_widgets.dart';
 
 class AdminInventoryVariantsPage extends StatefulWidget {
   const AdminInventoryVariantsPage({super.key, required this.productId});
@@ -22,20 +25,20 @@ class AdminInventoryVariantsPage extends StatefulWidget {
 
 class _AdminInventoryVariantsPageState
     extends State<AdminInventoryVariantsPage> {
-  late final AdminCatalogController _controller = AdminCatalogController(
+  late final AdminCatalogPresenter _presenter = AdminCatalogPresenter(
     adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
   );
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
-    _controller.loadProductDetail(widget.productId);
+    _presenter.addListener(_onControllerChanged);
+    _presenter.loadProductDetail(widget.productId);
   }
 
   @override
   void dispose() {
-    _controller
+    _presenter
       ..removeListener(_onControllerChanged)
       ..dispose();
     super.dispose();
@@ -56,7 +59,7 @@ class _AdminInventoryVariantsPageState
       return;
     }
 
-    final success = await _controller.saveVariant(
+    final success = await _presenter.saveVariant(
       productId: widget.productId,
       variantId: variant?.id,
       variant: result,
@@ -92,7 +95,7 @@ class _AdminInventoryVariantsPageState
       return;
     }
 
-    final success = await _controller.deleteVariant(
+    final success = await _presenter.deleteVariant(
       productId: widget.productId,
       variantId: variant.id,
     );
@@ -106,7 +109,7 @@ class _AdminInventoryVariantsPageState
     if (quantity < 0) {
       return;
     }
-    final success = await _controller.updateVariantStock(
+    final success = await _presenter.updateVariantStock(
       productId: widget.productId,
       variantId: variant.id,
       quantity: quantity,
@@ -123,7 +126,7 @@ class _AdminInventoryVariantsPageState
         content: Text(
           success
               ? successMessage
-              : (_controller.errorMessage ?? 'Thao tác chưa thành công.'),
+              : (_presenter.errorMessage ?? 'Thao tác chưa thành công.'),
         ),
       ),
     );
@@ -131,30 +134,32 @@ class _AdminInventoryVariantsPageState
 
   @override
   Widget build(BuildContext context) {
-    final product = _controller.selectedProduct;
+    final product = _presenter.selectedProduct;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quản lý kho hàng'),
         actions: [
           IconButton(
-            onPressed: _controller.isLoading
+            tooltip: 'Làm mới kho hàng',
+            onPressed: _presenter.isLoading
                 ? null
-                : () => _controller.loadProductDetail(widget.productId),
+                : () => _presenter.loadProductDetail(widget.productId),
             icon: const Icon(Icons.refresh),
           ),
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: () => _controller.loadProductDetail(widget.productId),
+        onRefresh: () => _presenter.loadProductDetail(widget.productId),
         child: _buildBody(product),
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: 'Thêm biến thể',
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         elevation: 4,
         shape: const CircleBorder(),
-        onPressed: _controller.isSubmitting ? null : () => _openVariantForm(),
-        child: _controller.isSubmitting
+        onPressed: _presenter.isSubmitting ? null : () => _openVariantForm(),
+        child: _presenter.isSubmitting
             ? const SizedBox(
                 width: 20,
                 height: 20,
@@ -167,14 +172,14 @@ class _AdminInventoryVariantsPageState
   }
 
   Widget _buildBody(ProductDetailModel? product) {
-    if (_controller.isLoading && product == null) {
+    if (_presenter.isLoading && product == null) {
       return const AppLoadingState(title: 'Đang tải biến thể');
     }
-    if (_controller.errorMessage != null && product == null) {
+    if (_presenter.errorMessage != null && product == null) {
       return AppErrorState(
         title: 'Không tải được kho hàng',
-        message: _controller.errorMessage!,
-        onAction: () => _controller.loadProductDetail(widget.productId),
+        message: _presenter.errorMessage!,
+        onAction: () => _presenter.loadProductDetail(widget.productId),
       );
     }
     if (product == null) {
@@ -183,7 +188,7 @@ class _AdminInventoryVariantsPageState
         title: 'Chưa có dữ liệu sản phẩm',
         message: 'Không tìm thấy sản phẩm để quản lý biến thể và tồn kho.',
         actionLabel: 'Tải lại dữ liệu',
-        onAction: () => _controller.loadProductDetail(widget.productId),
+        onAction: () => _presenter.loadProductDetail(widget.productId),
       );
     }
 
@@ -259,404 +264,4 @@ class _AdminInventoryVariantsPageState
       ],
     );
   }
-}
-
-class _VariantFormDialog extends StatefulWidget {
-  const _VariantFormDialog({this.variant});
-
-  final ProductVariantModel? variant;
-
-  @override
-  State<_VariantFormDialog> createState() => _VariantFormDialogState();
-}
-
-class _VariantFormDialogState extends State<_VariantFormDialog> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late final TextEditingController _skuController = TextEditingController(
-    text: widget.variant?.sku ?? '',
-  );
-  late final TextEditingController _sizeController = TextEditingController(
-    text: widget.variant?.size ?? '',
-  );
-  late final TextEditingController _colorController = TextEditingController(
-    text: widget.variant?.color ?? '',
-  );
-  late final TextEditingController _priceController = TextEditingController(
-    text: widget.variant?.price.toString() ?? '',
-  );
-  late final TextEditingController _stockController = TextEditingController(
-    text: widget.variant?.stockQuantity.toString() ?? '',
-  );
-  late final TextEditingController _imageController = TextEditingController(
-    text: widget.variant?.imageUrls.join(', ') ?? '',
-  );
-
-  @override
-  void dispose() {
-    _skuController.dispose();
-    _sizeController.dispose();
-    _colorController.dispose();
-    _priceController.dispose();
-    _stockController.dispose();
-    _imageController.dispose();
-    super.dispose();
-  }
-
-  void _submit() {
-    if (_formKey.currentState?.validate() != true) {
-      return;
-    }
-    Navigator.pop(context, {
-      'id': widget.variant?.id,
-      'sku': _skuController.text.trim(),
-      'size': _sizeController.text.trim(),
-      'color': _colorController.text.trim(),
-      'price': int.tryParse(_priceController.text.trim()) ?? 0,
-      'stockQuantity': int.tryParse(_stockController.text.trim()) ?? 0,
-      'imageUrls': _imageController.text
-          .split(',')
-          .map((value) => value.trim())
-          .where((value) => value.isNotEmpty)
-          .toList(),
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isEditing = widget.variant != null;
-    return AlertDialog(
-      title: Text(isEditing ? 'Sửa biến thể' : 'Thêm biến thể'),
-      content: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _DialogField(
-                controller: _skuController,
-                label: 'SKU',
-                required: true,
-              ),
-              _DialogField(controller: _sizeController, label: 'Size'),
-              _DialogField(controller: _colorController, label: 'Màu'),
-              _DialogField(
-                controller: _priceController,
-                label: 'Giá',
-                keyboardType: TextInputType.number,
-                required: true,
-              ),
-              _DialogField(
-                controller: _stockController,
-                label: 'Tồn kho',
-                keyboardType: TextInputType.number,
-                required: true,
-              ),
-              _DialogField(
-                controller: _imageController,
-                label: 'Ảnh URL',
-                hint: 'Ngăn cách nhiều URL bằng dấu phẩy',
-              ),
-            ],
-          ),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Hủy'),
-        ),
-        FilledButton(onPressed: _submit, child: const Text('Lưu')),
-      ],
-    );
-  }
-}
-
-class _DialogField extends StatelessWidget {
-  const _DialogField({
-    required this.controller,
-    required this.label,
-    this.hint,
-    this.keyboardType,
-    this.required = false,
-  });
-
-  final TextEditingController controller;
-  final String label;
-  final String? hint;
-  final TextInputType? keyboardType;
-  final bool required;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(labelText: label, hintText: hint),
-        validator: (value) {
-          if (required && (value == null || value.trim().isEmpty)) {
-            return 'Vui lòng nhập $label.';
-          }
-          return null;
-        },
-      ),
-    );
-  }
-}
-
-class _Title extends StatelessWidget {
-  const _Title({required this.product});
-
-  final ProductDetailModel product;
-
-  @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Quản lý kho hàng',
-        style: AppTextStyles.display.copyWith(fontSize: 36),
-      ),
-      const SizedBox(height: AppSpacing.sm),
-      Text(
-        'Kiểm soát biến thể và tồn kho cho ${product.name}.',
-        style: AppTextStyles.body.copyWith(
-          color: AdminColors.textSecondary,
-          fontSize: 18,
-        ),
-      ),
-    ],
-  );
-}
-
-class _StockSummary extends StatelessWidget {
-  const _StockSummary({
-    required this.title,
-    required this.value,
-    required this.subtitle,
-    this.alert = false,
-    this.dark = false,
-  });
-
-  final String title;
-  final String value;
-  final String subtitle;
-  final bool alert;
-  final bool dark;
-
-  @override
-  Widget build(BuildContext context) => HoverLift(
-    scale: 1.01,
-    dy: -2,
-    borderRadius: BorderRadius.circular(AppRadius.xl),
-    child: DecoratedBox(
-      decoration: BoxDecoration(
-        color: dark ? AdminColors.navy : AdminColors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        boxShadow: AdminDesign.cardShadow,
-        border: alert
-            ? const Border(
-                left: BorderSide(color: AdminColors.accent, width: 4),
-              )
-            : null,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: AppTextStyles.caption.copyWith(
-                color: dark ? Colors.white : AdminColors.primary,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              value,
-              style: AppTextStyles.display.copyWith(
-                fontSize: 42,
-                color: dark ? Colors.white : AdminColors.accent,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              subtitle,
-              style: AppTextStyles.body.copyWith(
-                color: dark ? Colors.white70 : AdminColors.primary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-class _InventoryChip extends StatelessWidget {
-  const _InventoryChip({required this.label, this.active = false});
-
-  final String label;
-  final bool active;
-
-  @override
-  Widget build(BuildContext context) => Chip(
-    label: Text(label),
-    backgroundColor: active ? AdminColors.primary : AdminColors.surfaceMuted,
-    labelStyle: TextStyle(
-      color: active ? Colors.white : AdminColors.primary,
-      fontWeight: FontWeight.w900,
-    ),
-  );
-}
-
-class _VariantCard extends StatelessWidget {
-  const _VariantCard({
-    required this.variant,
-    required this.onDecrease,
-    required this.onIncrease,
-    required this.onEdit,
-    required this.onDelete,
-  });
-
-  final ProductVariantModel variant;
-  final VoidCallback onDecrease;
-  final VoidCallback onIncrease;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
-
-  @override
-  Widget build(BuildContext context) {
-    final alert = variant.stockQuantity <= 5;
-    return HoverLift(
-      scale: 1.01,
-      dy: -2,
-      borderRadius: BorderRadius.circular(AppRadius.xl),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: AdminColors.surface,
-          borderRadius: BorderRadius.circular(AppRadius.xl),
-          boxShadow: AdminDesign.cardShadow,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Row(
-            children: [
-              Container(
-                width: 90,
-                height: 90,
-                decoration: BoxDecoration(
-                  color: AdminColors.surfaceMuted,
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-                child: Icon(
-                  Icons.directions_run,
-                  color: alert ? AdminColors.accent : AdminColors.primary,
-                  size: 48,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.lg),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (alert)
-                      const Chip(
-                        label: Text('SẮP HẾT'),
-                        backgroundColor: Color(0xFFFCE8EE),
-                        labelStyle: TextStyle(color: AdminColors.accent),
-                      ),
-                    Text('SKU: ${variant.sku}', style: AppTextStyles.subtitle),
-                    Text(
-                      'Màu ${variant.color} • Size ${variant.size}',
-                      style: AppTextStyles.body.copyWith(
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Row(
-                      children: [
-                        _QtyButton(label: '-', onTap: onDecrease),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.md,
-                          ),
-                          child: Text(
-                            '${variant.stockQuantity}',
-                            style: AppTextStyles.title,
-                          ),
-                        ),
-                        _QtyButton(label: '+', onTap: onIncrease),
-                        const Spacer(),
-                        Text(
-                          'Còn ${variant.stockQuantity} SP',
-                          style: AppTextStyles.body.copyWith(
-                            color: alert
-                                ? AdminColors.accent
-                                : AdminColors.primary,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  if (value == 'edit') {
-                    onEdit();
-                  } else if (value == 'delete') {
-                    onDelete();
-                  }
-                },
-                itemBuilder: (context) => const [
-                  PopupMenuItem(value: 'edit', child: Text('Sửa')),
-                  PopupMenuItem(value: 'delete', child: Text('Xóa')),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _QtyButton extends StatelessWidget {
-  const _QtyButton({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => HoverLift(
-    interactive: true,
-    scale: 1.06,
-    dy: -1,
-    borderRadius: BorderRadius.circular(AppRadius.lg),
-    child: Material(
-      color: label == '+' ? AdminColors.primary : AdminColors.surfaceMuted,
-      borderRadius: BorderRadius.circular(AppRadius.lg),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: SizedBox(
-          width: 42,
-          height: 42,
-          child: Center(
-            child: Text(
-              label,
-              style: TextStyle(
-                color: label == '+' ? Colors.white : AdminColors.primary,
-                fontSize: 22,
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
 }

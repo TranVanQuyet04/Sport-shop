@@ -10,11 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class DataInitializer implements CommandLineRunner {
     private final RoleSeeder roleSeeder;
     private final UserSeeder userSeeder;
+    private final OrderSeeder orderSeeder;
 
     @Override
     @Transactional
     public void run(String... args) {
         roleSeeder.seed();
         userSeeder.seed();
+        orderSeeder.seed();
     }
 }

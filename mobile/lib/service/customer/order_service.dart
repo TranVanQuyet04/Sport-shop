@@ -1,6 +1,5 @@
 import '../../core/network/api_client.dart';
 import '../../core/network/api_endpoints.dart';
-import '../../core/network/api_exception.dart';
 import '../../model/customer/order_model.dart';
 
 abstract interface class OrderService {
@@ -38,12 +37,16 @@ class OrderApiService implements OrderService {
 
   @override
   Future<OrderModel> getMyOrderById(String orderId) async {
-    return _findOrderById(await getMyOrders(), orderId);
+    final json = await _apiClient.getJson('${ApiEndpoints.myOrders}/$orderId');
+    return OrderModel.fromJson(json);
   }
 
   @override
   Future<OrderModel> getAdminOrderById(String orderId) async {
-    return _findOrderById(await getAllOrders(), orderId);
+    final json = await _apiClient.getJson(
+      '${ApiEndpoints.adminOrders}/$orderId',
+    );
+    return OrderModel.fromJson(json);
   }
 
   @override
@@ -62,24 +65,35 @@ class OrderApiService implements OrderService {
     return OrderModel.fromJson(json);
   }
 
-  OrderModel _findOrderById(List<OrderModel> orders, String orderId) {
-    final cleanId = orderId.replaceAll('#', '').trim();
-    for (final order in orders) {
-      if (order.id.replaceAll('#', '').trim() == cleanId) {
-        return order;
-      }
-    }
-    throw const ApiException('Không tìm thấy đơn hàng.', statusCode: 404);
-  }
-
   List<OrderModel> _parseOrders(Map<String, dynamic> json) {
     final rawItems = json['result'] ?? json['data'] ?? json;
     if (rawItems is! List) {
       return const [];
     }
-    return rawItems
+    final orders = rawItems
         .whereType<Map>()
         .map((item) => OrderModel.fromJson(Map<String, dynamic>.from(item)))
         .toList();
+    orders.sort(_compareNewestFirst);
+    return orders;
+  }
+
+  int _compareNewestFirst(OrderModel left, OrderModel right) {
+    final leftDate = left.orderDate;
+    final rightDate = right.orderDate;
+    if (leftDate != null && rightDate != null) {
+      final dateCompare = rightDate.compareTo(leftDate);
+      if (dateCompare != 0) {
+        return dateCompare;
+      }
+    } else if (leftDate != null) {
+      return -1;
+    } else if (rightDate != null) {
+      return 1;
+    }
+
+    final leftId = int.tryParse(left.id.replaceAll('#', '')) ?? 0;
+    final rightId = int.tryParse(right.id.replaceAll('#', '')) ?? 0;
+    return rightId.compareTo(leftId);
   }
 }

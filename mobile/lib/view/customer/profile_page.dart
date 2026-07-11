@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
-import '../../controller/customer/profile_controller.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_state.dart';
+import '../../core/widgets/app_text_field.dart';
 import '../../model/customer/profile_model.dart';
+import '../../presenter/customer/profile_presenter.dart';
 import 'widgets/customer_bottom_nav.dart';
 import 'widgets/sportshop_logo.dart';
 
@@ -20,20 +22,20 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late final ProfileController _controller = ProfileController(
+  late final ProfilePresenter _presenter = ProfilePresenter(
     profileRepository: AppDependencies.instance.profileRepository,
   );
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
-    _controller.loadProfile();
+    _presenter.addListener(_onControllerChanged);
+    _presenter.loadProfile();
   }
 
   @override
   void dispose() {
-    _controller
+    _presenter
       ..removeListener(_onControllerChanged)
       ..dispose();
     super.dispose();
@@ -47,21 +49,21 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final profile = _controller.profile;
+    final profile = _presenter.profile;
 
     return Scaffold(
       appBar: AppBar(
-        title: const SportshopLogo(),
+        title: const StrideXLogo(),
         actions: [
           IconButton(
-            tooltip: 'Refresh',
-            onPressed: _controller.isLoading ? null : _controller.loadProfile,
+            tooltip: 'Tải lại',
+            onPressed: _presenter.isLoading ? null : _presenter.loadProfile,
             icon: const Icon(Icons.refresh),
           ),
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: _controller.loadProfile,
+        onRefresh: _presenter.loadProfile,
         child: _buildBody(profile),
       ),
       bottomNavigationBar: const CustomerBottomNav(selectedIndex: 4),
@@ -69,14 +71,14 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildBody(ProfileModel? profile) {
-    if (_controller.isLoading && profile == null) {
-      return const AppLoadingState(title: 'Loading profile');
+    if (_presenter.isLoading && profile == null) {
+      return const AppLoadingState(title: 'Đang tải hồ sơ');
     }
-    if (_controller.errorMessage != null && profile == null) {
+    if (_presenter.errorMessage != null && profile == null) {
       return AppErrorState(
-        title: 'Could not load profile',
-        message: _controller.errorMessage!,
-        onAction: _controller.loadProfile,
+        title: 'Không tải được hồ sơ',
+        message: _presenter.errorMessage!,
+        onAction: _presenter.loadProfile,
       );
     }
 
@@ -84,47 +86,52 @@ class _ProfilePageState extends State<ProfilePage> {
     final email = profile?.email ?? '';
     final phone = profile?.phoneNumber ?? '';
     final role = profile?.roleName ?? '';
-    final status = profile?.status == true ? 'Active' : 'Disabled';
+    final status = profile?.status == true ? 'Hoạt động' : 'Đã khóa';
 
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
-        if (_controller.errorMessage != null) ...[
-          _ProfileErrorBanner(message: _controller.errorMessage!),
+        if (_presenter.errorMessage != null) ...[
+          _ProfileErrorBanner(message: _presenter.errorMessage!),
           const SizedBox(height: AppSpacing.lg),
         ],
         const SizedBox(height: AppSpacing.xl),
         const Center(
           child: CircleAvatar(
-            radius: 70,
+            radius: 64,
             backgroundColor: AppColors.primary,
-            child: Icon(Icons.person, color: Colors.white, size: 70),
+            child: Icon(Icons.person, color: Colors.white, size: 64),
           ),
         ),
         const SizedBox(height: AppSpacing.xl),
         Text(
-          fullName.isEmpty ? 'Profile' : fullName,
-          style: AppTextStyles.display.copyWith(fontSize: 34),
+          fullName.isEmpty ? 'Hồ sơ của tôi' : fullName,
+          style: AppTextStyles.display.copyWith(fontSize: 30),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          [role, email].where((value) => value.isNotEmpty).join(' - '),
+          email.isEmpty ? 'Chưa có email' : email,
           style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          phone.isEmpty ? 'Phone not updated' : phone,
+          phone.isEmpty ? 'Chưa cập nhật số điện thoại' : phone,
           style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.xl),
-        _ProfileInfoCard(
-          profile: profile,
-          status: status,
+        AppButton(
+          label: 'Chỉnh sửa hồ sơ',
+          variant: AppButtonVariant.secondary,
+          onPressed: profile == null
+              ? null
+              : () => _showEditProfileSheet(profile),
         ),
+        const SizedBox(height: AppSpacing.xl),
+        _ProfileInfoCard(profile: profile, status: status, role: role),
         const SizedBox(height: AppSpacing.xl),
         Material(
           color: AppColors.surface,
@@ -134,17 +141,17 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               _ProfileTile(
                 icon: Icons.location_on_outlined,
-                title: 'Address book',
+                title: 'Sổ địa chỉ',
                 route: AppRoutes.addressBook,
               ),
               _ProfileTile(
                 icon: Icons.receipt_long_outlined,
-                title: 'My orders',
+                title: 'Đơn hàng của tôi',
                 route: AppRoutes.orders,
               ),
               _ProfileTile(
                 icon: Icons.help_outline,
-                title: 'Support center',
+                title: 'Trung tâm hỗ trợ',
                 route: AppRoutes.customerSupport,
                 last: true,
               ),
@@ -163,10 +170,143 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           onPressed: _logout,
           icon: const Icon(Icons.logout),
-          label: const Text('Logout'),
+          label: const Text('Đăng xuất'),
         ),
       ],
     );
+  }
+
+  Future<void> _showEditProfileSheet(ProfileModel profile) async {
+    final nameController = TextEditingController(text: profile.fullName);
+    final phoneController = TextEditingController(text: profile.phoneNumber);
+    var hasSubmitted = false;
+    var isSaving = false;
+
+    try {
+      await showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setSheetState) {
+              String? requiredError(TextEditingController controller) {
+                if (!hasSubmitted || controller.text.trim().isNotEmpty) {
+                  return null;
+                }
+                return 'Vui lòng nhập thông tin.';
+              }
+
+              final phoneText = phoneController.text.trim();
+              final phoneError = !hasSubmitted || phoneText.isEmpty
+                  ? requiredError(phoneController)
+                  : _isVietnamesePhone(phoneText)
+                  ? null
+                  : 'Số điện thoại không hợp lệ.';
+              final canSubmit =
+                  nameController.text.trim().isNotEmpty &&
+                  phoneText.isNotEmpty &&
+                  phoneError == null;
+
+              Future<void> save() async {
+                setSheetState(() => hasSubmitted = true);
+                if (!canSubmit || isSaving) {
+                  return;
+                }
+                setSheetState(() => isSaving = true);
+                final success = await _presenter.updateProfile(
+                  fullName: nameController.text.trim(),
+                  phoneNumber: phoneText,
+                );
+                if (!context.mounted) {
+                  return;
+                }
+                setSheetState(() => isSaving = false);
+                if (success) {
+                  Navigator.of(context).pop();
+                  return;
+                }
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      _presenter.errorMessage ?? 'Không thể cập nhật hồ sơ.',
+                    ),
+                  ),
+                );
+              }
+
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: AppSpacing.lg,
+                  right: AppSpacing.lg,
+                  top: AppSpacing.lg,
+                  bottom:
+                      MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
+                ),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Chỉnh sửa hồ sơ',
+                            style: AppTextStyles.title,
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'Đóng',
+                          onPressed: isSaving
+                              ? null
+                              : () => Navigator.of(context).pop(),
+                          icon: const Icon(Icons.close),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    AppTextField(
+                      label: 'Họ và tên',
+                      controller: nameController,
+                      prefixIcon: Icons.person_outline,
+                      textInputAction: TextInputAction.next,
+                      errorText: requiredError(nameController),
+                      onChanged: (_) => setSheetState(() {}),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    AppTextField(
+                      label: 'Số điện thoại',
+                      controller: phoneController,
+                      prefixIcon: Icons.phone_outlined,
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.done,
+                      errorText: phoneError,
+                      onChanged: (_) => setSheetState(() {}),
+                      onSubmitted: (_) => save(),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    AppButton(
+                      label: 'Lưu hồ sơ',
+                      variant: AppButtonVariant.secondary,
+                      isLoading: isSaving,
+                      onPressed: save,
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      );
+    } finally {
+      nameController.dispose();
+      phoneController.dispose();
+    }
+  }
+
+  bool _isVietnamesePhone(String value) {
+    return RegExp(
+      r'^(0|\+84)(\s|\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\d)(\s|\.)?(\d{3})(\s|\.)?(\d{3})$',
+    ).hasMatch(value);
   }
 
   Future<void> _logout() async {
@@ -179,10 +319,15 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class _ProfileInfoCard extends StatelessWidget {
-  const _ProfileInfoCard({required this.profile, required this.status});
+  const _ProfileInfoCard({
+    required this.profile,
+    required this.status,
+    required this.role,
+  });
 
   final ProfileModel? profile;
   final String status;
+  final String role;
 
   @override
   Widget build(BuildContext context) {
@@ -196,11 +341,11 @@ class _ProfileInfoCard extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           children: [
-            _ProfileInfoRow(label: 'User ID', value: profile?.id ?? '-'),
+            _ProfileInfoRow(label: 'Mã tài khoản', value: profile?.id ?? '-'),
             const Divider(height: AppSpacing.xl),
-            _ProfileInfoRow(label: 'Role', value: profile?.roleName ?? '-'),
+            _ProfileInfoRow(label: 'Vai trò', value: role.isEmpty ? '-' : role),
             const Divider(height: AppSpacing.xl),
-            _ProfileInfoRow(label: 'Status', value: status),
+            _ProfileInfoRow(label: 'Trạng thái', value: status),
           ],
         ),
       ),
@@ -287,7 +432,7 @@ class _ProfileTile extends StatelessWidget {
         minVerticalPadding: AppSpacing.lg,
         leading: CircleAvatar(
           backgroundColor: AppColors.surfaceMuted,
-          foregroundColor: AppColors.primary,
+          foregroundColor: AppColors.secondary,
           child: Icon(icon),
         ),
         title: Text(title, style: AppTextStyles.subtitle),

@@ -2,6 +2,8 @@ import 'package:go_router/go_router.dart';
 
 import '../core/auth/role_mapper.dart';
 import '../core/di/app_dependencies.dart';
+import '../core/theme/app_colors.dart';
+import '../core/theme/role_theme_scope.dart';
 import '../model/customer/order_model.dart';
 import '../view/auth/login_page.dart';
 import '../view/auth/change_password_page.dart';
@@ -18,8 +20,9 @@ import '../view/admin/admin_chat_rooms_page.dart';
 import '../view/admin/admin_delivery_monitoring_page.dart';
 import '../view/admin/admin_inventory_variants_page.dart';
 import '../view/admin/admin_orders_page.dart';
+import '../view/admin/admin_profile_page.dart';
 import '../view/admin/admin_products_page.dart';
-import '../view/admin/admin_revenue_page.dart';
+import '../view/admin/admin_revenue_report_page.dart';
 import '../view/admin/admin_staff_page.dart';
 import '../view/admin/admin_staff_detail_page.dart';
 import '../view/admin/admin_sports_page.dart';
@@ -52,56 +55,9 @@ import '../view/public/not_found_page.dart';
 import '../view/public/unauthorized_page.dart';
 import '../view/splash/splash_page.dart';
 
-abstract final class AppRoutes {
-  static const splash = '/';
-  static const login = '/login';
-  static const register = '/register';
-  static const forgotPassword = '/forgot-password';
-  static const resetPassword = '/reset-password';
-  static const changePassword = '/change-password';
-  static const guestChat = '/guest-chat';
-  static const unauthorized = '/unauthorized';
-  static const onboarding = '/onboarding';
-  static const customerHome = '/customer/home';
-  static const search = '/customer/search';
-  static const productDetail = '/customer/products/:id';
-  static const productGallery = '/customer/products/:id/gallery';
-  static const cart = '/customer/cart';
-  static const checkout = '/customer/checkout';
-  static const addressBook = '/customer/addresses';
-  static const addAddress = '/customer/addresses/new';
-  static const orderSuccess = '/customer/order-success';
-  static const orders = '/customer/orders';
-  static const orderDetail = '/customer/orders/:id';
-  static const tracking = '/customer/orders/:id/tracking';
-  static const confirmReceived = '/customer/orders/:id/confirm-received';
-  static const profile = '/customer/profile';
-  static const customerSupport = '/customer/support';
-  static const customerChat = '/customer/support/chat';
-  static const adminDashboard = '/admin/dashboard';
-  static const adminRevenue = '/admin/revenue';
-  static const adminOrders = '/admin/orders';
-  static const adminProducts = '/admin/products';
-  static const adminStaff = '/admin/staff';
-  static const adminStaffDetail = '/admin/staff/:id';
-  static const adminAddProduct = '/admin/products/new';
-  static const adminInventoryVariants = '/admin/products/:id/variants';
-  static const adminCategories = '/admin/categories';
-  static const adminBrands = '/admin/brands';
-  static const adminSports = '/admin/sports';
-  static const adminCollections = '/admin/collections';
-  static const adminDeliveryMonitoring = '/admin/deliveries';
-  static const adminChatRooms = '/admin/chats';
-  static const adminChatDetail = '/admin/chats/:id';
-  static const adminUsers = '/admin/users';
-  static const adminSettings = '/admin/settings';
-  static const deliveryHome = '/delivery-staff/home';
-  static const deliveryAssignedOrders = '/delivery-staff/orders';
-  static const deliveryStatusUpdate = '/delivery-staff/orders/:id/status';
-  static const deliveryAccount = '/delivery-staff/account';
-}
+part 'app_routes.dart';
 
-final sportshopRouter = GoRouter(
+final stridexRouter = GoRouter(
   initialLocation: AppRoutes.splash,
   redirect: (context, state) async {
     final path = state.uri.path;
@@ -293,7 +249,7 @@ final sportshopRouter = GoRouter(
       path: AppRoutes.adminRevenue,
       name: 'adminRevenue',
       builder: (context, state) =>
-          const AdminThemeScope(child: AdminRevenuePage()),
+          const AdminThemeScope(child: AdminRevenueReportPage()),
     ),
     GoRoute(
       path: AppRoutes.adminOrders,
@@ -388,6 +344,17 @@ final sportshopRouter = GoRouter(
       ),
     ),
     GoRoute(
+      path: AppRoutes.adminProfile,
+      name: 'adminProfile',
+      builder: (context, state) =>
+          const AdminThemeScope(child: AdminProfilePage()),
+    ),
+    GoRoute(
+      path: AppRoutes.adminChangePassword,
+      name: 'adminChangePassword',
+      builder: (context, state) => const ChangePasswordPage(),
+    ),
+    GoRoute(
       path: AppRoutes.adminSettings,
       name: 'adminSettings',
       builder: (context, state) =>
@@ -396,23 +363,36 @@ final sportshopRouter = GoRouter(
     GoRoute(
       path: AppRoutes.deliveryHome,
       name: 'deliveryHome',
-      builder: (context, state) => const DeliveryHomePage(),
+      builder: (context, state) => const RoleThemeScope(
+        palette: AppRolePalette.shipper,
+        child: DeliveryHomePage(),
+      ),
     ),
     GoRoute(
       path: AppRoutes.deliveryAssignedOrders,
       name: 'deliveryAssignedOrders',
-      builder: (context, state) => const AssignedOrdersPage(),
+      builder: (context, state) => const RoleThemeScope(
+        palette: AppRolePalette.shipper,
+        child: AssignedOrdersPage(),
+      ),
     ),
     GoRoute(
       path: AppRoutes.deliveryStatusUpdate,
       name: 'deliveryStatusUpdate',
-      builder: (context, state) =>
-          DeliveryStatusUpdatePage(orderId: state.pathParameters['id'] ?? ''),
+      builder: (context, state) => RoleThemeScope(
+        palette: AppRolePalette.shipper,
+        child: DeliveryStatusUpdatePage(
+          orderId: state.pathParameters['id'] ?? '',
+        ),
+      ),
     ),
     GoRoute(
       path: AppRoutes.deliveryAccount,
       name: 'deliveryAccount',
-      builder: (context, state) => const ShipperAccountPage(),
+      builder: (context, state) => const RoleThemeScope(
+        palette: AppRolePalette.shipper,
+        child: ShipperAccountPage(),
+      ),
     ),
   ],
   errorBuilder: (context, state) => const NotFoundPage(),

@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-07-10T19:38:50.358Z",
+  "scanRoots": [
+    "mobile/lib/view",
+    "mobile/lib/presenter",
+    "mobile/test",
+    "mobile/init.ps1"
+  ],
+  "totalFindings": 0,
+  "findings": []
+}

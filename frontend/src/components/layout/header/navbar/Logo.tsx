@@ -15,7 +15,7 @@ const Logo = () => {
       <span className="flex h-9 w-9 items-center justify-center rounded-sm bg-zinc-950 text-sm text-white">
         S
       </span>
-      <span>SPORTSHOP</span>
+      <span>StrideX</span>
     </div>
   );
 };

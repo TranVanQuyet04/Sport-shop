@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/sportshop_router.dart';
-import '../../controller/customer/product_detail_controller.dart';
+import '../../presenter/customer/product_detail_presenter.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
@@ -11,6 +11,8 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_state.dart';
 import '../../model/customer/product_detail_model.dart';
+
+part 'product_detail_page_parts/product_detail_support_widgets.dart';
 
 class ProductDetailPage extends StatefulWidget {
   const ProductDetailPage({super.key, required this.productId});
@@ -26,7 +28,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   int selectedSizeIndex = 0;
   bool _isAddingToCart = false;
 
-  late final ProductDetailController _controller = ProductDetailController(
+  late final ProductDetailPresenter _presenter = ProductDetailPresenter(
     productRepository: AppDependencies.instance.productRepository,
     productId: widget.productId,
   );
@@ -34,13 +36,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
-    _controller.loadProduct();
+    _presenter.addListener(_onControllerChanged);
+    _presenter.loadProduct();
   }
 
   @override
   void dispose() {
-    _controller
+    _presenter
       ..removeListener(_onControllerChanged)
       ..dispose();
     super.dispose();
@@ -54,25 +56,33 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final product = _controller.product;
+    final product = _presenter.product;
     if (product == null) {
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            onPressed: context.pop,
+            onPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go(AppRoutes.customerHome);
+              }
+            },
             icon: const Icon(Icons.arrow_back),
           ),
-          title: const Center(child: Text('CHI TIẾT')),
+          title: const Text('Chi tiết sản phẩm'),
+          centerTitle: true,
         ),
-        body: _controller.isLoading
+        body: _presenter.isLoading
             ? const AppLoadingState(title: 'Đang tải chi tiết sản phẩm')
             : AppErrorState(
                 title: 'Không tải được chi tiết sản phẩm',
-                message: _controller.errorMessage ?? 'Sản phẩm không tồn tại.',
-                onAction: _controller.loadProduct,
+                message: _presenter.errorMessage ?? 'Sản phẩm không tồn tại.',
+                onAction: _presenter.loadProduct,
               ),
       );
     }
+
     final colors = product.colors;
     final sizes = product.sizes;
     final currentColorIndex = colors.isEmpty
@@ -81,49 +91,61 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     final currentSizeIndex = sizes.isEmpty
         ? 0
         : selectedSizeIndex.clamp(0, sizes.length - 1);
-    final selectedVariant = product.variants.isEmpty
-        ? null
-        : _findSelectedVariant(
-            product,
-            selectedSize: sizes.isEmpty ? '' : sizes[currentSizeIndex],
-            selectedColor: colors.isEmpty ? '' : colors[currentColorIndex],
-          );
-    final displayPrice = product.displayPrice;
+    final selectedVariant = _findSelectedVariant(
+      product,
+      selectedSize: sizes.isEmpty ? '' : sizes[currentSizeIndex],
+      selectedColor: colors.isEmpty ? '' : colors[currentColorIndex],
+    );
+    final displayPrice = selectedVariant?.price ?? product.displayPrice;
     final price = NumberFormat.decimalPattern('vi_VN').format(displayPrice);
+    final variantImages = selectedVariant?.imageUrls ?? const <String>[];
+    final galleryImage = variantImages.isNotEmpty
+        ? variantImages.first
+        : product.imageUrls.isNotEmpty
+        ? product.imageUrls.first
+        : '';
+    final isOutOfStock =
+        selectedVariant == null || selectedVariant.stockQuantity <= 0;
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: context.pop,
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go(AppRoutes.customerHome);
+            }
+          },
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Center(child: Text('CHI TIẾT')),
+        title: const Text('Chi tiết sản phẩm'),
+        centerTitle: true,
       ),
       body: ListView(
         children: [
-          if (_controller.isLoading)
-            const LinearProgressIndicator(minHeight: 3),
+          if (_presenter.isLoading) const LinearProgressIndicator(minHeight: 3),
           Container(
-            height: 500,
+            height: 420,
             color: const Color(0xFFECEFF1),
             child: InkWell(
               onTap: () =>
                   context.go('/customer/products/${widget.productId}/gallery'),
               child: Center(
-                child: product.imageUrls.isEmpty
+                child: galleryImage.isEmpty
                     ? const Icon(
                         Icons.directions_run,
-                        size: 180,
+                        size: 160,
                         color: AppColors.secondary,
                       )
                     : Image.network(
-                        product.imageUrls.first,
+                        galleryImage,
                         fit: BoxFit.cover,
                         webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                         errorBuilder: (context, error, stackTrace) =>
                             const Icon(
                               Icons.directions_run,
-                              size: 180,
+                              size: 160,
                               color: AppColors.secondary,
                             ),
                       ),
@@ -169,6 +191,23 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   '$priceđ',
                   style: AppTextStyles.display.copyWith(fontSize: 30),
                 ),
+                if (selectedVariant != null) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.sm,
+                    children: [
+                      if (selectedVariant.sku.isNotEmpty)
+                        _ProductMetaChip(label: 'SKU ${selectedVariant.sku}'),
+                      _ProductMetaChip(
+                        label: selectedVariant.stockQuantity > 0
+                            ? 'Còn ${selectedVariant.stockQuantity}'
+                            : 'Hết hàng',
+                        isWarning: selectedVariant.stockQuantity <= 0,
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: AppSpacing.lg),
                 if (product.description.isNotEmpty)
                   Text(
@@ -181,7 +220,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 const Divider(),
                 const SizedBox(height: AppSpacing.lg),
                 Text(
-                  'MÀU SẮC',
+                  'Màu sắc',
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w900,
@@ -194,9 +233,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     message: 'Backend chưa trả về biến thể màu sắc.',
                   )
                 else
-                  Row(
+                  Wrap(
+                    spacing: AppSpacing.md,
+                    runSpacing: AppSpacing.sm,
                     children: List.generate(colors.length, (index) {
-                      return _ColorDot(
+                      return _ColorOption(
+                        label: colors[index],
                         color: _parseColor(colors[index]),
                         selected: currentColorIndex == index,
                         onTap: () => setState(() => selectedColor = index),
@@ -207,7 +249,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Row(
                   children: [
                     Text(
-                      'CHỌN SIZE (VN)',
+                      'Chọn size',
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w900,
@@ -234,19 +276,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     spacing: AppSpacing.sm,
                     runSpacing: AppSpacing.sm,
                     children: List.generate(sizes.length, (index) {
+                      final isSelected = currentSizeIndex == index;
                       return ChoiceChip(
                         label: SizedBox(
                           width: 48,
                           child: Center(child: Text(sizes[index])),
                         ),
-                        selected: currentSizeIndex == index,
+                        selected: isSelected,
                         onSelected: (_) =>
                             setState(() => selectedSizeIndex = index),
                         selectedColor: AppColors.primary,
                         labelStyle: TextStyle(
-                          color: currentSizeIndex == index
-                              ? Colors.white
-                              : AppColors.primary,
+                          color: isSelected ? Colors.white : AppColors.primary,
                           fontWeight: FontWeight.w700,
                         ),
                       );
@@ -272,10 +313,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             children: [
               Expanded(
                 child: AppButton(
-                  label: 'THÊM VÀO GIỎ',
-                  variant: AppButtonVariant.outline,
+                  label: 'Thêm vào giỏ',
+                  backgroundColor: SuperSportsTheme.colorPrimary,
                   isLoading: _isAddingToCart,
-                  onPressed: selectedVariant == null
+                  onPressed: isOutOfStock || _isAddingToCart
                       ? null
                       : () => _addToCart(selectedVariant),
                 ),
@@ -283,10 +324,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: AppButton(
-                  label: 'MUA NGAY',
-                  variant: AppButtonVariant.secondary,
+                  label: 'Mua ngay',
+                  backgroundColor: SuperSportsTheme.colorPrimary,
                   isLoading: _isAddingToCart,
-                  onPressed: selectedVariant == null
+                  onPressed: isOutOfStock || _isAddingToCart
                       ? null
                       : () => _addToCart(selectedVariant, goToCheckout: true),
                 ),
@@ -298,40 +339,35 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
-  ProductVariantModel _findSelectedVariant(
+  ProductVariantModel? _findSelectedVariant(
     ProductDetailModel product, {
     required String selectedSize,
     required String selectedColor,
   }) {
     if (product.variants.isEmpty) {
-      return const ProductVariantModel(
-        id: '',
-        sku: '',
-        size: '',
-        color: '',
-        price: 0,
-        stockQuantity: 0,
-        imageUrls: [],
-      );
+      return null;
     }
 
-    return product.variants.firstWhere(
-      (variant) =>
-          variant.size == selectedSize && variant.color == selectedColor,
-      orElse: () => product.variants.firstWhere(
-        (variant) => variant.size == selectedSize,
-        orElse: () => product.variants.first,
-      ),
-    );
+    for (final variant in product.variants) {
+      if (variant.size == selectedSize && variant.color == selectedColor) {
+        return variant;
+      }
+    }
+    for (final variant in product.variants) {
+      if (variant.size == selectedSize) {
+        return variant;
+      }
+    }
+    return product.variants.first;
   }
 
   Future<void> _addToCart(
-    ProductVariantModel variant, {
+    ProductVariantModel? variant, {
     bool goToCheckout = false,
   }) async {
-    if (variant.id.isEmpty) {
+    if (variant == null || variant.id.isEmpty || variant.stockQuantity <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Sản phẩm chưa có biến thể hợp lệ.')),
+        const SnackBar(content: Text('Biến thể sản phẩm hiện không khả dụng.')),
       );
       return;
     }
@@ -363,7 +399,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Color _parseColor(String value) {
     final normalized = value.toLowerCase();
     if (normalized.contains('đỏ') || normalized.contains('red')) {
-      return AppColors.secondary;
+      return AppColors.error;
     }
     if (normalized.contains('trắng') || normalized.contains('white')) {
       return Colors.white;
@@ -374,68 +410,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     if (normalized.contains('đen') || normalized.contains('black')) {
       return Colors.black;
     }
+    if (normalized.contains('vàng') || normalized.contains('yellow')) {
+      return AppColors.warning;
+    }
     return AppColors.primary;
-  }
-}
-
-class _ColorDot extends StatelessWidget {
-  const _ColorDot({
-    required this.color,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final Color color;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 48,
-        height: 48,
-        margin: const EdgeInsets.only(right: AppSpacing.md),
-        padding: const EdgeInsets.all(3),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: selected ? AppColors.primary : AppColors.border,
-            width: selected ? 2 : 1,
-          ),
-        ),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-            border: color == Colors.white
-                ? Border.all(color: AppColors.border)
-                : null,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _InfoTile extends StatelessWidget {
-  const _InfoTile({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(
-        title,
-        style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700),
-      ),
-      trailing: Text(
-        '›',
-        style: AppTextStyles.body.copyWith(color: AppColors.secondary),
-      ),
-    );
   }
 }

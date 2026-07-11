@@ -11,6 +11,7 @@ extension OrderStatusPresentation on OrderStatus {
       OrderStatus.confirmed => 'Đã xác nhận',
       OrderStatus.packing => 'Đang đóng gói',
       OrderStatus.shipped => 'Đã bàn giao',
+      OrderStatus.delivered => 'Shipper đã giao',
       OrderStatus.completed => 'Hoàn thành',
       OrderStatus.cancelled => 'Đã hủy',
     };
@@ -22,6 +23,7 @@ extension OrderStatusPresentation on OrderStatus {
       OrderStatus.confirmed => StatusTone.info,
       OrderStatus.packing => StatusTone.info,
       OrderStatus.shipped => StatusTone.info,
+      OrderStatus.delivered => StatusTone.success,
       OrderStatus.completed => StatusTone.success,
       OrderStatus.cancelled => StatusTone.error,
     };

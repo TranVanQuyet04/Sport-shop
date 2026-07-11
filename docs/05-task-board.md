@@ -1,6 +1,6 @@
 # 05. Task Board
 
-Use file này để chia việc cho nhóm. Có thể copy từng task sang Trello, Jira, GitHub Projects hoặc Google Sheet.
+Use file nÃ y Ä‘á»ƒ chia viá»‡c cho nhÃ³m. CÃ³ thá»ƒ copy tá»«ng task sang Trello, Jira, GitHub Projects hoáº·c Google Sheet.
 
 ## Member A - Backend Auth & User
 
@@ -118,13 +118,13 @@ Use file này để chia việc cho nhóm. Có thể copy từng task sang Trell
 ## Suggested Demo Accounts
 
 Admin:
-- Email: admin@sportshop.vn
+- Email: admin@StrideX.vn
 - Role: Admin
 
 Customer:
-- Email: customer@sportshop.vn
+- Email: customer@StrideX.vn
 - Role: Customer
 
 Shipper:
-- Email: shipper@sportshop.vn
+- Email: shipper@StrideX.vn
 - Role: Shipper

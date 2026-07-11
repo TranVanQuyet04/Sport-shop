@@ -1,0 +1,51 @@
+{
+  "global": [
+    "README.md",
+    "docs/01-project-overview.md",
+    "docs/03-role-flows.md",
+    "docs/04-module-breakdown.md",
+    "docs/06-acceptance-checklist.md",
+    "ai-harness/state/guardrails.md"
+  ],
+  "backend": [
+    "backend/pom.xml",
+    "backend/src/main/java",
+    "backend/src/test",
+    "docs/04-module-breakdown.md",
+    "mobile/api-contract.md"
+  ],
+  "mobile": [
+    "mobile/AGENTS.md",
+    "mobile/architecture.md",
+    "mobile/domain-rules.md",
+    "mobile/api-contract.md",
+    "mobile/progress.md",
+    "mobile/lib",
+    "mobile/test"
+  ],
+  "mobile-admin-ui": [
+    "mobile/AGENTS.md",
+    "mobile/architecture.md",
+    "mobile/domain-rules.md",
+    "mobile/api-contract.md",
+    "mobile/progress.md",
+    "mobile/lib/app/sportshop_router.dart",
+    "mobile/lib/view/admin",
+    "mobile/lib/view/auth/change_password_page.dart",
+    "ai-harness/config/mobile-admin-screen-map.json",
+    "ai-harness/docs/mobile-admin-mvp-checklist.md",
+    "ai-harness/docs/brd-admin-collections-and-chat.md",
+    "ai-harness/workflows/mobile-admin-ui-auto-loop.json"
+  ],
+  "frontend": [
+    "frontend",
+    "docs/08-ui-screens-for-stitch.md"
+  ],
+  "slices": {
+    "mobile-ui-polish": ["mobile", "docs/08-ui-screens-for-stitch.md"],
+    "mobile-admin-ui-auto-loop": ["mobile-admin-ui"],
+    "backend-api-fix": ["backend", "docs/06-acceptance-checklist.md"],
+    "cross-stack-contract": ["backend", "mobile", "docs/04-module-breakdown.md"],
+    "documentation-update": ["global", "docs"]
+  }
+}

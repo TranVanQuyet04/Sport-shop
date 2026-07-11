@@ -18,7 +18,7 @@ public class ChatRoomService {
     public ChatRoom createRoom(String customerName) {
         ChatRoom room = ChatRoom.builder()
                 .customerName(customerName)
-                .adminName("Sportshop Support")
+                .adminName("StrideX Support")
                 .lastMessageAt(LocalDateTime.now())
                 .hasUnread(false)
                 .type(ChatRoomType.ADMIN_SUPPORT)

@@ -1,0 +1,28 @@
+{
+  "name": "StrideX-ralph-loop",
+  "description": "Manual/agent loop policy for StrideX slices",
+  "sliceSelection": {
+    "source": "ai-harness/whole-app-backlog.json",
+    "orderBy": ["priority", "id"],
+    "where": { "passes": false }
+  },
+  "testCaseGate": {
+    "mode": "optional"
+  },
+  "validation": {
+    "script": "ai-harness/scripts/run-checks.ps1",
+    "requiredBeforePass": true
+  },
+  "forbiddenPatterns": [
+    "direct API call in Flutter View",
+    "mock production data",
+    "unauthorized endpoint rename",
+    "silent auth/role bypass",
+    "unrequested database/entity/DTO change"
+  ],
+  "signals": {
+    "done": "SLICE_DONE <id>",
+    "blocked": "SLICE_BLOCKED <reason>",
+    "complete": "COMPLETE"
+  }
+}

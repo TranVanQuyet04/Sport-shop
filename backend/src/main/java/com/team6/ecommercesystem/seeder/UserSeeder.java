@@ -5,6 +5,7 @@ import com.team6.ecommercesystem.model.User;
 import com.team6.ecommercesystem.repository.RoleRepository;
 import com.team6.ecommercesystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -13,42 +14,73 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class UserSeeder {
-    private static final String DEFAULT_PASSWORD = "Password123";
-
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${seed.user.default-password}")
+    private String defaultPassword;
+
+    @Value("${seed.user.admin.full-name}")
+    private String adminFullName;
+
+    @Value("${seed.user.admin.email}")
+    private String adminEmail;
+
+    @Value("${seed.user.admin.phone}")
+    private String adminPhone;
+
+    @Value("${seed.user.shop-staff.full-name}")
+    private String shopStaffFullName;
+
+    @Value("${seed.user.shop-staff.email}")
+    private String shopStaffEmail;
+
+    @Value("${seed.user.shop-staff.phone}")
+    private String shopStaffPhone;
+
+    @Value("${seed.user.shipper.full-name}")
+    private String shipperFullName;
+
+    @Value("${seed.user.shipper.email}")
+    private String shipperEmail;
+
+    @Value("${seed.user.shipper.phone}")
+    private String shipperPhone;
+
+    @Value("${seed.user.member.full-name}")
+    private String memberFullName;
+
+    @Value("${seed.user.member.email}")
+    private String memberEmail;
+
+    @Value("${seed.user.member.phone}")
+    private String memberPhone;
+
     public void seed() {
         createOrRepairUser(
-                "Admin User",
-                "admin@example.com",
-                "0123456789",
+                adminFullName,
+                adminEmail,
+                adminPhone,
                 "ADMIN"
         );
         createOrRepairUser(
-                "Shop Staff User",
-                "shopstaff@example.com",
-                "0323456789",
+                shopStaffFullName,
+                shopStaffEmail,
+                shopStaffPhone,
                 "SHOP_STAFF"
         );
         createOrRepairUser(
-                "Shipper User",
-                "shipper@example.com",
-                "0333456789",
+                shipperFullName,
+                shipperEmail,
+                shipperPhone,
                 "SHIPPER"
         );
         createOrRepairUser(
-                "Member User",
-                "member@example.com",
-                "0987654321",
+                memberFullName,
+                memberEmail,
+                memberPhone,
                 "MEMBER"
-        );
-        createOrRepairUser(
-                "Shipper User",
-                "shipper@example.com",
-                "0912345678",
-                "SHIPPER"
         );
     }
 
@@ -62,7 +94,7 @@ public class UserSeeder {
                         .fullName(fullName)
                         .email(email)
                         .phoneNumber(phoneNumber)
-                        .password(passwordEncoder.encode(DEFAULT_PASSWORD))
+                        .password(passwordEncoder.encode(defaultPassword))
                         .status(true)
                         .role(role)
                         .failedLoginAttempts(0)
@@ -74,8 +106,8 @@ public class UserSeeder {
     private User repairSeedUser(User user, String fullName, String phoneNumber, Role role) {
         boolean changed = false;
 
-        if (!passwordEncoder.matches(DEFAULT_PASSWORD, user.getPassword())) {
-            user.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD));
+        if (!passwordEncoder.matches(defaultPassword, user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(defaultPassword));
             user.setLastPasswordChangeDate(LocalDateTime.now());
             changed = true;
         }

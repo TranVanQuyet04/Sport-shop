@@ -1,18 +1,20 @@
-  import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../core/theme/app_theme.dart';
 import 'sportshop_router.dart';
 
-class SportshopApp extends StatelessWidget {
-  const SportshopApp({super.key});
+class StrideXApp extends StatelessWidget {
+  const StrideXApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Sportshop',
+      title: 'StrideX',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      routerConfig: sportshopRouter,
+      scrollBehavior: const CupertinoScrollBehavior(),
+      routerConfig: stridexRouter,
     );
   }
 }

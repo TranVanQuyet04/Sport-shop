@@ -16,6 +16,7 @@ Future<T?> showAppBottomSheet<T>({
     context: context,
     isScrollControlled: isScrollControlled,
     backgroundColor: Colors.transparent,
+    barrierColor: AppColors.scrim,
     builder: (context) {
       return AppBottomSheet(
         title: title,
@@ -51,7 +52,9 @@ class AppBottomSheet extends StatelessWidget {
         ),
         decoration: const BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.xl),
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -66,7 +69,12 @@ class AppBottomSheet extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, AppSpacing.md),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.lg,
+                AppSpacing.lg,
+                AppSpacing.md,
+              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -79,13 +87,16 @@ class AppBottomSheet extends StatelessWidget {
                           const SizedBox(height: AppSpacing.xs),
                           Text(
                             subtitle!,
-                            style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+                            style: AppTextStyles.body.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
                           ),
                         ],
                       ],
                     ),
                   ),
                   IconButton(
+                    tooltip: 'Đóng',
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(Icons.close),
                   ),
@@ -94,13 +105,23 @@ class AppBottomSheet extends StatelessWidget {
             ),
             Flexible(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.lg),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  0,
+                  AppSpacing.lg,
+                  AppSpacing.lg,
+                ),
                 child: child,
               ),
             ),
             if (actions.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.lg),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  0,
+                  AppSpacing.lg,
+                  AppSpacing.lg,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: actions,

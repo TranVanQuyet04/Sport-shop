@@ -1,0 +1,17 @@
+{
+  "defaultDevice": "pixel7",
+  "devices": {
+    "pixel7": {
+      "label": "Google Pixel 7",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "deviceScaleFactor": 1,
+      "isMobile": true,
+      "hasTouch": true,
+      "orientation": "portrait",
+      "notes": "Matches Chrome DevTools Pixel 7 logical viewport used for StrideX mobile UI QA."
+    }
+  }
+}

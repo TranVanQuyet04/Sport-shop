@@ -14,12 +14,12 @@ const resetPasswordSchema = z
   .object({
     newPassword: z
       .string()
-      .nonempty("Vui lòng nhập mật khẩu mới")
-      .min(6, "Mật khẩu tối thiểu 6 ký tự"),
-    confirmPassword: z.string().nonempty("Vui lòng xác nhận mật khẩu"),
+      .nonempty("Vui lÃ²ng nháº­p máº­t kháº©u má»›i")
+      .min(6, "Máº­t kháº©u tá»‘i thiá»ƒu 6 kÃ½ tá»±"),
+    confirmPassword: z.string().nonempty("Vui lÃ²ng xÃ¡c nháº­n máº­t kháº©u"),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Mật khẩu xác nhận không khớp",
+    message: "Máº­t kháº©u xÃ¡c nháº­n khÃ´ng khá»›p",
     path: ["confirmPassword"],
   });
 
@@ -64,15 +64,15 @@ const ResetPasswordPage = () => {
           <div className="rounded-lg bg-white p-8 text-center shadow-xl shadow-zinc-950/10 ring-1 ring-black/5">
             <ShieldAlert className="mx-auto h-10 w-10 text-red-500" />
             <h1 className="mt-5 text-xl font-black text-gray-900">
-              Link không hợp lệ
+              Link khÃ´ng há»£p lá»‡
             </h1>
             <p className="mt-2 text-sm leading-6 text-gray-600">
-              Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng yêu
-              cầu gửi lại.
+              Link Ä‘áº·t láº¡i máº­t kháº©u khÃ´ng há»£p lá»‡ hoáº·c Ä‘Ã£ háº¿t háº¡n. Vui lÃ²ng yÃªu
+              cáº§u gá»­i láº¡i.
             </p>
             <Link to="/forgot-password" className="mt-6 block">
               <Button className="bg-zinc-950 font-black hover:bg-red-600">
-                Quên mật khẩu
+                QuÃªn máº­t kháº©u
               </Button>
             </Link>
           </div>
@@ -93,21 +93,21 @@ const ResetPasswordPage = () => {
               <span className="flex h-10 w-10 items-center justify-center rounded-sm bg-zinc-950 text-sm font-black text-white">
                 S
               </span>
-              SPORTSHOP
+              StrideX
             </Link>
             <h1 className="mt-7 text-2xl font-black text-gray-900">
-              Đặt lại mật khẩu
+              Äáº·t láº¡i máº­t kháº©u
             </h1>
             <p className="mt-2 text-sm text-gray-600">
-              Nhập mật khẩu mới cho tài khoản của bạn.
+              Nháº­p máº­t kháº©u má»›i cho tÃ i khoáº£n cá»§a báº¡n.
             </p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <PasswordInput
               id="newPassword"
-              label="Mật khẩu mới"
-              placeholder="Tối thiểu 6 ký tự"
+              label="Máº­t kháº©u má»›i"
+              placeholder="Tá»‘i thiá»ƒu 6 kÃ½ tá»±"
               showPassword={showPassword}
               error={errors.newPassword?.message}
               register={register("newPassword")}
@@ -115,8 +115,8 @@ const ResetPasswordPage = () => {
 
             <PasswordInput
               id="confirmPassword"
-              label="Xác nhận mật khẩu mới"
-              placeholder="Nhập lại mật khẩu mới"
+              label="XÃ¡c nháº­n máº­t kháº©u má»›i"
+              placeholder="Nháº­p láº¡i máº­t kháº©u má»›i"
               showPassword={showPassword}
               error={errors.confirmPassword?.message}
               register={register("confirmPassword")}
@@ -132,7 +132,7 @@ const ResetPasswordPage = () => {
               ) : (
                 <Eye className="h-4 w-4" />
               )}
-              {showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+              {showPassword ? "áº¨n máº­t kháº©u" : "Hiá»‡n máº­t kháº©u"}
             </button>
 
             <Button
@@ -142,7 +142,7 @@ const ResetPasswordPage = () => {
               disabled={loading}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {loading ? "Đang xử lý..." : "Đặt lại mật khẩu"}
+              {loading ? "Äang xá»­ lÃ½..." : "Äáº·t láº¡i máº­t kháº©u"}
             </Button>
           </form>
 
@@ -151,7 +151,7 @@ const ResetPasswordPage = () => {
               to="/login"
               className="text-sm font-semibold text-red-600 hover:text-red-700"
             >
-              ← Quay lại đăng nhập
+              â† Quay láº¡i Ä‘Äƒng nháº­p
             </Link>
           </p>
         </div>

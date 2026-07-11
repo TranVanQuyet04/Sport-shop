@@ -2,15 +2,15 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Tài khoản test (development)
+## TÃ i khoáº£n test (development)
 
-Khi chạy `npm run dev`, có thể đăng nhập bằng tài khoản ảo để test (không cần backend):
+Khi cháº¡y `npm run dev`, cÃ³ thá»ƒ Ä‘Äƒng nháº­p báº±ng tÃ i khoáº£n áº£o Ä‘á»ƒ test (khÃ´ng cáº§n backend):
 
-| Email | Mật khẩu |
+| Email | Máº­t kháº©u |
 |-------|----------|
-| test@sportshop.vn | Test123! |
+| test@StrideX.vn | Test123! |
 
-Sau khi đăng nhập có thể kiểm tra: header đã đăng nhập, menu tài khoản, trang Profile, trang Đơn hàng, v.v.
+Sau khi Ä‘Äƒng nháº­p cÃ³ thá»ƒ kiá»ƒm tra: header Ä‘Ã£ Ä‘Äƒng nháº­p, menu tÃ i khoáº£n, trang Profile, trang ÄÆ¡n hÃ ng, v.v.
 
 Currently, two official plugins are available:
 

@@ -1,4 +1,5 @@
 .env
+backend/.env
 .idea/
 *.iml
 node_modules/

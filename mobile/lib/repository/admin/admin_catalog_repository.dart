@@ -129,7 +129,25 @@ abstract interface class AdminCatalogRepository {
 
   Future<List<CollectionModel>> getCollections();
 
+  Future<CollectionModel> addVariantsToCollection({
+    required CollectionModel collection,
+    required List<String> variantIds,
+  });
+
   Future<CollectionModel> createCollection({
+    required String name,
+    required String slug,
+    required String description,
+    required String imageUrl,
+    required String type,
+    required bool isActive,
+    String? startDate,
+    String? endDate,
+    required List<String> variantIds,
+  });
+
+  Future<CollectionModel> updateCollection({
+    required String id,
     required String name,
     required String slug,
     required String description,

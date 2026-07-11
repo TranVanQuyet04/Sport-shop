@@ -1,17 +1,29 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-import '../../controller/admin/admin_orders_controller.dart';
+import '../../presenter/admin/admin_orders_presenter.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
+import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_state.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/hover_effect.dart';
+import '../../model/admin/admin_lookup_model.dart';
 import '../../model/common/delivery_status.dart';
 import '../../model/customer/order_model.dart';
+import '../../model/delivery/delivery_assignment_model.dart';
+import '../../model/delivery/delivery_report_model.dart';
+import '../../repository/delivery/delivery_operations_repository.dart';
 import '../../widgets/shared/absolute_persistent_layout.dart';
 import 'widgets/admin_app_bar.dart';
 import 'widgets/admin_bottom_nav.dart';
 import 'widgets/admin_design_system.dart';
+
+part 'admin_delivery_monitoring_page_parts/delivery_filters_and_summary.dart';
+part 'admin_delivery_monitoring_page_parts/delivery_card_widgets.dart';
+part 'admin_delivery_monitoring_page_parts/delivery_stepper_widgets.dart';
+part 'admin_delivery_monitoring_page_parts/delivery_operations_panel.dart';
 
 enum _DeliveryFilter { all, active, delivered, issue }
 
@@ -25,25 +37,37 @@ class AdminDeliveryMonitoringPage extends StatefulWidget {
 
 class _AdminDeliveryMonitoringPageState
     extends State<AdminDeliveryMonitoringPage> {
-  late final AdminOrdersController _controller = AdminOrdersController(
+  late final AdminOrdersPresenter _presenter = AdminOrdersPresenter(
     orderRepository: AppDependencies.instance.orderRepository,
   );
+  late final DeliveryOperationsRepository _deliveryOperationsRepository =
+      AppDependencies.instance.deliveryOperationsRepository;
   final TextEditingController _searchController = TextEditingController();
 
   _DeliveryFilter _selectedFilter = _DeliveryFilter.all;
   String _searchQuery = '';
+  List<AdminUserModel> _staffUsers = const [];
+  List<DeliveryAssignmentModel> _assignments = const [];
+  List<DeliveryReportModel> _reports = const [];
+  bool _isLoadingOperations = false;
+  bool _isSavingOperations = false;
+  String? _operationsError;
+  Timer? _refreshTimer;
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
-    _controller.loadOrders();
+    _presenter.addListener(_onControllerChanged);
+    _presenter.loadOrders();
+    _loadDeliveryOperations();
+    _startAutoRefresh();
   }
 
   @override
   void dispose() {
+    _refreshTimer?.cancel();
     _searchController.dispose();
-    _controller
+    _presenter
       ..removeListener(_onControllerChanged)
       ..dispose();
     super.dispose();
@@ -55,14 +79,212 @@ class _AdminDeliveryMonitoringPageState
     }
   }
 
+  void _startAutoRefresh() {
+    _refreshTimer?.cancel();
+    _refreshTimer = Timer.periodic(const Duration(seconds: 8), (_) {
+      if (!_presenter.isLoading &&
+          !_presenter.isUpdating &&
+          !_isLoadingOperations &&
+          !_isSavingOperations) {
+        _refreshAll(showLoading: false);
+      }
+    });
+  }
+
+  Future<void> _refreshAll({bool showLoading = true}) async {
+    await Future.wait([
+      _presenter.loadOrders(showLoading: showLoading),
+      _loadDeliveryOperations(showLoading: showLoading),
+    ]);
+  }
+
+  Future<void> _loadDeliveryOperations({bool showLoading = true}) async {
+    if (showLoading) {
+      setState(() {
+        _isLoadingOperations = true;
+        _operationsError = null;
+      });
+    } else {
+      _operationsError = null;
+    }
+    try {
+      final users = await AppDependencies.instance.adminCatalogRepository
+          .getUsers();
+      final assignments = await _deliveryOperationsRepository.getAssignments();
+      final reports = await _deliveryOperationsRepository.getAllReports();
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _staffUsers = users
+            .where((user) => user.roleName.toUpperCase() == 'SHIPPER')
+            .toList();
+        _assignments = assignments;
+        _reports = reports;
+      });
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      setState(() => _operationsError = error.toString());
+    } finally {
+      if (mounted) {
+        if (showLoading) {
+          setState(() => _isLoadingOperations = false);
+        }
+      }
+    }
+  }
+
+  Future<void> _openAssignmentForm({
+    OrderModel? order,
+    DeliveryAssignmentModel? assignment,
+  }) async {
+    final result = await showModalBottomSheet<_AssignmentFormResult>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => _AssignmentFormSheet(
+        orders: _deliveryOrders,
+        assignments: _assignments,
+        staffUsers: _staffUsers,
+        assignment: assignment,
+        initialOrderId: order?.id,
+      ),
+    );
+    if (result == null) {
+      return;
+    }
+    setState(() => _isSavingOperations = true);
+    try {
+      if (assignment == null) {
+        await _deliveryOperationsRepository.assignOrder(
+          orderId: result.orderId,
+          staffId: result.staffId,
+          note: result.note,
+        );
+      } else {
+        await _deliveryOperationsRepository.updateAssignment(
+          id: assignment.id,
+          orderId: result.orderId,
+          staffId: result.staffId,
+          note: result.note,
+        );
+      }
+      await _loadDeliveryOperations();
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.toString())));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSavingOperations = false);
+      }
+    }
+  }
+
+  Future<void> _deleteAssignment(DeliveryAssignmentModel assignment) async {
+    final confirmed = await _confirm(
+      title: 'Gỡ phân công',
+      message: 'Bạn có chắc muốn gỡ shipper khỏi đơn #${assignment.orderId}?',
+    );
+    if (!confirmed) {
+      return;
+    }
+    setState(() => _isSavingOperations = true);
+    try {
+      await _deliveryOperationsRepository.deleteAssignment(assignment.id);
+      await _loadDeliveryOperations();
+    } finally {
+      if (mounted) {
+        setState(() => _isSavingOperations = false);
+      }
+    }
+  }
+
+  Future<void> _openReportForm(DeliveryReportModel report) async {
+    final result = await showModalBottomSheet<_ReportFormResult>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => _ReportFormSheet(report: report),
+    );
+    if (result == null) {
+      return;
+    }
+    setState(() => _isSavingOperations = true);
+    try {
+      await _deliveryOperationsRepository.updateReport(
+        id: report.id,
+        status: result.status,
+        reason: result.reason,
+        note: result.note,
+        evidenceImageUrl: result.evidenceImageUrl,
+      );
+      await _loadDeliveryOperations();
+    } finally {
+      if (mounted) {
+        setState(() => _isSavingOperations = false);
+      }
+    }
+  }
+
+  Future<void> _deleteReport(DeliveryReportModel report) async {
+    final confirmed = await _confirm(
+      title: 'Xóa báo cáo',
+      message: 'Bạn có chắc muốn xóa báo cáo giao hàng #${report.id}?',
+    );
+    if (!confirmed) {
+      return;
+    }
+    setState(() => _isSavingOperations = true);
+    try {
+      await _deliveryOperationsRepository.deleteReport(report.id);
+      await _loadDeliveryOperations();
+    } finally {
+      if (mounted) {
+        setState(() => _isSavingOperations = false);
+      }
+    }
+  }
+
+  Future<bool> _confirm({
+    required String title,
+    required String message,
+  }) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Hủy'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Xác nhận'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
   List<OrderModel> get _deliveryOrders {
     final query = _searchQuery.trim().toLowerCase();
-    return _controller.orders.where((order) {
+    return _presenter.orders.where((order) {
       final rawStatus = order.status.toUpperCase();
       final paymentMethod = order.paymentMethod.toUpperCase();
       final belongsToDelivery =
           (rawStatus == 'PENDING' && paymentMethod == 'COD') ||
           rawStatus == 'PAID' ||
+          rawStatus == 'CONFIRMED' ||
+          rawStatus == 'PACKING' ||
+          rawStatus == 'SHIPPED' ||
           rawStatus == 'SHIPPING' ||
           rawStatus == 'DELIVERED' ||
           rawStatus == 'COMPLETED' ||
@@ -97,17 +319,24 @@ class _AdminDeliveryMonitoringPageState
 
   Future<void> _advanceDelivery(OrderModel order) async {
     final currentStatus = order.status.toUpperCase();
-    final nextStatus = currentStatus == 'SHIPPING' ? 'DELIVERED' : 'SHIPPING';
-    await _controller.updateOrderStatus(order.id, nextStatus);
+    final nextStatus = switch (currentStatus) {
+      'PENDING' => 'CONFIRMED',
+      'CONFIRMED' => 'PACKING',
+      'PACKING' || 'PAID' => 'SHIPPED',
+      'SHIPPED' || 'SHIPPING' => 'DELIVERED',
+      'DELIVERED' => 'COMPLETED',
+      _ => 'SHIPPED',
+    };
+    await _presenter.updateOrderStatus(order.id, nextStatus);
     if (!mounted) {
       return;
     }
-    final failed = _controller.errorMessage != null;
+    final failed = _presenter.errorMessage != null;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           failed
-              ? _controller.errorMessage!
+              ? _presenter.errorMessage!
               : 'Đã cập nhật đơn #${order.id} sang $nextStatus.',
         ),
       ),
@@ -119,18 +348,17 @@ class _AdminDeliveryMonitoringPageState
     final orders = _deliveryOrders;
     return Scaffold(
       appBar: const AdminAppBar(),
-      body: RefreshIndicator(
-        onRefresh: _controller.loadOrders,
-        child: _buildBody(orders),
-      ),
+      body: RefreshIndicator(onRefresh: _refreshAll, child: _buildBody(orders)),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Làm mới danh sách giao hàng',
         backgroundColor: AdminColors.primary,
         foregroundColor: Colors.white,
         elevation: 4,
         shape: const CircleBorder(),
-        onPressed: _controller.isLoading ? null : _controller.loadOrders,
-        child: _controller.isLoading
+        onPressed: _presenter.isLoading || _isLoadingOperations
+            ? null
+            : _refreshAll,
+        child: _presenter.isLoading
             ? const SizedBox.square(
                 dimension: 20,
                 child: CircularProgressIndicator(
@@ -145,21 +373,30 @@ class _AdminDeliveryMonitoringPageState
   }
 
   Widget _buildBody(List<OrderModel> orders) {
-    if (_controller.isLoading && _controller.orders.isEmpty) {
+    final assignmentByOrderId = {
+      for (final assignment in _assignments) assignment.orderId: assignment,
+    };
+    final canAddAssignment = _deliveryOrders.any(
+      (order) => !assignmentByOrderId.containsKey(order.id),
+    );
+    if (_presenter.isLoading && _presenter.orders.isEmpty) {
       return const AppLoadingState(title: 'Đang tải giao hàng');
     }
-    if (_controller.errorMessage != null && _controller.orders.isEmpty) {
+    if (_presenter.errorMessage != null && _presenter.orders.isEmpty) {
       return AppErrorState(
         title: 'Không tải được giao hàng',
-        message: _controller.errorMessage!,
-        onAction: _controller.loadOrders,
+        message: _presenter.errorMessage!,
+        onAction: _refreshAll,
       );
     }
 
-    final allDeliveryOrders = _controller.orders.where((order) {
+    final allDeliveryOrders = _presenter.orders.where((order) {
       final status = order.status.toUpperCase();
       return status == 'PENDING' ||
           status == 'PAID' ||
+          status == 'CONFIRMED' ||
+          status == 'PACKING' ||
+          status == 'SHIPPED' ||
           status == 'SHIPPING' ||
           status == 'DELIVERED' ||
           status == 'COMPLETED' ||
@@ -186,10 +423,10 @@ class _AdminDeliveryMonitoringPageState
       filterAndSearchZone: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (_controller.errorMessage != null) ...[
+          if (_presenter.errorMessage != null) ...[
             _DeliveryErrorBanner(
-              message: _controller.errorMessage!,
-              onRefresh: _controller.loadOrders,
+              message: _presenter.errorMessage!,
+              onRefresh: _refreshAll,
             ),
             const SizedBox(height: AppSpacing.lg),
           ],
@@ -218,6 +455,23 @@ class _AdminDeliveryMonitoringPageState
                 0,
               ),
               children: [
+                _DeliveryOperationsPanel(
+                  assignments: _assignments,
+                  reports: _reports,
+                  staffUsers: _staffUsers,
+                  canAddAssignment: canAddAssignment,
+                  isLoading: _isLoadingOperations,
+                  isSaving: _isSavingOperations,
+                  errorMessage: _operationsError,
+                  onRefresh: _loadDeliveryOperations,
+                  onAddAssignment: () => _openAssignmentForm(),
+                  onEditAssignment: (assignment) =>
+                      _openAssignmentForm(assignment: assignment),
+                  onDeleteAssignment: _deleteAssignment,
+                  onEditReport: _openReportForm,
+                  onDeleteReport: _deleteReport,
+                ),
+                const SizedBox(height: AppSpacing.lg),
                 _SectionHeading(
                   count: orders.length,
                   hasFilter:
@@ -231,10 +485,17 @@ class _AdminDeliveryMonitoringPageState
                     child: DeliveryCardWidget(
                       order: order,
                       status: _mapDeliveryStatus(order),
-                      isUpdating: _controller.isUpdating,
-                      onAdvance: _controller.isUpdating
+                      assignment: assignmentByOrderId[order.id],
+                      isUpdating: _presenter.isUpdating,
+                      onAdvance: _presenter.isUpdating
                           ? null
                           : () => _advanceDelivery(order),
+                      onAssign: _isSavingOperations
+                          ? null
+                          : () => _openAssignmentForm(
+                              order: order,
+                              assignment: assignmentByOrderId[order.id],
+                            ),
                     ),
                   ),
                 ),
@@ -258,7 +519,7 @@ class _AdminDeliveryMonitoringPageState
           : Icons.filter_alt_off_outlined,
       onAction:
           _selectedFilter == _DeliveryFilter.all && _searchQuery.trim().isEmpty
-          ? _controller.loadOrders
+          ? _refreshAll
           : () {
               _searchController.clear();
               setState(() {
@@ -307,683 +568,19 @@ class _AdminDeliveryMonitoringPageState
         ? order.deliveryStatus
         : order.status;
     return switch (value.toUpperCase()) {
-      'PAID' || 'PENDING' || 'WAITING_PICKUP' => DeliveryStatus.waitingPickup,
-      'PICKED_UP' => DeliveryStatus.pickedUp,
+      'PAID' ||
+      'PENDING' ||
+      'CONFIRMED' ||
+      'WAITING_PICKUP' => DeliveryStatus.waitingPickup,
+      'PACKING' || 'PICKED_UP' => DeliveryStatus.pickedUp,
       'IN_TRANSIT' => DeliveryStatus.inTransit,
-      'SHIPPING' || 'OUT_FOR_DELIVERY' => DeliveryStatus.outForDelivery,
+      'SHIPPED' ||
+      'SHIPPING' ||
+      'OUT_FOR_DELIVERY' => DeliveryStatus.outForDelivery,
       'DELIVERED' || 'COMPLETED' => DeliveryStatus.delivered,
       'CANCELLED' || 'RETURNED' => DeliveryStatus.returned,
       'FAILED' => DeliveryStatus.failed,
       _ => DeliveryStatus.waitingPickup,
     };
   }
-}
-
-class _DeliveryEmptyPresentation {
-  const _DeliveryEmptyPresentation({
-    required this.icon,
-    required this.title,
-    required this.message,
-  });
-
-  final IconData icon;
-  final String title;
-  final String message;
-}
-
-class _DeliverySummary extends StatelessWidget {
-  const _DeliverySummary({
-    required this.activeCount,
-    required this.deliveredCount,
-  });
-
-  final int activeCount;
-  final int deliveredCount;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
-      ),
-      decoration: BoxDecoration(
-        color: AdminColors.primarySoft,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-      ),
-      child: Text(
-        '$activeCount đang giao · $deliveredCount đã giao',
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: AdminColors.primary,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-  }
-}
-
-class _DeliveryErrorBanner extends StatelessWidget {
-  const _DeliveryErrorBanner({required this.message, required this.onRefresh});
-
-  final String message;
-  final VoidCallback onRefresh;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AdminColors.primarySoft,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.info_outline_rounded, color: AdminColors.primary),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Text(
-              message,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AdminColors.primaryPressed,
-              ),
-            ),
-          ),
-          TextButton(onPressed: onRefresh, child: const Text('Thử lại')),
-        ],
-      ),
-    );
-  }
-}
-
-class _DeliveryFilterBar extends StatelessWidget {
-  const _DeliveryFilterBar({required this.selected, required this.onSelected});
-
-  final _DeliveryFilter selected;
-  final ValueChanged<_DeliveryFilter> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    const filters = <(_DeliveryFilter, String)>[
-      (_DeliveryFilter.all, 'Tất cả'),
-      (_DeliveryFilter.active, 'Đang giao'),
-      (_DeliveryFilter.delivered, 'Đã giao'),
-      (_DeliveryFilter.issue, 'Lỗi / Trả lại'),
-    ];
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: filters.map((entry) {
-          final isSelected = selected == entry.$1;
-          final isIssue = entry.$1 == _DeliveryFilter.issue;
-          return Padding(
-            padding: const EdgeInsets.only(right: AppSpacing.sm),
-            child: ChoiceChip(
-              label: Text(entry.$2),
-              selected: isSelected,
-              onSelected: (_) => onSelected(entry.$1),
-              showCheckmark: false,
-              backgroundColor: AdminColors.surface,
-              selectedColor: isIssue
-                  ? const Color(0xFFFFE4E6)
-                  : AdminColors.primary,
-              side: BorderSide(
-                color: isSelected && isIssue
-                    ? const Color(0xFFBE123C)
-                    : isSelected
-                    ? AdminColors.primary
-                    : AdminColors.border,
-              ),
-              labelStyle: TextStyle(
-                color: isSelected
-                    ? isIssue
-                          ? const Color(0xFFBE123C)
-                          : Colors.white
-                    : AdminColors.textSecondary,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
-
-class _SectionHeading extends StatelessWidget {
-  const _SectionHeading({required this.count, required this.hasFilter});
-
-  final int count;
-  final bool hasFilter;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            hasFilter ? 'Kết quả lọc' : 'Danh sách vận đơn',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: AdminColors.textPrimary,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm,
-            vertical: AppSpacing.xs,
-          ),
-          decoration: BoxDecoration(
-            color: AdminColors.surfaceMuted,
-            borderRadius: BorderRadius.circular(AppRadius.sm),
-          ),
-          child: Text(
-            '$count vận đơn',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AdminColors.textSecondary,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class DeliveryCardWidget extends StatelessWidget {
-  const DeliveryCardWidget({
-    super.key,
-    required this.order,
-    required this.status,
-    required this.isUpdating,
-    required this.onAdvance,
-  });
-
-  final OrderModel order;
-  final DeliveryStatus status;
-  final bool isUpdating;
-  final VoidCallback? onAdvance;
-
-  bool get _isIssue =>
-      status == DeliveryStatus.returned || status == DeliveryStatus.failed;
-
-  bool get _canAdvance =>
-      status == DeliveryStatus.waitingPickup ||
-      status == DeliveryStatus.pickedUp ||
-      status == DeliveryStatus.inTransit ||
-      status == DeliveryStatus.outForDelivery;
-
-  @override
-  Widget build(BuildContext context) {
-    return HoverLift(
-      interactive: false,
-      scale: 1.01,
-      dy: -2,
-      borderRadius: BorderRadius.circular(AdminDesign.radius),
-      child: Material(
-        color: AdminColors.surface,
-        borderRadius: BorderRadius.circular(AdminDesign.radius),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: null,
-          splashColor: AdminColors.primary.withValues(alpha: 0.08),
-          child: Ink(
-            padding: AdminDesign.cardPadding,
-            decoration: BoxDecoration(
-              color: AdminColors.surface,
-              borderRadius: BorderRadius.circular(AdminDesign.radius),
-              boxShadow: AdminDesign.cardShadow,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _DeliveryCardHeader(orderId: order.id, status: status),
-                const SizedBox(height: AppSpacing.md),
-                _ProductSummary(order: order),
-                const SizedBox(height: AppSpacing.md),
-                _DeliveryInfo(order: order),
-                if (_isIssue) ...[
-                  const SizedBox(height: AppSpacing.md),
-                  const _IssueNotice(),
-                ],
-                const SizedBox(height: AppSpacing.lg),
-                DeliveryStatusStepper(status: status),
-                if (_canAdvance) ...[
-                  const SizedBox(height: AppSpacing.lg),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: onAdvance,
-                      icon: isUpdating
-                          ? const SizedBox.square(
-                              dimension: 18,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Icon(
-                              status == DeliveryStatus.outForDelivery
-                                  ? Icons.task_alt_rounded
-                                  : Icons.local_shipping_outlined,
-                            ),
-                      label: Text(
-                        status == DeliveryStatus.outForDelivery
-                            ? 'Đánh dấu đã giao'
-                            : 'Bàn giao cho đơn vị vận chuyển',
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DeliveryCardHeader extends StatelessWidget {
-  const _DeliveryCardHeader({required this.orderId, required this.status});
-
-  final String orderId;
-  final DeliveryStatus status;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: AdminColors.primarySoft,
-            borderRadius: BorderRadius.circular(AppRadius.lg),
-          ),
-          child: const Icon(
-            Icons.local_shipping_outlined,
-            color: AdminColors.primary,
-            size: 21,
-          ),
-        ),
-        const SizedBox(width: AppSpacing.md),
-        Expanded(
-          child: Text(
-            'Đơn hàng #$orderId',
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: AdminColors.textPrimary,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        _DeliveryStatusPill(status: status),
-      ],
-    );
-  }
-}
-
-class _DeliveryStatusPill extends StatelessWidget {
-  const _DeliveryStatusPill({required this.status});
-
-  final DeliveryStatus status;
-
-  @override
-  Widget build(BuildContext context) {
-    final presentation = _statusPresentation(status);
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: 6,
-      ),
-      decoration: BoxDecoration(
-        color: presentation.background,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        presentation.label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: presentation.foreground,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-    );
-  }
-}
-
-class _ProductSummary extends StatelessWidget {
-  const _ProductSummary({required this.order});
-
-  final OrderModel order;
-
-  @override
-  Widget build(BuildContext context) {
-    final productName = order.firstProductName.isEmpty
-        ? 'Chưa có thông tin sản phẩm'
-        : order.firstProductName;
-    return Row(
-      children: [
-        const Icon(
-          Icons.inventory_2_outlined,
-          size: 16,
-          color: AdminColors.textSecondary,
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: Text(
-            productName,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AdminColors.textSecondary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Text(
-          '${order.totalItems} sản phẩm',
-          style: Theme.of(
-            context,
-          ).textTheme.labelSmall?.copyWith(color: AdminColors.textSecondary),
-        ),
-      ],
-    );
-  }
-}
-
-class _DeliveryInfo extends StatelessWidget {
-  const _DeliveryInfo({required this.order});
-
-  final OrderModel order;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AdminColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-      ),
-      child: Column(
-        children: [
-          _InfoRow(
-            icon: Icons.person_outline_rounded,
-            child: Text(
-              order.recipientName.isEmpty
-                  ? 'Chưa có tên người nhận'
-                  : order.recipientName,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AdminColors.textPrimary,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          if (order.phoneNumber.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.sm),
-            _InfoRow(
-              icon: Icons.phone_outlined,
-              child: Text(
-                order.phoneNumber,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AdminColors.textSecondary,
-                ),
-              ),
-            ),
-          ],
-          const SizedBox(height: AppSpacing.sm),
-          _InfoRow(
-            icon: Icons.location_on_outlined,
-            alignStart: true,
-            child: Text(
-              order.shippingAddress.isEmpty
-                  ? 'Chưa có địa chỉ giao hàng'
-                  : order.shippingAddress,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AdminColors.textSecondary,
-                height: 1.4,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({
-    required this.icon,
-    required this.child,
-    this.alignStart = false,
-  });
-
-  final IconData icon;
-  final Widget child;
-  final bool alignStart;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: alignStart
-          ? CrossAxisAlignment.start
-          : CrossAxisAlignment.center,
-      children: [
-        Icon(icon, size: 17, color: AdminColors.textSecondary),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(child: child),
-      ],
-    );
-  }
-}
-
-class _IssueNotice extends StatelessWidget {
-  const _IssueNotice();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF1F2),
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.error_outline_rounded,
-            color: Color(0xFFBE123C),
-            size: 18,
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Text(
-              'Vận đơn cần được kiểm tra và xử lý lại.',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: const Color(0xFF9F1239),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class DeliveryStatusStepper extends StatelessWidget {
-  const DeliveryStatusStepper({super.key, required this.status});
-
-  final DeliveryStatus status;
-
-  int get _currentStep {
-    return switch (status) {
-      DeliveryStatus.waitingPickup || DeliveryStatus.pickedUp => 0,
-      DeliveryStatus.inTransit ||
-      DeliveryStatus.outForDelivery ||
-      DeliveryStatus.failed ||
-      DeliveryStatus.returned => 1,
-      DeliveryStatus.delivered => 2,
-    };
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final complete = status == DeliveryStatus.delivered;
-    final issue =
-        status == DeliveryStatus.failed || status == DeliveryStatus.returned;
-    final activeColor = complete
-        ? const Color(0xFF16A34A)
-        : issue
-        ? const Color(0xFFBE123C)
-        : AdminColors.primary;
-
-    return Column(
-      children: [
-        Row(
-          children: List.generate(5, (index) {
-            if (index.isOdd) {
-              final connectorStep = index ~/ 2;
-              return Expanded(
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  height: 3,
-                  color: connectorStep < _currentStep
-                      ? activeColor
-                      : AdminColors.border,
-                ),
-              );
-            }
-            final step = index ~/ 2;
-            final reached = step <= _currentStep;
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              width: 24,
-              height: 24,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: reached ? activeColor : AdminColors.surface,
-                border: Border.all(
-                  color: reached ? activeColor : AdminColors.border,
-                  width: 2,
-                ),
-              ),
-              child: reached
-                  ? const Icon(
-                      Icons.check_rounded,
-                      size: 14,
-                      color: Colors.white,
-                    )
-                  : null,
-            );
-          }),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Row(
-          children: [
-            _StepLabel(
-              label: 'Xác nhận',
-              active: _currentStep >= 0,
-              color: activeColor,
-            ),
-            _StepLabel(
-              label: issue ? 'Có sự cố' : 'Đang giao',
-              active: _currentStep >= 1,
-              color: activeColor,
-              centered: true,
-            ),
-            _StepLabel(
-              label: 'Hoàn thành',
-              active: _currentStep >= 2,
-              color: activeColor,
-              trailing: true,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _StepLabel extends StatelessWidget {
-  const _StepLabel({
-    required this.label,
-    required this.active,
-    required this.color,
-    this.centered = false,
-    this.trailing = false,
-  });
-
-  final String label;
-  final bool active;
-  final Color color;
-  final bool centered;
-  final bool trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Text(
-        label,
-        textAlign: centered
-            ? TextAlign.center
-            : trailing
-            ? TextAlign.end
-            : TextAlign.start,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: active ? color : AdminColors.textSecondary,
-          fontWeight: active ? FontWeight.w700 : FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
-
-({String label, Color background, Color foreground}) _statusPresentation(
-  DeliveryStatus status,
-) {
-  return switch (status) {
-    DeliveryStatus.waitingPickup => (
-      label: 'Chờ lấy hàng',
-      background: const Color(0xFFFEF3C7),
-      foreground: const Color(0xFF92400E),
-    ),
-    DeliveryStatus.pickedUp => (
-      label: 'Đã lấy hàng',
-      background: AdminColors.primarySoft,
-      foreground: AdminColors.primaryPressed,
-    ),
-    DeliveryStatus.inTransit => (
-      label: 'Đang vận chuyển',
-      background: AdminColors.primarySoft,
-      foreground: AdminColors.primaryPressed,
-    ),
-    DeliveryStatus.outForDelivery => (
-      label: 'Đang giao',
-      background: AdminColors.primarySoft,
-      foreground: AdminColors.primaryPressed,
-    ),
-    DeliveryStatus.delivered => (
-      label: 'Đã giao',
-      background: const Color(0xFFDCFCE7),
-      foreground: const Color(0xFF166534),
-    ),
-    DeliveryStatus.failed => (
-      label: 'Giao thất bại',
-      background: const Color(0xFFFFE4E6),
-      foreground: const Color(0xFFBE123C),
-    ),
-    DeliveryStatus.returned => (
-      label: 'Hoàn trả',
-      background: const Color(0xFFFFE4E6),
-      foreground: const Color(0xFFBE123C),
-    ),
-  };
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
-import '../../controller/admin/admin_catalog_controller.dart';
+import '../../presenter/admin/admin_catalog_presenter.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
@@ -22,20 +22,20 @@ class AdminStaffDetailPage extends StatefulWidget {
 }
 
 class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
-  late final AdminCatalogController _controller = AdminCatalogController(
+  late final AdminCatalogPresenter _presenter = AdminCatalogPresenter(
     adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
   );
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
-    _controller.loadUserDetail(widget.staffId);
+    _presenter.addListener(_onControllerChanged);
+    _presenter.loadUserDetail(widget.staffId);
   }
 
   @override
   void dispose() {
-    _controller
+    _presenter
       ..removeListener(_onControllerChanged)
       ..dispose();
     super.dispose();
@@ -56,11 +56,11 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
   }
 
   Future<void> _toggleStatus(bool status) async {
-    final user = _controller.selectedUser;
+    final user = _presenter.selectedUser;
     if (user == null) {
       return;
     }
-    final success = await _controller.saveUser(
+    final success = await _presenter.saveUser(
       id: user.id,
       fullName: user.fullName,
       email: user.email,
@@ -78,7 +78,7 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
         content: Text(
           success
               ? 'Đã cập nhật trạng thái nhân sự.'
-              : (_controller.errorMessage ??
+              : (_presenter.errorMessage ??
                     'Không thể cập nhật trạng thái nhân sự.'),
         ),
       ),
@@ -87,10 +87,11 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = _controller.selectedUser;
+    final user = _presenter.selectedUser;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          tooltip: 'Quay lại',
           onPressed: _closePage,
           icon: const Icon(Icons.arrow_back),
         ),
@@ -98,15 +99,16 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: _controller.isLoading
+            tooltip: 'Làm mới chi tiết nhân sự',
+            onPressed: _presenter.isLoading
                 ? null
-                : () => _controller.loadUserDetail(widget.staffId),
+                : () => _presenter.loadUserDetail(widget.staffId),
             icon: const Icon(Icons.refresh),
           ),
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: () => _controller.loadUserDetail(widget.staffId),
+        onRefresh: () => _presenter.loadUserDetail(widget.staffId),
         child: _buildBody(user),
       ),
       bottomNavigationBar: user == null
@@ -115,7 +117,7 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 child: AppButton(
-                  label: _controller.isSubmitting
+                  label: _presenter.isSubmitting
                       ? 'Đang lưu...'
                       : (user.status ? 'Khóa tài khoản' : 'Mở tài khoản'),
                   variant: user.status
@@ -125,8 +127,8 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
                       ? AdminColors.danger
                       : AdminColors.primary,
                   icon: Icons.toggle_on,
-                  isLoading: _controller.isSubmitting,
-                  onPressed: _controller.isSubmitting
+                  isLoading: _presenter.isSubmitting,
+                  onPressed: _presenter.isSubmitting
                       ? null
                       : () => _toggleStatus(!user.status),
                 ),
@@ -136,14 +138,14 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
   }
 
   Widget _buildBody(AdminUserModel? user) {
-    if (_controller.isLoading && user == null) {
+    if (_presenter.isLoading && user == null) {
       return const AppLoadingState(title: 'Đang tải nhân sự');
     }
-    if (_controller.errorMessage != null && user == null) {
+    if (_presenter.errorMessage != null && user == null) {
       return AppErrorState(
         title: 'Không tải được nhân sự',
-        message: _controller.errorMessage!,
-        onAction: () => _controller.loadUserDetail(widget.staffId),
+        message: _presenter.errorMessage!,
+        onAction: () => _presenter.loadUserDetail(widget.staffId),
       );
     }
     if (user == null) {
@@ -153,7 +155,7 @@ class _AdminStaffDetailPageState extends State<AdminStaffDetailPage> {
         message:
             'Không tìm thấy hồ sơ nhân sự hoặc dữ liệu chưa được tải xong.',
         actionLabel: 'Tải lại dữ liệu',
-        onAction: () => _controller.loadUserDetail(widget.staffId),
+        onAction: () => _presenter.loadUserDetail(widget.staffId),
       );
     }
 

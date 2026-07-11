@@ -1,0 +1,60 @@
+{
+  "name": "mobile-admin-ui-auto-loop",
+  "area": "mobile-admin",
+  "objective": "Automatically scan, test, and guide premium StrideX Mobile Admin UI improvements without changing backend/API/business logic.",
+  "inputs": [
+    "ai-harness/docs/brd-mobile-admin-ui-luxury.md",
+    "ai-harness/config/mobile-admin-screen-map.json",
+    "ai-harness/config/backend-feature-map.json",
+    "mobile/AGENTS.md",
+    "mobile/architecture.md",
+    "mobile/api-contract.md",
+    "mobile/domain-rules.md"
+  ],
+  "loop": [
+    {
+      "step": "scan-backend-map",
+      "command": "powershell -ExecutionPolicy Bypass -File ai-harness/scripts/Invoke-AdminMobileUiHarness.ps1 -StrictButtonAudit",
+      "expected": "All Admin screens are mapped to backend-supported modules."
+    },
+    {
+      "step": "apply-safe-ui-fixes",
+      "command": "powershell -ExecutionPolicy Bypass -File ai-harness/scripts/Invoke-AdminMobileUiHarness.ps1 -StrictButtonAudit -ApplySafeFixes",
+      "expected": "Only mechanical UI fixes are applied: bottom padding, obvious route correction, safe tooltips/spacing if implemented."
+    },
+    {
+      "step": "luxury-review",
+      "artifact": "ai-harness/state/admin-mobile-luxury-review-latest.md",
+      "expected": "Screens with low luxury score are prioritized for manual UI polish."
+    },
+    {
+      "step": "mobile-checks",
+      "command": "cd mobile; dart format lib test; powershell -ExecutionPolicy Bypass -File .\\init.ps1 -Analyze; powershell -ExecutionPolicy Bypass -File .\\init.ps1 -Test",
+      "expected": "Format, analyze, and tests pass."
+    },
+    {
+      "step": "manual-visual-check",
+      "expected": "Open Admin routes in Chrome/mobile viewport and verify no clipped chips, bottom-nav overlap, empty-state overlap, or mojibake."
+    }
+  ],
+  "safeFixPolicy": {
+    "allowed": [
+      "Add safe bottom padding for fixed bottom navigation.",
+      "Correct Settings routes to backend-supported standalone modules.",
+      "Add missing tooltip to icon-only buttons.",
+      "Improve spacing, card radius, shadows, and empty-state presentation without changing callbacks."
+    ],
+    "blocked": [
+      "Changing API endpoint paths.",
+      "Changing request/response fields.",
+      "Changing auth/role/business logic.",
+      "Deleting functional buttons.",
+      "Adding backend-unsupported real features."
+    ]
+  },
+  "reports": [
+    "ai-harness/state/admin-mobile-ui-audit-latest.md",
+    "ai-harness/state/admin-mobile-button-inventory-latest.md",
+    "ai-harness/state/admin-mobile-luxury-review-latest.md"
+  ]
+}

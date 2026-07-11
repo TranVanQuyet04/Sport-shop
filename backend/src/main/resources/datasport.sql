@@ -408,7 +408,7 @@ CREATE TABLE public.orders (
     total_amount numeric(38,2),
     user_id bigint,
     CONSTRAINT orders_payment_method_check CHECK (((payment_method)::text = ANY ((ARRAY['COD'::character varying, 'VNPAY'::character varying, 'MOMO'::character varying])::text[]))),
-    CONSTRAINT orders_status_check CHECK (((status)::text = ANY ((ARRAY['PENDING'::character varying, 'PAID'::character varying, 'COMPLETED'::character varying, 'CANCELLED'::character varying, 'DELIVERED'::character varying, 'SHIPPING'::character varying])::text[])))
+    CONSTRAINT orders_status_check CHECK (((status)::text = ANY ((ARRAY['PENDING'::character varying, 'CONFIRMED'::character varying, 'PACKING'::character varying, 'SHIPPED'::character varying, 'COMPLETED'::character varying, 'CANCELLED'::character varying, 'PAID'::character varying, 'DELIVERED'::character varying, 'SHIPPING'::character varying])::text[])))
 );
 
 

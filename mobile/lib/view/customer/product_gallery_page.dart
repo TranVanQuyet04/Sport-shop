@@ -64,7 +64,13 @@ class _ProductGalleryPageState extends State<ProductGalleryPage> {
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.textInverse,
         leading: IconButton(
-          onPressed: context.pop,
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/customer/products/${widget.productId}');
+            }
+          },
           icon: const Icon(Icons.close),
         ),
         title: Text(product?.name ?? 'Thư viện ảnh'),

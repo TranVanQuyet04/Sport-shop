@@ -1,0 +1,290 @@
+{
+  "generatedAt": "2026-07-06T10:34:54.029Z",
+  "baseUrl": "http://127.0.0.1:52777",
+  "backendUrl": "http://localhost:8080/api",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "totalRoutes": 12,
+  "pass": 12,
+  "warning": 0,
+  "fail": 0,
+  "results": [
+    {
+      "key": "dashboard",
+      "path": "/admin/dashboard",
+      "url": "http://127.0.0.1:52777/#/admin/dashboard",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/dashboard",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/dashboard",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\dashboard.png",
+      "screenshotBytes": 81257,
+      "console": []
+    },
+    {
+      "key": "products",
+      "path": "/admin/products",
+      "url": "http://127.0.0.1:52777/#/admin/products",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/products",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/products",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\products.png",
+      "screenshotBytes": 67148,
+      "console": []
+    },
+    {
+      "key": "productsSportTab",
+      "path": "/admin/products?tab=sport",
+      "url": "http://127.0.0.1:52777/#/admin/products?tab=sport",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/products?tab=sport",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/products?tab=sport",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\productsSportTab.png",
+      "screenshotBytes": 68133,
+      "console": [
+        {
+          "type": "error",
+          "text": "Access to XMLHttpRequest at 'https://example.com/full-e2e-product.png' from origin 'http://127.0.0.1:52777' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+          "location": {
+            "url": "http://127.0.0.1:52777/#/admin/products?tab=sport",
+            "line": 0,
+            "column": 0,
+            "lineNumber": 0,
+            "columnNumber": 0
+          }
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: net::ERR_FAILED",
+          "location": {
+            "url": "https://example.com/full-e2e-product.png",
+            "line": 0,
+            "column": 0,
+            "lineNumber": 0,
+            "columnNumber": 0
+          }
+        }
+      ]
+    },
+    {
+      "key": "sports",
+      "path": "/admin/sports",
+      "url": "http://127.0.0.1:52777/#/admin/sports",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/sports",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/sports",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\sports.png",
+      "screenshotBytes": 36690,
+      "console": []
+    },
+    {
+      "key": "collections",
+      "path": "/admin/collections",
+      "url": "http://127.0.0.1:52777/#/admin/collections",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/collections",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/collections",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\collections.png",
+      "screenshotBytes": 33790,
+      "console": []
+    },
+    {
+      "key": "orders",
+      "path": "/admin/orders",
+      "url": "http://127.0.0.1:52777/#/admin/orders",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/orders",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/orders",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\orders.png",
+      "screenshotBytes": 70455,
+      "console": []
+    },
+    {
+      "key": "staff",
+      "path": "/admin/staff",
+      "url": "http://127.0.0.1:52777/#/admin/staff",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/staff",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/staff",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\staff.png",
+      "screenshotBytes": 70097,
+      "console": []
+    },
+    {
+      "key": "users",
+      "path": "/admin/users",
+      "url": "http://127.0.0.1:52777/#/admin/users",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/users",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/users",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\users.png",
+      "screenshotBytes": 56616,
+      "console": []
+    },
+    {
+      "key": "chatRooms",
+      "path": "/admin/chats",
+      "url": "http://127.0.0.1:52777/#/admin/chats",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/chats",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/chats",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\chatRooms.png",
+      "screenshotBytes": 56010,
+      "console": []
+    },
+    {
+      "key": "settings",
+      "path": "/admin/settings",
+      "url": "http://127.0.0.1:52777/#/admin/settings",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/settings",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/settings",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\settings.png",
+      "screenshotBytes": 66403,
+      "console": []
+    },
+    {
+      "key": "profile",
+      "path": "/admin/profile",
+      "url": "http://127.0.0.1:52777/#/admin/profile",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/profile",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/profile",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\profile.png",
+      "screenshotBytes": 39243,
+      "console": []
+    },
+    {
+      "key": "changePassword",
+      "path": "/admin/change-password",
+      "url": "http://127.0.0.1:52777/#/admin/change-password",
+      "finalUrl": "http://127.0.0.1:52777/#/admin/change-password",
+      "status": "pass",
+      "error": "",
+      "signals": {
+        "href": "http://127.0.0.1:52777/#/admin/change-password",
+        "title": "Sportshop",
+        "bodyTextLength": 0,
+        "canvasCount": 0,
+        "glassPane": true,
+        "semanticsHost": true,
+        "loaderVisible": false,
+        "htmlLength": 5625
+      },
+      "screenshot": "D:\\FPTK8\\PRM\\sportswear-shop-system\\ai-harness\\state\\browser-admin-smoke\\changePassword.png",
+      "screenshotBytes": 40404,
+      "console": []
+    }
+  ]
+}

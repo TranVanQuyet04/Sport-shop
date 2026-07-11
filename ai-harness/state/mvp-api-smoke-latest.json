@@ -1,0 +1,30 @@
+{
+  "generatedAt": "2026-07-06T09:09:07.091Z",
+  "baseUrl": "http://localhost:8080/api",
+  "runId": "HARNESS_1783328946908",
+  "pass": 0,
+  "fail": 3,
+  "results": [
+    {
+      "area": "auth",
+      "caseId": "login-admin",
+      "status": "fail",
+      "endpoint": "POST /api/auth/login",
+      "detail": "fetch failed"
+    },
+    {
+      "area": "auth",
+      "caseId": "login-member",
+      "status": "fail",
+      "endpoint": "POST /api/auth/login",
+      "detail": "fetch failed"
+    },
+    {
+      "area": "auth",
+      "caseId": "login-shipper",
+      "status": "fail",
+      "endpoint": "POST /api/auth/login",
+      "detail": "fetch failed"
+    }
+  ]
+}

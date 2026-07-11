@@ -1,0 +1,135 @@
+{
+  "version": "2026-07-02",
+  "scope": "mobile-customer-staff",
+  "roleColorRules": {
+    "customer": {
+      "primary": "#09090B",
+      "surface": "#FFFFFF",
+      "accent": "#7F1D2D",
+      "notes": "Customer UI uses black, white, light gray and bordeaux accent for commerce actions."
+    },
+    "deliveryStaff": {
+      "primary": "#2563EB",
+      "surface": "#FFFFFF",
+      "accent": "#2563EB",
+      "notes": "Delivery/Staff operational UI uses blue for active state, CTA and status progress."
+    }
+  },
+  "screens": [
+    {
+      "route": "/customer/home",
+      "owner": "customer",
+      "screen": "CustomerHomePage",
+      "backendEndpoints": ["GET /api/navigation/main", "GET /api/products", "GET /api/collections"],
+      "mvpChecks": ["home mounts", "product sections render", "bottom navigation is visible"]
+    },
+    {
+      "route": "/customer/search",
+      "owner": "customer",
+      "screen": "SearchPage",
+      "backendEndpoints": ["GET /api/products", "GET /api/products/categories", "GET /api/products/brands"],
+      "mvpChecks": ["search field visible", "filter chips visible", "empty/loading/error states do not overflow"]
+    },
+    {
+      "route": "/customer/products/:id",
+      "owner": "customer",
+      "screen": "ProductDetailPage",
+      "backendEndpoints": ["GET /api/products/{id}", "POST /api/cart/add"],
+      "mvpChecks": ["product image area visible", "variant selection visible", "cart and checkout actions visible"]
+    },
+    {
+      "route": "/customer/cart",
+      "owner": "customer",
+      "screen": "CartPage",
+      "backendEndpoints": [
+        "GET /api/cart",
+        "PUT /api/cart/items/{itemId}",
+        "DELETE /api/cart/items/{itemId}",
+        "DELETE /api/cart/clear"
+      ],
+      "mvpChecks": ["cart list or empty state visible", "checkout action not hidden by bottom navigation"]
+    },
+    {
+      "route": "/customer/checkout",
+      "owner": "customer",
+      "screen": "CheckoutPage",
+      "backendEndpoints": ["GET /api/cart", "GET /api/user/addresses", "POST /api/orders/checkout"],
+      "mvpChecks": ["address selection visible", "payment method visible", "submit button visible"]
+    },
+    {
+      "route": "/customer/addresses",
+      "owner": "customer",
+      "screen": "AddressBookPage",
+      "backendEndpoints": [
+        "GET /api/user/addresses",
+        "POST /api/user/addresses",
+        "PUT /api/user/addresses/{id}",
+        "PATCH /api/user/addresses/{id}/default",
+        "DELETE /api/user/addresses/{id}"
+      ],
+      "mvpChecks": ["address cards or empty state visible", "add/edit/delete/default controls reachable"]
+    },
+    {
+      "route": "/customer/orders",
+      "owner": "customer",
+      "screen": "OrdersPage",
+      "backendEndpoints": ["GET /api/orders"],
+      "mvpChecks": ["order list or empty state visible", "status filters visible"]
+    },
+    {
+      "route": "/customer/orders/:id",
+      "owner": "customer",
+      "screen": "OrderDetailPage",
+      "backendEndpoints": ["GET /api/orders/{id}", "PATCH /api/orders/{id}/orderStatus"],
+      "mvpChecks": ["order summary visible", "status actions obey existing controller state"]
+    },
+    {
+      "route": "/customer/profile",
+      "owner": "customer",
+      "screen": "ProfilePage",
+      "backendEndpoints": ["GET /api/user/profile/me", "PUT /api/user/profile/me", "POST /api/auth/logout"],
+      "mvpChecks": ["profile identity visible", "address/order/support actions reachable", "logout reachable"]
+    },
+    {
+      "route": "/customer/support/chat",
+      "owner": "customer",
+      "screen": "CustomerChatPage",
+      "backendEndpoints": [
+        "POST /api/chat/send",
+        "POST /api/chat/rooms",
+        "GET /api/chat/rooms/me",
+        "GET /api/chat/rooms/{roomId}/messages",
+        "POST /api/chat/rooms/{roomId}/messages"
+      ],
+      "mvpChecks": ["message list visible", "composer visible", "send action visible"]
+    },
+    {
+      "route": "/delivery-staff/home",
+      "owner": "deliveryStaff",
+      "screen": "DeliveryHomePage",
+      "backendEndpoints": ["GET /api/orders/admin"],
+      "mvpChecks": ["metric cards visible", "priority orders or empty state visible", "blue operational CTA"]
+    },
+    {
+      "route": "/delivery-staff/orders",
+      "owner": "deliveryStaff",
+      "screen": "AssignedOrdersPage",
+      "backendEndpoints": ["GET /api/orders/admin"],
+      "mvpChecks": ["assigned order list visible", "filter chips visible", "blue active state"]
+    },
+    {
+      "route": "/delivery-staff/orders/:id/status",
+      "owner": "deliveryStaff",
+      "screen": "DeliveryStatusUpdatePage",
+      "backendEndpoints": ["GET /api/orders/admin/{id}", "PATCH /api/orders/{id}/status"],
+      "mvpChecks": ["delivery progress visible", "status CTA visible", "bottom nav does not hide CTA"]
+    },
+    {
+      "route": "/delivery-staff/account",
+      "owner": "deliveryStaff",
+      "screen": "ShipperAccountPage",
+      "backendEndpoints": ["GET /api/user/profile/me", "POST /api/auth/logout"],
+      "mvpChecks": ["profile card visible", "assigned orders shortcut visible", "logout visible"]
+    }
+  ]
+}

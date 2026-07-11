@@ -1,0 +1,177 @@
+{
+  "area": "mobile-admin",
+  "purpose": "Map every Admin mobile route to a real UI screen and backend-supported module for automated MVP/UI audits.",
+  "entryPoints": [
+    {
+      "key": "adminDashboard",
+      "label": "Tổng quan",
+      "route": "AppRoutes.adminDashboard",
+      "path": "/admin/dashboard",
+      "file": "mobile/lib/view/admin/admin_dashboard_page.dart",
+      "backendModule": "dashboardReports",
+      "mvpChecks": ["dashboard-state", "bottom-nav"]
+    },
+    {
+      "key": "adminRevenue",
+      "label": "Doanh thu",
+      "route": "AppRoutes.adminRevenue",
+      "path": "/admin/revenue",
+      "file": "mobile/lib/view/admin/admin_revenue_page.dart",
+      "backendModule": "dashboardReports",
+      "mvpChecks": ["dashboard-state", "bottom-nav"]
+    },
+    {
+      "key": "adminOrders",
+      "label": "Đơn hàng",
+      "route": "AppRoutes.adminOrders",
+      "path": "/admin/orders",
+      "file": "mobile/lib/view/admin/admin_orders_page.dart",
+      "backendModule": "orders",
+      "mvpChecks": ["list-state", "bottom-nav"]
+    },
+    {
+      "key": "adminProducts",
+      "label": "Sản phẩm",
+      "route": "AppRoutes.adminProducts",
+      "path": "/admin/products",
+      "file": "mobile/lib/view/admin/admin_products_page.dart",
+      "backendModule": "products",
+      "mvpChecks": ["list-state", "bottom-nav", "product-tabs"]
+    },
+    {
+      "key": "adminAddProduct",
+      "label": "Thêm sản phẩm",
+      "route": "AppRoutes.adminAddProduct",
+      "path": "/admin/products/new",
+      "file": "mobile/lib/view/admin/admin_add_product_page.dart",
+      "backendModule": "products",
+      "mvpChecks": ["form-state"]
+    },
+    {
+      "key": "adminInventoryVariants",
+      "label": "Biến thể và tồn kho",
+      "route": "AppRoutes.adminInventoryVariants",
+      "path": "/admin/products/:id/variants",
+      "file": "mobile/lib/view/admin/admin_inventory_variants_page.dart",
+      "backendModule": "productVariantsInventory",
+      "mvpChecks": ["list-state", "bottom-nav"]
+    },
+    {
+      "key": "adminCategories",
+      "label": "Danh mục",
+      "route": "AppRoutes.adminCategories",
+      "path": "/admin/categories",
+      "file": "mobile/lib/view/admin/admin_category_management_page.dart",
+      "backendModule": "categories",
+      "mvpChecks": ["list-state", "bottom-nav"]
+    },
+    {
+      "key": "adminBrands",
+      "label": "Thương hiệu",
+      "route": "AppRoutes.adminBrands",
+      "path": "/admin/brands",
+      "file": "mobile/lib/view/admin/admin_brand_management_page.dart",
+      "backendModule": "brands",
+      "mvpChecks": ["list-state", "bottom-nav"]
+    },
+    {
+      "key": "adminSports",
+      "label": "Môn thể thao",
+      "route": "AppRoutes.adminSports",
+      "path": "/admin/sports",
+      "file": "mobile/lib/view/admin/admin_sports_page.dart",
+      "backendModule": "sports",
+      "mvpChecks": ["list-state", "bottom-nav", "sport-icon-map"]
+    },
+    {
+      "key": "adminCollections",
+      "label": "Bộ sưu tập",
+      "route": "AppRoutes.adminCollections",
+      "path": "/admin/collections",
+      "file": "mobile/lib/view/admin/admin_collections_page.dart",
+      "backendModule": "collections",
+      "mvpChecks": ["list-state", "bottom-nav"]
+    },
+    {
+      "key": "adminDeliveryMonitoring",
+      "label": "Giao hàng",
+      "route": "AppRoutes.adminDeliveryMonitoring",
+      "path": "/admin/deliveries",
+      "file": "mobile/lib/view/admin/admin_delivery_monitoring_page.dart",
+      "backendModule": "deliveryReports",
+      "mvpChecks": ["list-state", "bottom-nav"]
+    },
+    {
+      "key": "adminChatRooms",
+      "label": "Phòng chat",
+      "route": "AppRoutes.adminChatRooms",
+      "path": "/admin/chats",
+      "file": "mobile/lib/view/admin/admin_chat_rooms_page.dart",
+      "backendModule": "chatRooms",
+      "mvpChecks": ["list-state", "bottom-nav", "chat-list"]
+    },
+    {
+      "key": "adminChatDetail",
+      "label": "Chi tiết chat",
+      "route": "AppRoutes.adminChatDetail",
+      "path": "/admin/chats/:id",
+      "file": "mobile/lib/view/admin/admin_chat_detail_page.dart",
+      "backendModule": "chatMessages",
+      "mvpChecks": ["detail-state", "message-form"]
+    },
+    {
+      "key": "adminStaff",
+      "label": "Nhân sự",
+      "route": "AppRoutes.adminStaff",
+      "path": "/admin/staff",
+      "file": "mobile/lib/view/admin/admin_staff_page.dart",
+      "backendModule": "users",
+      "mvpChecks": ["list-state", "bottom-nav"]
+    },
+    {
+      "key": "adminStaffDetail",
+      "label": "Chi tiết nhân sự",
+      "route": "AppRoutes.adminStaffDetail",
+      "path": "/admin/staff/:id",
+      "file": "mobile/lib/view/admin/admin_staff_detail_page.dart",
+      "backendModule": "users",
+      "mvpChecks": ["detail-state", "bottom-nav"]
+    },
+    {
+      "key": "adminUsers",
+      "label": "Người dùng",
+      "route": "AppRoutes.adminUsers",
+      "path": "/admin/users",
+      "file": "mobile/lib/view/admin/admin_user_management_page.dart",
+      "backendModule": "users",
+      "mvpChecks": ["list-state", "bottom-nav"]
+    },
+    {
+      "key": "adminProfile",
+      "label": "Hồ sơ admin",
+      "route": "AppRoutes.adminProfile",
+      "path": "/admin/profile",
+      "file": "mobile/lib/view/admin/admin_profile_page.dart",
+      "backendModule": "profile",
+      "mvpChecks": ["detail-state"]
+    },
+    {
+      "key": "adminChangePassword",
+      "label": "Đổi mật khẩu",
+      "route": "AppRoutes.adminChangePassword",
+      "path": "/admin/change-password",
+      "file": "mobile/lib/view/auth/change_password_page.dart",
+      "backendModule": "auth",
+      "mvpChecks": ["form-state"]
+    },
+    {
+      "key": "adminSettings",
+      "label": "Cài đặt",
+      "route": "AppRoutes.adminSettings",
+      "path": "/admin/settings",
+      "file": "mobile/lib/view/admin/admin_system_settings_page.dart",
+      "backendModule": "systemSettings",
+      "mvpChecks": ["settings-menu", "bottom-nav"]
+    }
+  ]
+}

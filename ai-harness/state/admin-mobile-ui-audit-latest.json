@@ -1,0 +1,16 @@
+﻿{
+    "generatedAt":  "2026-07-06T19:51:00",
+    "area":  "mobile-admin",
+    "attempts":  [
+                     {
+                         "attempt":  1,
+                         "findings":  {
+
+                                      }
+                     }
+                 ],
+    "safeFixes":  [
+
+                  ],
+    "status":  "pass"
+}

@@ -1,3 +1,5 @@
+import '../../core/utils/image_url_utils.dart';
+
 class BrandModel {
   const BrandModel({
     required this.id,
@@ -21,10 +23,10 @@ class BrandModel {
     id: (json['id'] ?? '').toString(),
     name: (json['brandName'] ?? json['name'] ?? '').toString(),
     slug: (json['slug'] ?? '').toString(),
-    logo: (json['logo'] ?? '').toString(),
+    logo: ImageUrlUtils.sanitize(json['logo']),
     description: (json['description'] ?? '').toString(),
-    banner: (json['brandBanner'] ?? json['banner'] ?? '').toString(),
-    isActive: json['isActive'] != false,
+    banner: ImageUrlUtils.sanitize(json['brandBanner'] ?? json['banner']),
+    isActive: (json['isActive'] ?? json['active']) != false,
   );
 }
 

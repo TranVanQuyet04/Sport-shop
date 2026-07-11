@@ -1,0 +1,312 @@
+{
+  "area": "mobile-admin",
+  "principle": "Admin UI must expose only backend-supported features, keep product catalog data under the Product navigation group, and use Settings as the configuration hub.",
+  "bottomNavigationGroups": {
+    "0": "overview-and-revenue",
+    "1": "product-catalog-and-inventory",
+    "2": "orders-delivery-and-fulfillment",
+    "3": "staff-users-and-roles",
+    "4": "settings-account-and-system"
+  },
+  "screens": [
+    {
+      "key": "adminDashboard",
+      "route": "/admin/dashboard",
+      "file": "mobile/lib/view/admin/admin_dashboard_page.dart",
+      "bottomNavIndex": 0,
+      "backendModule": "dashboardReports",
+      "endpoints": ["GET /api/admin/reports/dashboard"],
+      "uiRole": "executive overview",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminRevenue",
+      "route": "/admin/revenue",
+      "file": "mobile/lib/view/admin/admin_revenue_page.dart",
+      "bottomNavIndex": 0,
+      "backendModule": "dashboardReports",
+      "endpoints": ["GET /api/admin/reports/dashboard"],
+      "uiRole": "revenue detail",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminProducts",
+      "route": "/admin/products",
+      "file": "mobile/lib/view/admin/admin_products_page.dart",
+      "bottomNavIndex": 1,
+      "backendModule": "products",
+      "endpoints": [
+        "GET /api/admin/products",
+        "POST /api/admin/products",
+        "GET /api/admin/products/{id}",
+        "PUT /api/admin/products/{id}",
+        "DELETE /api/admin/products/{id}",
+        "GET /api/admin/categories",
+        "GET /api/brands",
+        "GET /api/admin/sports",
+        "GET /api/collections"
+      ],
+      "uiRole": "product command center with catalog lookup tabs",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminAddProduct",
+      "route": "/admin/products/new",
+      "file": "mobile/lib/view/admin/admin_add_product_page.dart",
+      "bottomNavIndex": 1,
+      "backendModule": "products",
+      "endpoints": [
+        "POST /api/admin/products",
+        "GET /api/admin/sports",
+        "GET /api/collections",
+        "PUT /api/collections/admin/{id}"
+      ],
+      "uiRole": "product creation form, optionally links variants to a collection",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminInventoryVariants",
+      "route": "/admin/products/{id}/variants",
+      "file": "mobile/lib/view/admin/admin_inventory_variants_page.dart",
+      "bottomNavIndex": 1,
+      "backendModule": "productVariantsInventory",
+      "endpoints": [
+        "GET /api/admin/products/{id}",
+        "POST /api/admin/products/{productId}/variants",
+        "PUT /api/admin/products/variants/{variantId}",
+        "DELETE /api/admin/products/variants/{variantId}",
+        "PATCH /api/admin/products/variants/{variantId}/stock"
+      ],
+      "uiRole": "variant and stock operations",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminCategories",
+      "route": "/admin/categories",
+      "file": "mobile/lib/view/admin/admin_category_management_page.dart",
+      "bottomNavIndex": 1,
+      "backendModule": "categories",
+      "endpoints": [
+        "GET /api/admin/categories",
+        "POST /api/admin/categories",
+        "GET /api/admin/categories/{id}",
+        "PUT /api/admin/categories/{id}",
+        "DELETE /api/admin/categories/{id}"
+      ],
+      "uiRole": "product taxonomy CRUD",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminBrands",
+      "route": "/admin/brands",
+      "file": "mobile/lib/view/admin/admin_brand_management_page.dart",
+      "bottomNavIndex": 1,
+      "backendModule": "brands",
+      "endpoints": [
+        "GET /api/brands",
+        "POST /api/brands",
+        "GET /api/brands/{id}",
+        "PUT /api/brands/{id}",
+        "DELETE /api/brands/{id}"
+      ],
+      "uiRole": "brand CRUD",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminSports",
+      "route": "/admin/sports",
+      "file": "mobile/lib/view/admin/admin_sports_page.dart",
+      "bottomNavIndex": 1,
+      "backendModule": "sports",
+      "endpoints": [
+        "GET /api/admin/sports",
+        "POST /api/admin/sports",
+        "GET /api/admin/sports/{id}",
+        "PUT /api/admin/sports/{id}",
+        "DELETE /api/admin/sports/{id}"
+      ],
+      "uiRole": "sport taxonomy CRUD",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminCollections",
+      "route": "/admin/collections",
+      "file": "mobile/lib/view/admin/admin_collections_page.dart",
+      "bottomNavIndex": 1,
+      "backendModule": "collections",
+      "endpoints": [
+        "GET /api/collections",
+        "GET /api/collections/{id}",
+        "GET /api/collections/slug/{slug}",
+        "POST /api/collections/admin",
+        "PUT /api/collections/admin/{id}",
+        "DELETE /api/collections/admin/{id}"
+      ],
+      "uiRole": "collection campaign CRUD",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminOrders",
+      "route": "/admin/orders",
+      "file": "mobile/lib/view/admin/admin_orders_page.dart",
+      "bottomNavIndex": 2,
+      "backendModule": "orders",
+      "endpoints": [
+        "GET /api/orders/admin",
+        "GET /api/orders/admin/{id}",
+        "PATCH /api/orders/{id}/status",
+        "PATCH /api/orders/{id}/orderStatus",
+        "DELETE /api/orders/admin/{id}"
+      ],
+      "uiRole": "order queue and status operation",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminDeliveryMonitoring",
+      "route": "/admin/deliveries",
+      "file": "mobile/lib/view/admin/admin_delivery_monitoring_page.dart",
+      "bottomNavIndex": 2,
+      "backendModule": "ordersAndDeliveryReports",
+      "endpoints": [
+        "GET /api/orders/admin",
+        "GET /api/admin/delivery-reports",
+        "GET /api/orders/{orderId}/delivery-reports",
+        "POST /api/orders/{orderId}/delivery-reports"
+      ],
+      "uiRole": "fulfillment and delivery monitoring",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminStaff",
+      "route": "/admin/staff",
+      "file": "mobile/lib/view/admin/admin_staff_page.dart",
+      "bottomNavIndex": 3,
+      "backendModule": "usersAndRoles",
+      "endpoints": ["GET /api/admin/users", "GET /api/admin/roles"],
+      "uiRole": "staff list and role overview",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminUsers",
+      "route": "/admin/users",
+      "file": "mobile/lib/view/admin/admin_user_management_page.dart",
+      "bottomNavIndex": 3,
+      "backendModule": "usersAndRoles",
+      "endpoints": [
+        "GET /api/admin/users",
+        "POST /api/admin/users",
+        "GET /api/admin/users/{id}",
+        "PUT /api/admin/users/{id}",
+        "DELETE /api/admin/users/{id}",
+        "GET /api/admin/roles"
+      ],
+      "uiRole": "user and staff CRUD",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminChatRooms",
+      "route": "/admin/chats",
+      "file": "mobile/lib/view/admin/admin_chat_rooms_page.dart",
+      "bottomNavIndex": 4,
+      "backendModule": "chatRooms",
+      "endpoints": ["GET /api/chat/rooms/admin/me", "POST /api/chat/rooms"],
+      "uiRole": "support inbox",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminChatDetail",
+      "route": "/admin/chats/{id}",
+      "file": "mobile/lib/view/admin/admin_chat_detail_page.dart",
+      "bottomNavIndex": 4,
+      "backendModule": "chatMessages",
+      "endpoints": [
+        "GET /api/chat/rooms/{roomId}/messages",
+        "POST /api/chat/rooms/{roomId}/messages"
+      ],
+      "uiRole": "support conversation",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminSettings",
+      "route": "/admin/settings",
+      "file": "mobile/lib/view/admin/admin_system_settings_page.dart",
+      "bottomNavIndex": 4,
+      "backendModule": "systemSettingsAndNavigationHub",
+      "endpoints": [
+        "GET /api/admin/settings",
+        "POST /api/admin/settings",
+        "PUT /api/admin/settings/{key}",
+        "DELETE /api/admin/settings/{key}"
+      ],
+      "uiRole": "settings hub and route launcher",
+      "mvpStatus": "partially-mapped",
+      "note": "Current UI is mostly a navigation hub; shop setting CRUD can be expanded from SystemSettingController."
+    },
+    {
+      "key": "adminProfile",
+      "route": "/admin/profile",
+      "file": "mobile/lib/view/admin/admin_profile_page.dart",
+      "bottomNavIndex": 4,
+      "backendModule": "profile",
+      "endpoints": ["GET /api/user/profile/me", "PUT /api/user/profile/me"],
+      "uiRole": "current admin profile",
+      "mvpStatus": "mapped"
+    },
+    {
+      "key": "adminChangePassword",
+      "route": "/admin/change-password",
+      "file": "mobile/lib/view/auth/change_password_page.dart",
+      "bottomNavIndex": 4,
+      "backendModule": "auth",
+      "endpoints": ["PUT /api/auth/change-pass"],
+      "uiRole": "account security",
+      "mvpStatus": "mapped"
+    }
+  ],
+  "backendSupportedButNoDedicatedAdminScreen": [
+    {
+      "key": "orderAssignments",
+      "endpoints": [
+        "GET /api/admin/order-assignments",
+        "POST /api/admin/order-assignments",
+        "PUT /api/admin/order-assignments/orders/{orderId}"
+      ],
+      "recommendedUi": "Fold into order detail or delivery monitoring before adding a new bottom-nav item."
+    },
+    {
+      "key": "workShifts",
+      "endpoints": [
+        "GET /api/admin/work-shifts",
+        "POST /api/admin/work-shifts",
+        "PUT /api/admin/work-shifts/{id}",
+        "DELETE /api/admin/work-shifts/{id}"
+      ],
+      "recommendedUi": "Add under Staff as a schedule tab."
+    },
+    {
+      "key": "leaveRequests",
+      "endpoints": [
+        "GET /api/admin/leave-requests",
+        "PATCH /api/admin/leave-requests/{id}/decision"
+      ],
+      "recommendedUi": "Add under Staff as leave approval tab."
+    }
+  ],
+  "unsupportedInBackendDoNotExposeAsActiveUi": [
+    "couponVoucherManagement",
+    "reviewRatingModeration",
+    "bannerCarouselManagement",
+    "warehouseImportReceipts",
+    "standaloneSizeColorMasterData",
+    "supplierPurchaseOrders"
+  ],
+  "flutterProUiRules": [
+    "Every Admin list screen must have loading, empty, error, refresh, and bottom spacing states.",
+    "Product-catalog child screens should keep bottomNavIndex 1.",
+    "Fulfillment screens should keep bottomNavIndex 2.",
+    "Staff/user screens should keep bottomNavIndex 3.",
+    "Account/settings/chat support screens should keep bottomNavIndex 4 unless promoted to a dedicated module.",
+    "Do not call API directly from View; View uses Controller, Controller uses Repository, Repository uses Service.",
+    "Do not expose buttons for backend-unsupported features except as disabled coming-soon affordances."
+  ]
+}

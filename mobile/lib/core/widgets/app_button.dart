@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/app_spacing.dart';
@@ -33,61 +34,91 @@ class AppButton extends StatelessWidget {
     final resolvedBackgroundColor =
         backgroundColor ??
         switch (variant) {
-          AppButtonVariant.primary => AppColors.primary,
-          AppButtonVariant.secondary => AppColors.secondary,
+          AppButtonVariant.primary => SuperSportsTheme.colorPrimary,
+          AppButtonVariant.secondary => SuperSportsTheme.colorAccent,
           AppButtonVariant.danger => AppColors.error,
           AppButtonVariant.outline => Colors.transparent,
         };
     final resolvedForegroundColor =
         foregroundColor ??
         (isOutline ? AppColors.textPrimary : AppColors.textInverse);
+    final canPress = !isLoading && onPressed != null;
+    final gradient = isOutline || !canPress
+        ? null
+        : LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: variant == AppButtonVariant.secondary
+                ? const [AppColors.secondary, AppColors.electric]
+                : [resolvedBackgroundColor, AppColors.electric],
+          );
 
-    return HoverLift(
-      enabled: !isLoading && onPressed != null,
-      scale: 1.01,
-      dy: -1,
-      borderRadius: BorderRadius.circular(AppRadius.lg),
-      child: SizedBox(
-        height: 52,
-        width: double.infinity,
-        child: FilledButton(
-          onPressed: isLoading ? null : onPressed,
-          style: FilledButton.styleFrom(
-            backgroundColor: resolvedBackgroundColor,
-            foregroundColor: resolvedForegroundColor,
-            disabledBackgroundColor: AppColors.surfaceMuted,
-            disabledForegroundColor: AppColors.textSecondary,
-            elevation: isOutline ? 0 : 2,
-            shadowColor: resolvedBackgroundColor.withValues(alpha: 0.22),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              side: isOutline
-                  ? const BorderSide(color: AppColors.borderStrong)
-                  : BorderSide.none,
+    return Semantics(
+      button: true,
+      enabled: canPress,
+      label: label,
+      child: HoverLift(
+        enabled: canPress,
+        scale: 1.01,
+        dy: -1,
+        borderRadius: SuperSportsTheme.borderRadius,
+        interactive: true,
+        child: SizedBox(
+          height: 52,
+          width: double.infinity,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: gradient,
+              color: onPressed == null || isLoading
+                  ? AppColors.surfaceMuted
+                  : gradient == null
+                  ? resolvedBackgroundColor
+                  : null,
+              borderRadius: SuperSportsTheme.borderRadius,
+              border: isOutline
+                  ? Border.all(color: AppColors.borderStrong)
+                  : Border.all(color: Colors.transparent),
+              boxShadow: isOutline || onPressed == null || isLoading
+                  ? null
+                  : AppElevation.glow(resolvedBackgroundColor),
+            ),
+            child: CupertinoButton(
+              padding: EdgeInsets.zero,
+              borderRadius: SuperSportsTheme.borderRadius,
+              minimumSize: const Size(52, 52),
+              pressedOpacity: 0.72,
+              onPressed: isLoading ? null : onPressed,
+              child: isLoading
+                  ? CupertinoActivityIndicator(
+                      color: isOutline
+                          ? AppColors.textSecondary
+                          : resolvedForegroundColor,
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (icon != null) ...[
+                          Icon(icon, size: 18, color: resolvedForegroundColor),
+                          const SizedBox(width: AppSpacing.sm),
+                        ],
+                        Flexible(
+                          child: Text(
+                            label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.button.copyWith(
+                              color: onPressed == null
+                                  ? AppColors.textSecondary
+                                  : resolvedForegroundColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ),
-          child: isLoading
-              ? const SizedBox(
-                  height: 18,
-                  width: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(icon, size: 18),
-                      const SizedBox(width: AppSpacing.sm),
-                    ],
-                    Text(
-                      label,
-                      style: AppTextStyles.button.copyWith(
-                        color: resolvedForegroundColor,
-                      ),
-                    ),
-                  ],
-                ),
         ),
       ),
     );

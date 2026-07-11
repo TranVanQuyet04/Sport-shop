@@ -49,9 +49,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> forgotPassword({
-    required String email,
-  }) {
+  Future<void> forgotPassword({required String email}) {
     return authService.forgotPassword(email: email);
   }
 

@@ -1,115 +1,115 @@
 # 01. Batch Customer Mobile
 
-Upload file này cùng `00-mobile-master-prompt.md`.
+Upload file nÃ y cÃ¹ng `00-mobile-master-prompt.md`.
 
-Mục tiêu: thiết kế mobile app cho customer storefront, flow mua hàng, checkout, tracking và account.
+Má»¥c tiÃªu: thiáº¿t káº¿ mobile app cho customer storefront, flow mua hÃ ng, checkout, tracking vÃ  account.
 
-## Screens Cần Thiết Kế
+## Screens Cáº§n Thiáº¿t Káº¿
 
 ### Splash screen
-- Trạng thái: Cần tạo mới
-- Cần Stitch: màn hình mở app với logo SPORTSHOP.
+- Tráº¡ng thÃ¡i: Cáº§n táº¡o má»›i
+- Cáº§n Stitch: mÃ n hÃ¬nh má»Ÿ app vá»›i logo StrideX.
 
 ### Onboarding screen
-- Trạng thái: Cần tạo mới
-- Cần Stitch: 2-3 màn hình giới thiệu mua đồ thể thao, tracking đơn, hỗ trợ chat.
+- Tráº¡ng thÃ¡i: Cáº§n táº¡o má»›i
+- Cáº§n Stitch: 2-3 mÃ n hÃ¬nh giá»›i thiá»‡u mua Ä‘á»“ thá»ƒ thao, tracking Ä‘Æ¡n, há»— trá»£ chat.
 
 ### Home screen
-- Web hiện có: `pages/home/HomePage.tsx`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: mobile home gồm search, banner, category shortcut, brand nổi bật, sản phẩm gợi ý.
+- Web hiá»‡n cÃ³: `pages/home/HomePage.tsx`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: mobile home gá»“m search, banner, category shortcut, brand ná»•i báº­t, sáº£n pháº©m gá»£i Ã½.
 
 ### Search screen
-- Web hiện có: `/search`, dùng `ProductsPage`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: search input, recent searches, result list, empty state.
+- Web hiá»‡n cÃ³: `/search`, dÃ¹ng `ProductsPage`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: search input, recent searches, result list, empty state.
 
 ### Product listing screen
-- Web hiện có: `pages/products/ProductsPage.tsx`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: product grid/list mobile, filter button, sort button, infinite scroll.
+- Web hiá»‡n cÃ³: `pages/products/ProductsPage.tsx`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: product grid/list mobile, filter button, sort button, infinite scroll.
 
 ### Filter bottom sheet
-- Web hiện có: `ProductFilters`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: filter theo brand, category, sport, price, color.
+- Web hiá»‡n cÃ³: `ProductFilters`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: filter theo brand, category, sport, price, color.
 
 ### Sort bottom sheet
-- Web hiện có: `ProductSort`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: sort theo giá, mới nhất, phổ biến.
+- Web hiá»‡n cÃ³: `ProductSort`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: sort theo giÃ¡, má»›i nháº¥t, phá»• biáº¿n.
 
 ### Product detail screen
-- Web hiện có: `ProductDetailPage`, `ProductDetail`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: gallery, info, size/color, quantity, add to cart sticky button.
+- Web hiá»‡n cÃ³: `ProductDetailPage`, `ProductDetail`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: gallery, info, size/color, quantity, add to cart sticky button.
 
 ### Product image gallery screen
-- Web hiện có: `ProductGallery`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: fullscreen gallery, swipe images.
+- Web hiá»‡n cÃ³: `ProductGallery`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: fullscreen gallery, swipe images.
 
 ### Cart screen
-- Web hiện có: `CartSheet`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: cart list, quantity controls, subtotal, checkout CTA.
+- Web hiá»‡n cÃ³: `CartSheet`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: cart list, quantity controls, subtotal, checkout CTA.
 
 ### Checkout screen
-- Web hiện có: `CheckoutPage`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: address, payment method, order summary, note.
+- Web hiá»‡n cÃ³: `CheckoutPage`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: address, payment method, order summary, note.
 
 ### Address selection screen
-- Trạng thái: Cần bổ sung
-- Cần Stitch: chọn địa chỉ giao hàng, set default.
+- Tráº¡ng thÃ¡i: Cáº§n bá»• sung
+- Cáº§n Stitch: chá»n Ä‘á»‹a chá»‰ giao hÃ ng, set default.
 
 ### Add/Edit address screen
-- Trạng thái: Cần bổ sung
-- Cần Stitch: form thêm/sửa địa chỉ.
+- Tráº¡ng thÃ¡i: Cáº§n bá»• sung
+- Cáº§n Stitch: form thÃªm/sá»­a Ä‘á»‹a chá»‰.
 
 ### Payment method screen
-- Trạng thái: Đã có một phần
-- Cần Stitch: chọn COD hoặc online payment.
+- Tráº¡ng thÃ¡i: ÄÃ£ cÃ³ má»™t pháº§n
+- Cáº§n Stitch: chá»n COD hoáº·c online payment.
 
 ### Payment result screen
-- Web hiện có: `PaymentPage`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: trạng thái success/failure/pending.
+- Web hiá»‡n cÃ³: `PaymentPage`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: tráº¡ng thÃ¡i success/failure/pending.
 
 ### My orders screen
-- Web hiện có: `OrdersPage`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: order cards, filter by status, pull to refresh.
+- Web hiá»‡n cÃ³: `OrdersPage`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: order cards, filter by status, pull to refresh.
 
 ### Order detail screen
-- Web hiện có: `OrdersPage`
-- Trạng thái: Đã có một phần
-- Cần Stitch: items, address, payment, orderStatus, deliveryStatus.
+- Web hiá»‡n cÃ³: `OrdersPage`
+- Tráº¡ng thÃ¡i: ÄÃ£ cÃ³ má»™t pháº§n
+- Cáº§n Stitch: items, address, payment, orderStatus, deliveryStatus.
 
 ### Order tracking screen
-- Trạng thái: Đã có một phần
-- Cần Stitch: timeline gồm orderStatus và deliveryStatus.
+- Tráº¡ng thÃ¡i: ÄÃ£ cÃ³ má»™t pháº§n
+- Cáº§n Stitch: timeline gá»“m orderStatus vÃ  deliveryStatus.
 
 ### Confirm received bottom sheet
-- Trạng thái: Cần bổ sung
-- Cần Stitch: xác nhận khi deliveryStatus = DELIVERED.
+- Tráº¡ng thÃ¡i: Cáº§n bá»• sung
+- Cáº§n Stitch: xÃ¡c nháº­n khi deliveryStatus = DELIVERED.
 
 ### Profile screen
-- Web hiện có: `ProfilePage`
-- Trạng thái: Cần chuyển từ web
-- Cần Stitch: thông tin cá nhân, account actions, logout.
+- Web hiá»‡n cÃ³: `ProfilePage`
+- Tráº¡ng thÃ¡i: Cáº§n chuyá»ƒn tá»« web
+- Cáº§n Stitch: thÃ´ng tin cÃ¡ nhÃ¢n, account actions, logout.
 
 ### Address management screen
-- Web hiện có: `ProfilePage`
-- Trạng thái: Đã có một phần
-- Cần Stitch: danh sách địa chỉ, add/edit/delete/default.
+- Web hiá»‡n cÃ³: `ProfilePage`
+- Tráº¡ng thÃ¡i: ÄÃ£ cÃ³ má»™t pháº§n
+- Cáº§n Stitch: danh sÃ¡ch Ä‘á»‹a chá»‰, add/edit/delete/default.
 
 ### Customer chat screen
-- Web hiện có: `CustomerChatPage`, `ChatBubble`
-- Trạng thái: Đã có một phần
-- Cần Stitch: chat messages, input, image preview, empty state.
+- Web hiá»‡n cÃ³: `CustomerChatPage`, `ChatBubble`
+- Tráº¡ng thÃ¡i: ÄÃ£ cÃ³ má»™t pháº§n
+- Cáº§n Stitch: chat messages, input, image preview, empty state.
 
-## Bottom Navigation Đề Xuất
+## Bottom Navigation Äá» Xuáº¥t
 
 - Home
 - Search

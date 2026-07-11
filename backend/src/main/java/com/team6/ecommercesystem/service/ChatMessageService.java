@@ -22,60 +22,62 @@ public class ChatMessageService {
 
     public List<ChatMessage> getMessages(Long roomId) {
         if (!chatRoomRepository.existsById(roomId)) {
-            throw new RuntimeException("Room khong ton tai");
+            throw new RuntimeException("Room không tồn tại");
         }
         return chatMessageRepository.findByRoomIdOrderBySentAtAsc(roomId);
     }
 
     public List<ChatMessage> sendMessage(Long roomId, SendMessageRequest request) {
-
         ChatRoom room = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room không tồn tại"));
 
-        // 1️⃣ Lưu tin nhắn customer/admin
+        String sender = request.getSender() == null ? "" : request.getSender().trim().toUpperCase();
         ChatMessage message = ChatMessage.builder()
                 .room(room)
                 .content(request.getContent())
-                .sender(request.getSender())
+                .sender(sender)
                 .sentAt(LocalDateTime.now())
                 .type("TEXT")
                 .build();
 
         chatMessageRepository.save(message);
         room.setLastMessageAt(message.getSentAt());
-        room.setHasUnread(!"ADMIN".equalsIgnoreCase(request.getSender()));
+        room.setHasUnread("CUSTOMER".equals(sender));
         chatRoomRepository.save(room);
 
-        // 2️⃣ Nếu là AI room và sender là CUSTOMER → gọi AI
-        if (room.getType() == ChatRoomType.AI_SUPPORT
-                && request.getSender().equals("CUSTOMER")) {
-
-            // Lấy lịch sử message
-            List<String> history = chatMessageRepository
-                    .findByRoomIdOrderBySentAtAsc(roomId)
-                    .stream()
-                    .map(ChatMessage::getContent)
-                    .toList();
-
-            String aiReply = chatBotService
-                    .generateResponse(request.getContent(), history)
-                    .getResponse();
-
-            ChatMessage aiMessage = ChatMessage.builder()
-                    .room(room)
-                    .content(aiReply)
-                    .sender("ADMIN")
-                    .sentAt(LocalDateTime.now())
-                    .type("TEXT")
-                    .build();
-
-            chatMessageRepository.save(aiMessage);
-            room.setLastMessageAt(aiMessage.getSentAt());
-            room.setHasUnread(false);
-            chatRoomRepository.save(room);
+        if ("CUSTOMER".equals(sender)) {
+            appendBotReply(room, request.getContent());
         }
 
-        // 3️⃣ Trả về toàn bộ messages
         return chatMessageRepository.findByRoomIdOrderBySentAtAsc(roomId);
+    }
+
+    private void appendBotReply(ChatRoom room, String customerMessage) {
+        List<String> history = chatMessageRepository
+                .findByRoomIdOrderBySentAtAsc(room.getId())
+                .stream()
+                .map(ChatMessage::getContent)
+                .toList();
+
+        String aiReply = chatBotService
+                .generateResponse(customerMessage, history)
+                .getResponse();
+
+        ChatMessage botMessage = ChatMessage.builder()
+                .room(room)
+                .content(aiReply)
+                .sender("BOT")
+                .sentAt(LocalDateTime.now())
+                .type("TEXT")
+                .build();
+
+        chatMessageRepository.save(botMessage);
+        room.setLastMessageAt(botMessage.getSentAt());
+        if (room.getType() == ChatRoomType.AI_SUPPORT) {
+            room.setHasUnread(false);
+        } else {
+            room.setHasUnread(true);
+        }
+        chatRoomRepository.save(room);
     }
 }

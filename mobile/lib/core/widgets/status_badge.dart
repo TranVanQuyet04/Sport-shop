@@ -24,24 +24,24 @@ class StatusBadge extends StatelessWidget {
         AppColors.border,
       ),
       StatusTone.info => (
-        const Color(0xFFEFF6FF),
+        AppColors.infoSoft,
         AppColors.info,
-        const Color(0xFFBFDBFE),
+        AppColors.infoBorder,
       ),
       StatusTone.warning => (
-        const Color(0xFFFFF7ED),
+        AppColors.warningSoft,
         AppColors.warning,
-        const Color(0xFFFED7AA),
+        AppColors.warningBorder,
       ),
       StatusTone.success => (
-        const Color(0xFFF0FDF4),
+        AppColors.successSoft,
         AppColors.success,
-        const Color(0xFFBBF7D0),
+        AppColors.successBorder,
       ),
       StatusTone.error => (
-        const Color(0xFFFEF2F2),
+        AppColors.errorSoft,
         AppColors.error,
-        const Color(0xFFFECACA),
+        AppColors.errorBorder,
       ),
     };
 

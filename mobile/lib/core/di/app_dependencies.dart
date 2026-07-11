@@ -4,6 +4,10 @@ import '../../repository/chat/chat_repository.dart';
 import '../../repository/chat/chat_repository_impl.dart';
 import '../../repository/admin/admin_report_repository.dart';
 import '../../repository/admin/admin_report_repository_impl.dart';
+import '../../repository/admin/admin_setting_repository.dart';
+import '../../repository/admin/admin_setting_repository_impl.dart';
+import '../../repository/admin/admin_staff_operations_repository.dart';
+import '../../repository/admin/admin_staff_operations_repository_impl.dart';
 import '../../repository/admin/admin_catalog_repository.dart';
 import '../../repository/admin/admin_catalog_repository_impl.dart';
 import '../../repository/customer/address_repository.dart';
@@ -22,9 +26,13 @@ import '../../repository/customer/product_repository.dart';
 import '../../repository/customer/product_repository_impl.dart';
 import '../../repository/customer/profile_repository.dart';
 import '../../repository/customer/profile_repository_impl.dart';
+import '../../repository/delivery/delivery_operations_repository.dart';
+import '../../repository/delivery/delivery_operations_repository_impl.dart';
 import '../../service/auth/auth_service.dart';
 import '../../service/chat/chat_service.dart';
 import '../../service/admin/admin_report_service.dart';
+import '../../service/admin/admin_setting_service.dart';
+import '../../service/admin/admin_staff_operations_service.dart';
 import '../../service/admin/admin_catalog_service.dart';
 import '../../service/customer/address_service.dart';
 import '../../service/customer/cart_service.dart';
@@ -34,6 +42,7 @@ import '../../service/customer/navigation_service.dart';
 import '../../service/customer/payment_service.dart';
 import '../../service/customer/product_service.dart';
 import '../../service/customer/profile_service.dart';
+import '../../service/delivery/delivery_operations_service.dart';
 import '../network/api_client.dart';
 import '../storage/token_storage.dart';
 
@@ -60,6 +69,17 @@ class AppDependencies {
   );
   late final AdminReportRepository adminReportRepository =
       AdminReportRepositoryImpl(adminReportService);
+
+  late final AdminSettingService adminSettingService = AdminSettingApiService(
+    apiClient,
+  );
+  late final AdminSettingRepository adminSettingRepository =
+      AdminSettingRepositoryImpl(adminSettingService);
+
+  late final AdminStaffOperationsService adminStaffOperationsService =
+      AdminStaffOperationsApiService(apiClient);
+  late final AdminStaffOperationsRepository adminStaffOperationsRepository =
+      AdminStaffOperationsRepositoryImpl(adminStaffOperationsService);
 
   late final AdminCatalogService adminCatalogService = AdminCatalogApiService(
     apiClient,
@@ -95,6 +115,11 @@ class AppDependencies {
   late final OrderRepository orderRepository = OrderRepositoryImpl(
     orderService,
   );
+
+  late final DeliveryOperationsService deliveryOperationsService =
+      DeliveryOperationsApiService(apiClient);
+  late final DeliveryOperationsRepository deliveryOperationsRepository =
+      DeliveryOperationsRepositoryImpl(deliveryOperationsService);
 
   late final PaymentService paymentService = PaymentApiService(apiClient);
   late final PaymentRepository paymentRepository = PaymentRepositoryImpl(

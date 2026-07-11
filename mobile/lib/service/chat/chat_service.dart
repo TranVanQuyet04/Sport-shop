@@ -48,7 +48,12 @@ class ChatApiService implements ChatService {
       '/chat/rooms',
       data: {'customerName': customerName},
     );
-    return ChatRoomModel.fromJson(json);
+    final source = json['result'] is Map
+        ? Map<String, dynamic>.from(json['result'] as Map)
+        : json['data'] is Map
+        ? Map<String, dynamic>.from(json['data'] as Map)
+        : json;
+    return ChatRoomModel.fromJson(source);
   }
 
   @override

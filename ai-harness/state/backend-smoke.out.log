@@ -1,0 +1,3382 @@
+[INFO] Scanning for projects...
+Downloading from central: https://repo.maven.apache.org/maven2/org/jooq/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/flywaydb/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/io/github/git-commit-id/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/maven-metadata.xml
+Progress (1): 234 BProgress (2): 234 B | 398 BProgress (3): 234 B | 398 B | 249 B                                   Downloaded from central: https://repo.maven.apache.org/maven2/org/flywaydb/maven-metadata.xml (234 B at 172 B/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/maven-metadata.xml (249 B at 183 B/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/jooq/maven-metadata.xml (398 B at 292 B/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/liquibase/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/graalvm/buildtools/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/maven-metadata.xml
+Progress (1): 255 B                   Downloaded from central: https://repo.maven.apache.org/maven2/io/github/git-commit-id/maven-metadata.xml (255 B at 186 B/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+Progress (1): 242 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/graalvm/buildtools/maven-metadata.xml (242 B at 2.7 kB/s)
+Progress (1): 394 B                   Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+Progress (2): 394 B | 375 B                           Downloaded from central: https://repo.maven.apache.org/maven2/org/liquibase/maven-metadata.xml (394 B at 2.9 kB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/maven-metadata.xml (375 B at 2.8 kB/s)
+Progress (1): 4.8 kBProgress (1): 7.7 kBProgress (1): 14 kB Progress (1): 14 kB                   Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 140 kB/s)
+Progress (1): 3.1 kBProgress (1): 7.7 kBProgress (1): 12 kB Progress (1): 17 kBProgress (1): 20 kBProgress (1): 21 kB                   Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (21 kB at 129 kB/s)
+[INFO] 
+[INFO] -------------------< com.team6:SportSwearShopSystem >-------------------
+[INFO] Building sport-swear-shop-system 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.2.6:run (default-cli) > test-compile @ SportSwearShopSystem >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ SportSwearShopSystem ---
+[INFO] Copying 4 resources from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ SportSwearShopSystem ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ SportSwearShopSystem ---
+[INFO] skip non existing resourceDirectory D:\FPTK8\PRM\sportswear-shop-system\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ SportSwearShopSystem ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] <<< spring-boot:3.2.6:run (default-cli) < test-compile @ SportSwearShopSystem <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.2.6:run (default-cli) @ SportSwearShopSystem ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.6)
+
+2026-07-01T20:43:55.601+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.EcommercesystemApplication         : Starting EcommercesystemApplication using Java 21.0.10 with PID 18212 (D:\FPTK8\PRM\sportswear-shop-system\backend\target\classes started by quyet in D:\FPTK8\PRM\sportswear-shop-system\backend)
+2026-07-01T20:43:55.606+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.EcommercesystemApplication         : The following 1 profile is active: "dev"
+2026-07-01T20:44:00.521+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-01T20:44:00.528+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-01T20:44:00.614+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.BlacklistedAccessTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-07-01T20:44:00.903+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 356 ms. Found 22 JPA repository interfaces.
+2026-07-01T20:44:01.060+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-01T20:44:01.072+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-01T20:44:01.192+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.BrandRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.221+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.CartRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.225+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.CategoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.227+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.ChatMessageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.229+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.ChatRoomRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.230+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.CollectionProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.230+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.CollectionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.231+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.DeliveryReportRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.231+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.LeaveRequestRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.232+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.OrderAssignmentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.232+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.OrderRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.232+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.PasswordResetTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.233+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.ProductImageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.233+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.234+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.ProductVariantRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.234+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.236+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.SportRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.237+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.SystemSettingRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.237+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.UserAddressRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.237+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.238+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.ValidRefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.241+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.team6.ecommercesystem.repository.WorkShiftRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-01T20:44:01.281+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 151 ms. Found 1 Redis repository interface.
+2026-07-01T20:44:08.086+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-01T20:44:08.118+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-07-01T20:44:08.120+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-07-01T20:44:08.346+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-07-01T20:44:08.348+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 12628 ms
+2026-07-01T20:44:11.182+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-07-01T20:44:11.348+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.8.Final
+2026-07-01T20:44:11.424+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-07-01T20:44:12.091+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-01T20:44:12.150+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-07-01T20:44:12.603+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6e3b2dd3
+2026-07-01T20:44:12.605+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-07-01T20:44:39.885+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-01T20:44:43.820+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-01T20:44:47.229+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.configuration.RedisConfiguration   : Redis configuration validated - Host: localhost, Port 6379
+2026-07-01T20:44:47.869+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.configuration.RedisConfiguration   : Redis connection factory created successfully
+2026-07-01T20:44:54.049+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.c.JwtDecoderConfiguration          : Jwt decoder successfully initialized with 60s clock skew leeway
+2026-07-01T20:44:55.883+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-01T20:44:58.728+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.c.SecurityConfiguration            : Password encoder configured with BCrypt strength: 12
+2026-07-01T20:44:58.729+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.c.SecurityConfiguration            : Authentication manager configured with DAO authentication provider
+2026-07-01T20:45:05.069+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.c.OpenAPIConfiguration             : Configuring OpenAPI documentation - Title API-Sport Swear Shop, Version v1.0.0
+2026-07-01T20:45:05.967+07:00  WARN 18212 --- [SportSwearShopSystem] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-01T20:45:07.850+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.c.SecurityConfiguration            : Configuring security filter chain
+2026-07-01T20:45:07.852+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.c.SecurityConfiguration            : CORS configuration initialized with allowed origins: [http://localhost:3000, http://localhost:5173, http://172.20.128.1:5173, http://localhost:4173, http://localhost:8080], allowed origin patterns: [http://localhost:*, http://127.0.0.1:*, http://172.20.128.1:*]
+2026-07-01T20:45:07.894+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.c.SecurityConfiguration            : Security filter chain configured successfully
+2026-07-01T20:45:07.991+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@5c43a52e, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@403e8b5, org.springframework.security.web.context.SecurityContextHolderFilter@12898e77, org.springframework.security.web.header.HeaderWriterFilter@6aef91e6, org.springframework.web.filter.CorsFilter@39fd1bfd, org.springframework.security.web.authentication.logout.LogoutFilter@a73b3c4, org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter@3a40e068, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4e8c27f7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7826c5ef, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5dcd5046, org.springframework.security.web.access.ExceptionTranslationFilter@2b686050, org.springframework.security.web.access.intercept.AuthorizationFilter@58830b31]
+2026-07-01T20:45:11.884+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-07-01T20:45:12.260+07:00  INFO 18212 --- [SportSwearShopSystem] [           main] c.t.e.EcommercesystemApplication         : Started EcommercesystemApplication in 77.294 seconds (process running for 78.234)
+2026-07-01T20:45:13.477+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-01T20:45:13.480+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-01T20:45:13.494+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_code=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_code=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_code=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_code=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_code=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-07-01T20:45:15.087+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-1] c.t.e.c.AuthenticationController         : Login request received for email: admin@example.com
+2026-07-01T20:45:15.132+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-1] c.t.e.service.AuthenticationServiceImpl  : Login attempt for email: admin@example.com
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-07-01T20:45:16.061+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-9] c.t.e.c.AuthenticationController         : Login request received for email: admin@example.com
+2026-07-01T20:45:16.074+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-9] c.t.e.service.AuthenticationServiceImpl  : Login attempt for email: admin@example.com
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_code=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_code=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-07-01T20:45:19.820+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-1] c.t.e.service.AuthenticationServiceImpl  : User authenticated successfully: admin@example.com
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-07-01T20:45:20.176+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-9] c.t.e.service.AuthenticationServiceImpl  : User authenticated successfully: admin@example.com
+Hibernate: 
+    insert 
+    into
+        valid_refresh_tokens
+        (created_at, expired_time, jwt_id, revoked, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        valid_refresh_tokens
+        (created_at, expired_time, jwt_id, revoked, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+org.springframework.web.context.request.async.AsyncRequestNotUsableException: ServletOutputStream failed to flush: java.io.IOException: An established connection was aborted by the software in your host machine
+	at org.springframework.web.context.request.async.StandardServletAsyncWebRequest$LifecycleHttpServletResponse.handleIOException(StandardServletAsyncWebRequest.java:320)
+	at org.springframework.web.context.request.async.StandardServletAsyncWebRequest$LifecycleServletOutputStream.flush(StandardServletAsyncWebRequest.java:392)
+	at java.base/java.io.FilterOutputStream.flush(FilterOutputStream.java:155)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator.flush(UTF8JsonGenerator.java:1200)
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1063)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:483)
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:114)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:297)
+	at org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor.handleReturnValue(HttpEntityMethodProcessor.java:245)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter.doFilterInternal(BearerTokenAuthenticationFilter.java:128)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.apache.catalina.connector.ClientAbortException: java.io.IOException: An established connection was aborted by the software in your host machine
+	at org.apache.catalina.connector.OutputBuffer.doFlush(OutputBuffer.java:303)
+	at org.apache.catalina.connector.OutputBuffer.flush(OutputBuffer.java:265)
+	at org.apache.catalina.connector.CoyoteOutputStream.flush(CoyoteOutputStream.java:136)
+	at org.springframework.security.web.util.OnCommittedResponseWrapper$SaveContextServletOutputStream.flush(OnCommittedResponseWrapper.java:524)
+	at org.springframework.web.context.request.async.StandardServletAsyncWebRequest$LifecycleServletOutputStream.flush(StandardServletAsyncWebRequest.java:389)
+	... 99 more
+Caused by: java.io.IOException: An established connection was aborted by the software in your host machine
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:137)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:102)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:58)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:542)
+	at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:122)
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:1378)
+	at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:764)
+	at org.apache.tomcat.util.net.SocketWrapperBase.flushBlocking(SocketWrapperBase.java:728)
+	at org.apache.tomcat.util.net.SocketWrapperBase.flush(SocketWrapperBase.java:712)
+	at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.flush(Http11OutputBuffer.java:559)
+	at org.apache.coyote.http11.filters.ChunkedOutputFilter.flush(ChunkedOutputFilter.java:157)
+	at org.apache.coyote.http11.Http11OutputBuffer.flush(Http11OutputBuffer.java:216)
+	at org.apache.coyote.http11.Http11Processor.flush(Http11Processor.java:1244)
+	at org.apache.coyote.AbstractProcessor.action(AbstractProcessor.java:400)
+	at org.apache.coyote.Response.action(Response.java:208)
+	at org.apache.catalina.connector.OutputBuffer.doFlush(OutputBuffer.java:299)
+	... 103 more
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_code=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_code=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-07-01T20:45:24.723+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-8] c.t.e.c.AuthenticationController         : Login request received for email: admin@example.com
+2026-07-01T20:45:24.729+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-8] c.t.e.service.AuthenticationServiceImpl  : Login attempt for email: admin@example.com
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-07-01T20:45:27.029+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-8] c.t.e.service.AuthenticationServiceImpl  : User authenticated successfully: admin@example.com
+Hibernate: 
+    insert 
+    into
+        valid_refresh_tokens
+        (created_at, expired_time, jwt_id, revoked, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected character ('\' (code 92)): was expecting double-quote to start field name
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.readJavaType(AbstractJackson2HttpMessageConverter.java:406)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.read(AbstractJackson2HttpMessageConverter.java:354)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver.readWithMessageConverters(AbstractMessageConverterMethodArgumentResolver.java:184)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.readWithMessageConverters(RequestResponseBodyMethodProcessor.java:161)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.resolveArgument(RequestResponseBodyMethodProcessor.java:135)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:224)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:178)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter.doFilterInternal(BearerTokenAuthenticationFilter.java:128)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: com.fasterxml.jackson.core.JsonParseException: Unexpected character ('\' (code 92)): was expecting double-quote to start field name
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 1, column: 3]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:2477)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:750)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportUnexpectedChar(ParserMinimalBase.java:674)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleOddName(UTF8StreamJsonParser.java:2144)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._parseName(UTF8StreamJsonParser.java:1794)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:798)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:181)
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:323)
+	at com.fasterxml.jackson.databind.ObjectReader._bindAndClose(ObjectReader.java:2105)
+	at com.fasterxml.jackson.databind.ObjectReader.readValue(ObjectReader.java:1481)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.readJavaType(AbstractJackson2HttpMessageConverter.java:395)
+	... 98 more
+2026-07-01T20:47:56.545+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-3] c.t.e.c.AuthenticationController         : Login request received for email: admin@example.com
+2026-07-01T20:47:56.651+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-3] c.t.e.service.AuthenticationServiceImpl  : Login attempt for email: admin@example.com
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-07-01T20:48:02.057+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-3] c.t.e.service.AuthenticationServiceImpl  : User authenticated successfully: admin@example.com
+Hibernate: 
+    insert 
+    into
+        valid_refresh_tokens
+        (created_at, expired_time, jwt_id, revoked, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-07-01T21:08:31.454+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-2] c.t.e.c.AuthenticationController         : Login request received for email: admin@example.com
+2026-07-01T21:08:31.629+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-2] c.t.e.service.AuthenticationServiceImpl  : Login attempt for email: admin@example.com
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-07-01T21:08:33.684+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-2] c.t.e.service.AuthenticationServiceImpl  : User authenticated successfully: admin@example.com
+Hibernate: 
+    insert 
+    into
+        valid_refresh_tokens
+        (created_at, expired_time, jwt_id, revoked, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-07-01T21:08:56.519+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-5] c.t.e.c.AuthenticationController         : Login request received for email: admin@example.com
+2026-07-01T21:08:56.554+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-5] c.t.e.service.AuthenticationServiceImpl  : Login attempt for email: admin@example.com
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-07-01T21:08:58.936+07:00  INFO 18212 --- [SportSwearShopSystem] [nio-8080-exec-5] c.t.e.service.AuthenticationServiceImpl  : User authenticated successfully: admin@example.com
+Hibernate: 
+    insert 
+    into
+        valid_refresh_tokens
+        (created_at, expired_time, jwt_id, revoked, user_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        sum(o1_0.total_amount) 
+    from
+        orders o1_0 
+    where
+        o1_0.status='COMPLETED' 
+        and o1_0.order_date>=? 
+        and o1_0.order_date<=?
+Hibernate: 
+    select
+        count(o1_0.id) 
+    from
+        orders o1_0 
+    where
+        o1_0.order_date>=? 
+        and o1_0.order_date<=?
+Hibernate: 
+    select
+        count(o1_0.id) 
+    from
+        orders o1_0 
+    where
+        o1_0.status='PENDING' 
+        and o1_0.order_date>=? 
+        and o1_0.order_date<=?
+Hibernate: 
+    select
+        count(u1_0.id) 
+    from
+        users u1_0 
+    where
+        u1_0.created_at>=? 
+        and u1_0.created_at<=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.description,
+        s1_0.sport_name 
+    from
+        sports s1_0
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.banner,
+        b1_0.brand_name,
+        b1_0.created_at,
+        b1_0.description,
+        b1_0.is_active,
+        b1_0.logo,
+        b1_0.slug,
+        b1_0.updated_at 
+    from
+        brands b1_0 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.description,
+        s1_0.sport_name 
+    from
+        sports s1_0 
+    where
+        s1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.banner,
+        b1_0.brand_name,
+        b1_0.created_at,
+        b1_0.description,
+        b1_0.is_active,
+        b1_0.logo,
+        b1_0.slug,
+        b1_0.updated_at 
+    from
+        brands b1_0 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.description,
+        s1_0.sport_name 
+    from
+        sports s1_0 
+    where
+        s1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.description,
+        s1_0.sport_name 
+    from
+        sports s1_0 
+    where
+        s1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.banner,
+        b1_0.brand_name,
+        b1_0.created_at,
+        b1_0.description,
+        b1_0.is_active,
+        b1_0.logo,
+        b1_0.slug,
+        b1_0.updated_at 
+    from
+        brands b1_0 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.banner,
+        b1_0.brand_name,
+        b1_0.created_at,
+        b1_0.description,
+        b1_0.is_active,
+        b1_0.logo,
+        b1_0.slug,
+        b1_0.updated_at 
+    from
+        brands b1_0 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.description,
+        s1_0.sport_name 
+    from
+        sports s1_0 
+    where
+        s1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.banner,
+        b1_0.brand_name,
+        b1_0.created_at,
+        b1_0.description,
+        b1_0.is_active,
+        b1_0.logo,
+        b1_0.slug,
+        b1_0.updated_at 
+    from
+        brands b1_0 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.description,
+        s1_0.sport_name 
+    from
+        sports s1_0 
+    where
+        s1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.description,
+        s1_0.sport_name 
+    from
+        sports s1_0 
+    where
+        s1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.banner,
+        b1_0.brand_name,
+        b1_0.created_at,
+        b1_0.description,
+        b1_0.is_active,
+        b1_0.logo,
+        b1_0.slug,
+        b1_0.updated_at 
+    from
+        brands b1_0 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.banner,
+        b1_0.brand_name,
+        b1_0.created_at,
+        b1_0.description,
+        b1_0.is_active,
+        b1_0.logo,
+        b1_0.slug,
+        b1_0.updated_at 
+    from
+        brands b1_0 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.description,
+        s1_0.sport_name 
+    from
+        sports s1_0 
+    where
+        s1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.banner,
+        b1_0.brand_name,
+        b1_0.created_at,
+        b1_0.description,
+        b1_0.is_active,
+        b1_0.logo,
+        b1_0.slug,
+        b1_0.updated_at 
+    from
+        brands b1_0 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        p1_0.id,
+        p1_0.category_name,
+        p1_0.description,
+        p1_0.parent_id 
+    from
+        categories c1_0 
+    left join
+        categories p1_0 
+            on p1_0.id=c1_0.parent_id 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        v1_0.product_id,
+        v1_0.id,
+        v1_0.color,
+        v1_0.price,
+        v1_0.size,
+        v1_0.sku,
+        v1_0.stock_quantity 
+    from
+        product_variants v1_0 
+    where
+        v1_0.product_id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.description,
+        c1_0.end_date,
+        c1_0.image_url,
+        c1_0.is_active,
+        c1_0.name,
+        c1_0.slug,
+        c1_0.start_date,
+        c1_0.type 
+    from
+        collections c1_0
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.category_name,
+        c1_0.description,
+        c1_0.parent_id 
+    from
+        categories c1_0
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.banner,
+        b1_0.brand_name,
+        b1_0.created_at,
+        b1_0.description,
+        b1_0.is_active,
+        b1_0.logo,
+        b1_0.slug,
+        b1_0.updated_at 
+    from
+        brands b1_0
+Hibernate: 
+    select
+        o1_0.id,
+        o1_0.note,
+        o1_0.order_date,
+        o1_0.payment_method,
+        o1_0.phone_number,
+        o1_0.recipient_name,
+        o1_0.shipping_address,
+        o1_0.status,
+        o1_0.total_amount,
+        o1_0.user_id 
+    from
+        orders o1_0
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        oi1_0.order_id,
+        oi1_0.id,
+        oi1_0.price,
+        oi1_0.quantity,
+        oi1_0.variant_id 
+    from
+        order_items oi1_0 
+    where
+        oi1_0.order_id=?
+Hibernate: 
+    select
+        pv1_0.id,
+        pv1_0.color,
+        pv1_0.price,
+        pv1_0.product_id,
+        pv1_0.size,
+        pv1_0.sku,
+        pv1_0.stock_quantity 
+    from
+        product_variants pv1_0 
+    where
+        pv1_0.id=?
+Hibernate: 
+    select
+        i1_0.variant_id,
+        i1_0.id,
+        i1_0.image_url,
+        i1_0.is_primary 
+    from
+        product_images i1_0 
+    where
+        i1_0.variant_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.description,
+        p1_0.product_name,
+        p1_0.sport_id 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0
+Hibernate: 
+    select
+        cr1_0.id,
+        cr1_0.admin_name,
+        cr1_0.customer_name,
+        cr1_0.has_unread,
+        cr1_0.last_message_at,
+        cr1_0.type 
+    from
+        chat_rooms cr1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.full_name,
+        u1_0.last_login_date,
+        u1_0.last_password_change_date,
+        u1_0.lock_time,
+        u1_0.password,
+        u1_0.phone_number,
+        u1_0.role_id,
+        u1_0.status 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        r1_0.role_id,
+        r1_0.role_code,
+        r1_0.role_description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  46:46 min
+[INFO] Finished at: 2026-07-01T21:30:21+07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.2.6:run (default-cli) on project SportSwearShopSystem: Process terminated with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

@@ -1,0 +1,370 @@
+﻿{
+    "generatedAt":  "2026-07-06T19:50:59",
+    "area":  "mobile-admin",
+    "brd":  "ai-harness/docs/brd-mobile-admin-ui-luxury.md",
+    "totalScreens":  19,
+    "reviewNotes":  6,
+    "screens":  [
+                    {
+                        "file":  "mobile/lib/view/admin/admin_add_product_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/products/new",
+                        "backendModule":  "products",
+                        "luxuryScore":  60,
+                        "usesAdminDesignSystem":  false,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  false,
+                        "hasBottomSafePadding":  false,
+                        "usesPremiumInputs":  true,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+                                      "Consider aligning with Admin design-system widgets such as AdminSurface/AdminPageHeader/AdminIconBadge."
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_brand_management_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/brands",
+                        "backendModule":  "brands",
+                        "luxuryScore":  85,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  true,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_category_management_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/categories",
+                        "backendModule":  "categories",
+                        "luxuryScore":  85,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  true,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_chat_detail_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/chats/:id",
+                        "backendModule":  "chatMessages",
+                        "luxuryScore":  100,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  false,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  true,
+                        "usesPremiumShadows":  true,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_chat_rooms_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/chats",
+                        "backendModule":  "chatRooms",
+                        "luxuryScore":  85,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  true,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_collections_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/collections",
+                        "backendModule":  "collections",
+                        "luxuryScore":  85,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  false,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_dashboard_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/dashboard",
+                        "backendModule":  "dashboardReports",
+                        "luxuryScore":  60,
+                        "usesAdminDesignSystem":  false,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  true,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+                                      "Consider aligning with Admin design-system widgets such as AdminSurface/AdminPageHeader/AdminIconBadge."
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_delivery_monitoring_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/deliveries",
+                        "backendModule":  "deliveryReports",
+                        "luxuryScore":  85,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  true,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_inventory_variants_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/products/:id/variants",
+                        "backendModule":  "productVariantsInventory",
+                        "luxuryScore":  60,
+                        "usesAdminDesignSystem":  false,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  false,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+                                      "Consider aligning with Admin design-system widgets such as AdminSurface/AdminPageHeader/AdminIconBadge."
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_orders_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/orders",
+                        "backendModule":  "orders",
+                        "luxuryScore":  85,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  false,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_products_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/products",
+                        "backendModule":  "products",
+                        "luxuryScore":  100,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  true,
+                        "usesPremiumShadows":  true,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_profile_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/profile",
+                        "backendModule":  "profile",
+                        "luxuryScore":  85,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  false,
+                        "hasBottomSafePadding":  false,
+                        "usesPremiumInputs":  false,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_revenue_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/revenue",
+                        "backendModule":  "dashboardReports",
+                        "luxuryScore":  100,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  true,
+                        "usesPremiumShadows":  true,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_revenue_report_page.dart",
+                        "mapped":  false,
+                        "route":  "",
+                        "backendModule":  "",
+                        "luxuryScore":  100,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  true,
+                        "usesPremiumShadows":  true,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+                                      "Admin view is not listed in mobile-admin-screen-map.json."
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_sports_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/sports",
+                        "backendModule":  "sports",
+                        "luxuryScore":  85,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  false,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_staff_detail_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/staff/:id",
+                        "backendModule":  "users",
+                        "luxuryScore":  85,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  false,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  false,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_staff_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/staff",
+                        "backendModule":  "users",
+                        "luxuryScore":  60,
+                        "usesAdminDesignSystem":  false,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  false,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+                                      "Consider aligning with Admin design-system widgets such as AdminSurface/AdminPageHeader/AdminIconBadge."
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_system_settings_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/settings",
+                        "backendModule":  "systemSettings",
+                        "luxuryScore":  100,
+                        "usesAdminDesignSystem":  true,
+                        "hasPremiumState":  false,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  false,
+                        "usesPremiumShadows":  true,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+
+                                  ]
+                    },
+                    {
+                        "file":  "mobile/lib/view/admin/admin_user_management_page.dart",
+                        "mapped":  true,
+                        "route":  "/admin/users",
+                        "backendModule":  "users",
+                        "luxuryScore":  60,
+                        "usesAdminDesignSystem":  false,
+                        "hasPremiumState":  true,
+                        "hasBottomNav":  true,
+                        "hasBottomSafePadding":  true,
+                        "usesPremiumInputs":  false,
+                        "usesPremiumShadows":  false,
+                        "usesRiskyColors":  false,
+                        "hasHardcodedAdminRoute":  false,
+                        "hasMojibake":  false,
+                        "notes":  [
+                                      "Consider aligning with Admin design-system widgets such as AdminSurface/AdminPageHeader/AdminIconBadge."
+                                  ]
+                    }
+                ]
+}

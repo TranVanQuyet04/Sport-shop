@@ -32,11 +32,10 @@ public class OrderMapper {
             return "WAITING_PICKUP";
         }
         return switch (order.getStatus()) {
-            case PAID -> "WAITING_PICKUP";
-            case SHIPPING -> "OUT_FOR_DELIVERY";
+            case PENDING, CONFIRMED, PACKING, PAID -> "WAITING_PICKUP";
+            case SHIPPED, SHIPPING -> "OUT_FOR_DELIVERY";
             case DELIVERED, COMPLETED -> "DELIVERED";
             case CANCELLED -> "RETURNED";
-            case PENDING -> "WAITING_PICKUP";
         };
     }
 

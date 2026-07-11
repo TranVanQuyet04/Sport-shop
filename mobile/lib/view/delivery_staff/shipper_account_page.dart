@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
-import '../../controller/customer/profile_controller.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
@@ -10,6 +9,7 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_state.dart';
 import '../../core/widgets/hover_effect.dart';
 import '../../model/customer/profile_model.dart';
+import '../../presenter/customer/profile_presenter.dart';
 import '../admin/widgets/admin_app_bar.dart';
 import 'widgets/delivery_bottom_nav.dart';
 
@@ -21,20 +21,20 @@ class ShipperAccountPage extends StatefulWidget {
 }
 
 class _ShipperAccountPageState extends State<ShipperAccountPage> {
-  late final ProfileController _controller = ProfileController(
+  late final ProfilePresenter _presenter = ProfilePresenter(
     profileRepository: AppDependencies.instance.profileRepository,
   );
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
-    _controller.loadProfile();
+    _presenter.addListener(_onControllerChanged);
+    _presenter.loadProfile();
   }
 
   @override
   void dispose() {
-    _controller
+    _presenter
       ..removeListener(_onControllerChanged)
       ..dispose();
     super.dispose();
@@ -56,11 +56,12 @@ class _ShipperAccountPageState extends State<ShipperAccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    final profile = _controller.profile;
+    final profile = _presenter.profile;
     return Scaffold(
-      appBar: const AdminAppBar(),
+      backgroundColor: AppColors.shipperBackground,
+      appBar: const AdminAppBar(variant: AdminAppBarVariant.shipper),
       body: RefreshIndicator(
-        onRefresh: _controller.loadProfile,
+        onRefresh: _presenter.loadProfile,
         child: _buildBody(profile),
       ),
       bottomNavigationBar: const DeliveryBottomNav(selectedIndex: 3),
@@ -68,14 +69,14 @@ class _ShipperAccountPageState extends State<ShipperAccountPage> {
   }
 
   Widget _buildBody(ProfileModel? profile) {
-    if (_controller.isLoading && profile == null) {
+    if (_presenter.isLoading && profile == null) {
       return const AppLoadingState(title: 'Đang tải tài khoản');
     }
-    if (_controller.errorMessage != null && profile == null) {
+    if (_presenter.errorMessage != null && profile == null) {
       return AppErrorState(
         title: 'Không tải được tài khoản',
-        message: _controller.errorMessage!,
-        onAction: _controller.loadProfile,
+        message: _presenter.errorMessage!,
+        onAction: _presenter.loadProfile,
       );
     }
 
@@ -83,8 +84,8 @@ class _ShipperAccountPageState extends State<ShipperAccountPage> {
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
-        if (_controller.errorMessage != null) ...[
-          _InfoBanner(message: _controller.errorMessage!),
+        if (_presenter.errorMessage != null) ...[
+          _InfoBanner(message: _presenter.errorMessage!),
           const SizedBox(height: AppSpacing.lg),
         ],
         _AccountHeader(profile: profile),
@@ -148,40 +149,41 @@ class _AccountHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return HoverLift(
       borderRadius: BorderRadius.circular(AppRadius.xl),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.xl),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.xl),
-              border: Border.all(color: AppColors.border),
-            ),
-            child: Column(
-              children: [
-                const CircleAvatar(
-                  radius: 42,
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  child: Icon(Icons.delivery_dining, size: 42),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  profile?.fullName ?? 'Tài khoản',
-                  style: AppTextStyles.title,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  profile?.roleName ?? '',
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.secondary,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [AppColors.shipperPrimary, AppColors.secondary],
           ),
-        ],
+          borderRadius: BorderRadius.circular(AppRadius.xl),
+          border: Border.all(color: AppColors.successBorder),
+          boxShadow: AppElevation.role(AppColors.secondary),
+        ),
+        child: Column(
+          children: [
+            const CircleAvatar(
+              radius: 42,
+              backgroundColor: Colors.white,
+              foregroundColor: AppColors.shipperPrimary,
+              child: Icon(Icons.delivery_dining, size: 42),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              profile?.fullName ?? 'Tài khoản',
+              style: AppTextStyles.title.copyWith(color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              profile?.roleName ?? '',
+              style: AppTextStyles.caption.copyWith(
+                color: Colors.white.withValues(alpha: 0.78),
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -199,35 +201,37 @@ class _AccountMetric extends StatelessWidget {
       scale: 1.01,
       dy: -1,
       borderRadius: BorderRadius.circular(AppRadius.lg),
-      child: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(AppSpacing.md),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              border: Border.all(color: AppColors.border),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  value,
-                  style: AppTextStyles.title.copyWith(
-                    color: AppColors.secondary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  label,
-                  style: AppTextStyles.caption,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.surface,
+              AppColors.secondary.withValues(alpha: 0.05),
+            ],
           ),
-        ],
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          border: Border.all(color: AppColors.successBorder),
+          boxShadow: AppElevation.role(AppColors.secondary),
+        ),
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: AppTextStyles.title.copyWith(color: AppColors.info),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              label,
+              style: AppTextStyles.caption,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -274,30 +278,41 @@ class _InfoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = danger ? AppColors.error : AppColors.primary;
+    final color = danger ? AppColors.error : AppColors.info;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: HoverLift(
         enabled: onTap != null,
+        interactive: onTap != null,
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        child: ListTile(
-          tileColor: AppColors.surface,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.lg),
-            side: const BorderSide(color: AppColors.border),
+        child: Material(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          clipBehavior: Clip.antiAlias,
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(
+                color: danger ? AppColors.errorBorder : AppColors.successBorder,
+              ),
+            ),
+            child: ListTile(
+              onTap: onTap,
+              leading: CircleAvatar(
+                backgroundColor: danger
+                    ? AppColors.errorSoft
+                    : AppColors.secondarySoft,
+                foregroundColor: color,
+                child: Icon(icon),
+              ),
+              title: Text(
+                title,
+                style: AppTextStyles.subtitle.copyWith(color: color),
+              ),
+              subtitle: Text(subtitle),
+              trailing: onTap == null ? null : const Icon(Icons.chevron_right),
+            ),
           ),
-          onTap: onTap,
-          leading: CircleAvatar(
-            backgroundColor: AppColors.surfaceMuted,
-            foregroundColor: color,
-            child: Icon(icon),
-          ),
-          title: Text(
-            title,
-            style: AppTextStyles.subtitle.copyWith(color: color),
-          ),
-          subtitle: Text(subtitle),
-          trailing: onTap == null ? null : const Icon(Icons.chevron_right),
         ),
       ),
     );

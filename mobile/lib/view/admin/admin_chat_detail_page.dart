@@ -1,13 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
-import '../../controller/chat/chat_controller.dart' as app_chat;
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/hover_effect.dart';
+import '../../presenter/chat/chat_presenter.dart' as app_chat;
 import 'widgets/admin_design_system.dart';
 
 class AdminChatDetailPage extends StatefulWidget {
@@ -20,24 +22,31 @@ class AdminChatDetailPage extends StatefulWidget {
 }
 
 class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
-  late final app_chat.ChatController _controller;
+  late final app_chat.ChatPresenter _presenter;
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  Timer? _refreshTimer;
+  int _lastMessageCount = 0;
 
   @override
   void initState() {
     super.initState();
-    _controller = app_chat.ChatController(
+    _presenter = app_chat.ChatPresenter(
       chatRepository: AppDependencies.instance.chatRepository,
     );
-    _controller.addListener(_onControllerChanged);
-    _controller.loadRoomMessages(widget.chatId);
+    _presenter.addListener(_onControllerChanged);
+    _presenter.loadRoomMessages(widget.chatId);
+    _refreshTimer = Timer.periodic(
+      const Duration(seconds: 3),
+      (_) => _presenter.loadRoomMessages(widget.chatId, silent: true),
+    );
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_onControllerChanged);
-    _controller.dispose();
+    _refreshTimer?.cancel();
+    _presenter.removeListener(_onControllerChanged);
+    _presenter.dispose();
     _messageController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -47,8 +56,21 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
     if (!mounted) {
       return;
     }
+    final nextMessageCount = _presenter.messages.length;
+    final hasNewMessage = nextMessageCount > _lastMessageCount;
+    _lastMessageCount = nextMessageCount;
     setState(() {});
-    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+    if (hasNewMessage || _isNearBottom) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+    }
+  }
+
+  bool get _isNearBottom {
+    if (!_scrollController.hasClients) {
+      return true;
+    }
+    final position = _scrollController.position;
+    return position.maxScrollExtent - position.pixels <= 96;
   }
 
   void _scrollToBottom() {
@@ -72,11 +94,11 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
 
   Future<void> _sendMessage() async {
     final text = _messageController.text.trim();
-    if (text.isEmpty || _controller.isSending) {
+    if (text.isEmpty || _presenter.isSending) {
       return;
     }
     _messageController.clear();
-    await _controller.sendRoomMessage(
+    await _presenter.sendRoomMessage(
       roomId: widget.chatId,
       content: text,
       sender: 'ADMIN',
@@ -88,6 +110,7 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          tooltip: 'Quay l\u1ea1i',
           onPressed: _closePage,
           icon: const Icon(Icons.arrow_back),
         ),
@@ -97,7 +120,7 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Text(
-                'Room #${widget.chatId}\nSupport chat',
+                'Ph\u00f2ng #${widget.chatId}\nH\u1ed7 tr\u1ee3 kh\u00e1ch h\u00e0ng',
                 style: AppTextStyles.subtitle,
               ),
             ),
@@ -106,7 +129,7 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
       ),
       body: Column(
         children: [
-          if (_controller.errorMessage != null)
+          if (_presenter.errorMessage != null)
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.lg,
@@ -115,17 +138,16 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
                 0,
               ),
               child: Text(
-                'Could not load or send chat messages.',
+                'Kh\u00f4ng t\u1ea3i ho\u1eb7c g\u1eedi \u0111\u01b0\u1ee3c tin nh\u1eafn.',
                 style: AppTextStyles.caption.copyWith(color: AppColors.error),
               ),
             ),
-          if (_controller.isLoading)
-            const LinearProgressIndicator(minHeight: 2),
+          if (_presenter.isLoading) const LinearProgressIndicator(minHeight: 2),
           Expanded(
-            child: _controller.messages.isEmpty && !_controller.isLoading
+            child: _presenter.messages.isEmpty && !_presenter.isLoading
                 ? Center(
                     child: Text(
-                      'Chưa có tin nhắn.',
+                      'Ch\u01b0a c\u00f3 tin nh\u1eafn.',
                       style: AppTextStyles.body.copyWith(
                         color: AdminColors.textSecondary,
                       ),
@@ -134,12 +156,13 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
                 : ListView.builder(
                     controller: _scrollController,
                     padding: const EdgeInsets.all(AppSpacing.lg),
-                    itemCount: _controller.messages.length,
+                    itemCount: _presenter.messages.length,
                     itemBuilder: (context, index) {
-                      final message = _controller.messages[index];
+                      final message = _presenter.messages[index];
                       return _Bubble(
-                        text: message.content,
+                        text: _AdminChatText.clean(message.content),
                         fromMe: message.sender.toUpperCase() == 'ADMIN',
+                        sender: message.sender,
                       );
                     },
                   ),
@@ -157,7 +180,7 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
                       textInputAction: TextInputAction.send,
                       onSubmitted: (_) => _sendMessage(),
                       decoration: InputDecoration(
-                        hintText: 'Type a message...',
+                        hintText: 'Nh\u1eadp tin nh\u1eafn...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(999),
                         ),
@@ -166,7 +189,7 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
                   ),
                   const SizedBox(width: AppSpacing.md),
                   HoverLift(
-                    interactive: !_controller.isSending,
+                    interactive: !_presenter.isSending,
                     scale: 1.06,
                     dy: -1,
                     borderRadius: BorderRadius.circular(999),
@@ -174,8 +197,9 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Colors.white,
                       child: IconButton(
-                        onPressed: _controller.isSending ? null : _sendMessage,
-                        icon: _controller.isSending
+                        tooltip: 'G\u1eedi tin nh\u1eafn',
+                        onPressed: _presenter.isSending ? null : _sendMessage,
+                        icon: _presenter.isSending
                             ? const SizedBox(
                                 width: 18,
                                 height: 18,
@@ -198,13 +222,20 @@ class _AdminChatDetailPageState extends State<AdminChatDetailPage> {
 }
 
 class _Bubble extends StatelessWidget {
-  const _Bubble({required this.text, required this.fromMe});
+  const _Bubble({
+    required this.text,
+    required this.fromMe,
+    required this.sender,
+  });
 
   final String text;
   final bool fromMe;
+  final String sender;
 
   @override
   Widget build(BuildContext context) {
+    final isBot = sender.toUpperCase() == 'BOT';
+
     return Align(
       alignment: fromMe ? Alignment.centerRight : Alignment.centerLeft,
       child: HoverLift(
@@ -218,17 +249,56 @@ class _Bubble extends StatelessWidget {
           decoration: BoxDecoration(
             color: fromMe ? AdminColors.primary : AdminColors.surface,
             borderRadius: BorderRadius.circular(AppRadius.xl),
+            border: isBot
+                ? Border.all(color: AdminColors.action.withValues(alpha: 0.18))
+                : null,
             boxShadow: fromMe ? null : AdminDesign.cardShadow,
           ),
-          child: Text(
-            text,
-            style: AppTextStyles.body.copyWith(
-              color: fromMe ? Colors.white : AdminColors.primary,
-              fontSize: 17,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (isBot) ...[
+                Text(
+                  'Bot h\u1ed7 tr\u1ee3',
+                  style: AppTextStyles.caption.copyWith(
+                    color: AdminColors.action,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+              ],
+              Text(
+                text,
+                style: AppTextStyles.body.copyWith(
+                  color: fromMe ? Colors.white : AdminColors.primary,
+                  fontSize: 15,
+                  height: 1.45,
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
+  }
+}
+
+class _AdminChatText {
+  static final RegExp _markerPattern = RegExp(
+    r'\[\[ACTION:([A-Z_]+):([^\]]+)\]\]',
+  );
+
+  static String clean(String content) {
+    return content
+        .replaceAll(_markerPattern, '')
+        .replaceAll(RegExp(r'\*\*'), '')
+        .replaceAll(RegExp(r'\[([^\]]+)\]\([^\)]+\)'), r'$1')
+        .replaceAll(RegExp(r'\[([^\]]+)\]\s*\([^\)]+\)'), r'$1')
+        .replaceAll(RegExp(r'^#{1,6}\s*', multiLine: true), '')
+        .replaceAll(RegExp(r'^\s*[-*]\s*', multiLine: true), '')
+        .replaceAll(RegExp(r'https?:\/\/[^\s\)]+'), '')
+        .replaceAll(RegExp(r'^\s*\([^\)]*\)\s*$', multiLine: true), '')
+        .replaceAll(RegExp(r'\n{3,}'), '\n\n')
+        .trim();
   }
 }

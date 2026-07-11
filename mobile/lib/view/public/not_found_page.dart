@@ -74,7 +74,7 @@ class NotFoundPage extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xl),
             Text(
-              'SPORTSHOP • SPORTSWEAR',
+              'StrideX • SPORTSWEAR',
               style: AppTextStyles.caption.copyWith(letterSpacing: 2),
             ),
           ],

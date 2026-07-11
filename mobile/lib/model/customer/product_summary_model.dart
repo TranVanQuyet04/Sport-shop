@@ -1,3 +1,5 @@
+import '../../core/utils/image_url_utils.dart';
+
 class ProductSummaryModel {
   const ProductSummaryModel({
     required this.id,
@@ -5,6 +7,7 @@ class ProductSummaryModel {
     required this.category,
     required this.price,
     this.brand = '',
+    this.sport = '',
     this.imageUrl = '',
     this.rating = 0,
     this.isNew = false,
@@ -15,6 +18,7 @@ class ProductSummaryModel {
   final String category;
   final int price;
   final String brand;
+  final String sport;
   final String imageUrl;
   final double rating;
   final bool isNew;
@@ -28,9 +32,12 @@ class ProductSummaryModel {
       id: (json['id'] ?? json['productId'] ?? '').toString(),
       name: (json['name'] ?? json['productName'] ?? '').toString(),
       category: (json['categoryName'] ?? json['category'] ?? '').toString(),
-      price: priceValue is num ? priceValue.toInt() : int.tryParse(priceValue.toString()) ?? 0,
+      price: priceValue is num
+          ? priceValue.toInt()
+          : int.tryParse(priceValue.toString()) ?? 0,
       brand: (json['brandName'] ?? json['brand'] ?? '').toString(),
-      imageUrl: (json['image_url'] ?? json['imageUrl'] ?? '').toString(),
+      sport: (json['sportName'] ?? json['sport'] ?? '').toString(),
+      imageUrl: ImageUrlUtils.sanitize(json['image_url'] ?? json['imageUrl']),
       rating: (json['rating'] is num) ? (json['rating'] as num).toDouble() : 0,
     );
   }

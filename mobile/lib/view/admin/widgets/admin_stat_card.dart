@@ -30,15 +30,26 @@ class AdminStatCard extends StatelessWidget {
         : AdminColors.primarySoft;
 
     return HoverLift(
-      borderRadius: BorderRadius.circular(AppRadius.xl),
+      borderRadius: BorderRadius.circular(AdminDesign.radius),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: dark ? AdminColors.textPrimary : AdminColors.surface,
-          borderRadius: BorderRadius.circular(AppRadius.xl),
+          gradient: dark
+              ? AdminDesign.actionGradient
+              : const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AdminColors.surface, AdminColors.surfaceTint],
+                ),
+          border: Border.all(
+            color: dark
+                ? Colors.white.withValues(alpha: 0.10)
+                : AdminColors.action.withValues(alpha: 0.14),
+          ),
+          borderRadius: BorderRadius.circular(AdminDesign.radius),
           boxShadow: dark
               ? [
                   BoxShadow(
-                    color: AdminColors.primary.withValues(alpha: 0.2),
+                    color: AdminColors.action.withValues(alpha: 0.22),
                     blurRadius: 26,
                     offset: const Offset(0, 12),
                   ),
@@ -65,9 +76,18 @@ class AdminStatCard extends StatelessWidget {
                     height: 42,
                     decoration: BoxDecoration(
                       color: iconBackground,
-                      borderRadius: BorderRadius.circular(AppRadius.lg),
+                      borderRadius: BorderRadius.circular(AdminDesign.radius),
+                      border: Border.all(
+                        color: dark
+                            ? Colors.white.withValues(alpha: 0.16)
+                            : AdminColors.action.withValues(alpha: 0.12),
+                      ),
                     ),
-                    child: Icon(icon, color: AdminColors.primary, size: 22),
+                    child: Icon(
+                      icon,
+                      color: dark ? Colors.white : AdminColors.primary,
+                      size: 22,
+                    ),
                   ),
                 ],
               ),
@@ -77,7 +97,7 @@ class AdminStatCard extends StatelessWidget {
                 style: AppTextStyles.display.copyWith(
                   color: foreground,
                   fontSize: 32,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w900,
                   height: 1,
                 ),
               ),

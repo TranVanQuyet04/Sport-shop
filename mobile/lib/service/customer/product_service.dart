@@ -38,7 +38,9 @@ class ProductApiService implements ProductService {
           'sportId': int.tryParse(sportId) ?? sportId,
       },
     );
-    final rawItems = json['result'] ?? json['data'] ?? json['content'] ?? [];
+    final rawItems = json is List
+        ? json
+        : json['result'] ?? json['data'] ?? json['content'] ?? [];
 
     if (rawItems is! List) {
       return const [];
@@ -46,13 +48,18 @@ class ProductApiService implements ProductService {
 
     return rawItems
         .whereType<Map>()
-        .map((item) => ProductSummaryModel.fromJson(Map<String, dynamic>.from(item)))
+        .map(
+          (item) =>
+              ProductSummaryModel.fromJson(Map<String, dynamic>.from(item)),
+        )
         .toList();
   }
 
   @override
   Future<ProductDetailModel> getProductDetail(String productId) async {
-    final json = await _apiClient.getJson('${ApiEndpoints.products}/$productId');
+    final json = await _apiClient.getJson(
+      '${ApiEndpoints.products}/$productId',
+    );
     final result = json['result'];
     final source = result is Map ? Map<String, dynamic>.from(result) : json;
     return ProductDetailModel.fromJson(source);

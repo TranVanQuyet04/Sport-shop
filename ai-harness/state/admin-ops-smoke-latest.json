@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-07-05T05:27:55.004Z",
+  "baseUrl": "http://localhost:8080/api",
+  "runId": "OPS_1783229274932",
+  "pass": 0,
+  "fail": 2,
+  "results": [
+    {
+      "area": "auth",
+      "step": "login admin",
+      "status": "fail",
+      "endpoint": "POST /api/auth/login",
+      "detail": "fetch failed"
+    },
+    {
+      "area": "harness",
+      "step": "admin ops smoke stopped",
+      "status": "fail",
+      "endpoint": "",
+      "detail": "fetch failed"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import '../../core/utils/image_url_utils.dart';
 import '../customer/product_detail_model.dart';
 
 class CollectionModel {
@@ -32,7 +33,7 @@ class CollectionModel {
       name: (json['name'] ?? '').toString(),
       slug: (json['slug'] ?? '').toString(),
       description: (json['description'] ?? '').toString(),
-      imageUrl: (json['imageUrl'] ?? '').toString(),
+      imageUrl: ImageUrlUtils.sanitize(json['imageUrl']),
       type: (json['type'] ?? '').toString(),
       isActive: json['isActive'] != false,
       startDate: DateTime.tryParse((json['startDate'] ?? '').toString()),

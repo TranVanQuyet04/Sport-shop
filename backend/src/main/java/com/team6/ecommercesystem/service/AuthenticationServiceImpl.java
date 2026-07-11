@@ -12,6 +12,7 @@ import com.team6.ecommercesystem.utils.PasswordUtils;
 import com.team6.ecommercesystem.utils.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -42,10 +43,17 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private static final int MAX_FAILED_ATTEMPTS = 5;
     private final EmailService emailService;
     private final RoleRepository roleRepository;
+    @Value("${jwt.blacklist.enabled:true}")
+    private boolean blacklistEnabled;
 
     @Override
     public void logout(String token) throws ParseException {
         log.info("Processing logout request");
+
+        if (!blacklistEnabled) {
+            log.info("JWT blacklist is disabled; logout completed without Redis blacklist write.");
+            return;
+        }
 
         JwtInfo jwtInfo = jwtService.parseToken(token);
         String jwtId = jwtInfo.getJwtId();

@@ -23,7 +23,7 @@ class OrderSuccessPage extends StatelessWidget {
     final paymentMethod = order?.paymentMethod ?? '';
     final totalAmount = order == null
         ? ''
-        : '${NumberFormat.decimalPattern('vi_VN').format(order.totalAmount)}đ';
+        : '${NumberFormat.decimalPattern('vi_VN').format(order.totalAmount)}\u0111';
 
     return Scaffold(
       body: SafeArea(
@@ -123,9 +123,9 @@ class OrderSuccessPage extends StatelessWidget {
   Future<void> _openPaymentUrl(BuildContext context, String url) async {
     final uri = Uri.tryParse(url);
     if (uri == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Invalid payment URL.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Payment URL không hợp lệ.')),
+      );
       return;
     }
 

@@ -23,5 +23,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             Long sportId
     );
 
+    @Query("""
+    SELECT DISTINCT p FROM Product p
+    LEFT JOIN FETCH p.category
+    LEFT JOIN FETCH p.brand
+    LEFT JOIN FETCH p.sport
+    LEFT JOIN FETCH p.variants v
+""")
+    List<Product> findAllForChatBot();
 
 }

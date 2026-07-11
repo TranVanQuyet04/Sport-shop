@@ -1,4 +1,5 @@
 import '../../core/auth/role_mapper.dart';
+import '../../core/utils/image_url_utils.dart';
 
 class AdminRoleModel {
   const AdminRoleModel({
@@ -68,7 +69,7 @@ class AdminBrandModel {
       id: (json['id'] ?? '').toString(),
       name: (json['brandName'] ?? json['name'] ?? '').toString(),
       description: (json['description'] ?? '').toString(),
-      logo: (json['logo'] ?? '').toString(),
+      logo: ImageUrlUtils.sanitize(json['logo']),
       isActive: json['isActive'] != false,
     );
   }

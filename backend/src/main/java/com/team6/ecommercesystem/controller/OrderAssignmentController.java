@@ -110,8 +110,13 @@ public class OrderAssignmentController {
     }
 
     private User getCurrentUser() {
-        Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        String principal = SecurityContextHolder.getContext().getAuthentication().getName();
+        try {
+            Long userId = Long.parseLong(principal);
+            return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        } catch (NumberFormatException ignored) {
+            return userRepository.findByEmail(principal).orElseThrow(() -> new RuntimeException("User not found"));
+        }
     }
 
     private OrderAssignmentResponse toResponse(OrderAssignment assignment) {

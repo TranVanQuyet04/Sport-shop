@@ -1,0 +1,60 @@
+{
+  "project": "sportswear-shop-system",
+  "updatedAt": "2026-06-30",
+  "slices": [
+    {
+      "id": "harness-bootstrap",
+      "title": "Create StrideX AI harness scaffold",
+      "area": "docs-harness",
+      "priority": 1,
+      "passes": true,
+      "acceptance": ["HARNESS-01"],
+      "context": ["global"],
+      "completionArtifacts": ["ai-harness/README.md", "ai-harness/scripts/run-checks.ps1"]
+    },
+    {
+      "id": "backend-contract-stability",
+      "title": "Audit backend API contract stability",
+      "area": "backend",
+      "priority": 10,
+      "passes": false,
+      "acceptance": ["API-01", "AUTH-01"],
+      "context": ["backend", "mobile"],
+      "completionArtifacts": ["backend test result", "updated API docs if needed"]
+    },
+    {
+      "id": "mobile-admin-ui-consistency",
+      "title": "Keep Admin mobile UI consistent with StrideX premium system",
+      "area": "mobile",
+      "priority": 20,
+      "passes": false,
+      "acceptance": ["UI-ADMIN-01"],
+      "context": ["mobile"],
+      "completionArtifacts": ["dart format", "init.ps1 -Analyze", "init.ps1 -Test"]
+    },
+    {
+      "id": "mobile-admin-ui-auto-loop",
+      "title": "Map Admin mobile screens and run MVP audit/feed/retry loop",
+      "area": "mobile-admin",
+      "priority": 21,
+      "passes": true,
+      "acceptance": ["UI-ADMIN-MAP-01", "UI-ADMIN-MVP-01"],
+      "context": ["mobile-admin-ui"],
+      "completionArtifacts": [
+        "ai-harness/config/mobile-admin-screen-map.json",
+        "ai-harness/docs/mobile-admin-mvp-checklist.md",
+        "ai-harness/scripts/Invoke-AdminMobileUiHarness.ps1"
+      ]
+    },
+    {
+      "id": "cross-stack-order-status-parity",
+      "title": "Verify backend/mobile order status mapping parity",
+      "area": "cross-stack",
+      "priority": 30,
+      "passes": false,
+      "acceptance": ["ORDER-STATUS-01"],
+      "context": ["backend", "mobile"],
+      "completionArtifacts": ["mapping notes", "tests/check outputs"]
+    }
+  ]
+}

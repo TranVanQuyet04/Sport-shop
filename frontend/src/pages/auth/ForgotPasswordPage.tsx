@@ -12,8 +12,8 @@ import { Label } from "@/components/ui/label";
 const forgotPasswordSchema = z.object({
   email: z
     .string()
-    .nonempty("Vui lòng nhập email")
-    .email("Email không hợp lệ"),
+    .nonempty("Vui lÃ²ng nháº­p email")
+    .email("Email khÃ´ng há»£p lá»‡"),
 });
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
@@ -49,14 +49,14 @@ const ForgotPasswordPage = () => {
               <span className="flex h-10 w-10 items-center justify-center rounded-sm bg-zinc-950 text-sm font-black text-white">
                 S
               </span>
-              SPORTSHOP
+              StrideX
             </Link>
             <h1 className="mt-7 text-2xl font-black text-gray-900">
-              Quên mật khẩu
+              QuÃªn máº­t kháº©u
             </h1>
             <p className="mt-2 text-sm leading-6 text-gray-600">
-              Nhập email đăng ký. Chúng tôi sẽ gửi link đặt lại mật khẩu đến
-              email của bạn.
+              Nháº­p email Ä‘Äƒng kÃ½. ChÃºng tÃ´i sáº½ gá»­i link Ä‘áº·t láº¡i máº­t kháº©u Ä‘áº¿n
+              email cá»§a báº¡n.
             </p>
           </div>
 
@@ -64,12 +64,12 @@ const ForgotPasswordPage = () => {
             <div className="space-y-4 text-center">
               <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-500" />
               <p className="text-sm leading-6 text-gray-600">
-                Đã gửi link đặt lại mật khẩu. Vui lòng kiểm tra hộp thư email
-                của bạn và cả thư mục spam.
+                ÄÃ£ gá»­i link Ä‘áº·t láº¡i máº­t kháº©u. Vui lÃ²ng kiá»ƒm tra há»™p thÆ° email
+                cá»§a báº¡n vÃ  cáº£ thÆ° má»¥c spam.
               </p>
               <Link to="/login">
                 <Button variant="outline" className="w-full">
-                  Quay lại đăng nhập
+                  Quay láº¡i Ä‘Äƒng nháº­p
                 </Button>
               </Link>
             </div>
@@ -101,7 +101,7 @@ const ForgotPasswordPage = () => {
                 disabled={loading}
               >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {loading ? "Đang gửi..." : "Gửi link đặt lại mật khẩu"}
+                {loading ? "Äang gá»­i..." : "Gá»­i link Ä‘áº·t láº¡i máº­t kháº©u"}
               </Button>
             </form>
           )}
@@ -111,7 +111,7 @@ const ForgotPasswordPage = () => {
               to="/login"
               className="text-sm font-semibold text-red-600 hover:text-red-700"
             >
-              ← Quay lại đăng nhập
+              â† Quay láº¡i Ä‘Äƒng nháº­p
             </Link>
           </p>
         </div>

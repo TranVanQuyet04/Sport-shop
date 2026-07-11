@@ -1,0 +1,11 @@
+﻿{
+  "project": "sportswear-shop-system",
+  "updatedAt": "2026-06-30",
+  "tags": {
+    "HARNESS-01": { "current": true, "artifact": "ai-harness/README.md" },
+    "API-01": { "current": false, "artifact": null },
+    "AUTH-01": { "current": false, "artifact": null },
+    "UI-ADMIN-01": { "current": false, "artifact": null },
+    "ORDER-STATUS-01": { "current": false, "artifact": null }
+  }
+}

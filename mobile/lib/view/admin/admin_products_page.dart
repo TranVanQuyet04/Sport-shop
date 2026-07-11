@@ -1,22 +1,27 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import 'package:go_router/go_router.dart';
+
 import '../../app/sportshop_router.dart';
-import '../../controller/admin/admin_catalog_controller.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/utils/brand_logo_url_validator.dart';
 import '../../core/widgets/app_state.dart';
+import '../../model/common/backend_models.dart';
 import '../../model/admin/admin_lookup_model.dart';
-import '../../model/customer/product_detail_model.dart';
 import '../../model/customer/product_summary_model.dart';
+import '../../presenter/admin/admin_catalog_presenter.dart';
 import '../../widgets/shared/absolute_persistent_layout.dart';
 import 'widgets/admin_app_bar.dart';
 import 'widgets/admin_bottom_nav.dart';
 import 'widgets/admin_design_system.dart';
+
+part 'admin_products_page_parts/category_brand_tab_views.dart';
+
+enum _ManagementTab { products, categories, brands, sports }
 
 class AdminProductsPage extends StatefulWidget {
   const AdminProductsPage({super.key});
@@ -26,28 +31,44 @@ class AdminProductsPage extends StatefulWidget {
 }
 
 class _AdminProductsPageState extends State<AdminProductsPage> {
-  late final AdminCatalogController _controller = AdminCatalogController(
-    adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
-  );
+  late final AdminCatalogPresenter _presenter;
   final TextEditingController _searchController = TextEditingController();
-  _ManagementTab _selectedTab = _ManagementTab.all;
-  Timer? _tabSwitchTimer;
-  bool _isSwitchingTab = false;
+
+  _ManagementTab _selectedTab = _ManagementTab.products;
+  String? _selectedCategoryFilter;
+  String? _selectedBrandFilter;
+  String? _selectedSportFilter;
+  bool _filterLowStock = false;
+
+  List<SportModel> get _visibleSports => _presenter.sports;
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
-    _loadManagementData();
+    _presenter = AdminCatalogPresenter(
+      adminCatalogRepository: AppDependencies.instance.adminCatalogRepository,
+    );
+    _presenter.addListener(_onControllerChanged);
+    _loadProducts();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final state = GoRouterState.of(context);
+        final tab = state.uri.queryParameters['tab'];
+        if (tab == 'sport' || tab == 'sports') {
+          setState(() {
+            _selectedTab = _ManagementTab.sports;
+          });
+        }
+      }
+    });
   }
 
   @override
   void dispose() {
-    _tabSwitchTimer?.cancel();
     _searchController.dispose();
-    _controller
-      ..removeListener(_onControllerChanged)
-      ..dispose();
+    _presenter.removeListener(_onControllerChanged);
+    _presenter.dispose();
     super.dispose();
   }
 
@@ -57,1158 +78,1148 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
     }
   }
 
-  void _selectTab(_ManagementTab tab) {
-    if (_selectedTab == tab) {
-      return;
-    }
-    _tabSwitchTimer?.cancel();
+  Future<void> _loadProducts() async {
+    await _presenter.loadProducts();
+    await _presenter.loadCategories();
+    await _presenter.loadBrands();
+    await _presenter.loadSports();
+  }
+
+  void _clearAllFilters() {
     setState(() {
-      _selectedTab = tab;
-      _isSwitchingTab = true;
+      _selectedCategoryFilter = null;
+      _selectedBrandFilter = null;
+      _selectedSportFilter = null;
+      _filterLowStock = false;
+      _searchController.clear();
+      _presenter.search('');
     });
-    _tabSwitchTimer = Timer(const Duration(milliseconds: 240), () {
-      if (mounted) {
-        setState(() => _isSwitchingTab = false);
-      }
-    });
   }
 
-  List<ProductSummaryModel> get _visibleProducts {
-    final query = _searchController.text.trim().toLowerCase();
-    final cleanProducts = _controller.products
-        .where((product) => product.id.trim().isNotEmpty)
-        .toList(growable: false);
-    if (query.isEmpty) {
-      return cleanProducts;
-    }
-    return cleanProducts.where((product) {
-      return product.name.toLowerCase().contains(query) ||
-          product.id.toLowerCase().contains(query) ||
-          product.category.toLowerCase().contains(query) ||
-          product.brand.toLowerCase().contains(query);
-    }).toList();
+  Future<void> _goToAddProduct() async {
+    await context.push(AppRoutes.adminAddProduct);
+    _loadProducts();
   }
 
-  List<AdminCategoryModel> get _visibleCategories {
-    final query = _searchController.text.trim().toLowerCase();
-    final cleanCategories = _controller.categories
-        .where((category) => category.id.trim().isNotEmpty)
-        .toList(growable: false);
-    if (query.isEmpty) {
-      return cleanCategories;
-    }
-    return cleanCategories.where((category) {
-      return category.name.toLowerCase().contains(query) ||
-          category.description.toLowerCase().contains(query) ||
-          category.id.toLowerCase().contains(query);
-    }).toList();
+  Future<void> _goToEditProduct(String productId) async {
+    await context.push(AppRoutes.adminAddProduct, extra: productId);
+    _loadProducts();
   }
 
-  List<AdminBrandModel> get _visibleBrands {
-    final query = _searchController.text.trim().toLowerCase();
-    final cleanBrands = _controller.brands
-        .where((brand) => brand.id.trim().isNotEmpty)
-        .toList(growable: false);
-    if (query.isEmpty) {
-      return cleanBrands;
-    }
-    return cleanBrands.where((brand) {
-      return brand.name.toLowerCase().contains(query) ||
-          brand.description.toLowerCase().contains(query) ||
-          brand.id.toLowerCase().contains(query);
-    }).toList();
+  void _goToDetail(String productId) {
+    context.push(AppRoutes.productDetail.replaceAll(':id', productId));
   }
 
-  Future<void> _loadManagementData() async {
-    await _controller.loadProducts();
-    await _controller.loadCategories();
-    await _controller.loadBrands();
-  }
-
-  Future<void> _editProduct(ProductSummaryModel product) async {
-    await _controller.loadProductDetail(product.id);
-    if (!mounted) {
-      return;
-    }
-
-    final detail = _controller.selectedProduct;
-    if (detail == null) {
-      _showResult(false, 'Không tải được chi tiết sản phẩm.');
-      return;
-    }
-
-    final result = await showDialog<_ProductFormResult>(
-      context: context,
-      builder: (_) => _ProductFormDialog(product: detail),
-    );
-    if (result == null) {
-      return;
-    }
-
-    final success = await _controller.saveProduct(
-      id: detail.id,
-      name: result.name,
-      description: result.description,
-      categoryName: result.categoryName,
-      brandName: result.brandName,
-      sportName: result.sportName,
-      variants: detail.variants.map(_variantPayload).toList(),
-    );
-    if (!mounted) {
-      return;
-    }
-    _showResult(success, 'Đã cập nhật sản phẩm.');
-  }
-
-  Future<void> _deleteProduct(ProductSummaryModel product) async {
+  Future<void> _deleteProduct(String productId, String productName) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Xóa sản phẩm?'),
-        content: Text('Bạn có chắc muốn xóa "${product.name}" không?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Hủy'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Xóa'),
-          ),
-        ],
-      ),
+      builder: (context) => _DeleteConfirmationDialog(productName: productName),
     );
-    if (confirmed != true) {
-      return;
-    }
 
-    final success = await _controller.deleteProduct(product.id);
-    if (!mounted) {
-      return;
+    if (confirmed == true) {
+      final success = await _presenter.deleteProduct(productId);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              success
+                  ? 'Đã xóa sản phẩm thành công'
+                  : (_presenter.errorMessage ?? 'Xóa sản phẩm thất bại'),
+            ),
+            backgroundColor: success
+                ? const Color(0xFF16A34A)
+                : const Color(0xFFDC2626),
+          ),
+        );
+        if (success) {
+          _loadProducts();
+        }
+      }
     }
-    _showResult(success, 'Đã xóa sản phẩm.');
   }
 
-  void _showResult(bool success, String successMessage) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          success
-              ? successMessage
-              : (_controller.errorMessage ?? 'Thao tác chưa thành công.'),
-        ),
-      ),
-    );
+  List<ProductSummaryModel> get _filteredProducts {
+    List<ProductSummaryModel> list = _presenter.products;
+
+    if (_presenter.searchKeyword.isNotEmpty) {
+      final kw = _presenter.searchKeyword.toLowerCase();
+      list = list.where((p) {
+        return p.name.toLowerCase().contains(kw) ||
+            p.brand.toLowerCase().contains(kw) ||
+            p.category.toLowerCase().contains(kw) ||
+            p.sport.toLowerCase().contains(kw) ||
+            p.id.toLowerCase().contains(kw);
+      }).toList();
+    }
+
+    if (_selectedCategoryFilter != null) {
+      list = list
+          .where(
+            (p) =>
+                p.category.toLowerCase() ==
+                _selectedCategoryFilter!.toLowerCase(),
+          )
+          .toList();
+    }
+
+    if (_selectedBrandFilter != null) {
+      list = list
+          .where(
+            (p) => p.brand.toLowerCase() == _selectedBrandFilter!.toLowerCase(),
+          )
+          .toList();
+    }
+
+    if (_selectedSportFilter != null) {
+      list = list
+          .where(
+            (p) => p.sport.toLowerCase() == _selectedSportFilter!.toLowerCase(),
+          )
+          .toList();
+    }
+
+    if (_filterLowStock) {
+      // Simulate low stock by showing a portion of products based on hash code
+      list = list.where((p) => p.id.hashCode % 3 == 0).toList();
+    }
+
+    return list;
   }
 
-  Map<String, dynamic> _variantPayload(ProductVariantModel variant) {
-    return {
-      'id': int.tryParse(variant.id),
-      'size': variant.size,
-      'color': variant.color,
-      'price': variant.price,
-      'stockQuantity': variant.stockQuantity,
-      'sku': variant.sku,
-      'imageUrls': variant.imageUrls,
-    };
+  PreferredSizeWidget _adminAppBar(BuildContext context) {
+    return const AdminAppBar(title: 'Sản phẩm');
+  }
+
+  Widget _adminBottomNav(BuildContext context) {
+    return const AdminBottomNav(selectedIndex: 1);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AdminAppBar(),
+      appBar: _adminAppBar(context),
       body: RefreshIndicator(
-        onRefresh: _loadManagementData,
-        child: _buildBody(),
+        onRefresh: _loadProducts,
+        color: const Color(0xFF2563EB),
+        child: _buildBody(context),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: AdminColors.primary,
-        foregroundColor: Colors.white,
-        elevation: 4,
-        onPressed: () => context.go(AppRoutes.adminAddProduct),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('Thêm mới'),
-      ),
-      bottomNavigationBar: const AdminBottomNav(selectedIndex: 1),
+      bottomNavigationBar: _adminBottomNav(context),
     );
   }
 
-  Widget _buildBody() {
-    final hasAnyData =
-        _controller.products.isNotEmpty ||
-        _controller.categories.isNotEmpty ||
-        _controller.brands.isNotEmpty;
-    if (_controller.isLoading && !hasAnyData) {
-      return const PremiumShimmerList(itemCount: 3, itemHeight: 152);
-    }
-    if (_controller.errorMessage != null && !hasAnyData) {
-      return AppErrorState(
-        title: 'Không tải được dữ liệu quản lý',
-        message: _controller.errorMessage!,
-        onAction: _loadManagementData,
-      );
-    }
-    if (!hasAnyData) {
-      return PremiumEmptyState(
-        icon: Icons.inventory_2_outlined,
-        title: 'Chưa có dữ liệu quản lý',
-        message:
-            'Sản phẩm, danh mục và thương hiệu sẽ xuất hiện tại đây sau khi đồng bộ backend.',
-        actionLabel: 'Thêm mới ngay',
-        actionIcon: Icons.add_rounded,
-        onAction: () => context.go(AppRoutes.adminAddProduct),
-      );
-    }
-    final products = _visibleProducts;
-    final categories = _visibleCategories;
-    final brands = _visibleBrands;
-    final visibleCount = switch (_selectedTab) {
-      _ManagementTab.all => products.length,
-      _ManagementTab.categories => categories.length,
-      _ManagementTab.brands => brands.length,
-    };
-    final totalCount = switch (_selectedTab) {
-      _ManagementTab.all => _controller.products.length,
-      _ManagementTab.categories => _controller.categories.length,
-      _ManagementTab.brands => _controller.brands.length,
-    };
-    final sectionTitle = switch (_selectedTab) {
-      _ManagementTab.all => 'Danh sách sản phẩm',
-      _ManagementTab.categories => 'Danh sách danh mục',
-      _ManagementTab.brands => 'Danh sách thương hiệu',
-    };
-    final sectionSubtitle = switch (_selectedTab) {
-      _ManagementTab.all => '$visibleCount sản phẩm phù hợp',
-      _ManagementTab.categories => '$visibleCount danh mục phù hợp',
-      _ManagementTab.brands => '$visibleCount thương hiệu phù hợp',
-    };
-    final dynamicContent = _isSwitchingTab
-        ? PremiumShimmerList(
-            itemCount: 3,
-            itemHeight: _selectedTab == _ManagementTab.all ? 152 : 92,
-            showThumbnail: true,
-          )
-        : visibleCount == 0
-        ? _buildEmptyState()
-        : _buildManagementList(
-            sectionTitle: sectionTitle,
-            sectionSubtitle: sectionSubtitle,
-            products: products,
-            categories: categories,
-            brands: brands,
-          );
-    return AbsolutePersistentLayout(
-      title: 'Quản lý sản phẩm',
-      subtitle: 'Theo dõi danh mục, giá bán và dữ liệu kho sản phẩm.',
-      icon: Icons.inventory_2_outlined,
-      trailing: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
-        ),
+  Widget _buildTabSelector() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.sm,
+        AppSpacing.md,
+        0,
+      ),
+      child: Container(
         decoration: BoxDecoration(
-          color: AdminColors.primarySoft,
-          borderRadius: BorderRadius.circular(999),
+          color: const Color(0xFFF1F5F9),
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(
-          '$visibleCount/$totalCount',
-          style: AppTextStyles.caption.copyWith(
-            color: AdminColors.primary,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ),
-      filterAndSearchZone: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (_controller.errorMessage != null) ...[
-            _ProductErrorBanner(
-              message: _controller.errorMessage!,
-              onRefresh: _loadManagementData,
-            ),
-            const SizedBox(height: AppSpacing.lg),
+        padding: const EdgeInsets.all(4),
+        child: Row(
+          children: [
+            _buildTabItem('Sản phẩm', _ManagementTab.products),
+            _buildTabItem('Danh mục', _ManagementTab.categories),
+            _buildTabItem('Hiệu', _ManagementTab.brands),
+            _buildTabItem('Bộ môn', _ManagementTab.sports),
           ],
-          _ProductToolbar(
-            controller: _searchController,
-            selectedTab: _selectedTab,
-            onSearchChanged: (_) => setState(() {}),
-            onTabChanged: _selectTab,
-          ),
-        ],
-      ),
-      dynamicContent: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 220),
-        switchInCurve: Curves.easeOutCubic,
-        switchOutCurve: Curves.easeOutCubic,
-        child: KeyedSubtree(
-          key: ValueKey(
-            'products-$_selectedTab-${_searchController.text}-${_isSwitchingTab ? 'loading' : visibleCount}',
-          ),
-          child: dynamicContent,
         ),
       ),
     );
   }
 
-  Widget _buildManagementList({
-    required String sectionTitle,
-    required String sectionSubtitle,
-    required List<ProductSummaryModel> products,
-    required List<AdminCategoryModel> categories,
-    required List<AdminBrandModel> brands,
-  }) {
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, 0),
-      children: [
-        AdminSectionTitle(
-          title: sectionTitle,
-          subtitle: sectionSubtitle,
-          trailing: IconButton(
-            tooltip: 'Làm mới',
-            onPressed: _controller.isLoading ? null : _loadManagementData,
-            icon: const Icon(Icons.refresh_rounded),
+  Widget _buildTabItem(String label, _ManagementTab tab) {
+    final isSelected = _selectedTab == tab;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedTab = tab;
+          });
+        },
+        child: Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: isSelected
+                  ? AdminColors.primary
+                  : AdminColors.textSecondary,
+            ),
           ),
         ),
-        const SizedBox(height: AppSpacing.md),
-        if (_selectedTab == _ManagementTab.all)
-          ...products
-              .where((product) => product.id.trim().isNotEmpty)
-              .map(
-                (product) => Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  child: ProductListItemWidget(
-                    product: product,
-                    onTap: () =>
-                        context.go('/admin/products/${product.id}/variants'),
-                    onEdit: () => _editProduct(product),
-                    onVariants: () =>
-                        context.go('/admin/products/${product.id}/variants'),
-                    onDelete: () => _deleteProduct(product),
-                  ),
-                ),
-              )
-        else if (_selectedTab == _ManagementTab.categories)
-          ...categories
-              .where((category) => category.id.trim().isNotEmpty)
-              .map(
-                (category) => Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  child: _CategoryLookupItem(category: category),
-                ),
-              )
-        else
-          ...brands
-              .where((brand) => brand.id.trim().isNotEmpty)
-              .map(
-                (brand) => Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  child: _BrandLookupItem(brand: brand),
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    if (_presenter.isLoading &&
+        _presenter.products.isEmpty &&
+        _presenter.categories.isEmpty &&
+        _presenter.brands.isEmpty &&
+        _presenter.sports.isEmpty) {
+      return const AppLoadingState(title: 'Đang tải sản phẩm...');
+    }
+
+    if (_presenter.errorMessage != null &&
+        _presenter.products.isEmpty &&
+        _presenter.categories.isEmpty &&
+        _presenter.brands.isEmpty &&
+        _presenter.sports.isEmpty) {
+      return AppErrorState(
+        title: 'Không thể tải dữ liệu',
+        message: _presenter.errorMessage!,
+        onAction: _loadProducts,
+      );
+    }
+
+    final displayProducts = _filteredProducts;
+    final displaySports = _visibleSports.where((s) {
+      if (_presenter.searchKeyword.isEmpty) return true;
+      return s.name.toLowerCase().contains(
+        _presenter.searchKeyword.toLowerCase(),
+      );
+    }).toList();
+
+    Widget mainContent;
+
+    if (_selectedTab == _ManagementTab.products) {
+      if (displayProducts.isEmpty) {
+        mainContent = SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: PremiumEmptyState(
+              icon: Icons.inventory_2_outlined,
+              title: 'Chưa có sản phẩm',
+              message:
+                  _presenter.searchKeyword.isNotEmpty ||
+                      _selectedCategoryFilter != null ||
+                      _selectedBrandFilter != null ||
+                      _selectedSportFilter != null ||
+                      _filterLowStock
+                  ? 'Không tìm thấy sản phẩm nào phù hợp với bộ lọc hiện tại.'
+                  : 'Tạo sản phẩm đầu tiên để bắt đầu bán hàng.',
+              actionLabel:
+                  _presenter.searchKeyword.isNotEmpty ||
+                      _selectedCategoryFilter != null ||
+                      _selectedBrandFilter != null ||
+                      _selectedSportFilter != null ||
+                      _filterLowStock
+                  ? 'Xóa tất cả bộ lọc'
+                  : '+ Thêm sản phẩm',
+              onAction:
+                  _presenter.searchKeyword.isNotEmpty ||
+                      _selectedCategoryFilter != null ||
+                      _selectedBrandFilter != null ||
+                      _selectedSportFilter != null ||
+                      _filterLowStock
+                  ? _clearAllFilters
+                  : _goToAddProduct,
+            ),
+          ),
+        );
+      } else {
+        mainContent = ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          padding: const EdgeInsets.only(
+            left: AppSpacing.md,
+            right: AppSpacing.md,
+            bottom: 100,
+          ),
+          itemCount: displayProducts.length,
+          itemBuilder: (context, index) {
+            final product = displayProducts[index];
+            return _ProductListItemCard(
+              product: product,
+              onTapDetail: () => _goToDetail(product.id),
+              onTapEdit: () => _goToEditProduct(product.id),
+              onTapDelete: () => _deleteProduct(product.id, product.name),
+            );
+          },
+        );
+      }
+    } else if (_selectedTab == _ManagementTab.categories) {
+      mainContent = _buildCategoriesTabContent(context);
+    } else if (_selectedTab == _ManagementTab.brands) {
+      mainContent = _buildBrandsTabContent(context);
+    } else {
+      if (displaySports.isEmpty) {
+        mainContent = SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.4,
+                child: PremiumEmptyState(
+                  icon: Icons.directions_run_rounded,
+                  title: 'Chưa có môn thể thao',
+                  message: _presenter.searchKeyword.isNotEmpty
+                      ? 'Không tìm thấy môn thể thao nào phù hợp.'
+                      : 'Tạo môn thể thao mới để phân loại sản phẩm.',
+                  actionLabel: 'Thêm môn thể thao',
+                  onAction: _goToCreateSport,
                 ),
               ),
-        const SizedBox(height: 80),
-      ],
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return PremiumEmptyState(
-      icon: _emptyPresentation.icon,
-      title: _emptyPresentation.title,
-      message: _emptyPresentation.message,
-      actionLabel: _searchController.text.trim().isEmpty
-          ? _emptyPresentation.refreshLabel
-          : 'Xóa tìm kiếm',
-      actionIcon: _searchController.text.trim().isEmpty
-          ? Icons.refresh_rounded
-          : Icons.filter_alt_off_outlined,
-      onAction: _searchController.text.trim().isEmpty
-          ? _loadManagementData
-          : () {
-              _searchController.clear();
-              setState(() {});
-            },
-    );
-  }
-
-  _ManagementEmptyPresentation get _emptyPresentation {
-    final hasSearch = _searchController.text.trim().isNotEmpty;
-    if (hasSearch) {
-      return switch (_selectedTab) {
-        _ManagementTab.all => const _ManagementEmptyPresentation(
-          icon: Icons.search_off_rounded,
-          title: 'Không tìm thấy sản phẩm',
-          message:
-              'Không có sản phẩm nào khớp với từ khóa hiện tại. Từ khóa sẽ vẫn được giữ khi đổi tab.',
-        ),
-        _ManagementTab.categories => const _ManagementEmptyPresentation(
-          icon: Icons.search_off_rounded,
-          title: 'Không tìm thấy danh mục',
-          message:
-              'Không có danh mục nào khớp với từ khóa hiện tại. Bạn có thể đổi tab mà không mất nội dung tìm kiếm.',
-        ),
-        _ManagementTab.brands => const _ManagementEmptyPresentation(
-          icon: Icons.search_off_rounded,
-          title: 'Không tìm thấy thương hiệu',
-          message:
-              'Không có thương hiệu nào khớp với từ khóa hiện tại. Hãy thử nhập tên khác.',
-        ),
-      };
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: _SportBlockActionButton(onPressed: _goToCreateSport),
+              ),
+            ],
+          ),
+        );
+      } else {
+        mainContent = SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            child: Column(
+              children: [
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: displaySports.length,
+                  itemBuilder: (context, index) {
+                    final sport = displaySports[index];
+                    return _SportListItemTile(
+                      sport: sport,
+                      onTapEdit: () => _goToEditSport(sport),
+                      onTapDelete: () => _deleteSport(sport),
+                    );
+                  },
+                ),
+                const SizedBox(height: AppSpacing.md),
+                _SportBlockActionButton(onPressed: _goToCreateSport),
+                const SizedBox(height: 120),
+              ],
+            ),
+          ),
+        );
+      }
     }
-    return switch (_selectedTab) {
-      _ManagementTab.all => const _ManagementEmptyPresentation(
-        icon: Icons.inventory_2_outlined,
-        title: 'Chưa có sản phẩm',
-        message:
-            'Danh mục sản phẩm đang trống. Hãy tạo sản phẩm đầu tiên để bắt đầu quản lý kho.',
-        refreshLabel: 'Tải lại sản phẩm',
-      ),
-      _ManagementTab.categories => const _ManagementEmptyPresentation(
-        icon: Icons.category_outlined,
-        title: 'Chưa có danh mục',
-        message:
-            'Backend chưa trả về danh mục sản phẩm nào. Danh mục mới sẽ giúp phân loại sản phẩm rõ ràng hơn.',
-        refreshLabel: 'Tải lại danh mục',
-      ),
-      _ManagementTab.brands => const _ManagementEmptyPresentation(
-        icon: Icons.verified_outlined,
-        title: 'Chưa có thương hiệu',
-        message:
-            'Backend chưa trả về thương hiệu nào. Thương hiệu giúp Admin kiểm soát nhận diện sản phẩm.',
-        refreshLabel: 'Tải lại thương hiệu',
-      ),
-    };
-  }
-}
 
-class _ManagementEmptyPresentation {
-  const _ManagementEmptyPresentation({
-    required this.icon,
-    required this.title,
-    required this.message,
-    this.refreshLabel = 'Tải lại dữ liệu',
-  });
+    final String layoutTitle;
+    final String layoutSubtitle;
+    final IconData layoutIcon;
+    final Widget? layoutTrailing;
 
-  final IconData icon;
-  final String title;
-  final String message;
-  final String refreshLabel;
-}
+    switch (_selectedTab) {
+      case _ManagementTab.products:
+        layoutTitle = 'Sản phẩm';
+        layoutSubtitle = 'Quản lý toàn bộ sản phẩm trong hệ thống';
+        layoutIcon = Icons.inventory_2_outlined;
+        layoutTrailing = ElevatedButton.icon(
+          onPressed: _goToAddProduct,
+          icon: const Icon(Icons.add, size: 16),
+          label: const Text('Thêm'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AdminColors.primary,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            elevation: 0,
+          ),
+        );
+        break;
+      case _ManagementTab.categories:
+        layoutTitle = 'Danh mục';
+        layoutSubtitle = 'Cấu trúc phân loại nhóm mặt hàng cửa hàng';
+        layoutIcon = Icons.category_outlined;
+        layoutTrailing = ElevatedButton.icon(
+          onPressed: _goToCreateCategory,
+          icon: const Icon(Icons.add, size: 16),
+          label: const Text('Thêm'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AdminColors.primary,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            elevation: 0,
+          ),
+        );
+        break;
+      case _ManagementTab.brands:
+        layoutTitle = 'Thương hiệu';
+        layoutSubtitle = 'Nhãn hàng và đối tác cung ứng StrideX';
+        layoutIcon = Icons.verified_outlined;
+        layoutTrailing = ElevatedButton.icon(
+          onPressed: _goToCreateBrand,
+          icon: const Icon(Icons.add, size: 16),
+          label: const Text('Thêm'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AdminColors.primary,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            elevation: 0,
+          ),
+        );
+        break;
+      case _ManagementTab.sports:
+        layoutTitle = 'Môn thể thao';
+        layoutSubtitle = 'Danh sách toàn bộ môn thể thao trong hệ thống';
+        layoutIcon = Icons.directions_run_rounded;
+        layoutTrailing = ElevatedButton.icon(
+          onPressed: _goToCreateSport,
+          icon: const Icon(Icons.add, size: 16),
+          label: const Text('Thêm'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AdminColors.primary,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            elevation: 0,
+          ),
+        );
+        break;
+    }
 
-enum _ManagementTab {
-  all('Tất cả', Icons.inventory_2_outlined),
-  categories('Danh mục', Icons.category_outlined),
-  brands('Thương hiệu', Icons.verified_outlined);
-
-  const _ManagementTab(this.label, this.icon);
-  final String label;
-  final IconData icon;
-}
-
-class _ProductToolbar extends StatelessWidget {
-  const _ProductToolbar({
-    required this.controller,
-    required this.selectedTab,
-    required this.onSearchChanged,
-    required this.onTabChanged,
-  });
-
-  final TextEditingController controller;
-  final _ManagementTab selectedTab;
-  final ValueChanged<String> onSearchChanged;
-  final ValueChanged<_ManagementTab> onTabChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return AdminSurface(
-      child: Column(
+    return AbsolutePersistentLayout(
+      title: layoutTitle,
+      subtitle: layoutSubtitle,
+      icon: layoutIcon,
+      trailing: layoutTrailing,
+      filterAndSearchZone: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextField(
-            controller: controller,
-            onChanged: onSearchChanged,
-            decoration: InputDecoration(
-              hintText: 'Tìm tên, mã, danh mục hoặc thương hiệu...',
-              prefixIcon: const Icon(Icons.search_rounded),
-              suffixIcon: controller.text.isEmpty
-                  ? null
-                  : IconButton(
-                      tooltip: 'Xóa tìm kiếm',
-                      onPressed: () {
-                        controller.clear();
-                        onSearchChanged('');
-                      },
-                      icon: const Icon(Icons.close_rounded),
-                    ),
+          _buildTabSelector(),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: _selectedTab == _ManagementTab.products
+                    ? 'Tìm kiếm sản phẩm...'
+                    : _selectedTab == _ManagementTab.categories
+                    ? 'Tìm kiếm danh mục...'
+                    : _selectedTab == _ManagementTab.brands
+                    ? 'Tìm kiếm thương hiệu...'
+                    : 'Tìm kiếm bộ môn...',
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: AdminColors.textSecondary,
+                ),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear, size: 18),
+                        onPressed: () {
+                          _searchController.clear();
+                          _presenter.search('');
+                        },
+                      )
+                    : null,
+                filled: true,
+                fillColor: const Color(0xFFF1F5F9),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 10.0,
+                  horizontal: 16.0,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              onChanged: (value) => _presenter.search(value),
             ),
           ),
-          const SizedBox(height: AppSpacing.md),
-          SizedBox(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                for (final tab in _ManagementTab.values) ...[
-                  ChoiceChip(
-                    avatar: Icon(
-                      tab.icon,
-                      size: 18,
-                      color: selectedTab == tab
-                          ? Colors.white
-                          : AdminColors.textSecondary,
-                    ),
-                    label: Text(tab.label),
-                    selected: selectedTab == tab,
-                    showCheckmark: false,
-                    onSelected: (_) => onTabChanged(tab),
-                    selectedColor: AdminColors.primary,
-                    backgroundColor: AdminColors.surfaceMuted,
-                    side: BorderSide.none,
-                    labelStyle: TextStyle(
-                      color: selectedTab == tab
-                          ? Colors.white
-                          : AdminColors.textSecondary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                ],
-              ],
-            ),
-          ),
+          if (_selectedTab == _ManagementTab.products) _buildFilterChipsRow(),
         ],
       ),
+      dynamicContent: mainContent,
     );
   }
-}
 
-class _CategoryLookupItem extends StatelessWidget {
-  const _CategoryLookupItem({required this.category});
+  Widget _buildFilterChipsRow() {
+    final activeFiltersCount =
+        (_selectedCategoryFilter != null ? 1 : 0) +
+        (_selectedBrandFilter != null ? 1 : 0) +
+        (_selectedSportFilter != null ? 1 : 0) +
+        (_filterLowStock ? 1 : 0);
 
-  final AdminCategoryModel category;
-
-  @override
-  Widget build(BuildContext context) {
-    return AdminOutlinedSurface(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Row(
-        children: [
-          const AdminIconBadge(icon: Icons.category_outlined, size: 44),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  category.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.subtitle.copyWith(
-                    color: AdminColors.textPrimary,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  category.description.isEmpty
-                      ? 'Không có mô tả'
-                      : category.description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.caption.copyWith(
-                    color: AdminColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BrandLookupItem extends StatelessWidget {
-  const _BrandLookupItem({required this.brand});
-
-  final AdminBrandModel brand;
-
-  @override
-  Widget build(BuildContext context) {
-    return AdminOutlinedSurface(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AdminColors.surfaceMuted,
-              border: Border.all(color: AdminColors.inputBorder),
-            ),
-            child: brand.logo.trim().isEmpty
-                ? const Icon(
-                    Icons.broken_image_outlined,
-                    color: AdminColors.textSecondary,
-                    size: 20,
-                  )
-                : Image.network(
-                    brand.logo,
-                    fit: BoxFit.contain,
-                    webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
-                    errorBuilder: (_, _, _) => const Icon(
-                      Icons.broken_image_outlined,
-                      color: AdminColors.textSecondary,
-                      size: 20,
-                    ),
-                  ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  brand.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.subtitle.copyWith(
-                    color: AdminColors.textPrimary,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  brand.description.isEmpty
-                      ? 'Không có mô tả'
-                      : brand.description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.caption.copyWith(
-                    color: AdminColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          _BrandStatePill(isActive: brand.isActive),
-        ],
-      ),
-    );
-  }
-}
-
-class _BrandStatePill extends StatelessWidget {
-  const _BrandStatePill({required this.isActive});
-
-  final bool isActive;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
+        horizontal: AppSpacing.md,
         vertical: AppSpacing.xs,
       ),
+      child: Row(
+        children: [
+          FilterChip(
+            label: Text(
+              'Tồn kho thấp',
+              style: TextStyle(
+                color: _filterLowStock
+                    ? Colors.white
+                    : AdminColors.textSecondary,
+                fontSize: 12,
+                fontWeight: _filterLowStock
+                    ? FontWeight.bold
+                    : FontWeight.normal,
+              ),
+            ),
+            selected: _filterLowStock,
+            selectedColor: AdminColors.primary,
+            checkmarkColor: Colors.white,
+            onSelected: (val) => setState(() => _filterLowStock = val),
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          _FilterMenuChip(
+            label: _selectedCategoryFilter ?? 'Danh mục',
+            options: _presenter.categories.map((c) => c.name).toList(),
+            selected: _selectedCategoryFilter != null,
+            onSelected: (val) => setState(() => _selectedCategoryFilter = val),
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          _FilterMenuChip(
+            label: _selectedBrandFilter ?? 'Thương hiệu',
+            options: _presenter.brands.map((b) => b.name).toList(),
+            selected: _selectedBrandFilter != null,
+            onSelected: (val) => setState(() => _selectedBrandFilter = val),
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          _FilterMenuChip(
+            label: _selectedSportFilter ?? 'Bộ môn',
+            options: _presenter.sports.map((s) => s.name).toList(),
+            selected: _selectedSportFilter != null,
+            onSelected: (val) => setState(() => _selectedSportFilter = val),
+          ),
+          if (activeFiltersCount > 0) ...[
+            const SizedBox(width: AppSpacing.xs),
+            ActionChip(
+              avatar: const Icon(
+                Icons.clear,
+                size: 14,
+                color: AdminColors.danger,
+              ),
+              label: const Text(
+                'Xóa lọc',
+                style: TextStyle(color: AdminColors.danger, fontSize: 12),
+              ),
+              onPressed: _clearAllFilters,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Future<void> _goToCreateSport() async {
+    final TextEditingController nameCtl = TextEditingController();
+    final TextEditingController descCtl = TextEditingController();
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Thêm môn thể thao'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameCtl,
+              decoration: const InputDecoration(
+                labelText: 'Tên môn thể thao',
+                hintText: 'Ví dụ: Bóng đá, Chạy bộ...',
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextField(
+              controller: descCtl,
+              decoration: const InputDecoration(
+                labelText: 'Mô tả',
+                hintText: 'Mô tả ngắn gọn môn thể thao',
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AdminColors.primary,
+            ),
+            child: const Text('Lưu', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && nameCtl.text.trim().isNotEmpty) {
+      final success = await _presenter.saveSport(
+        name: nameCtl.text.trim(),
+        description: descCtl.text.trim(),
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              success
+                  ? 'Đã thêm môn thể thao thành công'
+                  : 'Thêm môn thể thao thất bại',
+            ),
+          ),
+        );
+        _loadProducts();
+      }
+    }
+  }
+
+  Future<void> _goToEditSport(SportModel sport) async {
+    final TextEditingController nameCtl = TextEditingController(
+      text: sport.name,
+    );
+    final TextEditingController descCtl = TextEditingController(
+      text: sport.description,
+    );
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Sửa môn thể thao'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameCtl,
+              decoration: const InputDecoration(labelText: 'Tên môn thể thao'),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextField(
+              controller: descCtl,
+              decoration: const InputDecoration(labelText: 'Mô tả'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AdminColors.primary,
+            ),
+            child: const Text('Lưu', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && nameCtl.text.trim().isNotEmpty) {
+      final success = await _presenter.saveSport(
+        id: sport.id,
+        name: nameCtl.text.trim(),
+        description: descCtl.text.trim(),
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              success
+                  ? 'Đã sửa môn thể thao thành công'
+                  : 'Sửa môn thể thao thất bại',
+            ),
+          ),
+        );
+        _loadProducts();
+      }
+    }
+  }
+
+  Future<void> _deleteSport(SportModel sport) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Xóa môn thể thao?'),
+        content: Text('Bạn có chắc muốn xóa môn thể thao "${sport.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AdminColors.danger,
+            ),
+            child: const Text('Xóa', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      final success = await _presenter.deleteSport(sport.id);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              success
+                  ? 'Đã xóa môn thể thao thành công'
+                  : 'Xóa môn thể thao thất bại',
+            ),
+          ),
+        );
+        _loadProducts();
+      }
+    }
+  }
+}
+
+class _FilterMenuChip extends StatelessWidget {
+  const _FilterMenuChip({
+    required this.label,
+    required this.options,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final String label;
+  final List<String> options;
+  final bool selected;
+  final ValueChanged<String?> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String?>(
+      onSelected: onSelected,
+      itemBuilder: (context) {
+        return [
+          const PopupMenuItem<String?>(value: null, child: Text('Tất cả')),
+          ...options.map(
+            (opt) => PopupMenuItem<String?>(value: opt, child: Text(opt)),
+          ),
+        ];
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected ? AdminColors.primarySoft : Colors.white,
+          border: Border.all(
+            color: selected ? AdminColors.primary : AdminColors.border,
+            width: selected ? 1.5 : 1,
+          ),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: selected ? AdminColors.primary : AdminColors.textPrimary,
+                fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              Icons.arrow_drop_down,
+              size: 16,
+              color: selected ? AdminColors.primary : AdminColors.textSecondary,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProductListItemCard extends StatelessWidget {
+  const _ProductListItemCard({
+    required this.product,
+    required this.onTapDetail,
+    required this.onTapEdit,
+    required this.onTapDelete,
+  });
+
+  final ProductSummaryModel product;
+  final VoidCallback onTapDetail;
+  final VoidCallback onTapEdit;
+  final VoidCallback onTapDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final currencyFormat = NumberFormat.decimalPattern('vi_VN');
+    final formattedPrice = '${currencyFormat.format(product.price)}\u0111';
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
-        color: isActive ? AdminColors.successSoft : AdminColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(999),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: const Color(0xFFF1F5F9),
+                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: product.imageUrl.isNotEmpty
+                      ? Image.network(
+                          product.imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                                Icons.broken_image_outlined,
+                                color: Color(0xFF94A3B8),
+                                size: 28,
+                              ),
+                        )
+                      : const Icon(
+                          Icons.inventory_2_outlined,
+                          color: Color(0xFF94A3B8),
+                          size: 32,
+                        ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.subtitle.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: AdminColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Wrap(
+                        spacing: 4,
+                        runSpacing: 4,
+                        children: [
+                          if (product.category.isNotEmpty)
+                            _buildSmallChip(
+                              product.category,
+                              const Color(0xFF3B82F6),
+                            ),
+                          if (product.brand.isNotEmpty)
+                            _buildSmallChip(
+                              product.brand,
+                              const Color(0xFF10B981),
+                            ),
+                          if (product.sport.isNotEmpty)
+                            _buildSmallChip(
+                              product.sport,
+                              const Color(0xFF8B5CF6),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        formattedPrice,
+                        style: AppTextStyles.title.copyWith(
+                          color: const Color(0xFF2563EB),
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            const Divider(color: Color(0xFFF1F5F9), height: 1),
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                _buildActionButton(
+                  icon: Icons.visibility_outlined,
+                  label: 'Chi tiết',
+                  color: const Color(0xFF2563EB),
+                  onPressed: onTapDetail,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                _buildActionButton(
+                  icon: Icons.edit_outlined,
+                  label: 'Sửa',
+                  color: const Color(0xFF475569),
+                  onPressed: onTapEdit,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                _buildActionButton(
+                  icon: Icons.delete_outline_rounded,
+                  label: 'Xóa',
+                  color: const Color(0xFFDC2626),
+                  onPressed: onTapDelete,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSmallChip(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withValues(alpha: 0.15)),
       ),
       child: Text(
-        isActive ? 'Hoạt động' : 'Đã tắt',
-        style: AppTextStyles.caption.copyWith(
-          color: isActive ? AdminColors.success : AdminColors.textSecondary,
+        text,
+        style: TextStyle(
+          color: color,
           fontSize: 10,
           fontWeight: FontWeight.w800,
         ),
       ),
     );
   }
-}
 
-class _ProductErrorBanner extends StatelessWidget {
-  const _ProductErrorBanner({required this.message, required this.onRefresh});
-
-  final String message;
-  final VoidCallback onRefresh;
-
-  @override
-  Widget build(BuildContext context) {
-    return AdminInlineBanner(
-      message: message,
-      onRefresh: onRefresh,
-      isError: true,
-    );
-  }
-}
-
-class _ProductFormResult {
-  const _ProductFormResult({
-    required this.name,
-    required this.description,
-    required this.categoryName,
-    required this.brandName,
-    required this.sportName,
-  });
-
-  final String name;
-  final String description;
-  final String categoryName;
-  final String brandName;
-  final String sportName;
-}
-
-class _ProductFormDialog extends StatefulWidget {
-  const _ProductFormDialog({required this.product});
-
-  final ProductDetailModel product;
-
-  @override
-  State<_ProductFormDialog> createState() => _ProductFormDialogState();
-}
-
-class _ProductFormDialogState extends State<_ProductFormDialog> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late final TextEditingController _nameController = TextEditingController(
-    text: widget.product.name,
-  );
-  late final TextEditingController _descriptionController =
-      TextEditingController(text: widget.product.description);
-  late final TextEditingController _categoryController = TextEditingController(
-    text: widget.product.category,
-  );
-  late final TextEditingController _brandController = TextEditingController(
-    text: widget.product.brand,
-  );
-  late final TextEditingController _sportController = TextEditingController(
-    text: widget.product.sport,
-  );
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _descriptionController.dispose();
-    _categoryController.dispose();
-    _brandController.dispose();
-    _sportController.dispose();
-    super.dispose();
-  }
-
-  void _submit() {
-    if (_formKey.currentState?.validate() != true) {
-      return;
-    }
-    Navigator.pop(
-      context,
-      _ProductFormResult(
-        name: _nameController.text.trim(),
-        description: _descriptionController.text.trim(),
-        categoryName: _categoryController.text.trim(),
-        brandName: _brandController.text.trim(),
-        sportName: _sportController.text.trim(),
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return TextButton.icon(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        foregroundColor: color,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        backgroundColor: color.withValues(alpha: 0.05),
+      ),
+      icon: Icon(icon, size: 14),
+      label: Text(
+        label,
+        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700),
       ),
     );
   }
+}
+
+class _DeleteConfirmationDialog extends StatelessWidget {
+  const _DeleteConfirmationDialog({required this.productName});
+
+  final String productName;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Sửa thông tin sản phẩm'),
-      content: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _DialogField(
-                controller: _nameController,
-                label: 'Tên sản phẩm',
-                required: true,
-              ),
-              _DialogField(
-                controller: _descriptionController,
-                label: 'Mô tả',
-                minLines: 3,
-              ),
-              _DialogField(
-                controller: _categoryController,
-                label: 'Danh mục',
-                required: true,
-              ),
-              _DialogField(
-                controller: _brandController,
-                label: 'Thương hiệu',
-                required: true,
-              ),
-              _DialogField(controller: _sportController, label: 'Môn thể thao'),
-            ],
-          ),
-        ),
+      title: const Row(
+        children: [
+          Icon(Icons.warning_amber_rounded, color: AdminColors.danger),
+          SizedBox(width: 8),
+          Text('Xóa sản phẩm?'),
+        ],
+      ),
+      content: Text(
+        'Bạn có chắc chắn muốn xóa sản phẩm "$productName"? Thao tác này không thể hoàn tác.',
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
+        OutlinedButton(
+          onPressed: () => Navigator.pop(context, false),
           child: const Text('Hủy'),
         ),
-        FilledButton(onPressed: _submit, child: const Text('Lưu')),
+        FilledButton(
+          onPressed: () => Navigator.pop(context, true),
+          style: FilledButton.styleFrom(
+            backgroundColor: AdminColors.danger,
+            foregroundColor: Colors.white,
+          ),
+          child: const Text('Xóa'),
+        ),
       ],
     );
   }
 }
 
-class _DialogField extends StatelessWidget {
-  const _DialogField({
-    required this.controller,
-    required this.label,
-    this.minLines = 1,
-    this.required = false,
-  });
+class _SportBlockActionButton extends StatelessWidget {
+  const _SportBlockActionButton({required this.onPressed});
 
-  final TextEditingController controller;
-  final String label;
-  final int minLines;
-  final bool required;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: TextFormField(
-        controller: controller,
-        minLines: minLines,
-        maxLines: minLines == 1 ? 1 : 5,
-        decoration: InputDecoration(labelText: label),
-        validator: (value) {
-          if (required && (value == null || value.trim().isEmpty)) {
-            return 'Vui lòng nhập $label.';
-          }
-          return null;
-        },
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF1E3A8A),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          elevation: 0,
+        ),
+        child: const Text(
+          'THÊM MÔN THỂ THAO MỚI +',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 14,
+            letterSpacing: 0.5,
+          ),
+        ),
       ),
     );
   }
 }
 
-class ProductListItemWidget extends StatelessWidget {
-  const ProductListItemWidget({
-    super.key,
-    required this.product,
-    required this.onTap,
-    required this.onEdit,
-    required this.onVariants,
-    required this.onDelete,
+class _SportListItemTile extends StatelessWidget {
+  const _SportListItemTile({
+    required this.sport,
+    required this.onTapEdit,
+    required this.onTapDelete,
   });
 
-  final ProductSummaryModel product;
-  final VoidCallback onTap;
-  final VoidCallback onEdit;
-  final VoidCallback onVariants;
-  final VoidCallback onDelete;
-
-  @override
-  Widget build(BuildContext context) {
-    final priceText = NumberFormat.decimalPattern(
-      'vi_VN',
-    ).format(product.price);
-    final classification = [
-      if (product.category.isNotEmpty) product.category,
-      if (product.brand.isNotEmpty) product.brand.toUpperCase(),
-    ].join(' • ');
-
-    return AdminSurface(
-      onTap: onTap,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final compact = constraints.maxWidth < 440;
-          final thumbnail = _ProductThumbnail(product: product);
-          final information = _ProductInformation(
-            product: product,
-            classification: classification,
-          );
-          final controls = _ProductPriceAndActions(
-            price: '$priceTextđ',
-            onEdit: onEdit,
-            onVariants: onVariants,
-            onDelete: onDelete,
-            showMenu: !compact,
-          );
-
-          if (compact) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    thumbnail,
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(child: information),
-                    _ProductMenu(
-                      onEdit: onEdit,
-                      onVariants: onVariants,
-                      onDelete: onDelete,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.md),
-                const Divider(height: 1, color: AdminColors.border),
-                const SizedBox(height: AppSpacing.md),
-                controls,
-              ],
-            );
-          }
-
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              thumbnail,
-              const SizedBox(width: AppSpacing.md),
-              Expanded(child: information),
-              const SizedBox(width: AppSpacing.lg),
-              controls,
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _ProductThumbnail extends StatelessWidget {
-  const _ProductThumbnail({required this.product});
-
-  final ProductSummaryModel product;
+  final SportModel sport;
+  final VoidCallback onTapEdit;
+  final VoidCallback onTapDelete;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 76,
-      height: 76,
-      clipBehavior: Clip.antiAlias,
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AdminColors.inputBorder),
-      ),
-      child: product.imageUrl.isEmpty
-          ? const Icon(
-              Icons.checkroom_outlined,
-              color: Color(0xFF94A3B8),
-              size: 32,
-            )
-          : Image.network(
-              product.imageUrl,
-              fit: BoxFit.cover,
-              webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
-              errorBuilder: (_, _, _) => const Icon(
-                Icons.broken_image_outlined,
-                color: Color(0xFF94A3B8),
-                size: 28,
-              ),
-            ),
-    );
-  }
-}
-
-class _ProductInformation extends StatelessWidget {
-  const _ProductInformation({
-    required this.product,
-    required this.classification,
-  });
-
-  final ProductSummaryModel product;
-  final String classification;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          product.name,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: AppTextStyles.subtitle.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          classification.isEmpty ? 'Chưa phân loại' : classification,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: AppTextStyles.caption.copyWith(
-            color: AdminColors.textSecondary,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Wrap(
-          spacing: AppSpacing.md,
-          runSpacing: AppSpacing.xs,
-          children: [
-            _AdminMetadata(
-              icon: Icons.qr_code_2_outlined,
-              label: 'SKU',
-              value: 'Xem biến thể',
-            ),
-            const _AdminMetadata(
-              icon: Icons.warehouse_outlined,
-              label: 'Tồn kho',
-              value: 'Xem chi tiết',
-            ),
-            _AdminMetadata(
-              icon: Icons.tag_outlined,
-              label: 'Mã SP',
-              value: '#${product.id}',
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _AdminMetadata extends StatelessWidget {
-  const _AdminMetadata({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  final IconData icon;
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 14, color: AdminColors.textSecondary),
-        const SizedBox(width: AppSpacing.xs),
-        Text(
-          '$label: ',
-          style: AppTextStyles.caption.copyWith(
-            color: AdminColors.textSecondary,
-            fontSize: 10,
-          ),
-        ),
-        Text(
-          value,
-          style: AppTextStyles.caption.copyWith(
-            color: AdminColors.textPrimary,
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ProductPriceAndActions extends StatelessWidget {
-  const _ProductPriceAndActions({
-    required this.price,
-    required this.onEdit,
-    required this.onVariants,
-    required this.onDelete,
-    this.showMenu = true,
-  });
-
-  final String price;
-  final VoidCallback onEdit;
-  final VoidCallback onVariants;
-  final VoidCallback onDelete;
-  final bool showMenu;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              price,
-              style: AppTextStyles.subtitle.copyWith(
-                color: AdminColors.primary,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            const _ProductStatusBadge(),
-          ],
-        ),
-        if (showMenu) ...[
-          const SizedBox(width: AppSpacing.sm),
-          _ProductMenu(
-            onEdit: onEdit,
-            onVariants: onVariants,
-            onDelete: onDelete,
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
           ),
         ],
-      ],
-    );
-  }
-}
-
-class _ProductStatusBadge extends StatelessWidget {
-  const _ProductStatusBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: 3,
       ),
-      decoration: BoxDecoration(
-        color: AdminColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        'Chưa đồng bộ',
-        style: AppTextStyles.caption.copyWith(
-          color: AdminColors.textSecondary,
-          fontSize: 9,
-          fontWeight: FontWeight.w700,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF1F5F9),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: const Icon(
+                Icons.directions_run_rounded,
+                color: AdminColors.primary,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    sport.name,
+                    style: AppTextStyles.subtitle.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: AdminColors.textPrimary,
+                    ),
+                  ),
+                  if (sport.description.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      sport.description,
+                      style: const TextStyle(
+                        color: AdminColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.edit_outlined,
+                color: Color(0xFF475569),
+                size: 20,
+              ),
+              onPressed: onTapEdit,
+              tooltip: 'Chỉnh sửa',
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.delete_outline_rounded,
+                color: Color(0xFFDC2626),
+                size: 20,
+              ),
+              onPressed: onTapDelete,
+              tooltip: 'Xóa',
+            ),
+          ],
         ),
       ),
-    );
-  }
-}
-
-class _ProductMenu extends StatelessWidget {
-  const _ProductMenu({
-    required this.onEdit,
-    required this.onVariants,
-    required this.onDelete,
-  });
-
-  final VoidCallback onEdit;
-  final VoidCallback onVariants;
-  final VoidCallback onDelete;
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-      tooltip: 'Thao tác',
-      onSelected: (value) {
-        if (value == 'edit') {
-          onEdit();
-        } else if (value == 'variants') {
-          onVariants();
-        } else if (value == 'delete') {
-          onDelete();
-        }
-      },
-      itemBuilder: (context) => const [
-        PopupMenuItem(value: 'edit', child: Text('Sửa thông tin')),
-        PopupMenuItem(value: 'variants', child: Text('Biến thể / kho')),
-        PopupMenuItem(value: 'delete', child: Text('Xóa')),
-      ],
-      icon: const Icon(Icons.more_vert),
     );
   }
 }

@@ -19,6 +19,6 @@ COPY --from=build /app/target/SportSwearShopSystem-0.0.1-SNAPSHOT.war app.jar
 RUN chown spring:spring app.jar
 
 USER spring:spring
-EXPOSE 8080
+EXPOSE 8083
 
 ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+UseG1GC"

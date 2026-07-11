@@ -1,3 +1,5 @@
+import '../../core/utils/image_url_utils.dart';
+
 class CartModel {
   const CartModel({
     required this.id,
@@ -95,7 +97,7 @@ class CartItemModel {
       price: price,
       quantity: quantity,
       subTotal: subTotal == 0 ? price * quantity : subTotal,
-      imageUrl: (json['imageUrl'] ?? '').toString(),
+      imageUrl: ImageUrlUtils.sanitize(json['imageUrl']),
       maxStock: _toInt(json['maxStock']),
     );
   }

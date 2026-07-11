@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-07-06T09:30:47.639Z",
+  "baseUrl": "http://127.0.0.1:52777",
+  "backendUrl": "http://localhost:8080/api",
+  "pass": 0,
+  "warning": 0,
+  "fail": 2,
+  "results": [
+    {
+      "role": "customer",
+      "key": "login",
+      "path": "/login",
+      "url": "http://127.0.0.1:52777/#/login",
+      "status": "fail",
+      "error": "Flutter UI did not become visually ready. Last signals: {\"href\":\"http://127.0.0.1:52777/#/login\",\"title\":\"mobile\",\"bodyTextLength\":0,\"canvasCount\":0,\"glassPane\":false,\"semanticsHost\":false,\"loaderVisible\":false,\"htmlLength\":366}, screenshotBytes=2740"
+    },
+    {
+      "role": "deliveryStaff",
+      "key": "login",
+      "path": "/login",
+      "url": "http://127.0.0.1:52777/#/login",
+      "status": "fail",
+      "error": "Flutter UI did not become visually ready. Last signals: {\"href\":\"http://127.0.0.1:52777/#/login\",\"title\":\"mobile\",\"bodyTextLength\":0,\"canvasCount\":0,\"glassPane\":false,\"semanticsHost\":false,\"loaderVisible\":false,\"htmlLength\":366}, screenshotBytes=2740"
+    }
+  ]
+}

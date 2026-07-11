@@ -17,7 +17,9 @@ class AuthSessionModel {
     final result = json['result'];
     final source = result is Map ? Map<String, dynamic>.from(result) : json;
     final user = source['user'];
-    final userSource = user is Map ? Map<String, dynamic>.from(user) : const <String, dynamic>{};
+    final userSource = user is Map
+        ? Map<String, dynamic>.from(user)
+        : const <String, dynamic>{};
 
     return AuthSessionModel(
       accessToken: (source['accessToken'] ?? source['token'] ?? '').toString(),

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/sportshop_router.dart';
-import '../../controller/auth/register_controller.dart';
-import '../../core/di/app_dependencies.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
+import '../../presenter/auth/register_presenter.dart';
 import 'widgets/auth_brand_header.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -19,19 +19,19 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  late final RegisterController _controller = RegisterController(
+  late final RegisterPresenter _presenter = RegisterPresenter(
     authRepository: AppDependencies.instance.authRepository,
   );
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onChanged);
+    _presenter.addListener(_onChanged);
   }
 
   @override
   void dispose() {
-    _controller
+    _presenter
       ..removeListener(_onChanged)
       ..dispose();
     super.dispose();
@@ -44,7 +44,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> _submit() async {
-    final success = await _controller.submit();
+    final success = await _presenter.submit();
     if (success && mounted) {
       context.go(AppRoutes.login);
     }
@@ -62,7 +62,10 @@ class _RegisterPageState extends State<RegisterPage> {
           const SizedBox(height: AppSpacing.md),
           Text(
             'Tạo tài khoản để mua sắm và theo dõi đơn hàng từ hệ thống.',
-            style: AppTextStyles.body.copyWith(fontSize: 18, color: AppColors.textSecondary),
+            style: AppTextStyles.body.copyWith(
+              fontSize: 18,
+              color: AppColors.textSecondary,
+            ),
           ),
           const SizedBox(height: AppSpacing.xl),
           AppTextField(
@@ -70,8 +73,8 @@ class _RegisterPageState extends State<RegisterPage> {
             hintText: 'Nhập họ và tên',
             prefixIcon: Icons.person_outline,
             textInputAction: TextInputAction.next,
-            errorText: _controller.fullNameError,
-            onChanged: _controller.changeFullName,
+            errorText: _presenter.fullNameError,
+            onChanged: _presenter.changeFullName,
           ),
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
@@ -80,52 +83,52 @@ class _RegisterPageState extends State<RegisterPage> {
             prefixIcon: Icons.mail_outline,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
-            errorText: _controller.emailError,
-            onChanged: _controller.changeEmail,
+            errorText: _presenter.emailError,
+            onChanged: _presenter.changeEmail,
           ),
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             label: 'Số điện thoại',
-            hintText: 'Nhập số điện thoại',
+            hintText: 'Ví dụ: 0900000000',
             prefixIcon: Icons.phone_outlined,
             keyboardType: TextInputType.phone,
             textInputAction: TextInputAction.next,
-            errorText: _controller.phoneError,
-            onChanged: _controller.changePhoneNumber,
+            errorText: _presenter.phoneError,
+            onChanged: _presenter.changePhoneNumber,
           ),
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             label: 'Mật khẩu',
-            hintText: '••••••••',
+            hintText: 'Ít nhất 8 ký tự, gồm chữ và số',
             prefixIcon: Icons.lock_outline,
             obscureText: true,
             textInputAction: TextInputAction.next,
-            errorText: _controller.passwordError,
-            onChanged: _controller.changePassword,
+            errorText: _presenter.passwordError,
+            onChanged: _presenter.changePassword,
           ),
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             label: 'Xác nhận mật khẩu',
-            hintText: '••••••••',
+            hintText: 'Nhập lại mật khẩu',
             prefixIcon: Icons.lock_reset_outlined,
             obscureText: true,
             textInputAction: TextInputAction.done,
-            errorText: _controller.confirmPasswordError,
-            onChanged: _controller.changeConfirmPassword,
+            errorText: _presenter.confirmPasswordError,
+            onChanged: _presenter.changeConfirmPassword,
             onSubmitted: (_) => _submit(),
           ),
-          if (_controller.errorMessage != null) ...[
+          if (_presenter.errorMessage != null) ...[
             const SizedBox(height: AppSpacing.md),
             Text(
-              _controller.errorMessage!,
+              _presenter.errorMessage!,
               style: AppTextStyles.caption.copyWith(color: AppColors.error),
             ),
           ],
           const SizedBox(height: AppSpacing.xl),
           AppButton(
-            label: 'ĐĂNG KÝ  →',
+            label: 'Đăng ký',
             variant: AppButtonVariant.secondary,
-            isLoading: _controller.isLoading,
+            isLoading: _presenter.isLoading,
             onPressed: _submit,
           ),
           const SizedBox(height: AppSpacing.xl),
@@ -137,6 +140,9 @@ class _RegisterPageState extends State<RegisterPage> {
               child: const Text('Đã có tài khoản? Đăng nhập ngay'),
             ),
           ),
+          const SizedBox(height: AppSpacing.lg),
+          const AuthTrustStrip(),
+          const SizedBox(height: AppSpacing.xl),
         ],
       ),
     );

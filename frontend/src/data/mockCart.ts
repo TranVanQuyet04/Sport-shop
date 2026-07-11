@@ -1,6 +1,6 @@
 import type { CartResponse, CartItem } from "@/services/cartApi";
 
-const CART_STORAGE_KEY = "sportshop-local-cart";
+const CART_STORAGE_KEY = "StrideX-local-cart";
 
 export interface AddToCartProductInfo {
   productName: string;
@@ -49,7 +49,7 @@ export function clearLocalCart(): void {
 }
 
 /**
- * Thêm sản phẩm vào giỏ local (khi API lỗi)
+ * ThÃªm sáº£n pháº©m vÃ o giá» local (khi API lá»—i)
  */
 export function addToLocalCart(
   variantId: number,
@@ -103,7 +103,7 @@ export function addToLocalCart(
 }
 
 /**
- * Cập nhật số lượng item trong giỏ local
+ * Cáº­p nháº­t sá»‘ lÆ°á»£ng item trong giá» local
  */
 export function updateLocalCartItem(
   itemId: number,
@@ -129,14 +129,14 @@ export function updateLocalCartItem(
 }
 
 /**
- * Xóa item khỏi giỏ local
+ * XÃ³a item khá»i giá» local
  */
 export function removeLocalCartItem(itemId: number): CartResponse | null {
   return updateLocalCartItem(itemId, 0);
 }
 
 /**
- * Kiểm tra cart có phải từ local storage không (itemId âm)
+ * Kiá»ƒm tra cart cÃ³ pháº£i tá»« local storage khÃ´ng (itemId Ã¢m)
  */
 export function isLocalCart(cart: CartResponse | null): boolean {
   return (

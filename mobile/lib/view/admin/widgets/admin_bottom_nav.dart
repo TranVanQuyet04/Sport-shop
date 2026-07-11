@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/sportshop_router.dart';
+import '../../../core/constants/device_profiles.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import 'admin_design_system.dart';
@@ -49,10 +50,13 @@ class AdminBottomNav extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: AdminColors.surface,
+        border: const Border(
+          top: BorderSide(color: AdminColors.border, width: 0.5),
+        ),
         boxShadow: [
           BoxShadow(
-            color: AdminColors.primary.withValues(alpha: 0.09),
-            blurRadius: 28,
+            color: AdminColors.primary.withValues(alpha: 0.10),
+            blurRadius: 24,
             offset: const Offset(0, -8),
           ),
         ],
@@ -109,96 +113,97 @@ class _AdminNavItem extends StatefulWidget {
 }
 
 class _AdminNavItemState extends State<_AdminNavItem> {
-  bool _hovered = false;
   bool _pressed = false;
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
+    final enableHover = !AppDeviceProfiles.isPixel7WidthOrNarrower(context);
     final active = widget.selected || _hovered;
     final color = active ? AdminColors.primary : AdminColors.textSecondary;
 
-    return Semantics(
+    final content = Semantics(
       selected: widget.selected,
       button: true,
       label: widget.data.label,
-      child: MouseRegion(
-        onEnter: (_) => setState(() => _hovered = true),
-        onExit: (_) => setState(() => _hovered = false),
-        cursor: SystemMouseCursors.click,
-        child: Listener(
-          onPointerDown: (_) => setState(() => _pressed = true),
-          onPointerUp: (_) => setState(() => _pressed = false),
-          onPointerCancel: (_) => setState(() => _pressed = false),
-          child: InkWell(
-            onTap: widget.onTap,
-            splashColor: AdminColors.primary.withValues(alpha: 0.1),
-            highlightColor: Colors.transparent,
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 220),
-                  curve: Curves.easeOutCubic,
-                  width: widget.selected ? 32 : 0,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: AdminColors.primary,
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(999),
+      child: Listener(
+        onPointerDown: (_) => setState(() => _pressed = true),
+        onPointerUp: (_) => setState(() => _pressed = false),
+        onPointerCancel: (_) => setState(() => _pressed = false),
+        child: InkWell(
+          onTap: widget.onTap,
+          splashColor: AdminColors.action.withValues(alpha: 0.10),
+          highlightColor: AdminColors.action.withValues(alpha: 0.04),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.xs),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOutCubic,
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+              decoration: BoxDecoration(
+                color: widget.selected
+                    ? AdminColors.primarySoft
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(AppRadius.lg),
+                border: Border.all(
+                  color: widget.selected
+                      ? AdminColors.action.withValues(alpha: 0.18)
+                      : Colors.transparent,
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AnimatedScale(
+                    scale: _pressed ? 0.9 : (active ? 1.06 : 1),
+                    duration: const Duration(milliseconds: 180),
+                    curve: Curves.easeOutCubic,
+                    child: Container(
+                      width: 30,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        gradient: widget.selected
+                            ? AdminDesign.actionGradient
+                            : null,
+                        borderRadius: BorderRadius.circular(AppRadius.md),
+                      ),
+                      alignment: Alignment.center,
+                      child: Icon(
+                        widget.selected
+                            ? widget.data.selectedIcon
+                            : widget.data.icon,
+                        color: widget.selected ? Colors.white : color,
+                        size: widget.selected ? 19 : 20,
+                      ),
                     ),
-                    boxShadow: widget.selected
-                        ? [
-                            BoxShadow(
-                              color: AdminColors.primary.withValues(alpha: 0.3),
-                              blurRadius: 8,
-                            ),
-                          ]
-                        : null,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.xs,
-                    AppSpacing.sm,
-                    AppSpacing.xs,
-                    AppSpacing.xs,
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    widget.data.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.caption.copyWith(
+                      color: color,
+                      fontSize: 10.5,
+                      fontWeight: widget.selected
+                          ? FontWeight.w800
+                          : FontWeight.w600,
+                    ),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AnimatedScale(
-                        scale: _pressed ? 0.9 : (active ? 1.08 : 1),
-                        duration: const Duration(milliseconds: 180),
-                        curve: Curves.easeOutCubic,
-                        child: Icon(
-                          widget.selected
-                              ? widget.data.selectedIcon
-                              : widget.data.icon,
-                          color: color,
-                          size: widget.selected ? 23 : 21,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        widget.data.label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.caption.copyWith(
-                          color: color,
-                          fontSize: 10.5,
-                          fontWeight: widget.selected
-                              ? FontWeight.w800
-                              : FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
+    );
+
+    if (!enableHover) return content;
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      cursor: SystemMouseCursors.click,
+      child: content,
     );
   }
 }

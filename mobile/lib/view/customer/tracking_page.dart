@@ -1,8 +1,8 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../controller/customer/order_detail_controller.dart';
+import '../../app/sportshop_router.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/di/app_dependencies.dart';
 import '../../core/theme/app_colors.dart';
@@ -12,7 +12,10 @@ import '../../core/widgets/app_state.dart';
 import '../../core/widgets/order_status_badge.dart';
 import '../../model/common/order_status.dart';
 import '../../model/customer/order_model.dart';
+import '../../presenter/customer/order_detail_presenter.dart';
 import 'widgets/customer_bottom_nav.dart';
+
+part 'tracking_page_parts/tracking_timeline_widgets.dart';
 
 class TrackingPage extends StatefulWidget {
   const TrackingPage({super.key, required this.orderId});
@@ -24,7 +27,7 @@ class TrackingPage extends StatefulWidget {
 }
 
 class _TrackingPageState extends State<TrackingPage> {
-  late final OrderDetailController _controller = OrderDetailController(
+  late final OrderDetailPresenter _presenter = OrderDetailPresenter(
     orderRepository: AppDependencies.instance.orderRepository,
     orderId: widget.orderId,
   );
@@ -32,13 +35,14 @@ class _TrackingPageState extends State<TrackingPage> {
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onControllerChanged);
-    _controller.loadOrder();
+    _presenter.addListener(_onControllerChanged);
+    _presenter.loadOrder();
+    _presenter.startAutoRefresh();
   }
 
   @override
   void dispose() {
-    _controller
+    _presenter
       ..removeListener(_onControllerChanged)
       ..dispose();
     super.dispose();
@@ -55,7 +59,7 @@ class _TrackingPageState extends State<TrackingPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: context.pop,
+          onPressed: _leavePage,
           icon: const Icon(Icons.arrow_back),
         ),
         title: Text(
@@ -65,28 +69,28 @@ class _TrackingPageState extends State<TrackingPage> {
         actions: [
           IconButton(
             tooltip: 'Làm mới',
-            onPressed: _controller.isLoading ? null : _controller.loadOrder,
+            onPressed: _presenter.isLoading ? null : _presenter.loadOrder,
             icon: const Icon(Icons.refresh),
           ),
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: _controller.loadOrder,
-        child: _buildBody(_controller.order),
+        onRefresh: _presenter.loadOrder,
+        child: _buildBody(_presenter.order),
       ),
       bottomNavigationBar: const CustomerBottomNav(selectedIndex: 3),
     );
   }
 
   Widget _buildBody(OrderModel? order) {
-    if (_controller.isLoading && order == null) {
+    if (_presenter.isLoading && order == null) {
       return const AppLoadingState(title: 'Đang tải hành trình');
     }
-    if (_controller.errorMessage != null && order == null) {
+    if (_presenter.errorMessage != null && order == null) {
       return AppErrorState(
         title: 'Không tải được hành trình',
-        message: _controller.errorMessage!,
-        onAction: _controller.loadOrder,
+        message: _presenter.errorMessage!,
+        onAction: _presenter.loadOrder,
       );
     }
     if (order == null) {
@@ -102,8 +106,8 @@ class _TrackingPageState extends State<TrackingPage> {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
-        if (_controller.errorMessage != null) ...[
-          _TrackingErrorBanner(message: _controller.errorMessage!),
+        if (_presenter.errorMessage != null) ...[
+          _TrackingErrorBanner(message: _presenter.errorMessage!),
           const SizedBox(height: AppSpacing.lg),
         ],
         DecoratedBox(
@@ -137,19 +141,7 @@ class _TrackingPageState extends State<TrackingPage> {
                 const Divider(height: AppSpacing.xl),
                 Row(
                   children: [
-                    Container(
-                      width: 72,
-                      height: 72,
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceMuted,
-                        borderRadius: BorderRadius.circular(AppRadius.md),
-                      ),
-                      child: const Icon(
-                        Icons.directions_run,
-                        color: AppColors.secondary,
-                        size: 36,
-                      ),
-                    ),
+                    _OrderPreviewImage(imageUrl: firstItem?.variantImage ?? ''),
                     const SizedBox(width: AppSpacing.lg),
                     Expanded(
                       child: Text(
@@ -168,10 +160,10 @@ class _TrackingPageState extends State<TrackingPage> {
         ),
         const SizedBox(height: AppSpacing.xl),
         Container(
-          height: 190,
+          constraints: const BoxConstraints(minHeight: 178),
           padding: const EdgeInsets.all(AppSpacing.lg),
           decoration: BoxDecoration(
-            color: const Color(0xFFC7C7C7),
+            color: AppColors.primary,
             borderRadius: BorderRadius.circular(AppRadius.xl),
           ),
           child: Column(
@@ -185,18 +177,21 @@ class _TrackingPageState extends State<TrackingPage> {
                   fontWeight: FontWeight.w900,
                 ),
               ),
+              const SizedBox(height: AppSpacing.sm),
               Row(
                 children: [
                   Expanded(
                     child: Text(
-                      order.shippingAddress,
+                      order.shippingAddress.isEmpty
+                          ? 'Chưa có địa chỉ'
+                          : order.shippingAddress,
                       style: AppTextStyles.subtitle.copyWith(
                         color: Colors.white,
                       ),
                     ),
                   ),
                   const CircleAvatar(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: AppColors.secondary,
                     foregroundColor: Colors.white,
                     child: Icon(Icons.navigation),
                   ),
@@ -224,7 +219,7 @@ class _TrackingPageState extends State<TrackingPage> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                ..._timelineItems(status),
+                ..._timelineItems(order),
               ],
             ),
           ),
@@ -244,52 +239,62 @@ class _TrackingPageState extends State<TrackingPage> {
     );
   }
 
-  List<Widget> _timelineItems(OrderStatus status) {
+  List<Widget> _timelineItems(OrderModel order) {
+    final status = OrderStatus.fromApi(order.status);
+    final deliveryStatus = order.deliveryStatus.toUpperCase();
     final steps = <_TimelineData>[
-      _TimelineData(
+      const _TimelineData(
         OrderStatus.pending,
         'Chờ xác nhận',
         'Đơn hàng đã được tạo và đang chờ cửa hàng xác nhận.',
       ),
-      _TimelineData(
+      const _TimelineData(
         OrderStatus.confirmed,
         'Đã xác nhận',
         'Cửa hàng đã xác nhận đơn hàng.',
       ),
-      _TimelineData(
+      const _TimelineData(
         OrderStatus.packing,
         'Đang đóng gói',
         'Sản phẩm đang được chuẩn bị và đóng gói.',
       ),
-      _TimelineData(
+      const _TimelineData(
         OrderStatus.shipped,
         'Đang giao',
         'Đơn hàng đã bàn giao cho nhân viên giao hàng.',
       ),
-      _TimelineData(
+      const _TimelineData(
+        OrderStatus.delivered,
+        'Đã giao',
+        'Shipper đã giao đơn hàng, cửa hàng đang xác nhận hoàn tất.',
+      ),
+      const _TimelineData(
         OrderStatus.completed,
         'Hoàn thành',
-        'Đơn hàng đã hoàn thành.',
+        'Đơn hàng đã giao thành công.',
       ),
     ];
 
-    final currentIndex = status == OrderStatus.cancelled
-        ? 0
-        : steps
-              .indexWhere((step) => step.status == status)
-              .clamp(0, steps.length - 1);
-
-    if (status == OrderStatus.cancelled) {
-      return [
-        const _TimelineItem(
+    if (status == OrderStatus.cancelled || deliveryStatus == 'RETURNED') {
+      return const [
+        _TimelineItem(
           active: true,
           last: true,
           title: 'Đã hủy',
           time: 'Hiện tại',
-          subtitle: 'Đơn hàng đã bị hủy.',
+          subtitle: 'Đơn hàng đã bị hủy hoặc hoàn trả.',
         ),
       ];
     }
+
+    final effectiveStatus = switch (deliveryStatus) {
+      'OUT_FOR_DELIVERY' => OrderStatus.shipped,
+      'DELIVERED' => OrderStatus.delivered,
+      _ => status,
+    };
+    final currentIndex = steps
+        .indexWhere((step) => step.status == effectiveStatus)
+        .clamp(0, steps.length - 1);
 
     return List.generate(steps.length, (index) {
       final step = steps[index];
@@ -302,125 +307,46 @@ class _TrackingPageState extends State<TrackingPage> {
       );
     });
   }
+
+  void _leavePage() {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+    context.go(AppRoutes.orders);
+  }
 }
 
-class _TrackingErrorBanner extends StatelessWidget {
-  const _TrackingErrorBanner({required this.message});
+class _OrderPreviewImage extends StatelessWidget {
+  const _OrderPreviewImage({required this.imageUrl});
 
-  final String message;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.info.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.info.withValues(alpha: 0.18)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Row(
-          children: [
-            const Icon(Icons.info_outline, color: AppColors.info),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                message,
-                style: AppTextStyles.caption.copyWith(color: AppColors.info),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      child: Container(
+        width: 72,
+        height: 72,
+        color: AppColors.surfaceMuted,
+        child: imageUrl.isEmpty
+            ? const Icon(
+                Icons.directions_run,
+                color: AppColors.secondary,
+                size: 36,
+              )
+            : Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+                webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+                errorBuilder: (_, _, _) => const Icon(
+                  Icons.directions_run,
+                  color: AppColors.secondary,
+                  size: 36,
+                ),
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
 }
-
-class _TimelineData {
-  const _TimelineData(this.status, this.title, this.subtitle);
-
-  final OrderStatus status;
-  final String title;
-  final String subtitle;
-}
-
-class _TimelineItem extends StatelessWidget {
-  const _TimelineItem({
-    required this.title,
-    required this.time,
-    required this.subtitle,
-    this.active = false,
-    this.last = false,
-  });
-
-  final String title;
-  final String time;
-  final String subtitle;
-  final bool active;
-  final bool last;
-
-  @override
-  Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            children: [
-              CircleAvatar(
-                radius: 14,
-                backgroundColor: active
-                    ? AppColors.secondary
-                    : const Color(0xFFD7CDD0),
-                child: Icon(
-                  active ? Icons.check : Icons.circle,
-                  size: active ? 14 : 8,
-                  color: active ? Colors.white : AppColors.textSecondary,
-                ),
-              ),
-              if (!last)
-                Expanded(
-                  child: Container(width: 2, color: const Color(0xFFD7CDD0)),
-                ),
-            ],
-          ),
-          const SizedBox(width: AppSpacing.lg),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.xl),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          title,
-                          style: AppTextStyles.subtitle.copyWith(
-                            color: active
-                                ? AppColors.secondary
-                                : AppColors.primary,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        time,
-                        style: AppTextStyles.caption.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(subtitle, style: AppTextStyles.body),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-

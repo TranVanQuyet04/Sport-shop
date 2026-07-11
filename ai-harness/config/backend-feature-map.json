@@ -1,0 +1,279 @@
+{
+  "source": "backend/src/main/java/com/team6/ecommercesystem/controller",
+  "mobileMappingRule": "Only expose Mobile UI screens that have confirmed backend support here. Hide or mark unsupported features as coming soon.",
+  "adminModules": [
+    {
+      "key": "dashboardReports",
+      "supported": true,
+      "endpoints": ["GET /api/admin/reports/dashboard"],
+      "mobileUi": ["admin_dashboard"]
+    },
+    {
+      "key": "products",
+      "supported": true,
+      "endpoints": [
+        "GET /api/admin/products",
+        "POST /api/admin/products",
+        "GET /api/admin/products/{id}",
+        "PUT /api/admin/products/{id}",
+        "DELETE /api/admin/products/{id}"
+      ],
+      "mobileUi": ["admin_products", "admin_add_product"]
+    },
+    {
+      "key": "productVariantsInventory",
+      "supported": true,
+      "endpoints": [
+        "POST /api/admin/products/{productId}/variants",
+        "PUT /api/admin/products/variants/{vId}",
+        "DELETE /api/admin/products/variants/{vId}",
+        "PATCH /api/admin/products/variants/{vId}/stock"
+      ],
+      "mobileUi": ["admin_inventory_variants"]
+    },
+    {
+      "key": "categories",
+      "supported": true,
+      "endpoints": [
+        "GET /api/admin/categories",
+        "POST /api/admin/categories",
+        "GET /api/admin/categories/{id}",
+        "PUT /api/admin/categories/{id}",
+        "DELETE /api/admin/categories/{id}"
+      ],
+      "mobileUi": ["admin_categories", "admin_products_tab_categories"]
+    },
+    {
+      "key": "brands",
+      "supported": true,
+      "endpoints": [
+        "GET /api/brands",
+        "POST /api/brands",
+        "GET /api/brands/{id}",
+        "PUT /api/brands/{id}",
+        "DELETE /api/brands/{id}"
+      ],
+      "mobileUi": ["admin_brands", "admin_products_tab_brands"]
+    },
+    {
+      "key": "sports",
+      "supported": true,
+      "endpoints": [
+        "GET /api/admin/sports",
+        "POST /api/admin/sports",
+        "GET /api/admin/sports/{id}",
+        "PUT /api/admin/sports/{id}",
+        "DELETE /api/admin/sports/{id}"
+      ],
+      "mobileUi": ["admin_sports"],
+      "optionalShortcutUi": ["admin_products_tab_sports"]
+    },
+    {
+      "key": "collections",
+      "supported": true,
+      "endpoints": [
+        "GET /api/collections",
+        "GET /api/collections/{id}",
+        "GET /api/collections/slug/{slug}",
+        "POST /api/collections/admin",
+        "PUT /api/collections/admin/{id}",
+        "DELETE /api/collections/admin/{id}"
+      ],
+      "mobileUi": ["admin_collections"],
+      "optionalShortcutUi": ["admin_products_tab_collections"]
+    },
+    {
+      "key": "orders",
+      "supported": true,
+      "endpoints": [
+        "GET /api/orders/admin",
+        "GET /api/orders/admin/{id}",
+        "DELETE /api/orders/admin/{id}",
+        "PATCH /api/orders/{id}/status",
+        "PATCH /api/orders/{id}/orderStatus"
+      ],
+      "mobileUi": ["admin_orders", "admin_order_detail"]
+    },
+    {
+      "key": "orderAssignments",
+      "supported": true,
+      "endpoints": [
+        "GET /api/admin/order-assignments",
+        "GET /api/admin/order-assignments/{id}",
+        "GET /api/admin/order-assignments/orders/{orderId}",
+        "POST /api/admin/order-assignments",
+        "PUT /api/admin/order-assignments/orders/{orderId}",
+        "PUT /api/admin/order-assignments/{id}",
+        "DELETE /api/admin/order-assignments/{id}",
+        "DELETE /api/admin/order-assignments/orders/{orderId}"
+      ],
+      "mobileUi": ["admin_order_assignments"]
+    },
+    {
+      "key": "deliveryReports",
+      "supported": true,
+      "endpoints": [
+        "GET /api/admin/delivery-reports",
+        "GET /api/admin/delivery-reports/{id}",
+        "GET /api/orders/{orderId}/delivery-reports",
+        "POST /api/orders/{orderId}/delivery-reports",
+        "PUT /api/admin/delivery-reports/{id}",
+        "DELETE /api/admin/delivery-reports/{id}"
+      ],
+      "mobileUi": ["admin_delivery_reports"]
+    },
+    {
+      "key": "users",
+      "supported": true,
+      "endpoints": [
+        "GET /api/admin/users",
+        "POST /api/admin/users",
+        "GET /api/admin/users/{id}",
+        "PUT /api/admin/users/{id}",
+        "DELETE /api/admin/users/{id}"
+      ],
+      "mobileUi": ["admin_user_management", "admin_staff_detail"]
+    },
+    {
+      "key": "roles",
+      "supported": true,
+      "endpoints": ["GET /api/admin/roles"],
+      "mobileUi": ["admin_role_picker"]
+    },
+    {
+      "key": "workShifts",
+      "supported": true,
+      "endpoints": [
+        "GET /api/admin/work-shifts",
+        "GET /api/admin/work-shifts/{id}",
+        "POST /api/admin/work-shifts",
+        "PUT /api/admin/work-shifts/{id}",
+        "DELETE /api/admin/work-shifts/{id}"
+      ],
+      "mobileUi": ["admin_work_shifts"]
+    },
+    {
+      "key": "leaveRequests",
+      "supported": true,
+      "endpoints": [
+        "GET /api/admin/leave-requests",
+        "GET /api/admin/leave-requests/{id}",
+        "PUT /api/admin/leave-requests/{id}",
+        "PATCH /api/admin/leave-requests/{id}/decision",
+        "DELETE /api/admin/leave-requests/{id}"
+      ],
+      "mobileUi": ["admin_leave_requests"]
+    },
+    {
+      "key": "systemSettings",
+      "supported": true,
+      "endpoints": [
+        "GET /api/admin/settings",
+        "GET /api/admin/settings/{key}",
+        "POST /api/admin/settings",
+        "PUT /api/admin/settings/{key}",
+        "DELETE /api/admin/settings/{key}"
+      ],
+      "mobileUi": ["admin_system_settings"]
+    },
+    {
+      "key": "chatRooms",
+      "supported": true,
+      "endpoints": [
+        "POST /api/chat/rooms",
+        "GET /api/chat/rooms/me",
+        "GET /api/chat/rooms/admin/me"
+      ],
+      "mobileUi": ["admin_chat_rooms"]
+    },
+    {
+      "key": "chatMessages",
+      "supported": true,
+      "endpoints": [
+        "GET /api/chat/rooms/{roomId}/messages",
+        "POST /api/chat/rooms/{roomId}/messages"
+      ],
+      "mobileUi": ["admin_chat_detail"]
+    }
+  ],
+  "customerModules": [
+    {
+      "key": "auth",
+      "supported": true,
+      "endpoints": [
+        "POST /api/auth/login",
+        "POST /api/auth/register",
+        "POST /api/auth/logout",
+        "POST /api/auth/refresh",
+        "POST /api/auth/refresh-token",
+        "PUT /api/auth/change-pass",
+        "POST /api/auth/forgot-password",
+        "POST /api/auth/reset-password"
+      ]
+    },
+    {
+      "key": "profile",
+      "supported": true,
+      "endpoints": ["GET /api/user/profile/me", "PUT /api/user/profile/me"]
+    },
+    {
+      "key": "publicProducts",
+      "supported": true,
+      "endpoints": [
+        "GET /api/products",
+        "GET /api/products/{id}",
+        "GET /api/products/brands",
+        "GET /api/products/categories"
+      ]
+    },
+    {
+      "key": "cart",
+      "supported": true,
+      "endpoints": [
+        "GET /api/cart",
+        "POST /api/cart/add",
+        "PUT /api/cart/items/{itemId}",
+        "DELETE /api/cart/items/{itemId}",
+        "DELETE /api/cart/clear"
+      ]
+    },
+    {
+      "key": "orders",
+      "supported": true,
+      "endpoints": [
+        "POST /api/orders/checkout",
+        "GET /api/orders",
+        "GET /api/orders/my-orders",
+        "GET /api/orders/{id}"
+      ]
+    },
+    {
+      "key": "payment",
+      "supported": true,
+      "endpoints": [
+        "GET /api/payment/create_payment/{orderId}",
+        "GET /api/payment/vnpay_return"
+      ]
+    },
+    {
+      "key": "addresses",
+      "supported": true,
+      "endpoints": [
+        "GET /api/user/addresses",
+        "POST /api/user/addresses",
+        "PUT /api/user/addresses/{id}",
+        "DELETE /api/user/addresses/{id}",
+        "PATCH /api/user/addresses/{id}/default"
+      ]
+    }
+  ],
+  "unsupportedOrNotFound": [
+    "couponVoucherManagement",
+    "productReviewRatingManagement",
+    "bannerCarouselManagement",
+    "standaloneNotificationDeliverySettings",
+    "standaloneSizeColorMasterData",
+    "warehouseImportReceipts",
+    "supplierPurchaseOrders"
+  ]
+}

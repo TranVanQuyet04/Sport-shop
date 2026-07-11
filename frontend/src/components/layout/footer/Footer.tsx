@@ -29,7 +29,7 @@ const Footer = () => {
                 S
               </span>
               <span className="text-xl font-black tracking-tight">
-                SPORTSHOP
+                StrideX
               </span>
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-7 text-zinc-400">
@@ -81,7 +81,7 @@ const Footer = () => {
             <ul className="space-y-4 text-sm text-zinc-400">
               <li className="flex items-start gap-3">
                 <Mail className="mt-0.5 h-4 w-4 text-red-400" />
-                hotro@sportshop.vn
+                hotro@StrideX.vn
               </li>
               <li className="flex items-start gap-3">
                 <Phone className="mt-0.5 h-4 w-4 text-red-400" />
@@ -96,7 +96,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-7 text-sm text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} SPORTSHOP. All rights reserved.</p>
+          <p>Â© {new Date().getFullYear()} StrideX. All rights reserved.</p>
           <div className="flex gap-6">
             <Link to="/chinh-sach/bao-mat" className="hover:text-zinc-300">
               Privacy

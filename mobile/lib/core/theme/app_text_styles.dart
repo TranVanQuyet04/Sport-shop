@@ -21,6 +21,9 @@ abstract final class AppTextStyles {
     color: AppColors.textPrimary,
   );
 
+  // Alias for KPI card usage
+  static const TextStyle h1 = title;
+
   static const TextStyle subtitle = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w800,

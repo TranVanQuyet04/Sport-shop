@@ -16,24 +16,24 @@ const registerSchema = z
   .object({
     fullName: z
       .string()
-      .nonempty("Vui lòng nhập họ tên")
-      .min(2, "Họ tên tối thiểu 2 ký tự"),
+      .nonempty("Vui lÃ²ng nháº­p há» tÃªn")
+      .min(2, "Há» tÃªn tá»‘i thiá»ƒu 2 kÃ½ tá»±"),
     email: z
       .string()
-      .nonempty("Vui lòng nhập email")
-      .email("Email không hợp lệ"),
+      .nonempty("Vui lÃ²ng nháº­p email")
+      .email("Email khÃ´ng há»£p lá»‡"),
     password: z
       .string()
-      .nonempty("Vui lòng nhập mật khẩu")
+      .nonempty("Vui lÃ²ng nháº­p máº­t kháº©u")
       .regex(
         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-        "Mật khẩu tối thiểu 8 ký tự, gồm chữ và số",
+        "Máº­t kháº©u tá»‘i thiá»ƒu 8 kÃ½ tá»±, gá»“m chá»¯ vÃ  sá»‘",
       ),
-    confirmPassword: z.string().nonempty("Vui lòng xác nhận mật khẩu"),
-    phoneNumber: z.string().nonempty("Vui lòng nhập số điện thoại"),
+    confirmPassword: z.string().nonempty("Vui lÃ²ng xÃ¡c nháº­n máº­t kháº©u"),
+    phoneNumber: z.string().nonempty("Vui lÃ²ng nháº­p sá»‘ Ä‘iá»‡n thoáº¡i"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Mật khẩu xác nhận không khớp",
+    message: "Máº­t kháº©u xÃ¡c nháº­n khÃ´ng khá»›p",
     path: ["confirmPassword"],
   });
 
@@ -52,7 +52,7 @@ const RegisterPage = () => {
     try {
       const result = await registerWithEmail(data);
       if (result?.id ?? result?.email) {
-        toast.success("Đăng ký thành công! Vui lòng đăng nhập.", {
+        toast.success("ÄÄƒng kÃ½ thÃ nh cÃ´ng! Vui lÃ²ng Ä‘Äƒng nháº­p.", {
           duration: 2500,
         });
       }
@@ -76,12 +76,12 @@ const RegisterPage = () => {
             />
             <div className="absolute inset-0 bg-linear-to-t from-zinc-950 via-zinc-950/55 to-zinc-950/10" />
             <div className="relative z-10 flex h-full flex-col justify-end">
-              <p className="section-kicker text-red-300">Join SPORTSHOP</p>
+              <p className="section-kicker text-red-300">Join StrideX</p>
               <h2 className="mt-3 text-4xl font-black leading-tight tracking-tight">
-                Tạo tài khoản để mua sắm nhanh hơn.
+                Táº¡o tÃ i khoáº£n Ä‘á»ƒ mua sáº¯m nhanh hÆ¡n.
               </h2>
               <p className="mt-4 text-sm leading-7 text-white/75">
-                Lưu địa chỉ, theo dõi đơn hàng và nhận ưu đãi cho thành viên.
+                LÆ°u Ä‘á»‹a chá»‰, theo dÃµi Ä‘Æ¡n hÃ ng vÃ  nháº­n Æ°u Ä‘Ã£i cho thÃ nh viÃªn.
               </p>
             </div>
           </div>
@@ -95,13 +95,13 @@ const RegisterPage = () => {
                 <span className="flex h-10 w-10 items-center justify-center rounded-sm bg-zinc-950 text-sm font-black text-white">
                   S
                 </span>
-                SPORTSHOP
+                StrideX
               </Link>
               <h1 className="mt-7 text-2xl font-black text-gray-900">
-                Đăng ký tài khoản
+                ÄÄƒng kÃ½ tÃ i khoáº£n
               </h1>
               <p className="mt-2 text-sm text-gray-600">
-                Tạo tài khoản để mua sắm và theo dõi đơn hàng.
+                Táº¡o tÃ i khoáº£n Ä‘á»ƒ mua sáº¯m vÃ  theo dÃµi Ä‘Æ¡n hÃ ng.
               </p>
             </div>
 
@@ -109,13 +109,13 @@ const RegisterPage = () => {
               <div className="grid gap-5 sm:grid-cols-2">
                 <Field
                   id="full_name"
-                  label="Họ và tên"
+                  label="Há» vÃ  tÃªn"
                   icon={<User className="h-4 w-4" />}
                   error={form.formState.errors.fullName?.message}
                 >
                   <Input
                     id="full_name"
-                    placeholder="Nguyễn Văn A"
+                    placeholder="Nguyá»…n VÄƒn A"
                     className="h-11 pl-10"
                     {...form.register("fullName")}
                   />
@@ -123,7 +123,7 @@ const RegisterPage = () => {
 
                 <Field
                   id="phoneNumber"
-                  label="Số điện thoại"
+                  label="Sá»‘ Ä‘iá»‡n thoáº¡i"
                   icon={<Phone className="h-4 w-4" />}
                   error={form.formState.errors.phoneNumber?.message}
                 >
@@ -155,16 +155,16 @@ const RegisterPage = () => {
               <div className="grid gap-5 sm:grid-cols-2">
                 <PasswordField
                   id="password"
-                  label="Mật khẩu"
-                  placeholder="Tối thiểu 8 ký tự"
+                  label="Máº­t kháº©u"
+                  placeholder="Tá»‘i thiá»ƒu 8 kÃ½ tá»±"
                   showPassword={showPassword}
                   error={form.formState.errors.password?.message}
                   register={form.register("password")}
                 />
                 <PasswordField
                   id="confirmPassword"
-                  label="Xác nhận mật khẩu"
-                  placeholder="Nhập lại mật khẩu"
+                  label="XÃ¡c nháº­n máº­t kháº©u"
+                  placeholder="Nháº­p láº¡i máº­t kháº©u"
                   showPassword={showPassword}
                   error={form.formState.errors.confirmPassword?.message}
                   register={form.register("confirmPassword")}
@@ -181,7 +181,7 @@ const RegisterPage = () => {
                 ) : (
                   <Eye className="h-4 w-4" />
                 )}
-                {showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                {showPassword ? "áº¨n máº­t kháº©u" : "Hiá»‡n máº­t kháº©u"}
               </button>
 
               <Button
@@ -191,17 +191,17 @@ const RegisterPage = () => {
                 disabled={loading}
               >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {loading ? "Đang đăng ký..." : "Đăng ký"}
+                {loading ? "Äang Ä‘Äƒng kÃ½..." : "ÄÄƒng kÃ½"}
               </Button>
             </form>
 
             <p className="mt-6 text-center text-sm text-gray-600">
-              Đã có tài khoản?{" "}
+              ÄÃ£ cÃ³ tÃ i khoáº£n?{" "}
               <Link
                 to="/login"
                 className="font-bold text-red-600 hover:text-red-700"
               >
-                Đăng nhập ngay
+                ÄÄƒng nháº­p ngay
               </Link>
             </p>
           </div>

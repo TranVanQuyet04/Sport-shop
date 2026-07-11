@@ -1,0 +1,16 @@
+﻿{
+  "defaultModel": "auto",
+  "reviewerModel": "auto",
+  "testerModel": "auto",
+  "agent": {
+    "timeoutMs": 3600000,
+    "idleTimeoutMs": 300000,
+    "signalGraceMs": 15000
+  },
+  "commands": {
+    "backendChecks": "cd backend; ./mvnw test",
+    "mobileFormat": "cd mobile; dart format lib test",
+    "mobileAnalyze": "cd mobile; ./init.ps1 -Analyze",
+    "mobileTest": "cd mobile; ./init.ps1 -Test"
+  }
+}

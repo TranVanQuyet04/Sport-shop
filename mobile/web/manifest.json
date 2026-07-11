@@ -1,11 +1,11 @@
 {
-    "name": "mobile",
-    "short_name": "mobile",
+    "name": "StrideX",
+    "short_name": "StrideX",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#F3F6FA",
+    "theme_color": "#061A2E",
+    "description": "StrideX mobile shopping app for sportswear products, orders, delivery tracking, and account management.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

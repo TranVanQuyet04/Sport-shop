@@ -214,7 +214,7 @@ public class OrderServiceImpl implements  OrderService {
 
     private void validateShipperTransition(OrderStatus currentStatus, OrderStatus newStatus) {
         boolean valid = currentStatus == OrderStatus.SHIPPED
-                && (newStatus == OrderStatus.COMPLETED || newStatus == OrderStatus.CANCELLED);
+                && (newStatus == OrderStatus.DELIVERED || newStatus == OrderStatus.CANCELLED);
 
         if (!valid) {
             throw new IllegalArgumentException("Shipper khong duoc chuyen trang thai tu " + currentStatus + " sang " + newStatus);
