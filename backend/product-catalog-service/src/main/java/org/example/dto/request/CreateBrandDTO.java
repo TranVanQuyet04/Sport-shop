@@ -1,0 +1,14 @@
+package org.example.dto.request;
+
+import lombok.*;
+
+@Getter
+@Setter
+public class CreateBrandDTO {
+    private String name;
+    private String slug;
+    private String logo;
+    private String description;
+    private String banner;
+    private Boolean isActive;
+}

@@ -17,6 +17,7 @@ class ApiClient {
               headers: {'Content-Type': 'application/json'},
             ),
           ) {
+    _dio.interceptors.add(const _MicroserviceRoutingInterceptor());
     _dio.interceptors.add(_AuthInterceptor(_tokenStorage));
   }
 
@@ -122,9 +123,12 @@ class ApiClient {
   Future<ApiException> _toApiException(DioException error) async {
     final response = error.response;
     final data = response?.data;
+    final isPublicAuthRequest = ApiEndpoints.isPublicAuthPath(
+      error.requestOptions.path,
+    );
     String message = 'Không thể kết nối máy chủ. Vui lòng thử lại.';
 
-    if (response?.statusCode == 401) {
+    if (response?.statusCode == 401 && !isPublicAuthRequest) {
       await _tokenStorage.clear();
       setBearerToken(null);
       message = 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
@@ -152,6 +156,16 @@ class ApiClient {
   }
 }
 
+class _MicroserviceRoutingInterceptor extends Interceptor {
+  const _MicroserviceRoutingInterceptor();
+
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    options.baseUrl = ApiEndpoints.resolveBaseUrl(options.path);
+    handler.next(options);
+  }
+}
+
 /// Dio Interceptor that automatically reads the access token from
 /// secure storage and attaches it to the Authorization header for
 /// every outgoing request. This is the fallback for cases where
@@ -167,6 +181,14 @@ class _AuthInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    // Do not let an expired stored token block permitAll auth endpoints.
+    // Spring validates any supplied bearer token before authorization rules.
+    if (ApiEndpoints.isPublicAuthPath(options.path)) {
+      options.headers.remove('Authorization');
+      handler.next(options);
+      return;
+    }
+
     // If the Authorization header is already set (via setBearerToken), keep it.
     if (!options.headers.containsKey('Authorization')) {
       final token = await _tokenStorage.readAccessToken();

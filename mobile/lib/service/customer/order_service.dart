@@ -37,7 +37,7 @@ class OrderApiService implements OrderService {
 
   @override
   Future<OrderModel> getMyOrderById(String orderId) async {
-    final json = await _apiClient.getJson('${ApiEndpoints.myOrders}/$orderId');
+    final json = await _apiClient.getJson('${ApiEndpoints.orders}/$orderId');
     return OrderModel.fromJson(json);
   }
 
