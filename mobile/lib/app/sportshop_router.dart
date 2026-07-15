@@ -58,7 +58,6 @@ import '../view/splash/splash_page.dart';
 part 'app_routes.dart';
 
 final stridexRouter = GoRouter(
-  initialLocation: AppRoutes.splash,
   redirect: (context, state) async {
     final path = state.uri.path;
     final dependencies = AppDependencies.instance;
@@ -124,7 +123,9 @@ final stridexRouter = GoRouter(
     GoRoute(
       path: AppRoutes.resetPassword,
       name: 'resetPassword',
-      builder: (context, state) => const ResetPasswordPage(),
+      builder: (context, state) => ResetPasswordPage(
+        initialToken: state.uri.queryParameters['token'],
+      ),
     ),
     GoRoute(
       path: AppRoutes.changePassword,

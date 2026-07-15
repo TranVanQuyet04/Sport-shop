@@ -12,7 +12,9 @@ import '../../presenter/auth/reset_password_presenter.dart';
 import 'widgets/auth_brand_header.dart';
 
 class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+  const ResetPasswordPage({super.key, this.initialToken});
+
+  final String? initialToken;
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
@@ -26,6 +28,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   @override
   void initState() {
     super.initState();
+    final initialToken = widget.initialToken?.trim();
+    if (initialToken != null && initialToken.isNotEmpty) {
+      _presenter.changeToken(initialToken);
+    }
     _presenter.addListener(_onChanged);
   }
 
@@ -91,6 +97,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   AppTextField(
                     label: 'Token đặt lại mật khẩu',
                     hintText: 'Nhập token từ email',
+                    initialValue: widget.initialToken,
                     prefixIcon: Icons.key_outlined,
                     textInputAction: TextInputAction.next,
                     errorText: _presenter.tokenError,

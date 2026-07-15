@@ -339,6 +339,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         int revokedCount = validRefreshTokenRepository.deleteAllByUser(user);
         log.info("Revoked {} refresh tokens for user: {}", revokedCount, user.getEmail());
 
+        emailService.sendPasswordResetConfirmationEmail(user.getEmail());
+
         log.info("Password reset completed successfully for user: {}", user.getEmail());
     }
 
