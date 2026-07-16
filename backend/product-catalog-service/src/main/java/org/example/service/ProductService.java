@@ -14,6 +14,7 @@ public interface ProductService {
     public ProductDetailResponse createProduct(ProductRequest request);
     public List<ProductSummaryResponse> getAllProducts();
     public ProductDetailResponse getProductDetail(Long id);
+    public List<ProductDetailResponse> getChatCatalog();
     public ProductSummaryResponse updateProduct(Long id, ProductRequest request);
     public void deleteProduct(Long id);
 

@@ -80,7 +80,7 @@ public class BrandController {
         brandService.delete(id);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "XÃ³a thÃ nh cÃ´ng");
+        response.put("message", "Xóa thành công");
 
         return response;
     }

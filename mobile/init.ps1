@@ -42,8 +42,18 @@ function Import-DotEnv {
 
 function Get-MobileDartDefines {
     $defines = @()
-    if ($env:SPORTSHOP_API_URL) {
-        $defines += "--dart-define=SPORTSHOP_API_URL=$($env:SPORTSHOP_API_URL)"
+    $keys = @(
+        "SPORTSHOP_API_URL",
+        "SPORTSHOP_AUTH_API_URL",
+        "SPORTSHOP_CATALOG_API_URL",
+        "SPORTSHOP_ORDER_API_URL",
+        "SPORTSHOP_CHAT_API_URL"
+    )
+    foreach ($key in $keys) {
+        $value = [Environment]::GetEnvironmentVariable($key, "Process")
+        if ($value) {
+            $defines += "--dart-define=$key=$value"
+        }
     }
     return $defines
 }
@@ -135,7 +145,7 @@ if ($Help) {
     Write-Host "  -Analyze : Chạy linter phân tích code tĩnh."
     Write-Host "  -Test    : Chạy toàn bộ các file widget/unit test."
     Write-Host "  -Build   : Biên dịch ứng dụng ra file APK release."
-    Write-Host "  -Web     : Chạy Flutter web-server, tự lấy SPORTSHOP_API_URL/SPORTSHOP_WEB_URL từ .env."
+    Write-Host "  -Web     : Chạy Flutter web-server, tự lấy cấu hình API/WEB từ .env."
     Write-Host "  -Help    : Hiển thị hướng dẫn này."
     exit 0
 }

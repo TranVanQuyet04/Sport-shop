@@ -67,6 +67,34 @@ class _GuestChatPageState extends State<GuestChatPage> {
     await _presenter.sendBotMessage(text);
   }
 
+  Future<void> _confirmClearHistory() async {
+    if (_presenter.messages.isEmpty || _presenter.isSending) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Xóa lịch sử chat?'),
+        content: const Text('Trợ lý sẽ quên nội dung và các yêu cầu đã trao đổi trong cuộc trò chuyện này.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton.icon(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            icon: const Icon(Icons.delete_outline),
+            label: const Text('Xóa lịch sử'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) {
+      _presenter.clearBotHistory();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã xóa lịch sử trò chuyện.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,6 +105,15 @@ class _GuestChatPageState extends State<GuestChatPage> {
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('Chat hỗ trợ'),
+        actions: [
+          IconButton(
+            tooltip: 'Xóa lịch sử chat',
+            onPressed: _presenter.messages.isEmpty || _presenter.isSending
+                ? null
+                : _confirmClearHistory,
+            icon: const Icon(Icons.delete_outline),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -218,6 +255,11 @@ class _GuestMessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final visibleContent = message.content
+        .split('\n')
+        .where((line) => !line.trim().startsWith('[[ACTION:'))
+        .join('\n')
+        .trim();
     return Align(
       alignment: fromMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -232,7 +274,7 @@ class _GuestMessageBubble extends StatelessWidget {
           ),
         ),
         child: Text(
-          message.content,
+          visibleContent,
           style: AppTextStyles.body.copyWith(
             color: fromMe ? AppColors.textInverse : AppColors.textPrimary,
           ),

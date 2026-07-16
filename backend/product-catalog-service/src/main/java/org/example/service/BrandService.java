@@ -39,7 +39,7 @@ public class BrandService {
 
     public Brand update(Long id, UpdateBrandDTO dto) {
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Brand khÃ´ng tá»“n táº¡i"));
+                .orElseThrow(() -> new RuntimeException("Brand không tồn tại"));
 
         if (dto.getName() != null) brand.setBrandName(dto.getName());
         if (dto.getSlug() != null) brand.setSlug(dto.getSlug());

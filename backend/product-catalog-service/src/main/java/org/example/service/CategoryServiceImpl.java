@@ -25,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         if (request.getParentId() != null) {
             parent = categoryRepository.findById(request.getParentId())
-                    .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y parent category"));
+                    .orElseThrow(() -> new NoSuchElementException("Không tìm thấy parent category"));
         }
 
         Category category = new Category();
@@ -40,17 +40,17 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse update(Long id, CategoryRequest request) {
 
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y category"));
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy category"));
 
         Category parent = null;
         if (request.getParentId() != null) {
 
             if (request.getParentId().equals(id)) {
-                throw new RuntimeException("Category khÃ´ng thá»ƒ lÃ  parent cá»§a chÃ­nh nÃ³");
+                throw new RuntimeException("Category không thể là parent của chính nó");
             }
 
             parent = categoryRepository.findById(request.getParentId())
-                    .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y parent category"));
+                    .orElseThrow(() -> new NoSuchElementException("Không tìm thấy parent category"));
         }
 
         category.setCategoryName(request.getCategoryName());
@@ -65,7 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse getById(Long id) {
 
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y category"));
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy category"));
 
         return toResponse(category);
     }
@@ -74,14 +74,14 @@ public class CategoryServiceImpl implements CategoryService {
     public void delete(Long id) {
 
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y category"));
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy category"));
 
         if (category.getChildren() != null && !category.getChildren().isEmpty()) {
-            throw new RuntimeException("KhÃ´ng thá»ƒ xoÃ¡ category Ä‘ang cÃ³ category con");
+            throw new RuntimeException("Không thể xoá category đang có category con");
         }
 
         if (category.getProducts() != null && !category.getProducts().isEmpty()) {
-            throw new RuntimeException("KhÃ´ng thá»ƒ xoÃ¡ category Ä‘ang Ä‘Æ°á»£c product sá»­ dá»¥ng");
+            throw new RuntimeException("Không thể xoá category đang được product sử dụng");
         }
 
         categoryRepository.delete(category);

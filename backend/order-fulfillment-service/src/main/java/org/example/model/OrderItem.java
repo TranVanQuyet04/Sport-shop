@@ -30,6 +30,6 @@ public class OrderItem {
 
     private Integer quantity;
 
-    // LÆ°u giÃ¡ táº¡i thá»i Ä‘iá»ƒm mua (Ä‘á» phÃ²ng giÃ¡ sáº£n pháº©m thay Ä‘á»•i sau nÃ y)
+    // Lưu giá tại thời điểm mua (đề phòng giá sản phẩm thay đổi sau này)
     private BigDecimal price;
 }

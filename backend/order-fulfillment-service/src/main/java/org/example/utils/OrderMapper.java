@@ -46,7 +46,7 @@ public class OrderMapper {
                 .productName(item.getProductName())
                 .size(item.getSize())
                 .color(item.getColor())
-                .price(item.getPrice()) // LÆ°u Ã½: Láº¥y giÃ¡ tá»« OrderItem (giÃ¡ lÃºc mua) chá»© khÃ´ng pháº£i giÃ¡ hiá»‡n táº¡i cá»§a Variant
+                .price(item.getPrice()) // Lưu ý: Lấy giá từ OrderItem (giá lúc mua) chứ không phải giá hiện tại của Variant
                 .quantity(item.getQuantity())
                 .subTotal(item.getPrice().multiply(new BigDecimal(item.getQuantity())))
                 .variantImage(item.getVariantImage())

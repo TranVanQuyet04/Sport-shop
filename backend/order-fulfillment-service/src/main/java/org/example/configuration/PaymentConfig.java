@@ -24,7 +24,7 @@ public class PaymentConfig {
     @Value("${vnpay.command}")
     private String vnp_Command;
 
-    // Tiá»‡n Ã­ch mÃ£ hÃ³a HMAC SHA512
+    // Tiện ích mã hóa HMAC SHA512
     public static String hmacSHA512(String key, String data) {
         try {
             if (key == null || data == null) {

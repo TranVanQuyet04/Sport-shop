@@ -22,17 +22,17 @@ public class ChatController {
 
     @PostMapping("/send")
     public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest request) {
-        // 1. Láº¥y lá»‹ch sá»­ tá»« Request do Frontend gá»­i lÃªn
+        // 1. Lấy lịch sử từ Request do Frontend gửi lên
         List<String> history = request.getHistory();
         if (history == null) {
             history = new ArrayList<>();
         }
 
-        // 2. Gá»i Service vá»›i lá»‹ch sá»­ hiá»‡n táº¡i
+        // 2. Gọi Service với lịch sử hiện tại
         ChatResponse response = chatBotService.generateResponse(request.getMessage(), history);
 
-        // ChÃº Ã½: Backend chá»‰ xá»­ lÃ½ vÃ  tráº£ vá» cÃ¢u tráº£ lá»i.
-        // Frontend sáº½ tá»± cÃ³ trÃ¡ch nhiá»‡m ná»‘i (push) cÃ¢u há»i vÃ  cÃ¢u tráº£ lá»i má»›i vÃ o máº£ng history á»Ÿ dÆ°á»›i local.
+        // Chú ý: Backend chỉ xử lý và trả về câu trả lời.
+        // Frontend sẽ tự có trách nhiệm nối (push) câu hỏi và câu trả lời mới vào mảng history ở dưới local.
         return ResponseEntity.ok(response);
     }
 }

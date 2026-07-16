@@ -40,11 +40,18 @@ class ChatRepositoryImpl implements ChatRepository {
     required String roomId,
     required String content,
     required String sender,
+    String? intent,
   }) {
     return _chatService.sendRoomMessage(
       roomId: roomId,
       content: content,
       sender: sender,
+      intent: intent,
     );
+  }
+
+  @override
+  Future<void> clearRoomMessages(String roomId) {
+    return _chatService.clearRoomMessages(roomId);
   }
 }

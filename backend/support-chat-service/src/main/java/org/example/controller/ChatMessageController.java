@@ -27,4 +27,10 @@ public class ChatMessageController {
     ) {
         return chatMessageService.sendMessage(roomId, request);
     }
+
+    @DeleteMapping("/rooms/{roomId}/messages")
+    @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
+    public void clearMessages(@PathVariable Long roomId) {
+        chatMessageService.clearMessages(roomId);
+    }
 }

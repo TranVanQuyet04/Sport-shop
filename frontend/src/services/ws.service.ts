@@ -3,8 +3,15 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import { useAuthStore } from "@/store/useAuthStore";
 
-// THAY ĐỔI: Sử dụng IP hoặc localhost nếu server AWS chưa sẵn sàng
-const WS_URL = "http://localhost:8083/ws/chat";
+const configuredSocketUrl = import.meta.env.VITE_CHAT_WS_URL?.trim();
+const socketServiceBase = (
+  import.meta.env.VITE_API_URL?.trim() ||
+  import.meta.env.VITE_CHAT_API_URL?.trim() ||
+  "http://localhost:8084"
+)
+  .replace(/\/+$/, "")
+  .replace(/\/api$/, "");
+const WS_URL = configuredSocketUrl || `${socketServiceBase}/ws/chat`;
 
 class WebSocketClient {
   stomp: any = null;

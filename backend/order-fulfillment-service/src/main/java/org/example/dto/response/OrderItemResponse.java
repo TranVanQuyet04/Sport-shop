@@ -8,13 +8,13 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class OrderItemResponse {
-    private Long id;            // ID cá»§a dÃ²ng trong Ä‘Æ¡n hÃ ng
-    private Long variantId;     // ID cá»§a biáº¿n thá»ƒ (Ä‘á»ƒ FE dáº«n link vá» trang sáº£n pháº©m)
+    private Long id;            // ID của dòng trong đơn hàng
+    private Long variantId;     // ID của biến thể (để FE dẫn link về trang sản phẩm)
     private String productName;
-    private String size;        // Quan trá»ng: Size lÃºc mua
-    private String color;       // Quan trá»ng: MÃ u lÃºc mua
-    private BigDecimal price;       // GiÃ¡ táº¡i thá»i Ä‘iá»ƒm mua
+    private String size;        // Quan trọng: Size lúc mua
+    private String color;       // Quan trọng: Màu lúc mua
+    private BigDecimal price;       // Giá tại thời điểm mua
     private Integer quantity;
-    private BigDecimal subTotal;    // ThÃ nh tiá»n (price * quantity)
-    private String variantImage; // áº¢nh cá»§a biáº¿n thá»ƒ Ä‘Ã³
+    private BigDecimal subTotal;    // Thành tiền (price * quantity)
+    private String variantImage; // Ảnh của biến thể đó
 }

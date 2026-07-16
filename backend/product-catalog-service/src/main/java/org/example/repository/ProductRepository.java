@@ -29,6 +29,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     LEFT JOIN FETCH p.brand
     LEFT JOIN FETCH p.sport
     LEFT JOIN FETCH p.variants v
+    LEFT JOIN FETCH v.images
 """)
     List<Product> findAllForChatBot();
 

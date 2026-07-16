@@ -1,4 +1,5 @@
 import ProductCard from "@/components/ui/ProductCard";
+import api from "@/lib/axios";
 import { useEffect, useState } from "react";
 
 interface Product {
@@ -17,13 +18,8 @@ const HomeProductGrid = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:8083/api/products");
-
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-
-        const data = await res.json();
+        const res = await api.get("/api/products");
+        const data = res.data;
         console.log("API products:", data);
 
         // 🔑 QUAN TRỌNG: đảm bảo là mảng

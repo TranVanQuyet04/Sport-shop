@@ -74,3 +74,11 @@ export function formatChatTime(sentAt: string) {
 
   return `${dd}/${mm2}/${yyyy} • ${hh}:${mm}`;
 }
+
+export function stripChatActionMarkers(content: string) {
+  return content
+    .split("\n")
+    .filter((line) => !line.trim().startsWith("[[ACTION:"))
+    .join("\n")
+    .trim();
+}

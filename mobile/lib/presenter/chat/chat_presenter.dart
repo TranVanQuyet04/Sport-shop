@@ -46,7 +46,10 @@ class ChatPresenter extends ChangeNotifier {
     try {
       final response = await chatRepository.sendBotMessage(
         message: text,
-        history: messages.map((message) => message.content).toList(),
+        history: messages
+            .take(messages.length - 1)
+            .map((message) => '${message.sender}: ${message.content}')
+            .toList(),
       );
       messages = [
         ...messages,
@@ -59,6 +62,32 @@ class ChatPresenter extends ChangeNotifier {
       errorMessage = error.toString();
     } finally {
       isSending = false;
+      _safeNotifyListeners();
+    }
+  }
+
+  void clearBotHistory() {
+    messages = const [];
+    errorMessage = null;
+    _safeNotifyListeners();
+  }
+
+  Future<void> clearActiveRoomHistory() async {
+    final roomId = activeRoom?.id;
+    if (roomId == null || roomId.isEmpty || isSending || isLoading) {
+      return;
+    }
+    isLoading = true;
+    errorMessage = null;
+    _safeNotifyListeners();
+    try {
+      await chatRepository.clearRoomMessages(roomId);
+      messages = const [];
+      latestMessagesByRoomId = {...latestMessagesByRoomId}..remove(roomId);
+    } catch (error) {
+      errorMessage = error.toString();
+    } finally {
+      isLoading = false;
       _safeNotifyListeners();
     }
   }
@@ -156,6 +185,7 @@ class ChatPresenter extends ChangeNotifier {
     required String roomId,
     required String content,
     required String sender,
+    String? intent,
   }) async {
     final text = content.trim();
     if (text.isEmpty) {
@@ -175,6 +205,7 @@ class ChatPresenter extends ChangeNotifier {
         roomId: roomId,
         content: text,
         sender: sender,
+        intent: intent,
       );
       messages = responseMessages;
       if (responseMessages.isNotEmpty) {

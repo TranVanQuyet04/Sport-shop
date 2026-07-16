@@ -13,6 +13,7 @@ export function useCustomerChat() {
   const [mode, setMode] = useState<"human" | "ai">("human");
   const [isAiThinking, setIsAiThinking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const aiHistoryRef = useRef<string[]>([]);
 
   // Kiểm tra đăng nhập
   const isLoggedIn = !!(user && accessToken);
@@ -74,11 +75,18 @@ export function useCustomerChat() {
 
         const res = await chatApiAi.send({
           message: userMessage,
+          history: aiHistoryRef.current.slice(-10),
         });
 
         console.log(res);
 
-        const aiReply = res.data?.response || "AI không trả lời.";
+        const aiReply = res.data?.response || "Trợ lý chưa phản hồi.";
+
+        aiHistoryRef.current = [
+          ...aiHistoryRef.current,
+          `USER: ${userMessage}`,
+          `ASSISTANT: ${aiReply}`,
+        ].slice(-10);
 
         setMessages((prev) => [
           ...prev,

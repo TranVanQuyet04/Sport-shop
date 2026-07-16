@@ -19,7 +19,10 @@ abstract interface class ChatService {
     required String roomId,
     required String content,
     required String sender,
+    String? intent,
   });
+
+  Future<void> clearRoomMessages(String roomId);
 }
 
 class ChatApiService implements ChatService {
@@ -82,16 +85,26 @@ class ChatApiService implements ChatService {
     required String roomId,
     required String content,
     required String sender,
+    String? intent,
   }) async {
     final json = await _apiClient.postJson(
       '/chat/rooms/$roomId/messages',
-      data: {'content': content, 'sender': sender},
+      data: {
+        'content': content,
+        'sender': sender,
+        if (intent?.trim().isNotEmpty == true) 'intent': intent!.trim(),
+      },
     );
     final rawItems = json['result'] ?? json['data'] ?? json;
     if (rawItems is! List) {
       return const [];
     }
     return _parseMessages(json);
+  }
+
+  @override
+  Future<void> clearRoomMessages(String roomId) async {
+    await _apiClient.deleteJson('/chat/rooms/$roomId/messages');
   }
 
   List<ChatRoomModel> _parseRooms(Map<String, dynamic> json) {

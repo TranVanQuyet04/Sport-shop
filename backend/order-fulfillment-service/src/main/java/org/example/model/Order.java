@@ -39,12 +39,12 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    // --- SNAPSHOT Äá»ŠA CHá»ˆ (LÆ°u cá»©ng táº¡i thá»i Ä‘iá»ƒm mua) ---
+    // --- SNAPSHOT ĐỊA CHỈ (Lưu cứng tại thời điểm mua) ---
     private String recipientName;
     private String phoneNumber;
-    private String shippingAddress; // GhÃ©p full chuá»—i: Sá»‘ nhÃ , PhÆ°á»ng, Quáº­n, Tá»‰nh
+    private String shippingAddress; // Ghép full chuỗi: Số nhà, Phường, Quận, Tỉnh
 
-    private String note; // Ghi chÃº cá»§a khÃ¡ch hÃ ng
+    private String note; // Ghi chú của khách hàng
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

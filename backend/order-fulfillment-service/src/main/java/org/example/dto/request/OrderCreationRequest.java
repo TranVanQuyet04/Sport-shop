@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 public class OrderCreationRequest {
-    @NotNull(message = "Vui lÃ²ng chá»n Ä‘á»‹a chá»‰ giao hÃ ng")
+    @NotNull(message = "Vui lòng chọn địa chỉ giao hàng")
     private Long addressId;
 
-    @NotNull(message = "Vui lÃ²ng chá»n phÆ°Æ¡ng thá»©c thanh toÃ¡n")
+    @NotNull(message = "Vui lòng chọn phương thức thanh toán")
     private PaymentMethod paymentMethod;
 
     private String note;

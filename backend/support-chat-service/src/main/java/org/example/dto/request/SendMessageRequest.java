@@ -8,4 +8,5 @@ import lombok.Setter;
 public class SendMessageRequest {
     private String content;
     private String sender;
+    private String intent;
 }

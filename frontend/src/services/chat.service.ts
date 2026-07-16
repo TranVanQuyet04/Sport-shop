@@ -20,7 +20,7 @@ export interface ChatMessage {
 
 export interface ChatMessageAI {
   message: string;
-  history?: [];
+  history?: string[];
 }
 
 export interface SendMessageDTO {

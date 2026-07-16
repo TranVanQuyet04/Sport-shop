@@ -62,6 +62,11 @@ services:
       - ./support-chat-service/.env
     ports:
       - "8084:8084"
+    environment:
+      PRODUCT_CATALOG_SERVICE_URL: http://product-catalog-service:8082
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      product-catalog-service:
+        condition: service_started
     restart: unless-stopped

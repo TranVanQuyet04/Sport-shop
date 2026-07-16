@@ -18,5 +18,8 @@ abstract interface class ChatRepository {
     required String roomId,
     required String content,
     required String sender,
+    String? intent,
   });
+
+  Future<void> clearRoomMessages(String roomId);
 }

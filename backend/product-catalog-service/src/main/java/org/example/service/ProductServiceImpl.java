@@ -44,19 +44,19 @@ public class ProductServiceImpl implements ProductService{
                 .category(
                         categoryRepository.findById(categoryId)
                                 .orElseThrow(() ->
-                                        new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y Category vá»›i ID: " + categoryId)
+                                        new NoSuchElementException("Không tìm thấy Category với ID: " + categoryId)
                                 )
                 )
                 .brand(
                         brandRepository.findById(brandId)
                                 .orElseThrow(() ->
-                                        new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y Brand vá»›i ID: " + brandId)
+                                        new NoSuchElementException("Không tìm thấy Brand với ID: " + brandId)
                                 )
                 )
                 .sport(
                         sportRepository.findById(sportId)
                                 .orElseThrow(() ->
-                                        new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y Sport vá»›i ID: " + sportId)
+                                        new NoSuchElementException("Không tìm thấy Sport với ID: " + sportId)
                                 )
                 )
                 .build();
@@ -119,6 +119,14 @@ public class ProductServiceImpl implements ProductService{
         return ProductMapper.toDetailDto(productRepository.findById(id).orElseThrow());
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProductDetailResponse> getChatCatalog() {
+        return productRepository.findAllForChatBot().stream()
+                .map(ProductMapper::toDetailDto)
+                .toList();
+    }
+
     @Transactional
     @Override
     public ProductSummaryResponse updateProduct(Long id, ProductRequest request) {
@@ -128,20 +136,20 @@ public class ProductServiceImpl implements ProductService{
         Long sportId = sportRepository.findIdBySportName(request.getSportName());
 
         Product p = productRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y product"));
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy product"));
 
         // ===== Update product info =====
         p.setProductName(request.getProductName());
         p.setDescription(request.getDescription());
 
         p.setCategory(categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y Category")));
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy Category")));
 
         p.setBrand(brandRepository.findById(brandId)
-                .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y Brand")));
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy Brand")));
 
         p.setSport(sportRepository.findById(sportId)
-                .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y Sport")));
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy Sport")));
 
         // ===== Update / Add variants =====
         if (request.getVariants() != null) {
@@ -153,7 +161,7 @@ public class ProductServiceImpl implements ProductService{
                 if (vReq.getId() != null) {
 
                     variant = variantRepository.findById(vReq.getId())
-                            .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y variant"));
+                            .orElseThrow(() -> new NoSuchElementException("Không tìm thấy variant"));
 
                     variant.setSize(vReq.getSize());
                     variant.setColor(vReq.getColor());
@@ -223,7 +231,7 @@ public class ProductServiceImpl implements ProductService{
     public VariantResponse addVariant(Long productId, VariantRequest request) {
 
         Product p = productRepository.findById(productId)
-                .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y product"));
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy product"));
 
         String sku = SkuGenerator.generateSku(
                 p.getProductName(),

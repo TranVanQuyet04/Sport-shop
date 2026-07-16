@@ -26,7 +26,7 @@ public class Cart {
     @Builder.Default
     private List<CartItem> items = new ArrayList<>();
 
-    // Helper method Ä‘á»ƒ tÃ­nh tá»•ng tiá»n táº¡m tÃ­nh
+    // Helper method để tính tổng tiền tạm tính
     public BigDecimal getTotalPrice() {
         return items.stream()
                 .map(item -> item.getUnitPrice().multiply(new BigDecimal(item.getQuantity())))

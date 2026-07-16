@@ -24,16 +24,16 @@ public class Category {
 
     // ===== Self reference =====
 
-    // Nhiá»u category con -> 1 parent
+    // Nhiều category con -> 1 parent
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    // 1 parent -> nhiá»u category con
+    // 1 parent -> nhiều category con
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Category> children;
 
-    // ===== Quan há»‡ vá»›i Product =====
+    // ===== Quan hệ với Product =====
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 }

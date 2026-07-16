@@ -82,7 +82,7 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    // BÆ¯á»šC 1: Admin nháº¥n "AI Suggest" - Chá»‰ tráº£ vá» gá»£i Ã½, khÃ´ng lÆ°u
+    // BƯỚC 1: Admin nhấn "AI Suggest" - Chỉ trả về gợi ý, không lưu
     @PostMapping("/ai-suggest")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AIClassificationResult> suggest(@RequestBody Map<String, String> payload) {
@@ -92,11 +92,11 @@ public class ProductController {
         ));
     }
 
-    // BÆ¯á»šC 2: Admin kiá»ƒm tra, sá»­a Ä‘á»•i rá»“i má»›i nháº¥n "Confirm" Ä‘á»ƒ lÆ°u
+    // BƯỚC 2: Admin kiểm tra, sửa đổi rồi mới nhấn "Confirm" để lưu
     @PostMapping("/admin-confirm")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductDetailResponse> confirm(@RequestBody ProductRequest req) {
-        // req nÃ y chá»©a dá»¯ liá»‡u Admin Ä‘Ã£ chá»‘t (cÃ³ thá»ƒ khÃ¡c vá»›i AI gá»£i Ã½)
+        // req này chứa dữ liệu Admin đã chốt (có thể khác với AI gợi ý)
         return ResponseEntity.ok(productService.createProduct(req));
     }
 }

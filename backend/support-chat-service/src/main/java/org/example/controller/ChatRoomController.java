@@ -28,7 +28,7 @@ public class ChatRoomController {
 
     @GetMapping("/me")
     public List<ChatRoom> getMyRooms(@RequestParam(required = false) String customerName) {
-        if (customerName == null) return new ArrayList<>(); // TrÃ¡nh lá»—i 500 náº¿u thiáº¿u param
+        if (customerName == null) return new ArrayList<>(); // Tránh lỗi 500 nếu thiếu param
         return chatRoomService.getMyRooms(customerName);
     }
 

@@ -46,48 +46,48 @@ public class OrderServiceImpl implements  OrderService {
     public OrderResponse createOrder(OrderCreationRequest request) {
         Long userId = getCurrentUserId();
 
-        // 1. Láº¥y giá» hÃ ng
+        // 1. Lấy giỏ hàng
         Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Giá» hÃ ng trá»‘ng"));
+                .orElseThrow(() -> new RuntimeException("Giỏ hàng trống"));
 
         if (cart.getItems().isEmpty()) {
-            throw new RuntimeException("Giá» hÃ ng khÃ´ng cÃ³ sáº£n pháº©m nÃ o Ä‘á»ƒ thanh toÃ¡n");
+            throw new RuntimeException("Giỏ hàng không có sản phẩm nào để thanh toán");
         }
 
-        // 2. Láº¥y Ä‘á»‹a chá»‰ giao hÃ ng (Validate xem cÃ³ pháº£i cá»§a user nÃ y khÃ´ng)
+        // 2. Lấy địa chỉ giao hàng (Validate xem có phải của user này không)
         AuthAddress address = authServiceClient.getMyAddress(request.getAddressId());
-        if (address == null) throw new RuntimeException("Äá»‹a chá»‰ giao hÃ ng khÃ´ng há»£p lá»‡");
+        if (address == null) throw new RuntimeException("Địa chỉ giao hàng không hợp lệ");
 
-        // 3. Khá»Ÿi táº¡o Order
+        // 3. Khởi tạo Order
         Order order = Order.builder()
                 .userId(userId)
                 .orderDate(LocalDateTime.now())
-                .status(OrderStatus.PENDING) // Máº·c Ä‘á»‹nh lÃ  Chá» xá»­ lÃ½
+                .status(OrderStatus.PENDING) // Mặc định là Chờ xử lý
                 .paymentMethod(request.getPaymentMethod())
                 .note(request.getNote())
                 .recipientName(address.recipientName())
                 .phoneNumber(address.phoneNumber())
-                // Snapshot Ä‘á»‹a chá»‰ full text
+                // Snapshot địa chỉ full text
                 .shippingAddress(String.format("%s, %s, %s, %s",
                         address.street(), address.ward(), address.district(), address.city()))
                 .build();
 
-        // 4. Xá»­ lÃ½ tá»«ng Item: Check kho -> Trá»« kho -> Táº¡o OrderItem
+        // 4. Xử lý từng Item: Check kho -> Trừ kho -> Tạo OrderItem
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (CartItem cartItem : cart.getItems()) {
             CatalogVariant variant = productCatalogClient.getVariant(cartItem.getVariantId());
 
-            // Check tá»“n kho (Concurrency check cÆ¡ báº£n)
+            // Check tồn kho (Concurrency check cơ bản)
             if (variant.stockQuantity() < cartItem.getQuantity()) {
                 throw new RuntimeException("Sản phẩm " + variant.productName() + " không đủ số lượng tồn kho.");
             }
 
-            // Trá»« kho
+            // Trừ kho
             productCatalogClient.reserve(variant.id(), cartItem.getQuantity());
 
-            // Táº¡o OrderItem
+            // Tạo OrderItem
             OrderItem orderItem = OrderItem.builder()
                     .order(order)
                     .variantId(variant.id())
@@ -101,17 +101,17 @@ public class OrderServiceImpl implements  OrderService {
 
             orderItems.add(orderItem);
 
-            // TÃ­nh: subTotal = price * quantity
+            // Tính: subTotal = price * quantity
             BigDecimal subTotal = orderItem.getPrice().multiply(new BigDecimal(orderItem.getQuantity()));
-            // TÃ­nh: totalAmount = totalAmount + subTotal
+            // Tính: totalAmount = totalAmount + subTotal
             totalAmount = totalAmount.add(subTotal);        }
 
-        // 5. HoÃ n táº¥t Order
+        // 5. Hoàn tất Order
         order.setOrderItems(orderItems);
         order.setTotalAmount(totalAmount);
         Order savedOrder = orderRepository.save(order);
 
-        // 6. XÃ³a sáº¡ch giá» hÃ ng sau khi Ä‘áº·t thÃ nh cÃ´ng
+        // 6. Xóa sạch giỏ hàng sau khi đặt thành công
         cart.getItems().clear();
         cartRepository.save(cart);
 

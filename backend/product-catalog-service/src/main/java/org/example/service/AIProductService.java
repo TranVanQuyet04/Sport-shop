@@ -26,21 +26,21 @@ public class AIProductService {
     private String geminiUrl;
 
     public AIClassificationResult classifyProduct(String productName, String description) {
-        // XÃ¢y dá»±ng System Prompt vá»›i quy táº¯c nghiÃªm ngáº·t
+        // Xây dựng System Prompt với quy tắc nghiêm ngặt
         String systemInstruction = """
-            Báº¡n lÃ  chuyÃªn gia phÃ¢n loáº¡i sáº£n pháº©m thá»ƒ thao. HÃ£y phÃ¢n tÃ­ch TÃªn vÃ  MÃ´ táº£ Ä‘á»ƒ tráº£ vá» JSON.
+            Bạn là chuyên gia phân loại sản phẩm thể thao. Hãy phân tích Tên và Mô tả để trả về JSON.
             
-            QUY Táº®C PHÃ‚N LOáº I:
-            1. category: Chá»‰ chá»n má»™t trong [Ão, Quáº§n, GiÃ y, Phá»¥ kiá»‡n, Thiáº¿t bá»‹ táº­p luyá»‡n].
-            2. sportType: Chá»‰ chá»n má»™t trong [Gym, Yoga, BÃ³ng Ä‘Ã¡, Cháº¡y bá»™, Cáº§u lÃ´ng, Tennis, Basketball].
-            3. targetGender: Chá»‰ chá»n má»™t trong [Nam, Ná»¯, Unisex].
-            4. material: TrÃ­ch xuáº¥t cháº¥t liá»‡u váº£i chÃ­nh (vÃ­ dá»¥: Dri-FIT, Cotton...).
-            5. tags: TrÃ­ch xuáº¥t 3-5 Ä‘áº·c Ä‘iá»ƒm ná»•i báº­t nháº¥t (vÃ­ dá»¥: ThoÃ¡ng khÃ­, Tháº¥m hÃºt má»“ hÃ´i...).
+            QUY TẮC PHÂN LOẠI:
+            1. category: Chỉ chọn một trong [Áo, Quần, Giày, Phụ kiện, Thiết bị tập luyện].
+            2. sportType: Chỉ chọn một trong [Gym, Yoga, Bóng đá, Chạy bộ, Cầu lông, Tennis, Basketball].
+            3. targetGender: Chỉ chọn một trong [Nam, Nữ, Unisex].
+            4. material: Trích xuất chất liệu vải chính (ví dụ: Dri-FIT, Cotton...).
+            5. tags: Trích xuất 3-5 đặc điểm nổi bật nhất (ví dụ: Thoáng khí, Thấm hút mồ hôi...).
 
-            YÃŠU Cáº¦U: Chá»‰ tráº£ vá» duy nháº¥t chuá»—i JSON. KhÃ´ng giáº£i thÃ­ch thÃªm.
+            YÊU CẦU: Chỉ trả về duy nhất chuỗi JSON. Không giải thích thêm.
             """;
 
-        String userPrompt = String.format("Sáº£n pháº©m: %s\nMÃ´ táº£: %s", productName, description);
+        String userPrompt = String.format("Sản phẩm: %s\nMô tả: %s", productName, description);
         String fullPrompt = systemInstruction + "\n" + userPrompt;
 
         try {
@@ -58,7 +58,7 @@ public class AIProductService {
             return result;
 
         } catch (Exception e) {
-            log.error("Lá»—i phÃ¢n loáº¡i AI: {}", e.getMessage());
+            log.error("Lỗi phân loại AI: {}", e.getMessage());
             return AIClassificationResult.builder()
                     .status("FAILURE")
                     .tags(List.of())
@@ -94,7 +94,7 @@ public class AIProductService {
                 return parts.get(0).get("text").toString();
             }
         }
-        throw new RuntimeException("Dá»¯ liá»‡u pháº£n há»“i tá»« AI khÃ´ng Ä‘Ãºng Ä‘á»‹nh dáº¡ng");
+        throw new RuntimeException("Dữ liệu phản hồi từ AI không đúng định dạng");
     }
 
 }

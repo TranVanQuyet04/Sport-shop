@@ -32,11 +32,11 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
-    private Brand brand; // TÆ°Æ¡ng tá»± Category
+    private Brand brand; // Tương tự Category
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sport_id")
-    private Sport sport; // TÆ°Æ¡ng tá»± Category
+    private Sport sport; // Tương tự Category
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductVariant> variants = new HashSet<>();

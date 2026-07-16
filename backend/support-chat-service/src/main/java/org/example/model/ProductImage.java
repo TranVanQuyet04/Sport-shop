@@ -19,7 +19,7 @@ public class ProductImage {
     private String imageUrl;
 
     @Column(name = "is_primary")
-    private Boolean isPrimary; // XÃ¡c Ä‘á»‹nh áº£nh Ä‘áº¡i diá»‡n cho biáº¿n thá»ƒ
+    private Boolean isPrimary; // Xác định ảnh đại diện cho biến thể
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "variant_id", nullable = false)

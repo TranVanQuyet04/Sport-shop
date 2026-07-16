@@ -26,7 +26,7 @@ public class PublicProductController {
     @GetMapping
     @Operation(
             summary = "Get products",
-            description = "Láº¥y danh sÃ¡ch sáº£n pháº©m, cÃ³ thá»ƒ filter theo categoryId, brandId, sportId"
+            description = "Lấy danh sách sản phẩm, có thể filter theo categoryId, brandId, sportId"
     )
     public ResponseEntity<List<ProductSummaryResponse>> getProducts(
             @RequestParam(required = false) Long categoryId,
@@ -38,10 +38,19 @@ public class PublicProductController {
         );
     }
 
+    @GetMapping("/chat-catalog")
+    @Operation(
+            summary = "Get complete chat catalog",
+            description = "Lấy toàn bộ sản phẩm và biến thể trong một snapshot để dịch vụ tư vấn tìm kiếm chính xác"
+    )
+    public ResponseEntity<List<ProductDetailResponse>> getChatCatalog() {
+        return ResponseEntity.ok(productService.getChatCatalog());
+    }
+
     @GetMapping("/{id}")
     @Operation(
             summary = "Get product detail",
-            description = "Xem chi tiáº¿t má»™t sáº£n pháº©m kÃ¨m cÃ¡c biáº¿n thá»ƒ (size, mÃ u)"
+            description = "Xem chi tiết một sản phẩm kèm các biến thể (size, màu)"
     )
     public ResponseEntity<ProductDetailResponse> getProductDetail(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductDetail(id));
@@ -50,7 +59,7 @@ public class PublicProductController {
     @GetMapping("/brands")
     @Operation(
             summary = "Get brand",
-            description = "Láº¥y danh sÃ¡ch cÃ¡c nhÃ£n hÃ ng"
+            description = "Lấy danh sách các nhãn hàng"
     )
     public ResponseEntity<List<BrandResponse>> getBrand(){
         return ResponseEntity.ok(productService.getAllBrand());

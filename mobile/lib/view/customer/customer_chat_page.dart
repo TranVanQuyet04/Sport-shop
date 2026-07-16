@@ -34,18 +34,21 @@ class _CustomerChatPageState extends State<CustomerChatPage> {
         _QuickPrompt(
           label: 'T\u00ecm gi\u00e0y ch\u1ea1y b\u1ed9',
           icon: Icons.directions_run_outlined,
+          intent: 'RUNNING_SHOES',
           message:
               'T\u00f4i mu\u1ed1n t\u00ecm gi\u00e0y ch\u1ea1y b\u1ed9. H\u00e3y g\u1ee3i \u00fd s\u1ea3n ph\u1ea9m theo nhu c\u1ea7u t\u1eadp luy\u1ec7n v\u00e0 ng\u00e2n s\u00e1ch.',
         ),
         _QuickPrompt(
           label: 'T\u00ecm \u0111\u1ed3 gym',
           icon: Icons.fitness_center_outlined,
+          intent: 'GYM_PRODUCTS',
           message:
               'T\u00f4i mu\u1ed1n t\u00ecm \u0111\u1ed3 gym tho\u1ea3i m\u00e1i, d\u1ec5 v\u1eadn \u0111\u1ed9ng. H\u00e3y g\u1ee3i \u00fd s\u1ea3n ph\u1ea9m ph\u00f9 h\u1ee3p.',
         ),
         _QuickPrompt(
           label: 'S\u1ea3n ph\u1ea9m gi\u1ea3m gi\u00e1',
           icon: Icons.local_offer_outlined,
+          intent: 'DISCOUNT_SEARCH',
           message:
               'Hi\u1ec7n c\u00f3 s\u1ea3n ph\u1ea9m th\u1ec3 thao n\u00e0o \u0111ang gi\u1ea3m gi\u00e1 ho\u1eb7c \u0111\u00e1ng mua kh\u00f4ng?',
         ),
@@ -57,18 +60,21 @@ class _CustomerChatPageState extends State<CustomerChatPage> {
         _QuickPrompt(
           label: 'T\u01b0 v\u1ea5n size',
           icon: Icons.straighten_outlined,
+          intent: 'SIZE_GUIDE',
           message:
               'T\u00f4i c\u1ea7n t\u01b0 v\u1ea5n size gi\u00e0y ho\u1eb7c qu\u1ea7n \u00e1o th\u1ec3 thao. T\u00f4i n\u00ean cung c\u1ea5p s\u1ed1 \u0111o n\u00e0o?',
         ),
         _QuickPrompt(
           label: 'Theo m\u00f4n th\u1ec3 thao',
           icon: Icons.sports_soccer_outlined,
+          intent: 'SPORT_GUIDE',
           message:
               'H\u00e3y g\u1ee3i \u00fd trang ph\u1ee5c ho\u1eb7c gi\u00e0y theo m\u00f4n th\u1ec3 thao t\u00f4i \u0111ang t\u1eadp.',
         ),
         _QuickPrompt(
           label: 'Theo ng\u00e2n s\u00e1ch',
           icon: Icons.payments_outlined,
+          intent: 'BUDGET_GUIDE',
           message:
               'T\u00f4i mu\u1ed1n ch\u1ecdn s\u1ea3n ph\u1ea9m theo ng\u00e2n s\u00e1ch. H\u00e3y g\u1ee3i \u00fd v\u00e0i l\u1ef1a ch\u1ecdn t\u1ed1t.',
         ),
@@ -80,18 +86,21 @@ class _CustomerChatPageState extends State<CustomerChatPage> {
         _QuickPrompt(
           label: 'Tra c\u1ee9u \u0111\u01a1n h\u00e0ng',
           icon: Icons.receipt_long_outlined,
+          intent: 'ORDER_LOOKUP',
           message:
               'T\u00f4i mu\u1ed1n tra c\u1ee9u t\u00ecnh tr\u1ea1ng \u0111\u01a1n h\u00e0ng c\u1ee7a m\u00ecnh.',
         ),
         _QuickPrompt(
           label: '\u0110\u1ed5i tr\u1ea3',
           icon: Icons.assignment_return_outlined,
+          intent: 'RETURN_POLICY',
           message:
               'T\u00f4i c\u1ea7n h\u1ed7 tr\u1ee3 v\u1ec1 ch\u00ednh s\u00e1ch \u0111\u1ed5i tr\u1ea3 s\u1ea3n ph\u1ea9m.',
         ),
         _QuickPrompt(
           label: 'G\u1eb7p nh\u00e2n vi\u00ean',
           icon: Icons.support_agent_outlined,
+          intent: 'HUMAN_HANDOFF',
           message:
               'T\u00f4i mu\u1ed1n g\u1eb7p nh\u00e2n vi\u00ean t\u01b0 v\u1ea5n \u0111\u1ec3 \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 tr\u1ef1c ti\u1ebfp.',
         ),
@@ -172,14 +181,49 @@ class _CustomerChatPageState extends State<CustomerChatPage> {
   }
 
   Future<void> _sendQuickPrompt(_QuickPrompt prompt) {
-    return _sendText(prompt.message);
+    return _sendText(prompt.message, intent: prompt.intent);
   }
 
   Future<void> _sendMessage() {
     return _sendText(_messageController.text);
   }
 
-  Future<void> _sendText(String rawText) async {
+  Future<void> _confirmClearHistory() async {
+    if (_presenter.messages.isEmpty ||
+        _presenter.isLoading ||
+        _presenter.isSending) {
+      return;
+    }
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Xóa lịch sử chat?'),
+        content: const Text(
+          'Toàn bộ tin nhắn sẽ bị xóa và AI sẽ không còn dùng ngữ cảnh cũ.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton.icon(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            icon: const Icon(Icons.delete_outline),
+            label: const Text('Xóa lịch sử'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    await _presenter.clearActiveRoomHistory();
+    if (mounted && _presenter.errorMessage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã xóa lịch sử trò chuyện.')),
+      );
+    }
+  }
+
+  Future<void> _sendText(String rawText, {String? intent}) async {
     final text = rawText.trim();
     if (text.isEmpty || _presenter.isSending) {
       return;
@@ -199,6 +243,7 @@ class _CustomerChatPageState extends State<CustomerChatPage> {
       roomId: roomId,
       content: text,
       sender: 'CUSTOMER',
+      intent: intent,
     );
   }
 
@@ -219,6 +264,15 @@ class _CustomerChatPageState extends State<CustomerChatPage> {
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('H\u1ed7 tr\u1ee3 kh\u00e1ch h\u00e0ng'),
+        actions: [
+          IconButton(
+            tooltip: 'Xóa lịch sử chat',
+            onPressed: _presenter.messages.isEmpty || isBusy
+                ? null
+                : _confirmClearHistory,
+            icon: const Icon(Icons.delete_outline),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -248,6 +302,7 @@ class _CustomerChatPageState extends State<CustomerChatPage> {
                         onAddToCart: (variantId) => _addToCart(variantId),
                         onBuyNow: (variantId) =>
                             _addToCart(variantId, goToCheckout: true),
+                        onOpenRoute: (route) => context.go(route),
                       );
                     },
                   ),
@@ -340,11 +395,13 @@ class _QuickPrompt {
   const _QuickPrompt({
     required this.label,
     required this.icon,
+    required this.intent,
     required this.message,
   });
 
   final String label;
   final IconData icon;
+  final String intent;
   final String message;
 }
 
@@ -571,6 +628,7 @@ class _MessageBubble extends StatelessWidget {
     required this.onViewProduct,
     required this.onAddToCart,
     required this.onBuyNow,
+    required this.onOpenRoute,
   });
 
   final ChatMessageModel message;
@@ -578,6 +636,7 @@ class _MessageBubble extends StatelessWidget {
   final ValueChanged<String> onViewProduct;
   final ValueChanged<String> onAddToCart;
   final ValueChanged<String> onBuyNow;
+  final ValueChanged<String> onOpenRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -652,6 +711,7 @@ class _MessageBubble extends StatelessWidget {
                       onViewProduct: onViewProduct,
                       onAddToCart: onAddToCart,
                       onBuyNow: onBuyNow,
+                      onOpenRoute: onOpenRoute,
                     ),
                   ],
                   const SizedBox(height: 4),
@@ -692,27 +752,40 @@ class _MessageActionButtons extends StatelessWidget {
     required this.onViewProduct,
     required this.onAddToCart,
     required this.onBuyNow,
+    required this.onOpenRoute,
   });
 
   final _ChatActions actions;
   final ValueChanged<String> onViewProduct;
   final ValueChanged<String> onAddToCart;
   final ValueChanged<String> onBuyNow;
+  final ValueChanged<String> onOpenRoute;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final action in actions.products) ...[
+        for (var index = 0; index < actions.products.length; index++) ...[
           _ChatProductCard(
-            action: action,
+            action: actions.products[index],
             onViewProduct: onViewProduct,
             onAddToCart: onAddToCart,
             onBuyNow: onBuyNow,
           ),
-          if (action != actions.products.last)
+          if (index < actions.products.length - 1 ||
+              actions.services.isNotEmpty)
             const SizedBox(height: AppSpacing.md),
+        ],
+        for (var index = 0; index < actions.services.length; index++) ...[
+          _ChatActionButton(
+            label: actions.services[index].label,
+            icon: Icons.receipt_long_outlined,
+            filled: true,
+            onPressed: () => onOpenRoute(actions.services[index].route),
+          ),
+          if (index < actions.services.length - 1)
+            const SizedBox(height: AppSpacing.sm),
         ],
       ],
     );
@@ -1004,7 +1077,11 @@ class _ChatActionButton extends StatelessWidget {
 }
 
 class _ChatActions {
-  const _ChatActions({required this.summaryContent, required this.products});
+  const _ChatActions({
+    required this.summaryContent,
+    required this.products,
+    required this.services,
+  });
 
   static final RegExp _markerPattern = RegExp(
     r'\[\[ACTION:([A-Z_]+):([^\]]+)\]\]',
@@ -1015,18 +1092,36 @@ class _ChatActions {
 
   final String summaryContent;
   final List<_ChatProductAction> products;
+  final List<_ChatServiceAction> services;
 
-  bool get hasAny => products.isNotEmpty;
+  bool get hasAny => products.isNotEmpty || services.isNotEmpty;
 
   factory _ChatActions.fromContent(String content) {
     final markerFreeContent = content.replaceAll(_markerPattern, '').trim();
     final actionsByProductId = <String, _MutableChatProductAction>{};
     final looseVariantActions = <String, String>{};
+    final serviceActionsByRoute = <String, _ChatServiceAction>{};
 
     for (final match in _markerPattern.allMatches(content)) {
       final type = match.group(1);
       final payload = match.group(2) ?? '';
       final values = _readPayload(payload);
+      if (type == 'OPEN_ORDERS') {
+        final route = values['route']?.trim();
+        if (route == AppRoutes.orders) {
+          final label = values['label']?.trim();
+          serviceActionsByRoute.putIfAbsent(
+            route!,
+            () => _ChatServiceAction(
+              route: route,
+              label: label == null || label.isEmpty
+                  ? 'Xem \u0111\u01a1n h\u00e0ng c\u1ee7a t\u00f4i'
+                  : label,
+            ),
+          );
+        }
+        continue;
+      }
       final variantId = values['variantId'];
       final productId = values['productId'];
 
@@ -1097,6 +1192,7 @@ class _ChatActions {
       products: actionsByProductId.values
           .map((action) => action.freeze())
           .toList(),
+      services: serviceActionsByRoute.values.toList(),
     );
   }
 
@@ -1199,6 +1295,13 @@ class _ChatActions {
     }
     return values;
   }
+}
+
+class _ChatServiceAction {
+  const _ChatServiceAction({required this.route, required this.label});
+
+  final String route;
+  final String label;
 }
 
 class _ParsedProductBlock {

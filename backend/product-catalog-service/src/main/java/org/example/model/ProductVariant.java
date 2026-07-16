@@ -21,7 +21,7 @@ public class ProductVariant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sku; // MÃ£ quáº£n lÃ½ kho riÃªng biá»‡t
+    private String sku; // Mã quản lý kho riêng biệt
     private String color;
     private String size;
     private BigDecimal price;

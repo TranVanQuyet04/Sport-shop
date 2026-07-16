@@ -37,14 +37,14 @@ public class JwtDecoderConfiguration implements JwtDecoder {
                     JCA_HMAC_ALGORITHM
             );
 
-            // Táº¡o validator cho phÃ©p lá»‡ch 60 giÃ¢y (quan trá»ng nháº¥t)
+            // Tạo validator cho phép lệch 60 giây (quan trọng nhất)
             JwtTimestampValidator timestampValidator = new JwtTimestampValidator(Duration.ofSeconds(60));
 
             this.nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(key)
                     .macAlgorithm(MacAlgorithm.HS512)
                     .build();
 
-            // Gáº¯n validator vÃ o decoder
+            // Gắn validator vào decoder
             this.nimbusJwtDecoder.setJwtValidator(timestampValidator);
 
             log.info("Jwt decoder successfully initialized with 60s clock skew leeway");

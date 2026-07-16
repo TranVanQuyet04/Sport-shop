@@ -8,6 +8,7 @@ import {
   formatChatTime,
   groupMessages,
   formatDateHeader,
+  stripChatActionMarkers,
 } from "@/utils/chat-utils";
 
 export default function CustomerChatPage() {
@@ -42,7 +43,7 @@ export default function CustomerChatPage() {
               size="sm"
               onClick={() => setMode("ai")}
             >
-              Trợ lý AI
+              Trợ lý sản phẩm
             </Button>
           </div>
         </div>
@@ -83,7 +84,7 @@ export default function CustomerChatPage() {
                           : "bg-muted rounded-bl-none"
                       }`}
                     >
-                      {msg.type === "TEXT" && msg.content}
+                      {msg.type === "TEXT" && stripChatActionMarkers(msg.content)}
                       {msg.type === "IMAGE" && (
                         <img
                           src={msg.fileUrl}
@@ -136,7 +137,7 @@ export default function CustomerChatPage() {
         </div>
         {isAiThinking && (
           <div className="text-center text-xs text-muted-foreground py-2">
-            Trợ lý AI đang xử lý...
+            Trợ lý đang tìm sản phẩm...
           </div>
         )}
       </Card>

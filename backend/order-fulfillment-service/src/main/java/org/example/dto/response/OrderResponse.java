@@ -21,7 +21,7 @@ public class OrderResponse {
     private BigDecimal totalAmount;
     private PaymentMethod paymentMethod;
 
-    // ThÃ´ng tin giao hÃ ng snapshot
+    // Thông tin giao hàng snapshot
     private String recipientName;
     private String phoneNumber;
     private String shippingAddress;

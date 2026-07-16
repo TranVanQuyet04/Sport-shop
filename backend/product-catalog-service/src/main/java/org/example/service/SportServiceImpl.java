@@ -31,7 +31,7 @@ public class SportServiceImpl implements SportService {
     public SportResponse createSport(SportRequest request) {
 
         if (sportRepository.existsBySportName(request.getSportName())) {
-            throw new RuntimeException("Sport Ä‘Ã£ tá»“n táº¡i");
+            throw new RuntimeException("Sport đã tồn tại");
         }
 
         Sport sport = Sport.builder()
@@ -46,7 +46,7 @@ public class SportServiceImpl implements SportService {
     public SportResponse updateSport(Long id, SportRequest request) {
 
         Sport sport = sportRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y sport"));
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy sport"));
 
         sport.setSportName(request.getSportName());
         sport.setDescription(request.getDescription());
@@ -57,7 +57,7 @@ public class SportServiceImpl implements SportService {
     @Override
     public SportResponse getSportById(Long id){
         Sport sport = sportRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y sport"));
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy sport"));
         return toResponse(sport);
     }
 
@@ -65,11 +65,11 @@ public class SportServiceImpl implements SportService {
     public void deleteSport(Long id) {
 
         Sport sport = sportRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("KhÃ´ng tÃ¬m tháº¥y sport"));
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy sport"));
 
-        // Náº¿u sport Ä‘ang Ä‘Æ°á»£c product sá»­ dá»¥ng thÃ¬ khÃ´ng cho xoÃ¡
+        // Nếu sport đang được product sử dụng thì không cho xoá
         if (sport.getProducts() != null && !sport.getProducts().isEmpty()) {
-            throw new RuntimeException("KhÃ´ng thá»ƒ xoÃ¡ sport Ä‘ang Ä‘Æ°á»£c sá»­ dá»¥ng");
+            throw new RuntimeException("Không thể xoá sport đang được sử dụng");
         }
 
         sportRepository.delete(sport);
