@@ -149,22 +149,19 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           onPressed: () => context.go('/customer/orders/${order.id}/tracking'),
         ),
         const SizedBox(height: AppSpacing.md),
-        if (status == OrderStatus.shipped ||
-            status == OrderStatus.delivered ||
+        if (status == OrderStatus.delivered ||
             status == OrderStatus.completed)
           AppButton(
             label: status == OrderStatus.completed
                 ? 'Đã hoàn thành'
-                : status == OrderStatus.delivered
-                ? 'Đã giao - chờ hoàn tất'
                 : 'Xác nhận đã nhận hàng',
             variant: AppButtonVariant.outline,
             isLoading: _presenter.isUpdating,
-            onPressed:
-                status == OrderStatus.completed ||
-                    status == OrderStatus.delivered
+            onPressed: status == OrderStatus.completed
                 ? null
-                : _completeOrder,
+                : () => context.go(
+                    '/customer/orders/${order.id}/confirm-received',
+                  ),
           )
         else if (status == OrderStatus.pending)
           AppButton(
@@ -188,22 +185,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           success
               ? 'Đã hủy đơn hàng.'
               : _presenter.errorMessage ?? 'Không thể hủy đơn.',
-        ),
-      ),
-    );
-  }
-
-  Future<void> _completeOrder() async {
-    final success = await _presenter.completeOrder();
-    if (!mounted) {
-      return;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          success
-              ? 'Đã xác nhận nhận hàng.'
-              : _presenter.errorMessage ?? 'Không thể cập nhật đơn.',
         ),
       ),
     );

@@ -190,7 +190,7 @@ class _DeliveryStatusUpdatePageState extends State<DeliveryStatusUpdatePage> {
         ),
         _DeliveryStep(
           title: 'DELIVERED',
-          subtitle: 'Shipper đã giao hàng, chờ admin xác nhận hoàn tất.',
+          subtitle: 'Shipper đã giao hàng, chờ khách xác nhận đã nhận.',
           done:
               status == OrderStatus.delivered ||
               status == OrderStatus.completed,

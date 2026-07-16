@@ -1,9 +1,10 @@
 part of '../customer_home_page.dart';
 
 class _BrandGrid extends StatelessWidget {
-  const _BrandGrid({required this.brands});
+  const _BrandGrid({required this.brands, required this.onTap});
 
   final List<BrandModel> brands;
+  final ValueChanged<BrandModel> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +25,13 @@ class _BrandGrid extends StatelessWidget {
           scale: 1.018,
           dy: -3,
           borderRadius: BorderRadius.circular(AppRadius.xl),
-          child: Container(
+          child: Material(
+            color: AppColors.secondary,
+            borderRadius: BorderRadius.circular(AppRadius.xl),
             clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: AppColors.secondary,
-              borderRadius: BorderRadius.circular(AppRadius.xl),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.10),
-                  blurRadius: 18,
-                  offset: const Offset(0, 9),
-                ),
-              ],
-            ),
-            child: Stack(
+            child: InkWell(
+              onTap: () => onTap(brand),
+              child: Stack(
               fit: StackFit.expand,
               children: [
                 if (brand.banner.isNotEmpty || brand.logo.isNotEmpty)
@@ -110,7 +104,8 @@ class _BrandGrid extends StatelessWidget {
                     ],
                   ),
                 ),
-              ],
+                ],
+              ),
             ),
           ),
         );

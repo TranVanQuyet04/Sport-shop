@@ -13,6 +13,8 @@ public class OrderMapper {
         return OrderResponse.builder()
                 .id(order.getId())
                 .orderDate(order.getOrderDate())
+                .deliveredAt(order.getDeliveredAt())
+                .completedAt(order.getCompletedAt())
                 .status(order.getStatus())
                 .deliveryStatus(toDeliveryStatus(order))
                 .totalAmount(order.getTotalAmount())

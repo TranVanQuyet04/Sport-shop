@@ -266,7 +266,7 @@ class _TrackingPageState extends State<TrackingPage> {
       const _TimelineData(
         OrderStatus.delivered,
         'Đã giao',
-        'Shipper đã giao đơn hàng, cửa hàng đang xác nhận hoàn tất.',
+        'Shipper đã giao đơn hàng. Vui lòng xác nhận khi bạn đã nhận được hàng; hệ thống sẽ tự hoàn tất sau 7 ngày.',
       ),
       const _TimelineData(
         OrderStatus.completed,

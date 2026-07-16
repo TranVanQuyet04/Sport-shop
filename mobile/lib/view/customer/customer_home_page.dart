@@ -139,7 +139,10 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                             message:
                                 'Backend chưa trả về thương hiệu hiển thị.',
                           )
-                        : _BrandGrid(brands: brands.take(4).toList()),
+                        : _BrandGrid(
+                            brands: brands.take(4).toList(),
+                            onTap: _loadBrand,
+                          ),
                   ),
                   _HomeSection(
                     key: _productKey,
@@ -215,6 +218,13 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
 
   Future<void> _loadCategory(NavigationCategoryModel category) async {
     await _presenter.loadProducts(categoryId: category.id);
+    if (mounted) {
+      _scrollTo(_productKey);
+    }
+  }
+
+  Future<void> _loadBrand(BrandModel brand) async {
+    await _presenter.loadProducts(brandId: brand.id);
     if (mounted) {
       _scrollTo(_productKey);
     }

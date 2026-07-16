@@ -31,20 +31,37 @@ class CustomerHomePresenter extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
+    final errors = <Object>[];
     try {
       _recommendedProducts = await productRepository.getRecommendedProducts();
-      _brands = await productRepository.getPublicBrands();
-      final navigationRepository = this.navigationRepository;
-      if (navigationRepository != null) {
-        _categories = await navigationRepository.getMainNavigation();
-      }
     } catch (error) {
       _recommendedProducts = const [];
-      _errorMessage = error.toString();
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+      errors.add(error);
     }
+
+    try {
+      _brands = await productRepository.getPublicBrands();
+    } catch (error) {
+      _brands = const [];
+      errors.add(error);
+    }
+
+    final navigationRepository = this.navigationRepository;
+    if (navigationRepository != null) {
+      try {
+        _categories = await navigationRepository.getMainNavigation();
+      } catch (error) {
+        _categories = const [];
+        errors.add(error);
+      }
+    }
+
+    if (errors.isNotEmpty) {
+      _errorMessage = errors.first.toString();
+    }
+
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> loadProducts({

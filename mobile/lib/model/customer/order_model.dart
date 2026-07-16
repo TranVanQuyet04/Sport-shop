@@ -12,6 +12,8 @@ class OrderModel {
     required this.shippingAddress,
     required this.note,
     required this.orderDate,
+    this.deliveredAt,
+    this.completedAt,
     required this.items,
   });
 
@@ -25,6 +27,8 @@ class OrderModel {
   final String shippingAddress;
   final String note;
   final DateTime? orderDate;
+  final DateTime? deliveredAt;
+  final DateTime? completedAt;
   final List<OrderItemModel> items;
 
   String get firstProductName {
@@ -64,6 +68,12 @@ class OrderModel {
       shippingAddress: (source['shippingAddress'] ?? '').toString(),
       note: (source['note'] ?? '').toString(),
       orderDate: DateTime.tryParse((source['orderDate'] ?? '').toString()),
+      deliveredAt: DateTime.tryParse(
+        (source['deliveredAt'] ?? '').toString(),
+      ),
+      completedAt: DateTime.tryParse(
+        (source['completedAt'] ?? '').toString(),
+      ),
       items: items,
     );
   }

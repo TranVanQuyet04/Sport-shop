@@ -53,7 +53,7 @@ class _ConfirmReceivedPageState extends State<ConfirmReceivedPage> {
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'Sau khi xác nhận, đơn hàng sẽ chuyển sang trạng thái hoàn thành.',
+              'Sau khi xác nhận, đơn hàng sẽ chuyển sang trạng thái hoàn thành. Nếu bạn không xác nhận, hệ thống sẽ tự hoàn tất sau 7 ngày kể từ lúc shipper giao hàng.',
               style: AppTextStyles.body.copyWith(
                 color: AppColors.textSecondary,
               ),

@@ -11,11 +11,13 @@ import org.example.utils.CartMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CartServiceImpl implements  CartService {
     private final CartRepository cartRepository;
     private final ProductCatalogClient productCatalogClient;

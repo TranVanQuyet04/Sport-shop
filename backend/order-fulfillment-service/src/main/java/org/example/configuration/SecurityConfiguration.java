@@ -30,11 +30,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/api/payment/**",
+            "/api/payment/vnpay_return",
+            "/api/payment/vnpay_ipn",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/api/payment/**"
+            "/swagger-ui.html"
     };
 
     private static final String CORS_MAPPING_PATTERN ="/**";

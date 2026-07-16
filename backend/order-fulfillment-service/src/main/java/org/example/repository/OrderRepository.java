@@ -12,6 +12,11 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByUserIdOrderByOrderDateDesc(Long userId);
 
+    @Query("SELECT o FROM Order o WHERE o.status = 'DELIVERED' AND "
+            + "((o.deliveredAt IS NOT NULL AND o.deliveredAt <= :cutoff) "
+            + "OR (o.deliveredAt IS NULL AND o.orderDate <= :cutoff))")
+    List<Order> findDeliveredOrdersAwaitingConfirmation(@Param("cutoff") LocalDateTime cutoff);
+
     // TÃ­nh tá»•ng doanh thu, chá»‰ tÃ­nh Ä‘Æ¡n COMPLETED.
     @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.status = 'COMPLETED' AND o.orderDate >= :startDate AND o.orderDate <= :endDate")
     BigDecimal sumRevenueByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);

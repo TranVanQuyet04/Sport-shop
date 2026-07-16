@@ -14,6 +14,7 @@ import org.example.utils.OrderMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderServiceImpl implements  OrderService {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
@@ -168,6 +170,7 @@ public class OrderServiceImpl implements  OrderService {
         }
 
         order.setStatus(newStatus);
+        applyStatusTimestamp(order, newStatus);
         return OrderMapper.toResponse(orderRepository.save(order));
     }
 
@@ -185,8 +188,9 @@ public class OrderServiceImpl implements  OrderService {
 
         if (status == OrderStatus.CANCELLED && currentStatus == OrderStatus.PENDING) {
             order.setStatus(status);
-        } else if (status == OrderStatus.COMPLETED && currentStatus == OrderStatus.SHIPPED) {
+        } else if (status == OrderStatus.COMPLETED && currentStatus == OrderStatus.DELIVERED) {
             order.setStatus(status);
+            applyStatusTimestamp(order, status);
         } else {
             throw new RuntimeException("Trang thai cap nhat khong hop le");
         }
@@ -214,6 +218,16 @@ public class OrderServiceImpl implements  OrderService {
 
         if (!valid) {
             throw new IllegalArgumentException("Shop staff khong duoc chuyen trang thai tu " + currentStatus + " sang " + newStatus);
+        }
+    }
+
+    private void applyStatusTimestamp(Order order, OrderStatus status) {
+        LocalDateTime now = LocalDateTime.now();
+        if (status == OrderStatus.DELIVERED && order.getDeliveredAt() == null) {
+            order.setDeliveredAt(now);
+        }
+        if (status == OrderStatus.COMPLETED && order.getCompletedAt() == null) {
+            order.setCompletedAt(now);
         }
     }
 

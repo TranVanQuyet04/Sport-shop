@@ -342,8 +342,7 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
         );
       } else {
         mainContent = ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.only(
             left: AppSpacing.md,
             right: AppSpacing.md,
@@ -987,8 +986,10 @@ class _ProductListItemCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             const Divider(color: Color(0xFFF1F5F9), height: 1),
             const SizedBox(height: AppSpacing.sm),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            Wrap(
+              alignment: WrapAlignment.end,
+              spacing: AppSpacing.xs,
+              runSpacing: AppSpacing.xs,
               children: [
                 _buildActionButton(
                   icon: Icons.visibility_outlined,
@@ -996,14 +997,12 @@ class _ProductListItemCard extends StatelessWidget {
                   color: const Color(0xFF2563EB),
                   onPressed: onTapDetail,
                 ),
-                const SizedBox(width: AppSpacing.xs),
                 _buildActionButton(
                   icon: Icons.edit_outlined,
                   label: 'Sửa',
                   color: const Color(0xFF475569),
                   onPressed: onTapEdit,
                 ),
-                const SizedBox(width: AppSpacing.xs),
                 _buildActionButton(
                   icon: Icons.delete_outline_rounded,
                   label: 'Xóa',

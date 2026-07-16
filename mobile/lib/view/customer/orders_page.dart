@@ -349,11 +349,16 @@ class _OrderCard extends StatelessWidget {
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: AppButton(
-                    label: status == OrderStatus.completed
+                    label: status == OrderStatus.delivered
+                        ? 'Đã nhận hàng'
+                        : status == OrderStatus.completed
                         ? 'Đánh giá'
                         : 'Theo dõi',
-                    onPressed: () =>
-                        context.go('/customer/orders/${order.id}/tracking'),
+                    onPressed: () => context.go(
+                      status == OrderStatus.delivered
+                          ? '/customer/orders/${order.id}/confirm-received'
+                          : '/customer/orders/${order.id}/tracking',
+                    ),
                   ),
                 ),
               ],

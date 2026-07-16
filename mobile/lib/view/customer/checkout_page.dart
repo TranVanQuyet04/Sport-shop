@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/sportshop_router.dart';
 import '../../core/constants/app_spacing.dart';
@@ -216,14 +217,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
           subtitle: 'Thanh toán online qua cổng VNPay',
           onTap: () => _presenter.selectPaymentMethod('VNPAY'),
         ),
-        const SizedBox(height: AppSpacing.md),
-        _PaymentMethod(
-          selected: _presenter.paymentMethod == 'MOMO',
-          icon: Icons.account_balance_wallet_outlined,
-          title: 'Ví MoMo',
-          subtitle: 'Thanh toán online bằng ví MoMo',
-          onTap: () => _presenter.selectPaymentMethod('MOMO'),
-        ),
         const SizedBox(height: AppSpacing.xl),
         Text('Ghi chú đơn hàng', style: AppTextStyles.title),
         const SizedBox(height: AppSpacing.md),
@@ -252,6 +245,22 @@ class _CheckoutPageState extends State<CheckoutPage> {
       return;
     }
     if (success) {
+      final paymentUrl = _presenter.paymentUrl;
+      if (paymentUrl != null && paymentUrl.isNotEmpty) {
+        final uri = Uri.tryParse(paymentUrl);
+        final opened = uri != null &&
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+        if (!mounted) {
+          return;
+        }
+        if (!opened) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Không thể mở cổng thanh toán VNPay.'),
+            ),
+          );
+        }
+      }
       context.go(
         AppRoutes.orderSuccess,
         extra: {
