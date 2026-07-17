@@ -11,7 +11,7 @@ The project uses GitHub Actions and GitHub Container Registry (GHCR).
 
 CI verifies:
 
-- React frontend: `npm ci`, lint, and production build.
+- React frontend: `npm ci`, advisory lint reporting, and a required production build.
 - Flutter app: dependency resolution, analysis, tests, and web release build.
 - Four Spring Boot services: Maven `verify` on Java 21.
 
@@ -59,3 +59,5 @@ git push origin v1.0.0
 ```
 
 The workflows publish deployable images; deployment to a specific server or cloud is intentionally kept separate until a target environment and its credentials are selected.
+
+The frontend currently has legacy ESLint violations. They remain visible as a warning in CI, while the production TypeScript/Vite build is the required quality gate. Remove `continue-on-error` from the lint step after that backlog is resolved.
