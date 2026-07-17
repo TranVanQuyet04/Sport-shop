@@ -12,6 +12,7 @@ abstract final class AppRoutes {
   static const onboarding = '/onboarding';
   static const customerHome = '/customer/home';
   static const search = '/customer/search';
+  static const catalog = '/customer/catalog';
   static const productDetail = '/customer/products/:id';
   static const productGallery = '/customer/products/:id/gallery';
   static const cart = '/customer/cart';

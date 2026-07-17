@@ -29,7 +29,7 @@ class OnboardingPage extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () => context.go(AppRoutes.login),
+                          onPressed: () => context.go(AppRoutes.customerHome),
                           child: Text(
                             'Bỏ qua',
                             style: AppTextStyles.caption.copyWith(
@@ -73,10 +73,23 @@ class OnboardingPage extends StatelessWidget {
                       const Row(children: [_Dot(active: true), _Dot(), _Dot()]),
                       const SizedBox(height: AppSpacing.xl),
                       AppButton(
-                        label: 'Tiếp tục',
+                        label: 'Khám phá cửa hàng',
                         icon: Icons.arrow_forward_rounded,
                         variant: AppButtonVariant.secondary,
-                        onPressed: () => context.go(AppRoutes.login),
+                        onPressed: () => context.go(AppRoutes.customerHome),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Center(
+                        child: TextButton(
+                          onPressed: () => context.go(AppRoutes.login),
+                          child: Text(
+                            'Đã có tài khoản? Đăng nhập',
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.textInverse,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),

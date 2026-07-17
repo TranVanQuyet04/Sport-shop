@@ -8,6 +8,8 @@ import org.example.model.ProductImage;
 import org.example.model.ProductVariant;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductMapper {
@@ -30,22 +32,27 @@ public class ProductMapper {
     public static ProductSummaryResponse toSummaryDto(Product product) {
         BigDecimal price = BigDecimal.ZERO;
         String imageUrl = null;
+        List<ProductVariant> variants = product.getVariants() == null
+                ? List.of()
+                : product.getVariants().stream().toList();
 
-        if (!product.getVariants().isEmpty()) {
-
-            ProductVariant variant = product.getVariants()
+        if (!variants.isEmpty()) {
+            ProductVariant variant = variants
                     .stream()
-                    .findFirst()
+                    .filter(item -> item.getPrice() != null)
+                    .min(Comparator.comparing(ProductVariant::getPrice))
                     .orElse(null);
 
-            price = variant.getPrice();
+            if (variant != null) {
+                price = variant.getPrice();
 
-            if (variant.getImages() != null && !variant.getImages().isEmpty()) {
-                imageUrl = variant.getImages()
-                        .stream()
-                        .findFirst()
-                        .map(ProductImage::getImageUrl)
-                        .orElse(null);
+                if (variant.getImages() != null && !variant.getImages().isEmpty()) {
+                    imageUrl = variant.getImages()
+                            .stream()
+                            .findFirst()
+                            .map(ProductImage::getImageUrl)
+                            .orElse(null);
+                }
             }
         }
 
@@ -57,6 +64,12 @@ public class ProductMapper {
                 .sportName(product.getSport().getSportName())
                 .price(price)
                 .image_url(imageUrl)
+                .colors(variants.stream()
+                        .map(ProductVariant::getColor)
+                        .filter(color -> color != null && !color.isBlank())
+                        .distinct()
+                        .sorted(String.CASE_INSENSITIVE_ORDER)
+                        .toList())
                 .build();
     }
 

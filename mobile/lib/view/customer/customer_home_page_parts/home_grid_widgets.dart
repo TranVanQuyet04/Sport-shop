@@ -32,78 +32,78 @@ class _BrandGrid extends StatelessWidget {
             child: InkWell(
               onTap: () => onTap(brand),
               child: Stack(
-              fit: StackFit.expand,
-              children: [
-                if (brand.banner.isNotEmpty || brand.logo.isNotEmpty)
-                  Image.network(
-                    brand.banner.isNotEmpty ? brand.banner : brand.logo,
-                    fit: BoxFit.cover,
-                    webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
-                    errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                fit: StackFit.expand,
+                children: [
+                  if (brand.banner.isNotEmpty || brand.logo.isNotEmpty)
+                    Image.network(
+                      brand.banner.isNotEmpty ? brand.banner : brand.logo,
+                      fit: BoxFit.cover,
+                      webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+                      errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                    ),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.08),
+                          Colors.black.withValues(alpha: 0.62),
+                        ],
+                      ),
+                    ),
                   ),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.black.withValues(alpha: 0.08),
-                        Colors.black.withValues(alpha: 0.62),
+                  Positioned(
+                    top: AppSpacing.md,
+                    right: AppSpacing.md,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm,
+                          vertical: AppSpacing.xs,
+                        ),
+                        child: Text(
+                          'GIẢM 50%',
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.secondary,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: AppSpacing.md,
+                    right: AppSpacing.md,
+                    bottom: AppSpacing.md,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          brand.name.toUpperCase(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.title.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          'Mua ngay',
+                          style: AppTextStyles.caption.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ),
-                Positioned(
-                  top: AppSpacing.md,
-                  right: AppSpacing.md,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.sm,
-                        vertical: AppSpacing.xs,
-                      ),
-                      child: Text(
-                        'GIẢM 50%',
-                        style: AppTextStyles.caption.copyWith(
-                          color: AppColors.secondary,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: AppSpacing.md,
-                  right: AppSpacing.md,
-                  bottom: AppSpacing.md,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        brand.name.toUpperCase(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.title.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        'Mua ngay',
-                        style: AppTextStyles.caption.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 ],
               ),
             ),
@@ -139,6 +139,10 @@ class _ProductGrid extends StatelessWidget {
       );
     }
 
+    final products = controller.recommendedProducts
+        .take(12)
+        .toList(growable: false);
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -148,12 +152,9 @@ class _ProductGrid extends StatelessWidget {
         mainAxisSpacing: AppSpacing.xl,
         childAspectRatio: 0.68,
       ),
-      itemCount: controller.recommendedProducts.length,
+      itemCount: products.length,
       itemBuilder: (context, index) {
-        return ProductCard(
-          product: controller.recommendedProducts[index],
-          index: index,
-        );
+        return ProductCard(product: products[index], index: index);
       },
     );
   }

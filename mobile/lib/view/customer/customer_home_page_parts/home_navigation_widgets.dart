@@ -147,28 +147,18 @@ class _NavIconButtonState extends State<_NavIconButton> {
 }
 
 class _HomeDrawer extends StatelessWidget {
-  const _HomeDrawer({required this.categories, required this.onSelect});
+  const _HomeDrawer({
+    required this.categories,
+    required this.onSelect,
+    required this.onSelectCategory,
+  });
 
   final List<NavigationCategoryModel> categories;
   final ValueChanged<String> onSelect;
+  final ValueChanged<NavigationCategoryModel> onSelectCategory;
 
   @override
   Widget build(BuildContext context) {
-    final dynamicItems = categories
-        .take(5)
-        .map((category) => category.name)
-        .where((name) => name.isNotEmpty)
-        .toList();
-    final items = <String>[
-      'Xu hướng',
-      ...dynamicItems,
-      'Thương hiệu',
-      'Thể thao',
-      'Ưu đãi',
-      'Tìm kiếm',
-      'Tra cứu đơn hàng',
-    ];
-
     return Drawer(
       width: MediaQuery.sizeOf(context).width.clamp(300, 360).toDouble(),
       backgroundColor: AppColors.surface,
@@ -197,20 +187,47 @@ class _HomeDrawer extends StatelessWidget {
             ),
             const Divider(height: 1),
             Expanded(
-              child: ListView.separated(
-                itemCount: items.length,
-                separatorBuilder: (_, _) => const Divider(height: 1),
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  final isDeal = item == 'Ưu đãi';
-                  final isLookup = item == 'Tra cứu đơn hàng';
-                  return _DrawerEntry(
-                    label: item,
-                    icon: isLookup ? Icons.receipt_long_outlined : null,
-                    accent: isDeal,
-                    onTap: () => onSelect(item),
-                  );
-                },
+              child: ListView(
+                children: [
+                  _DrawerEntry(
+                    label: 'Xu hướng',
+                    onTap: () => onSelect('Xu hướng'),
+                  ),
+                  const Divider(height: 1),
+                  for (final category in categories) ...[
+                    _DrawerCategoryNode(
+                      category: category,
+                      onSelect: onSelectCategory,
+                    ),
+                    const Divider(height: 1),
+                  ],
+                  _DrawerEntry(
+                    label: 'Thương hiệu',
+                    onTap: () => onSelect('Thương hiệu'),
+                  ),
+                  const Divider(height: 1),
+                  _DrawerEntry(
+                    label: 'Thể thao',
+                    onTap: () => onSelect('Thể thao'),
+                  ),
+                  const Divider(height: 1),
+                  _DrawerEntry(
+                    label: 'Ưu đãi',
+                    accent: true,
+                    onTap: () => onSelect('Ưu đãi'),
+                  ),
+                  const Divider(height: 1),
+                  _DrawerEntry(
+                    label: 'Tìm kiếm',
+                    onTap: () => onSelect('Tìm kiếm'),
+                  ),
+                  const Divider(height: 1),
+                  _DrawerEntry(
+                    label: 'Tra cứu đơn hàng',
+                    icon: Icons.receipt_long_outlined,
+                    onTap: () => onSelect('Tra cứu đơn hàng'),
+                  ),
+                ],
               ),
             ),
             const Padding(
@@ -219,6 +236,103 @@ class _HomeDrawer extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _DrawerCategoryNode extends StatelessWidget {
+  const _DrawerCategoryNode({
+    required this.category,
+    required this.onSelect,
+    this.depth = 0,
+  });
+
+  final NavigationCategoryModel category;
+  final ValueChanged<NavigationCategoryModel> onSelect;
+  final int depth;
+
+  @override
+  Widget build(BuildContext context) {
+    if (category.children.isEmpty) {
+      return _DrawerCategoryLink(
+        category: category,
+        onSelect: onSelect,
+        depth: depth,
+      );
+    }
+
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.only(
+          left: AppSpacing.lg + depth * AppSpacing.md,
+          right: AppSpacing.sm,
+        ),
+        childrenPadding: EdgeInsets.zero,
+        title: Text(
+          category.name,
+          style: AppTextStyles.body.copyWith(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        children: [
+          _DrawerCategoryLink(
+            category: category,
+            onSelect: onSelect,
+            depth: depth + 1,
+            label: 'Xem tất cả ${category.name}',
+            isAllLink: true,
+          ),
+          for (final child in category.children)
+            _DrawerCategoryNode(
+              category: child,
+              onSelect: onSelect,
+              depth: depth + 1,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DrawerCategoryLink extends StatelessWidget {
+  const _DrawerCategoryLink({
+    required this.category,
+    required this.onSelect,
+    required this.depth,
+    this.label,
+    this.isAllLink = false,
+  });
+
+  final NavigationCategoryModel category;
+  final ValueChanged<NavigationCategoryModel> onSelect;
+  final int depth;
+  final String? label;
+  final bool isAllLink;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: isAllLink ? AppColors.surfaceMuted : AppColors.surface,
+      child: ListTile(
+        contentPadding: EdgeInsets.only(
+          left: AppSpacing.lg + depth * AppSpacing.md,
+          right: AppSpacing.lg,
+        ),
+        leading: isAllLink
+            ? const Icon(Icons.grid_view_rounded, size: 18)
+            : null,
+        title: Text(
+          label ?? category.name,
+          style: AppTextStyles.body.copyWith(
+            color: isAllLink ? AppColors.secondary : AppColors.textPrimary,
+            fontWeight: isAllLink ? FontWeight.w800 : FontWeight.w500,
+          ),
+        ),
+        trailing: const Icon(Icons.chevron_right, size: 20),
+        onTap: () => onSelect(category),
       ),
     );
   }

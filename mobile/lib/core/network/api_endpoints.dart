@@ -92,6 +92,7 @@ abstract final class ApiEndpoints {
       path == resetPassword;
 
   static const String products = '/products';
+  static const String productCategories = '/products/categories';
   static const String productBrands = '/products/brands';
   static const String cart = '/cart';
   static const String myOrders = '/orders/my-orders';

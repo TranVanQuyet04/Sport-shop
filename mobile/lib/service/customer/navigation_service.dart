@@ -13,17 +13,14 @@ class NavigationApiService implements NavigationService {
 
   @override
   Future<List<NavigationCategoryModel>> getMainNavigation() async {
-    final json = await _apiClient.getJson(ApiEndpoints.navigationMain);
-    final rawItems = json['result'] ?? json['data'] ?? json;
+    // The public category endpoint is the backend's complete category
+    // contract. It returns a flat list with parentId, which is rebuilt into
+    // the hierarchy consumed by the home page and drawer.
+    final json = await _apiClient.getJson(ApiEndpoints.productCategories);
+    final rawItems = json['result'] ?? json['data'] ?? json['content'] ?? [];
     if (rawItems is! List) {
       return const [];
     }
-    return rawItems
-        .whereType<Map>()
-        .map(
-          (item) =>
-              NavigationCategoryModel.fromJson(Map<String, dynamic>.from(item)),
-        )
-        .toList();
+    return NavigationCategoryModel.treeFromFlatJson(rawItems);
   }
 }

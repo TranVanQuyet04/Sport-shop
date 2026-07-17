@@ -76,6 +76,68 @@ class NavigationCategoryModel {
           : const [],
     );
   }
+
+  /// Builds the navigation tree from the flat category contract returned by
+  /// `GET /products/categories`.
+  static List<NavigationCategoryModel> treeFromFlatJson(
+    Iterable<Object?> rawItems,
+  ) {
+    final records = <String, _NavigationCategoryRecord>{};
+
+    for (final rawItem in rawItems.whereType<Map>()) {
+      final json = Map<String, dynamic>.from(rawItem);
+      final id = (json['id'] ?? '').toString();
+      final name = (json['categoryName'] ?? json['name'] ?? '').toString();
+      if (id.isEmpty || name.isEmpty) {
+        continue;
+      }
+      records[id] = _NavigationCategoryRecord(
+        id: id,
+        name: name,
+        parentId: (json['parentId'] ?? '').toString(),
+      );
+    }
+
+    NavigationCategoryModel build(
+      _NavigationCategoryRecord record,
+      Set<String> ancestors,
+    ) {
+      final nextAncestors = {...ancestors, record.id};
+      final children = records.values
+          .where(
+            (candidate) =>
+                candidate.parentId == record.id &&
+                !nextAncestors.contains(candidate.id),
+          )
+          .map((child) => build(child, nextAncestors))
+          .toList(growable: false);
+      return NavigationCategoryModel(
+        id: record.id,
+        name: record.name,
+        children: children,
+      );
+    }
+
+    return records.values
+        .where(
+          (record) =>
+              record.parentId.isEmpty || !records.containsKey(record.parentId),
+        )
+        .map((record) => build(record, const <String>{}))
+        .toList(growable: false);
+  }
+}
+
+class _NavigationCategoryRecord {
+  const _NavigationCategoryRecord({
+    required this.id,
+    required this.name,
+    required this.parentId,
+  });
+
+  final String id;
+  final String name;
+  final String parentId;
 }
 
 class PaymentResponseModel {

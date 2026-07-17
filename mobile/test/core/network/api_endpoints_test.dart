@@ -18,6 +18,10 @@ void main() {
     test('routes catalog endpoints to product catalog service', () {
       expect(ApiEndpoints.resolveBaseUrl('/products'), contains(':8082/api'));
       expect(
+        ApiEndpoints.resolveBaseUrl(ApiEndpoints.productCategories),
+        contains(':8082/api'),
+      );
+      expect(
         ApiEndpoints.resolveBaseUrl('/admin/products/1'),
         contains(':8082/api'),
       );
@@ -51,7 +55,10 @@ void main() {
     test('marks unauthenticated auth operations as public', () {
       expect(ApiEndpoints.isPublicAuthPath(ApiEndpoints.login), isTrue);
       expect(ApiEndpoints.isPublicAuthPath(ApiEndpoints.register), isTrue);
-      expect(ApiEndpoints.isPublicAuthPath(ApiEndpoints.forgotPassword), isTrue);
+      expect(
+        ApiEndpoints.isPublicAuthPath(ApiEndpoints.forgotPassword),
+        isTrue,
+      );
       expect(ApiEndpoints.isPublicAuthPath(ApiEndpoints.logout), isFalse);
       expect(ApiEndpoints.isPublicAuthPath(ApiEndpoints.profile), isFalse);
     });

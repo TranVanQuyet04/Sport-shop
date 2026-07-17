@@ -32,6 +32,7 @@ import '../view/admin/widgets/admin_design_system.dart';
 import '../view/customer/add_address_page.dart';
 import '../view/customer/address_book_page.dart';
 import '../view/customer/cart_page.dart';
+import '../view/customer/category_products_page.dart';
 import '../view/customer/checkout_page.dart';
 import '../view/customer/confirm_received_page.dart';
 import '../view/customer/customer_home_page.dart';
@@ -79,6 +80,7 @@ final stridexRouter = GoRouter(
         path == AppRoutes.onboarding ||
         path.startsWith('/customer/products') ||
         path == AppRoutes.search ||
+        path == AppRoutes.catalog ||
         path == AppRoutes.customerHome;
 
     if ((token == null || token.isEmpty) && !isPublicPath) {
@@ -123,9 +125,8 @@ final stridexRouter = GoRouter(
     GoRoute(
       path: AppRoutes.resetPassword,
       name: 'resetPassword',
-      builder: (context, state) => ResetPasswordPage(
-        initialToken: state.uri.queryParameters['token'],
-      ),
+      builder: (context, state) =>
+          ResetPasswordPage(initialToken: state.uri.queryParameters['token']),
     ),
     GoRoute(
       path: AppRoutes.changePassword,
@@ -156,6 +157,14 @@ final stridexRouter = GoRouter(
       path: AppRoutes.search,
       name: 'search',
       builder: (context, state) => const SearchPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.catalog,
+      name: 'catalog',
+      builder: (context, state) => CategoryProductsPage(
+        categoryId: state.uri.queryParameters['categoryId'] ?? '',
+        categoryName: state.uri.queryParameters['categoryName'] ?? '',
+      ),
     ),
     GoRoute(
       path: AppRoutes.productDetail,

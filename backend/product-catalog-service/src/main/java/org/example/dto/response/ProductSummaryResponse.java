@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
@@ -19,4 +20,5 @@ public class ProductSummaryResponse {
     private String sportName;
     private BigDecimal price;
     private String image_url;
+    private List<String> colors;
 }

@@ -9,6 +9,7 @@ class ProductSummaryModel {
     this.brand = '',
     this.sport = '',
     this.imageUrl = '',
+    this.colors = const [],
     this.rating = 0,
     this.isNew = false,
   });
@@ -20,6 +21,7 @@ class ProductSummaryModel {
   final String brand;
   final String sport;
   final String imageUrl;
+  final List<String> colors;
   final double rating;
   final bool isNew;
 
@@ -38,6 +40,12 @@ class ProductSummaryModel {
       brand: (json['brandName'] ?? json['brand'] ?? '').toString(),
       sport: (json['sportName'] ?? json['sport'] ?? '').toString(),
       imageUrl: ImageUrlUtils.sanitize(json['image_url'] ?? json['imageUrl']),
+      colors: json['colors'] is List
+          ? (json['colors'] as List)
+                .map((color) => color.toString().trim())
+                .where((color) => color.isNotEmpty)
+                .toList(growable: false)
+          : const [],
       rating: (json['rating'] is num) ? (json['rating'] as num).toDouble() : 0,
     );
   }

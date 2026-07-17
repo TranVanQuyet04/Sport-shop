@@ -13,7 +13,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     SELECT DISTINCT p FROM Product p
     LEFT JOIN FETCH p.variants v
     LEFT JOIN FETCH v.images i
-    WHERE (:categoryId IS NULL OR p.category.id = :categoryId)
+    WHERE (:categoryId IS NULL
+      OR p.category.id = :categoryId
+      OR p.category.parent.id = :categoryId)
       AND (:brandId IS NULL OR p.brand.id = :brandId)
       AND (:sportId IS NULL OR p.sport.id = :sportId)
 """)

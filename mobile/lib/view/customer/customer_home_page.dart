@@ -72,8 +72,9 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: _HomeDrawer(
-        categories: categories,
+        categories: _presenter.categories,
         onSelect: _handleDrawerSelection,
+        onSelectCategory: _handleDrawerCategorySelection,
       ),
       body: Column(
         children: [
@@ -118,7 +119,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                     key: _categoryKey,
                     title: 'Danh mục mua sắm',
                     actionLabel: 'Xem tất cả',
-                    onAction: () => _scrollTo(_productKey),
+                    onAction: () => _openCatalog(),
                     child: categories.isEmpty
                         ? const AppEmptyState(
                             title: 'Chưa có danh mục',
@@ -126,7 +127,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                           )
                         : _CategoryRail(
                             categories: categories.take(8).toList(),
-                            onTap: (category) => _loadCategory(category),
+                            onTap: _openCatalog,
                           ),
                   ),
                   _HomeSection(
@@ -195,32 +196,25 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         context.go(AppRoutes.search);
         return;
       default:
-        final category = _findCategory(label);
-        if (category != null) {
-          _loadCategory(category);
-        } else {
-          _scrollTo(_productKey);
-        }
+        _openCatalog();
     }
   }
 
-  NavigationCategoryModel? _findCategory(String label) {
-    final normalizedLabel = _normalize(label);
-    for (final category in _flattenCategories(_presenter.categories)) {
-      final categoryName = _normalize(category.name);
-      if (categoryName.contains(normalizedLabel) ||
-          normalizedLabel.contains(categoryName)) {
-        return category;
-      }
-    }
-    return null;
+  void _handleDrawerCategorySelection(NavigationCategoryModel category) {
+    Navigator.pop(context);
+    _openCatalog(category);
   }
 
-  Future<void> _loadCategory(NavigationCategoryModel category) async {
-    await _presenter.loadProducts(categoryId: category.id);
-    if (mounted) {
-      _scrollTo(_productKey);
-    }
+  void _openCatalog([NavigationCategoryModel? category]) {
+    context.push(
+      Uri(
+        path: AppRoutes.catalog,
+        queryParameters: {
+          if (category != null) 'categoryId': category.id,
+          if (category != null) 'categoryName': category.name,
+        },
+      ).toString(),
+    );
   }
 
   Future<void> _loadBrand(BrandModel brand) async {
@@ -241,37 +235,5 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
       curve: Curves.easeOutCubic,
       alignment: 0.02,
     );
-  }
-
-  String _normalize(String value) {
-    return value
-        .toLowerCase()
-        .replaceAll(
-          RegExp(
-            '[\u00e0\u00e1\u1ea1\u1ea3\u00e3\u00e2\u1ea7\u1ea5\u1ead\u1ea9\u1eab\u0103\u1eb1\u1eaf\u1eb7\u1eb3\u1eb5]',
-          ),
-          'a',
-        )
-        .replaceAll(
-          RegExp(
-            '[\u00e8\u00e9\u1eb9\u1ebb\u1ebd\u00ea\u1ec1\u1ebf\u1ec7\u1ec3\u1ec5]',
-          ),
-          'e',
-        )
-        .replaceAll(RegExp('[\u00ec\u00ed\u1ecb\u1ec9\u0129]'), 'i')
-        .replaceAll(
-          RegExp(
-            '[\u00f2\u00f3\u1ecd\u1ecf\u00f5\u00f4\u1ed3\u1ed1\u1ed9\u1ed5\u1ed7\u01a1\u1edd\u1edb\u1ee3\u1edf\u1ee1]',
-          ),
-          'o',
-        )
-        .replaceAll(
-          RegExp(
-            '[\u00f9\u00fa\u1ee5\u1ee7\u0169\u01b0\u1eeb\u1ee9\u1ef1\u1eed\u1eef]',
-          ),
-          'u',
-        )
-        .replaceAll(RegExp('[\u1ef3\u00fd\u1ef5\u1ef7\u1ef9]'), 'y')
-        .replaceAll('\u0111', 'd');
   }
 }

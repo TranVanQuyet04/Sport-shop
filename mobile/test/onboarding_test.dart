@@ -15,5 +15,7 @@ void main() {
 
     expect(find.byType(AppButton), findsOneWidget);
     expect(find.byIcon(Icons.sports_gymnastics_rounded), findsOneWidget);
+    expect(find.text('Khám phá cửa hàng'), findsOneWidget);
+    expect(find.text('Đã có tài khoản? Đăng nhập'), findsOneWidget);
   });
 }
